@@ -100,6 +100,22 @@
     .modal-body { flex: 1; overflow-y: auto; }
     .modal-body iframe { display: block; width: 100%; border: none; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* CHART MODALS */
+    .chart-wrap { padding: 1.25rem; }
+    .chart-canvas-wrap { position: relative; height: 280px; margin-bottom: 1rem; }
+    .chart-stats { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .chart-stat { background: var(--bg3); border-radius: 10px; padding: 0.6rem 1rem; flex: 1; min-width: 80px; text-align: center; }
+    .chart-stat-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent); line-height: 1; }
+    .chart-stat-num.green { color: var(--accent2); }
+    .chart-stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+    .chart-loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
+    .chart-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+    .chart-tab { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .chart-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(212,120,154,0.06); }
+    .chart-tab.green.active { color: var(--accent2); border-color: var(--accent2); background: rgba(126,203,161,0.06); }
+  </style>
 </head>
 <body>
 <div class="page">
@@ -122,10 +138,10 @@
         <div class="card-title">Log expense</div>
         <div class="card-desc">Add a new entry to your budget tracker</div>
       </a>
-      <a class="card primary" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5jGSINGX-mmk5ZzWE-odDuzkAeDbpfhSs6r3CyH_MZjBbiZ9QAhLzy6_mMRbG-VZoAwt2XqyolPq7/pubhtml" target="_blank" rel="noopener">
-        <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">↗</span></div>
+      <a class="card primary" href="#" onclick="openBudgetModal(); return false;">
+        <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">⊕</span></div>
         <div class="card-title">Budget overview</div>
-        <div class="card-desc">View your full spending spreadsheet</div>
+        <div class="card-desc">Spending charts by category</div>
       </a>
 
     </div>
@@ -139,10 +155,10 @@
         <div class="card-title">Log weight</div>
         <div class="card-desc">Record today's check-in</div>
       </a>
-      <a class="card success" href="https://docs.google.com/spreadsheets/d/1keT2M_lslOUDMPXde72ezQ_rVElMZzWkY8PJQefV2-M/edit?resourcekey=&gid=494459883#gid=494459883" target="_blank" rel="noopener">
-        <div class="card-top"><span class="card-emoji">📉</span><span class="card-arrow">↗</span></div>
+      <a class="card success" href="#" onclick="openWeightChartModal(); return false;">
+        <div class="card-top"><span class="card-emoji">📉</span><span class="card-arrow">⊕</span></div>
         <div class="card-title">Weight graph</div>
-        <div class="card-desc">Track your progress over time</div>
+        <div class="card-desc">Your progress over time</div>
       </a>
     </div>
   </section>
@@ -239,6 +255,281 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeWeightModal(); closeExpenseModal(); }
   });
+</script>
+
+
+<!-- BUDGET MODAL -->
+<div class="modal-overlay" id="budget-modal" onclick="if(event.target===this)closeBudgetModal()">
+  <div class="modal-box" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">📊 Budget Overview — 2026</span>
+      <button class="modal-close" onclick="closeBudgetModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="chart-wrap">
+        <div id="budget-loading" class="chart-loading">Loading your data…</div>
+        <div id="budget-content" style="display:none;">
+          <div class="chart-stats" id="budget-stats"></div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="showBudgetChart('pie', this)">By Category</button>
+            <button class="chart-tab" onclick="showBudgetChart('bar', this)">By Month</button>
+            <button class="chart-tab" onclick="showBudgetChart('who', this)">Ashley vs Jon</button>
+          </div>
+          <div class="chart-canvas-wrap"><canvas id="budget-chart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WEIGHT CHART MODAL -->
+<div class="modal-overlay" id="weight-chart-modal" onclick="if(event.target===this)closeWeightChartModal()">
+  <div class="modal-box" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">📉 Weight Progress</span>
+      <button class="modal-close" onclick="closeWeightChartModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="chart-wrap">
+        <div id="weight-loading" class="chart-loading">Loading your data…</div>
+        <div id="weight-content" style="display:none;">
+          <div class="chart-stats" id="weight-stats"></div>
+          <div class="chart-canvas-wrap"><canvas id="weight-chart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BUDGET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT5jGSINGX-mmk5ZzWE-odDuzkAeDbpfhSs6r3CyH_MZjBbiZ9QAhLzy6_mMRbG-VZoAwt2XqyolPq7/pub?output=csv';
+const WEIGHT_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZms_WvCj3ehN_dOxEUooxy-7pCK396BjDOqS1YZtslE7LdPw3Hq4EebPOJMIWELoNDKzYrnZ9lde/pub?output=csv';
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  return lines.slice(1).map(line => {
+    // Handle quoted commas
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let ch of line) {
+      if (ch === '"') inQ = !inQ;
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    cols.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (cols[i] || '').replace(/"/g,'').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+// ── BUDGET ────────────────────────────────────────────────
+let budgetData = null, budgetChartInst = null, currentBudgetView = 'pie';
+const COLORS = ['#d4789a','#7ecba1','#6eb3c9','#c9a96e','#a78bca','#e8916a','#5bb8a0','#e8c96a','#8ab4d4','#d4a0c9'];
+
+async function loadBudget() {
+  if (budgetData) return;
+  try {
+    const res = await fetch(BUDGET_CSV);
+    const text = await res.text();
+    budgetData = parseCSV(text);
+    renderBudget('pie');
+    document.getElementById('budget-loading').style.display = 'none';
+    document.getElementById('budget-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('budget-loading').textContent = 'Could not load data — check sheet is published as CSV.';
+  }
+}
+
+function renderBudget(view) {
+  currentBudgetView = view;
+  if (budgetChartInst) { budgetChartInst.destroy(); budgetChartInst = null; }
+  const ctx = document.getElementById('budget-chart').getContext('2d');
+
+  // Parse amounts
+  const rows = budgetData.map(r => ({
+    date: r['Purchase Date'] || r['Date'] || '',
+    item: r['Item'] || '',
+    amount: parseFloat((r['Amount'] || '0').replace(/[$,]/g, '')) || 0,
+    category: r['Category'] || 'Other',
+    who: r['Ashley or Jon?'] || r['Who'] || 'Unknown'
+  })).filter(r => r.amount > 0);
+
+  const total = rows.reduce((s, r) => s + r.amount, 0);
+  const avg = rows.length ? total / rows.length : 0;
+
+  // Stats
+  document.getElementById('budget-stats').innerHTML = `
+    <div class="chart-stat"><div class="chart-stat-num">$${total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Total Spent</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">${rows.length}</div><div class="chart-stat-label">Transactions</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">$${avg.toFixed(2)}</div><div class="chart-stat-label">Avg per Item</div></div>
+  `;
+
+  if (view === 'pie') {
+    // By category
+    const cats = {};
+    rows.forEach(r => { cats[r.category] = (cats[r.category] || 0) + r.amount; });
+    const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
+    budgetChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: sorted.map(([k]) => k),
+        datasets: [{ data: sorted.map(([,v]) => v.toFixed(2)), backgroundColor: COLORS, borderColor: '#181816', borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8a8880', font: { size: 11 }, boxWidth: 12 } } } }
+    });
+  } else if (view === 'bar') {
+    // By month
+    const months = {};
+    rows.forEach(r => {
+      const d = new Date(r.date);
+      if (isNaN(d)) return;
+      const key = d.toLocaleString('default', { month: 'short', year: '2-digit' });
+      months[key] = (months[key] || 0) + r.amount;
+    });
+    const keys = Object.keys(months);
+    budgetChartInst = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: keys,
+        datasets: [{ label: 'Spending ($)', data: keys.map(k => months[k].toFixed(2)), backgroundColor: 'rgba(212,120,154,0.7)', borderColor: '#d4789a', borderWidth: 1, borderRadius: 6 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#8a8880' }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#8a8880', callback: v => '$'+v }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+    });
+  } else if (view === 'who') {
+    // Ashley vs Jon
+    const who = {};
+    rows.forEach(r => { const w = r.who || 'Unknown'; who[w] = (who[w] || 0) + r.amount; });
+    const entries = Object.entries(who);
+    budgetChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: entries.map(([k]) => k),
+        datasets: [{ data: entries.map(([,v]) => v.toFixed(2)), backgroundColor: ['#d4789a','#7ecba1','#6eb3c9'], borderColor: '#181816', borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8a8880', font: { size: 12 }, boxWidth: 14 } } } }
+    });
+  }
+}
+
+function showBudgetChart(view, btn) {
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderBudget(view);
+}
+
+function openBudgetModal() {
+  document.getElementById('budget-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadBudget();
+}
+function closeBudgetModal() {
+  document.getElementById('budget-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── WEIGHT ────────────────────────────────────────────────
+let weightData = null, weightChartInst = null;
+
+async function loadWeight() {
+  if (weightData) return;
+  try {
+    const res = await fetch(WEIGHT_CSV);
+    const text = await res.text();
+    weightData = parseCSV(text);
+    renderWeight();
+    document.getElementById('weight-loading').style.display = 'none';
+    document.getElementById('weight-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('weight-loading').textContent = 'Could not load data — check sheet is published as CSV.';
+  }
+}
+
+function renderWeight() {
+  if (weightChartInst) { weightChartInst.destroy(); weightChartInst = null; }
+  const ctx = document.getElementById('weight-chart').getContext('2d');
+
+  // Find weight and date columns flexibly
+  const sample = weightData[0] || {};
+  const weightKey = Object.keys(sample).find(k => k.toLowerCase().includes('weight') || k.toLowerCase().includes('lbs') || k.toLowerCase().includes('kg')) || Object.keys(sample)[1];
+  const dateKey = Object.keys(sample).find(k => k.toLowerCase().includes('date') || k.toLowerCase().includes('time') || k.toLowerCase().includes('stamp')) || Object.keys(sample)[0];
+
+  const rows = weightData.map(r => ({
+    date: new Date(r[dateKey]),
+    weight: parseFloat((r[weightKey] || '0').replace(/[^0-9.]/g,''))
+  })).filter(r => !isNaN(r.date) && r.weight > 0).sort((a,b) => a.date - b.date);
+
+  if (!rows.length) {
+    document.getElementById('weight-loading').textContent = 'No weight data found yet — log your first entry!';
+    document.getElementById('weight-loading').style.display = 'block';
+    document.getElementById('weight-content').style.display = 'none';
+    return;
+  }
+
+  const first = rows[0].weight, last = rows[rows.length-1].weight;
+  const min = Math.min(...rows.map(r => r.weight));
+  const change = (last - first).toFixed(1);
+  const changeStr = change > 0 ? '+'+change : change;
+  const trend = change < 0 ? '📉' : change > 0 ? '📈' : '➡️';
+
+  document.getElementById('weight-stats').innerHTML = `
+    <div class="chart-stat"><div class="chart-stat-num green">${last} <span style="font-size:1rem">lbs</span></div><div class="chart-stat-label">Current</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${changeStr} lbs</div><div class="chart-stat-label">Total Change ${trend}</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${min}</div><div class="chart-stat-label">Lowest</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${rows.length}</div><div class="chart-stat-label">Entries</div></div>
+  `;
+
+  // Gradient fill
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+  gradient.addColorStop(0, 'rgba(126,203,161,0.3)');
+  gradient.addColorStop(1, 'rgba(126,203,161,0.01)');
+
+  weightChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [{
+        label: 'Weight (lbs)',
+        data: rows.map(r => r.weight),
+        borderColor: '#7ecba1',
+        backgroundColor: gradient,
+        borderWidth: 2,
+        pointRadius: rows.length > 30 ? 0 : 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#7ecba1',
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} lbs` } } },
+      scales: {
+        x: { ticks: { color: '#8a8880', maxTicksLimit: 10, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#8a8880', callback: v => v+' lbs' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+}
+
+function openWeightChartModal() {
+  document.getElementById('weight-chart-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadWeight();
+}
+function closeWeightChartModal() {
+  document.getElementById('weight-chart-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Global escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeBudgetModal(); closeWeightChartModal();
+    closeExpenseModal(); closeWeightModal();
+  }
+});
 </script>
 
 </body>
