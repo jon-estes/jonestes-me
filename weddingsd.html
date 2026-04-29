@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jon & Ashley · San Diego · July 20, 2027</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #fdf6f8;
+      --bg2:     #fff0f4;
+      --bg3:     #fce4ec;
+      --border:  rgba(212,120,154,0.18);
+      --border2: rgba(212,120,154,0.35);
+      --text:    #2d1a22;
+      --muted:   #9e6e7e;
+      --pink:    #c0446e;
+      --pink2:   #e07898;
+      --pink3:   rgba(212,120,154,0.1);
+      --radius:  14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,182,210,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,210,230,0.15) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+    .page { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.5s ease forwards; flex-wrap: wrap; }
+    nav a { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+    nav a:hover, nav a.active { color: var(--pink); border-color: var(--pink); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 11px; color: var(--muted); display: block; width: 100%; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--pink); }
+    .hero { text-align: center; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.05s forwards; }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 10vw, 90px); font-weight: 300; line-height: 1.0; color: var(--text); margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--pink2); }
+    .hero-date { font-size: 14px; color: var(--muted); font-weight: 300; letter-spacing: 0.08em; margin-top: 0.75rem; }
+    .hero-divider { width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--pink), transparent); margin: 1.25rem auto; }
+    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards; }
+    .cd-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 0.5rem; text-align: center; }
+    .cd-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: var(--pink); line-height: 1; }
+    .cd-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.15s forwards; }
+    .couple-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .couple-card.pink-border { border-left: 2px solid var(--pink); }
+    .couple-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; }
+    .couple-name em { font-style: italic; color: var(--pink2); }
+    .couple-facts { list-style: none; }
+    .couple-facts li { font-size: 13px; color: var(--muted); font-weight: 300; padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .couple-facts li:last-child { border-bottom: none; }
+    .couple-facts li span { color: var(--text); font-weight: 400; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--text); margin-bottom: 1.5rem; }
+    .venues-section { opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; margin-bottom: 3.5rem; }
+    .venue-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+    .venue-card:hover { border-color: var(--border2); }
+    .venue-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .venue-header-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 3px; }
+    .venue-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .venue-tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-weight: 400; }
+    .venue-tag.pink { border-color: var(--pink); color: var(--pink); }
+    .venue-tag.green { border-color: #7ecba1; color: #7ecba1; }
+    .venue-rating { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--pink); white-space: nowrap; }
+    .venue-rating span { font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+    .venue-body { padding: 0 1.5rem 1.25rem; }
+    .venue-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1rem; }
+    .pc-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+    .pc-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 8px 12px; background: var(--bg3); }
+    .pc-table th.pros { color: #7ecba1; text-align: left; border-radius: 6px 0 0 0; }
+    .pc-table th.cons { color: #e8896a; text-align: left; border-radius: 0 6px 0 0; }
+    .pc-table td { padding: 7px 12px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; line-height: 1.55; }
+    .pc-table td.pro::before { content: '✓ '; color: #7ecba1; font-weight: 500; }
+    .pc-table td.con::before { content: '✕ '; color: #e8896a; font-weight: 500; }
+    .pc-table tr:last-child td { border-bottom: none; }
+    .venue-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .venue-price { font-size: 12px; color: var(--muted); font-weight: 300; }
+    .venue-price strong { color: var(--text); font-weight: 500; }
+    .venue-link { font-size: 12px; color: var(--pink); text-decoration: none; font-weight: 500; letter-spacing: 0.03em; }
+    .venue-link:hover { text-decoration: underline; }
+    .tips-section { opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; margin-bottom: 3.5rem; }
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .tip-icon { font-size: 20px; margin-bottom: 8px; }
+    .tip-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .tip-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .tip-card.pink-left { border-left: 2px solid var(--pink); }
+    .love-note { text-align: center; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note p { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 300; color: var(--pink); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+    .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 1rem; font-style: normal; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.5s ease 0.02s forwards; transition: color 0.15s; }
+    .back-link:hover { color: var(--pink); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 560px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 48px; } .couple-grid { grid-template-columns: 1fr; } .countdown { grid-template-columns: repeat(2, 1fr); } .venue-header { flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <a class="back-link" href="wedding.html">← Back to all venues</a>
+
+  <div class="hero">
+    <div class="hero-eyebrow">☀️ San Diego, California · July 20, 2027</div>
+    <h1>Jon <em>&</em> Ashley</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Sacramento → San Diego &nbsp;·&nbsp; Sun, sand, and forever — just 8 hours away</div>
+  </div>
+
+  <div class="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">Seconds</div></div>
+  </div>
+
+  <!-- PHOTO BANNER -->
+  <div style="margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.7s ease 0.12s forwards;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:180px 180px;gap:8px;border-radius:16px;overflow:hidden;">
+      <div style="grid-row:1/3;background:url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80') center/cover no-repeat;"></div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.05em;font-style:italic;">San Diego ☀️ — perfect weather, perfect beaches, no passport required</p>
+  </div>
+
+  <div class="couple-grid">
+    <div class="couple-card pink-border">
+      <div class="couple-name">Jon <em>Estes</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇳 <span>Chinese American</span></li>
+        <li>⚽ <span>Soccer lover & coach</span></li>
+        <li>🃏 <span>Poker player & former dealer</span></li>
+        <li>📐 <span>Math enthusiast</span></li>
+        <li>🧩 <span>Collector — coins, cubes, chips, kicks</span></li>
+        <li>👧👧👧 <span>Dad to Annie, Clem & Estella</span></li>
+      </ul>
+    </div>
+    <div class="couple-card pink-border">
+      <div class="couple-name">Ashley <em>Xiong</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇷 <span>Costa Rican</span></li>
+        <li>🌊 <span>Beach lover</span></li>
+        <li>🛍️ <span>Shopping enthusiast</span></li>
+        <li>🩰 <span>Pure Barre Princess</span></li>
+        <li>👧👧👧 <span>Mom to Annie, Clem & Estella</span></li>
+        <li>💕 <span>The reason Jon smiles like that</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="venues-section">
+    <div class="section-eyebrow">Where it happens</div>
+    <div class="section-title">San Diego Venue Options 🌊</div>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem;line-height:1.7;">San Diego in July is arguably the best weather on Earth — mid-70s, sunny, almost zero chance of rain. It's the closest destination-feel location to Sacramento (8 hrs by car, 1.5 hrs by plane). Beach ceremonies are easy and legal. <strong style="color:var(--text);">Book venues 12–18 months out for July dates.</strong></p>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Hotel del Coronado</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">⭐ Top Pick</span>
+            <span class="venue-tag">Coronado Island</span>
+            <span class="venue-tag">Iconic Luxury</span>
+            <span class="venue-tag">Beachfront</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The most iconic wedding venue in Southern California. This historic Victorian resort sits directly on one of the most beautiful beaches in America, with the famous red-roofed hotel as your backdrop. Ceremonies happen on the beach or the Crown Room — a stunning Victorian ballroom. The island setting feels like a destination wedding without the travel stress. A-list guests and Hollywood royalty have married here for over a century. For a family that appreciates beauty and wants the "wow" factor, this is unmatched.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Iconic — guests will be blown away</td><td class="con">Very expensive — one of priciest in SD</td></tr>
+          <tr><td class="pro">Direct beachfront on Coronado Beach</td><td class="con">Books up very far in advance</td></tr>
+          <tr><td class="pro">Perfect July weather — 75°F, zero rain</td><td class="con">Minimum F&B spends can be high</td></tr>
+          <tr><td class="pro">Full resort — guests never need to leave</td><td class="con">Ferry required from mainland SD</td></tr>
+          <tr><td class="pro">Kids love the beach, pool, and island feel</td><td class="con">Popular — expect other weddings same weekend</td></tr>
+          <tr><td class="pro">8 hrs from Sacramento by car</td><td class="con">Paparazzi/tourists on the beach</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$$ · $30k–$80k+</strong> · Contact for 2027 pricing</div>
+          <a class="venue-link" href="https://www.hoteldel.com/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>The Lodge at Torrey Pines</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Best Views</span>
+            <span class="venue-tag">La Jolla</span>
+            <span class="venue-tag">Cliffside + Beach</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.2<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A stunning Craftsman-style lodge perched on sea cliffs above Black's Beach with sweeping Pacific Ocean views. Ceremonies on the outdoor terrace overlooking the ocean with La Jolla's famous golden cliffs as your backdrop — completely different from the typical beach resort look. The Lodge feels intimate and exclusive. Torrey Pines State Beach is steps below for photos. One of the top-rated wedding venues in all of California. Best for smaller, more intimate ceremonies.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Ocean views that stop guests in their tracks</td><td class="con">Smaller capacity — best under 120 guests</td></tr>
+          <tr><td class="pro">Unique clifftop setting — very photogenic</td><td class="con">No beach ceremony (cliffside only)</td></tr>
+          <tr><td class="pro">AAA Five Diamond rated — top-tier service</td><td class="con">Very expensive — comparable to Hotel Del</td></tr>
+          <tr><td class="pro">La Jolla location = upscale neighborhood feel</td><td class="con">Less "resort" than Hotel Del Coronado</td></tr>
+          <tr><td class="pro">Excellent food and wine program</td><td class="con">No pool for kids/guests</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $25k–$60k</strong> · Contact for availability</div>
+          <a class="venue-link" href="https://www.lodgetorreypines.com/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Catamaran Resort Hotel</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Ashley's Vibe</span>
+            <span class="venue-tag">Mission Beach</span>
+            <span class="venue-tag">Tropical Beach</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.8<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A lush Polynesian-themed resort directly on Mission Bay with a private beach on the bay side. The tropical garden setting with tiki torches, palm trees, and a private beach pier makes this feel like a destination resort even though it's in the heart of San Diego. The Catamaran has hosted hundreds of beach weddings and has beautiful sunset views across Mission Bay. Ceremony and reception both on-site, very family-friendly, and more affordable than Hotel Del.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">True beach resort feel — tropical and lush</td><td class="con">Bay-facing, not ocean-facing beach</td></tr>
+          <tr><td class="pro">Private beach + pier for ceremony</td><td class="con">Mission Beach area can be touristy/busy</td></tr>
+          <tr><td class="pro">More affordable than Hotel Del or Lodge</td><td class="con">Not as iconic/prestigious as other picks</td></tr>
+          <tr><td class="pro">Family-friendly — kids love the beach</td><td class="con">Can be loud depending on season</td></tr>
+          <tr><td class="pro">Beautiful sunset views across the bay</td><td class="con">Polynesian theme is distinctive — not for everyone</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $15k–$35k</strong> · Best mid-range option</div>
+          <a class="venue-link" href="https://www.catamaranresort.com/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Scripps Seaside Forum</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">La Jolla</span>
+            <span class="venue-tag">Cliffside Ocean</span>
+            <span class="venue-tag">Unique</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Part of UC San Diego's Scripps Institution of Oceanography — a dramatic open-air pavilion sitting directly above the Pacific on La Jolla's coastal cliffs. This is one of the most uniquely beautiful and unconventional wedding venues in San Diego. The ocean is literally your ceremony backdrop, with crashing waves below and the famous La Jolla kelp forests offshore. Educational, unique, and stunning. Great for a couple that wants something nobody else has.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Dramatic ocean cliffs — unlike any venue</td><td class="con">No hotel — guests stay elsewhere</td></tr>
+          <tr><td class="pro">More affordable than luxury resorts</td><td class="con">Can be windy on the cliffs in July</td></tr>
+          <tr><td class="pro">Unique story — oceanographic institute</td><td class="con">Limited catering flexibility</td></tr>
+          <tr><td class="pro">Beautiful grounds and tide pools nearby</td><td class="con">Academic setting — not typical wedding vibe</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $10k–$22k</strong> · Unique & affordable</div>
+          <a class="venue-link" href="https://scripps.ucsd.edu/about/seaside-forum" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Bali Hai Restaurant</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Best for 20–50</span>
+            <span class="venue-tag">Shelter Island</span>
+            <span class="venue-tag">Intimate + Tropical</span>
+            <span class="venue-tag green">Waterfront</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.7<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A legendary San Diego Polynesian tiki restaurant on Shelter Island with unobstructed panoramic views of San Diego Bay, the downtown skyline, and Coronado Bridge. Perfect for intimate ceremonies of 20–50 guests who want waterfront views without a massive venue budget. The sunset ceremony timing on July 20 would be extraordinary — city lights, bridge glow, and the Pacific behind everything. Very family-friendly and genuinely beautiful for photography.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">360° bay + skyline + bridge views</td><td class="con">Bay-facing, not open ocean</td></tr>
+          <tr><td class="pro">Perfect for 20–50 guests, no minimum stretch</td><td class="con">Tiki/Polynesian theme isn't everyone's style</td></tr>
+          <tr><td class="pro">Iconic SD institution — storied venue</td><td class="con">Not a resort — no on-site hotel rooms</td></tr>
+          <tr><td class="pro">July sunsets from Shelter Island are magical</td><td class="con">More restaurant than wedding venue feel</td></tr>
+          <tr><td class="pro">Most affordable waterfront option in SD</td><td class="con">Limited outdoor ceremony space</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $8k–$18k</strong> · Best value waterfront</div>
+          <a class="venue-link" href="https://www.balihairestaurant.com/private-events/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-section">
+    <div class="section-eyebrow">Good to know</div>
+    <div class="section-title">Planning Tips for San Diego July 2027 🗓️</div>
+    <div class="tips-grid">
+      <div class="tip-card pink-left">
+        <div class="tip-icon">☀️</div>
+        <div class="tip-title">Best weather in America</div>
+        <div class="tip-text">July in San Diego averages 76°F with virtually zero rain. No hurricane risk, no humidity. The most reliable outdoor wedding weather in the country.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🚗</div>
+        <div class="tip-title">Easy for the family</div>
+        <div class="tip-text">8 hours from Sacramento by car, 1.5 hrs by plane. Mom, dad, and sister can easily make the drive. No flights or passports required for any guests.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Book by early 2026</div>
+        <div class="tip-text">Summer weekends in San Diego are the most competitive in the state. For July 20, 2027 you should reach out to venues by Jan–March 2026 at the latest.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">💰</div>
+        <div class="tip-title">Budget range</div>
+        <div class="tip-text">Mid-size SD weddings (~50 guests) run $22k–$40k. Hotel Del can push to $80k+. But venues like Catamaran or Bali Hai offer beautiful ceremonies for under $20k.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📋</div>
+        <div class="tip-title">California marriage license</div>
+        <div class="tip-text">Apply at any San Diego County clerk office. License is valid for 90 days from issue. Simple process — no waiting period in California.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🎉</div>
+        <div class="tip-title">Weekend activities</div>
+        <div class="tip-text">San Diego is a perfect wedding weekend city — the Zoo, Balboa Park, Old Town, Coronado Island ferry, La Jolla sea caves, and endless beach time for Annie, Clem & Estella.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="love-note">
+    <p>"Ashley, Jon, Annie, Clem, and Estella — five people becoming one family under the San Diego sun. Perfect weather. Perfect beach. Perfect forever."</p>
+    <div class="attr">— July 20, 2027 &nbsp;·&nbsp; 💍</div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; Jon & Ashley &nbsp;·&nbsp; ☀️ San Diego · July 20, 2027</p></footer>
+</div>
+
+<script>
+  function updateCountdown() {
+    const wedding = new Date('2027-07-20T17:00:00');
+    const now = new Date();
+    const diff = wedding - now;
+    if (diff <= 0) {
+      ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '🎉');
+      return;
+    }
+    document.getElementById('cd-days').textContent = Math.floor(diff / 86400000).toLocaleString();
+    document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+    document.getElementById('cd-mins').textContent = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cd-secs').textContent = Math.floor((diff % 60000) / 1000);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

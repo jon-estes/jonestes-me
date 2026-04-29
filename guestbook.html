@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guestbook · Jon Estes</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+    .hero { margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3rem); font-weight: 400; line-height: 1.1; margin-bottom: 0.6rem; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.7; }
+
+    /* FORM */
+    .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .form-row { margin-bottom: 1.1rem; }
+    .form-row label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.45rem; }
+    .form-row input, .form-row textarea, .form-row select {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300;
+      outline: none; transition: border-color 0.15s; resize: vertical;
+    }
+    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--accent); }
+    .form-row input::placeholder, .form-row textarea::placeholder { color: var(--muted); }
+    .form-row select option { background: var(--bg3); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .submit-btn {
+      background: transparent; border: 1px solid var(--accent); color: var(--accent);
+      border-radius: 999px; padding: 0.65rem 1.75rem; font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+    }
+    .submit-btn:hover { background: var(--accent); color: #0f0f0e; }
+
+    /* ENTRIES */
+    .entries-head { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+    .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .entry-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    .entry { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    .entry-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.6rem; gap: 1rem; }
+    .entry-name { font-size: 14px; font-weight: 500; color: var(--text); }
+    .entry-meta { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .entry-location { font-size: 12px; color: var(--muted); margin-bottom: 0.5rem; }
+    .entry-msg { font-size: 14px; color: var(--text); font-weight: 300; line-height: 1.65; font-style: italic; }
+    .entry-emoji { font-size: 1.1rem; margin-left: auto; flex-shrink: 0; }
+
+    .netlify-note { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 1rem 1.25rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; margin-top: 2rem; }
+    .netlify-note strong { color: var(--text); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-label">Sign the book</div>
+    <h1>Leave a <em>note</em></h1>
+    <p>You found my little corner of the internet. Whether you're a former student, a coaching parent, a poker buddy, or a curious stranger — I'd love to hear from you. Drop a message below. ✌️</p>
+  </div>
+
+  <!-- NETLIFY FORM -->
+  <div class="form-card">
+    <form name="guestbook" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/guestbook-thanks">
+      <input type="hidden" name="form-name" value="guestbook" />
+      <p style="display:none;"><input name="bot-field" /></p>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="gb-name">Your Name *</label>
+          <input type="text" id="gb-name" name="name" placeholder="e.g. Sarah M." required />
+        </div>
+        <div class="form-row">
+          <label for="gb-location">Where you're from</label>
+          <input type="text" id="gb-location" name="location" placeholder="e.g. Sacramento, CA" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="gb-connection">How do you know Jon?</label>
+        <select id="gb-connection" name="connection">
+          <option value="">— Select one —</option>
+          <option value="former-student">Former student 📐</option>
+          <option value="soccer">Soccer family / player ⚽</option>
+          <option value="poker">Poker buddy 🃏</option>
+          <option value="peace-corps">Peace Corps connection 🌍</option>
+          <option value="family-friend">Family friend 👨‍👧</option>
+          <option value="just-browsing">Just browsing the internet 🌐</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="gb-message">Your message *</label>
+        <textarea id="gb-message" name="message" rows="4" placeholder="Say hi, share a memory, leave a kind word…" required></textarea>
+      </div>
+
+      <div class="form-row" style="margin-bottom:0;">
+        <button type="submit" class="submit-btn">✉️ &nbsp;Sign the Guestbook</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="netlify-note">
+    <strong>📬 How this works:</strong> Messages submitted above are collected via Netlify Forms and will appear here once approved. You'll get an email notification for each new entry in your Netlify dashboard → Forms → guestbook.
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
+</body>
+</html>

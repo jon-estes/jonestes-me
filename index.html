@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jon Estes · Personal Dashboard</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --radius: 14px; --radius-sm: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    /* NAV */
+    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 12px; color: var(--muted); display: block; width: 100%; background: transparent; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--accent); }
+
+    /* HEADER */
+    header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .avatar { width: 62px; height: 62px; border-radius: 50%; border: 1.5px solid var(--accent); background: var(--bg3); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 24px; color: var(--accent); flex-shrink: 0; }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); line-height: 1.1; }
+    .header-text p { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 300; letter-spacing: 0.02em; }
+
+    /* SECTIONS */
+    .section { margin-bottom: 2.25rem; opacity: 0; animation: fadeUp 0.6s ease forwards; }
+    .section:nth-child(3) { animation-delay: 0.1s; }
+    .section:nth-child(4) { animation-delay: 0.2s; }
+    .section:nth-child(5) { animation-delay: 0.3s; }
+    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.9rem; }
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .section-dot.green { background: var(--accent2); }
+    .section-dot.blue { background: var(--accent3); }
+    .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    /* CARDS */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+    .card { display: block; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; text-decoration: none; color: inherit; transition: border-color 0.18s, background 0.18s, transform 0.15s; position: relative; overflow: hidden; }
+    .card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%); pointer-events: none; }
+    .card:hover { border-color: var(--border2); background: var(--bg3); transform: translateY(-2px); }
+    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .card-emoji { font-size: 20px; line-height: 1; }
+    .card-arrow { font-size: 12px; color: var(--muted); opacity: 0; transform: translateX(-4px); transition: opacity 0.15s, transform 0.15s; }
+    .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+    .card-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .card-desc { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.5; }
+    .card.primary { border-left: 2px solid var(--accent); }
+    .card.success { border-left: 2px solid var(--accent2); }
+    .card.info { border-left: 2px solid var(--accent3); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; margin-top: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .page { padding: 2rem 1rem 4rem; } .header-text h1 { font-size: 22px; } .card-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <header>
+    <div class="avatar">JE</div>
+    <div class="header-text">
+      <h1>Jon Estes</h1>
+      <p>Personal dashboard &mdash; finance, health &amp; collections</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-header"><div class="section-dot"></div><span class="section-title">Finance</span></div>
+    <div class="card-grid">
+      <a class="card primary" href="https://docs.google.com/forms/d/e/1FAIpQLSe0sw1M7CuqeeEZMCYdxlq0fnc6P5lvyjv7MyrfjQHKeCQCWQ/viewform?usp=dialog" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">➕</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Log expense</div>
+        <div class="card-desc">Add a new entry to your budget tracker</div>
+      </a>
+      <a class="card primary" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5jGSINGX-mmk5ZzWE-odDuzkAeDbpfhSs6r3CyH_MZjBbiZ9QAhLzy6_mMRbG-VZoAwt2XqyolPq7/pubhtml" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Budget overview</div>
+        <div class="card-desc">View your full spending spreadsheet</div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><div class="section-dot green"></div><span class="section-title">Health</span></div>
+    <div class="card-grid">
+      <a class="card success" href="https://docs.google.com/forms/d/e/1FAIpQLSeMZTu8cbOIfNk-MOVXlRq7FDHt4NjER5AkKMj-gKHL59o4GQ/viewform?usp=dialog" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">⚖️</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Log weight</div>
+        <div class="card-desc">Record today's check-in</div>
+      </a>
+      <a class="card success" href="https://docs.google.com/spreadsheets/d/1keT2M_lslOUDMPXde72ezQ_rVElMZzWkY8PJQefV2-M/edit?resourcekey=&gid=494459883#gid=494459883" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">📉</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Weight graph</div>
+        <div class="card-desc">Track your progress over time</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><div class="section-dot blue"></div><span class="section-title">Collections</span></div>
+    <div class="card-grid">
+      <a class="card info" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS7JBktCAjC8oVg8JpAkA50MdKGdhcvCmRc0x-PZ3RRPNBfBVOT7eeS2OHuuObiouGQ81SCi60Ivm8X/pubhtml" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">🪙</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Coin collection</div>
+        <div class="card-desc">Browse and manage your coins</div>
+      </a>
+      <a class="card info" href="https://photos.app.goo.gl/TYEGcE1hXKBsWNeZ9" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">⭐</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Estella</div>
+        <div class="card-desc">Family photos album</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><div class="section-dot" style="background:#a78bca;"></div><span class="section-title">Sierra Leone</span></div>
+    <div class="card-grid">
+      <a class="card" style="border-left:2px solid #a78bca;" href="salone.html">
+        <div class="card-top"><span class="card-emoji">🇸🇱</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Salone</div>
+        <div class="card-desc">Peace Corps memories & Sierra Leone stories</div>
+      </a>
+    </div>
+  </section>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
+</body>
+</html>

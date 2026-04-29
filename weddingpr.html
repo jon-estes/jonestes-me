@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jon & Ashley · July 20, 2027</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #fdf6f8;
+      --bg2:     #fff0f4;
+      --bg3:     #fce4ec;
+      --border:  rgba(212,120,154,0.18);
+      --border2: rgba(212,120,154,0.35);
+      --text:    #2d1a22;
+      --muted:   #9e6e7e;
+      --pink:    #c0446e;
+      --pink2:   #e07898;
+      --pink3:   rgba(212,120,154,0.1);
+      --radius:  14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,182,210,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,210,230,0.15) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+    .page { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+    /* NAV */
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.5s ease forwards; flex-wrap: wrap; }
+    nav a { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+    nav a:hover, nav a.active { color: var(--pink); border-color: var(--pink); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 11px; color: var(--muted); display: block; width: 100%; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--pink); }
+
+    /* HERO */
+    .hero { text-align: center; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.05s forwards; }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 10vw, 90px); font-weight: 300; line-height: 1.0; color: var(--text); margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--pink2); }
+    .hero-date { font-size: 14px; color: var(--muted); font-weight: 300; letter-spacing: 0.08em; margin-top: 0.75rem; }
+    .hero-divider { width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--pink), transparent); margin: 1.25rem auto; }
+
+    /* COUNTDOWN */
+    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards; }
+    .cd-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 0.5rem; text-align: center; }
+    .cd-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: var(--pink); line-height: 1; }
+    .cd-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+    /* COUPLE SECTION */
+    .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.15s forwards; }
+    .couple-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .couple-card.pink-border { border-left: 2px solid var(--pink); }
+    .couple-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; }
+    .couple-name em { font-style: italic; color: var(--pink2); }
+    .couple-facts { list-style: none; }
+    .couple-facts li { font-size: 13px; color: var(--muted); font-weight: 300; padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .couple-facts li:last-child { border-bottom: none; }
+    .couple-facts li span { color: var(--text); font-weight: 400; }
+
+    /* SECTION HEADERS */
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--text); margin-bottom: 1.5rem; }
+
+    /* VENUE CARDS */
+    .venues-section { opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; margin-bottom: 3.5rem; }
+    .venue-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+    .venue-card:hover { border-color: var(--border2); }
+    .venue-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; cursor: pointer; }
+    .venue-header-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 3px; }
+    .venue-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .venue-tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-weight: 400; }
+    .venue-tag.pink { border-color: var(--pink); color: var(--pink); }
+    .venue-tag.green { border-color: #7ecba1; color: #7ecba1; }
+    .venue-rating { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--pink); white-space: nowrap; }
+    .venue-rating span { font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+    .venue-body { padding: 0 1.5rem 1.25rem; }
+    .venue-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1rem; }
+
+    /* PROS/CONS TABLE */
+    .pc-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+    .pc-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 8px 12px; background: var(--bg3); }
+    .pc-table th.pros { color: #7ecba1; text-align: left; border-radius: 6px 0 0 0; }
+    .pc-table th.cons { color: #e8896a; text-align: left; border-radius: 0 6px 0 0; }
+    .pc-table td { padding: 7px 12px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; line-height: 1.55; }
+    .pc-table td.pro::before { content: '✓ '; color: #7ecba1; font-weight: 500; }
+    .pc-table td.con::before { content: '✕ '; color: #e8896a; font-weight: 500; }
+    .pc-table tr:last-child td { border-bottom: none; }
+
+    .venue-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .venue-price { font-size: 12px; color: var(--muted); font-weight: 300; }
+    .venue-price strong { color: var(--text); font-weight: 500; }
+    .venue-link { font-size: 12px; color: var(--pink); text-decoration: none; font-weight: 500; letter-spacing: 0.03em; }
+    .venue-link:hover { text-decoration: underline; }
+
+    /* TIPS SECTION */
+    .tips-section { opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; margin-bottom: 3.5rem; }
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .tip-icon { font-size: 20px; margin-bottom: 8px; }
+    .tip-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .tip-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .tip-card.pink-left { border-left: 2px solid var(--pink); }
+
+    /* LOVE NOTE */
+    .love-note { text-align: center; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note p { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 300; color: var(--pink); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+    .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 1rem; font-style: normal; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 560px) {
+      .page { padding: 2rem 1rem 4rem; }
+      .hero h1 { font-size: 48px; }
+      .couple-grid { grid-template-columns: 1fr; }
+      .countdown { grid-template-columns: repeat(2, 1fr); }
+      .venue-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">🇵🇷 Puerto Rico · July 20, 2027</div>
+    <h1>Jon <em>&</em> Ashley</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Sacramento → San Juan &nbsp;·&nbsp; A blended family, a beach, and a forever</div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">Seconds</div></div>
+  </div>
+
+
+  <!-- PUERTO RICO PHOTO BANNER -->
+  <div class="pr-gallery" style="margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.7s ease 0.12s forwards;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:180px 180px;gap:8px;border-radius:16px;overflow:hidden;">
+      <div style="grid-row:1/3;background:url('https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://camillefontz.com/wp-content/uploads/2022/04/Fusion-Beach-Villas-Isabela-PR-Beach-Wedding-Ceremony-13.jpg') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80') center/cover no-repeat;"></div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.05em;font-style:italic;">Puerto Rico 🇵🇷 — your backdrop for July 20, 2027</p>
+  </div>
+
+  <!-- COUPLE -->
+  <div class="couple-grid">
+    <div class="couple-card pink-border">
+      <div class="couple-name">Jon <em>Estes</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇳 <span>Chinese American</span></li>
+        <li>⚽ <span>Soccer lover & coach</span></li>
+        <li>🃏 <span>Poker player & former dealer</span></li>
+        <li>📐 <span>Math enthusiast</span></li>
+        <li>🛍️ <span>Dedicated shopper</span></li>
+        <li>🧩 <span>Collector — coins, cubes, chips, kicks</span></li>
+        <li>👧👧👧 <span>Dad to Annie, Clem & Estella</span></li>
+      </ul>
+    </div>
+    <div class="couple-card pink-border">
+      <div class="couple-name">Ashley <em>Xiong</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇷 <span>Costa Rican</span></li>
+        <li>🌊 <span>Beach lover</span></li>
+        <li>🛍️ <span>Shopping enthusiast</span></li>
+        <li>🩰 <span>Pure Barre Princess</span></li>
+        <li>👧👧👧 <span>Mom to Annie, Clem & Estella</span></li>
+        <li>💕 <span>The reason Jon smiles like that</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- VENUES -->
+  <div class="venues-section">
+    <div class="section-eyebrow">Where it happens</div>
+    <div class="section-title">Puerto Rico Venue Options 🏝️</div>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem;line-height:1.7;">July 20 falls in Puerto Rico's summer — warm, lush, and off-peak which means better availability and pricing. Hurricane season runs June–November so wedding insurance is recommended. All 5 venues below are beach-forward and family-friendly. <strong style="color:var(--text);">July books fast — contact venues 12–18 months out.</strong></p>
+
+    <!-- VENUE 1 -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Four Seasons Puerto Rico</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">⭐ Top Pick</span>
+            <span class="venue-tag">Río Grande</span>
+            <span class="venue-tag">Luxury</span>
+            <span class="venue-tag">Beach + Rainforest</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Brand new as of November 2025, this is the most spectacular venue on the island. Set on a private 483-acre nature reserve between El Yunque rainforest and 2 miles of golden beach — just 30 minutes from San Juan airport. Ceremonies can be on the beach, an oceanfront lawn, or under a pavilion surrounded by tropical trees. Over 25,000 sq ft of indoor/outdoor event space. Full spa for the bridal party. Perfect for a 3-4 day destination wedding weekend — golf, kayaking, rainforest hikes, and an inflatable water park for the kids.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Brand new — pristine, modern, no wear</td><td class="con">Most expensive option on the island</td></tr>
+          <tr><td class="pro">2 miles of private beach, 3 nature reserves</td><td class="con">Need to book 12–18 months in advance</td></tr>
+          <tr><td class="pro">Full resort — guests never need to leave</td><td class="con">45 min from San Juan (not walkable)</td></tr>
+          <tr><td class="pro">On-site wedding planners included</td><td class="con">Minimum spend requirements apply</td></tr>
+          <tr><td class="pro">Kids love it — water park, animal sanctuary</td><td class="con">Premium pricing for July dates</td></tr>
+          <tr><td class="pro">Rainforest + beach backdrop = stunning photos</td><td class="con">Exclusive vendor list may limit choices</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$$ · $30k–$60k+</strong> · Contact for 2027 pricing</div>
+          <a class="venue-link" href="https://www.fourseasons.com/puertorico/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE 2 -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>La Concha Renaissance San Juan</h3>
+          <div class="venue-meta">
+            <span class="venue-tag green">Great Value</span>
+            <span class="venue-tag">Condado, San Juan</span>
+            <span class="venue-tag">Iconic Architecture</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">One of the most recognizable venues in Puerto Rico — the curved white shell architecture and seashell-shaped pool are iconic. Located in the heart of Condado with 10 different event spaces including a stunning rooftop with lagoon and coastline views at night. Perfect for couples who want a city-beach vibe with tons of energy, dancing, and a reception that goes late. Walking distance from great restaurants and nightlife for the wedding weekend.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Iconic architecture — unforgettable photos</td><td class="con">More "city hotel" feel than secluded resort</td></tr>
+          <tr><td class="pro">10 event spaces — tons of flexibility</td><td class="con">Busier/more touristy area of San Juan</td></tr>
+          <tr><td class="pro">Rooftop views are spectacular at night</td><td class="con">Beach access is shared, not private</td></tr>
+          <tr><td class="pro">Walking distance to restaurants & nightlife</td><td class="con">Can feel crowded in peak season</td></tr>
+          <tr><td class="pro">More affordable than Four Seasons</td><td class="con">Less family-resort feel for kids</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $18k–$35k</strong> · Contact for packages</div>
+          <a class="venue-link" href="https://www.laconcharesort.com/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE 3 -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Caribe Hilton San Juan</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">San Juan</span>
+            <span class="venue-tag">Private Beach</span>
+            <span class="venue-tag">Historic</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.0<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">One of Puerto Rico's most storied wedding venues — hosting celebrations since 1949. Sits on its own private peninsula between the Atlantic and San Juan Bay with a genuinely private beach, which is rare for a city hotel. Historic, grand atmosphere. Close to the airport and walkable to Condado restaurants. Excellent for large, formal weddings with classic Caribbean elegance.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Rare private beach in the city</td><td class="con">Older property — less modern aesthetic</td></tr>
+          <tr><td class="pro">Historic grandeur — timeless atmosphere</td><td class="con">More formal/traditional, less bohemian</td></tr>
+          <tr><td class="pro">Great for large guest lists</td><td class="con">Not as lush/nature-forward as other picks</td></tr>
+          <tr><td class="pro">Close to airport — easy for mainland guests</td><td class="con">Higher-traffic area of San Juan</td></tr>
+          <tr><td class="pro">Strong event infrastructure — experienced staff</td><td class="con">Pricier than similar hotels nearby</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $20k–$40k</strong> · Contact for 2027 packages</div>
+          <a class="venue-link" href="https://www.caribehilton.com/gather/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE 4 -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Rincon Beach Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Ashley's Vibe</span>
+            <span class="venue-tag">Rincón, West Coast</span>
+            <span class="venue-tag">Bohemian Beach</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Rincón is the coolest town in Puerto Rico — laid-back, surfer-bohemian, known for the most jaw-dropping sunsets on the island. The Rincón Beach Resort has direct oceanfront ceremony space with the Caribbean as your backdrop, capacity up to 220 guests, and a Grand Flamboyant Ballroom for the reception. This is the pick if you want the wedding to feel like a real Caribbean escape rather than a city hotel. Given Ashley loves beaches, this one would likely resonate most.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Best sunsets in all of Puerto Rico</td><td class="con">~2.5 hrs from San Juan airport</td></tr>
+          <tr><td class="pro">True beachy, tropical feel — not "hotel-y"</td><td class="con">Smaller town — fewer tourist amenities</td></tr>
+          <tr><td class="pro">More affordable than San Juan resorts</td><td class="con">Guests need to commit to traveling west</td></tr>
+          <tr><td class="pro">Great water activities — surfing, paddleboard</td><td class="con">Fewer direct flight connections nearby</td></tr>
+          <tr><td class="pro">Intimate, romantic atmosphere</td><td class="con">Smaller vendor/caterer pool in the area</td></tr>
+          <tr><td class="pro">Perfect for a 3-day beach wedding weekend</td><td class="con">Hurricane risk — definitely get insurance</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $12k–$25k</strong> · Most affordable quality option</div>
+          <a class="venue-link" href="https://www.rinconbeach.com/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE 5 -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Hacienda Siesta Alegre</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">Río Grande</span>
+            <span class="venue-tag">Rainforest</span>
+            <span class="venue-tag">Unique & Boutique</span>
+          </div>
+        </div>
+        <div class="venue-rating">7.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A stunning Spanish Colonial hacienda at the base of El Yunque rainforest — lush gardens, old-world architecture, tropical flowers everywhere. This is the pick for couples who want something dramatically different from a beach resort. No ocean view, but the rainforest atmosphere is magical. Great if Ashley's Costa Rican roots make her feel at home in a garden/jungle setting. Boutique and intimate — perfect for smaller guest lists.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Stunning Spanish Colonial architecture</td><td class="con">No beach or ocean view</td></tr>
+          <tr><td class="pro">Lush rainforest garden setting</td><td class="con">Smaller capacity — best under 100 guests</td></tr>
+          <tr><td class="pro">Incredibly unique — unlike any other venue</td><td class="con">More remote — logistics for large groups harder</td></tr>
+          <tr><td class="pro">Feels like Costa Rica — Ashley will love the vibe</td><td class="con">Less resort infrastructure for guests</td></tr>
+          <tr><td class="pro">More affordable — good for smaller budgets</td><td class="con">July heat + humidity in the jungle</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $8k–$20k</strong> · Great for intimate weddings</div>
+          <a class="venue-link" href="https://www.theknot.com/marketplace/hacienda-siesta-alegre-rio-grande-pr-859869" target="_blank" rel="noopener">View on The Knot →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ASHLEY'S BEACH VENUES -->
+  <div class="venues-section" style="margin-top:3.5rem;">
+    <div class="section-eyebrow">🌊 Ashley's requirement</div>
+    <div class="section-title">Small Beach Ceremonies · 20–50 Guests</div>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem;line-height:1.7;">These venues are specifically designed for <strong style="color:var(--text);">intimate beach ceremonies</strong> — toes in the sand, waves in the background, no ballroom required. All accommodate 20–50 guests and put you <em>directly on the beach</em> for the ceremony.</p>
+
+    <!-- FUSION BEACH VILLAS -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Fusion Beach Villas</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">🏆 #1 Beach Pick</span>
+            <span class="venue-tag">Isabela, NW Coast</span>
+            <span class="venue-tag">Max 30 guests</span>
+            <span class="venue-tag green">All-inclusive packages</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.8<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The single best option in Puerto Rico for an intimate beach ceremony. Situated on 2 acres of pristine oceanfront land between Shacks and Jobos beaches on the magical northwest coast. A romantic natural forest path leads directly to the beach. Run by Elaine and the Fusion Floral team who handle everything — florals, photography, catering, officiant, legal marriage license. Reviewers consistently call it stress-free, magical, and affordable. The reception happens under a massive flamboyán tree on the terrace with a converted horse trailer as the bar. <strong>This is exactly what Ashley is describing.</strong></p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Literally on the beach — sand, waves, palms</td><td class="con">Max 30 guests — tight for 50</td></tr>
+          <tr><td class="pro">All-inclusive packages — one contract, one team</td><td class="con">Northwest coast — 2.5 hrs from San Juan airport</td></tr>
+          <tr><td class="pro">Most affordable quality beach option on island</td><td class="con">Smaller/rustic feel — not a luxury resort</td></tr>
+          <tr><td class="pro">Elaine handles florals, food, photos, officiant</td><td class="con">Book early — fills up fast for summer</td></tr>
+          <tr><td class="pro">Walking distance to bars & beach restaurants</td><td class="con">July = hurricane season, insurance needed</td></tr>
+          <tr><td class="pro">Glowing 5-star reviews across the board</td><td class="con">No on-site hotel rooms for guests</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Micro-wedding dinner package: <strong>~$4,195 for 25 guests</strong> · Most affordable on list</div>
+          <a class="venue-link" href="https://fusionfloralart.com/service/simply-wed-elopement-packages/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VILLA MONTANA -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Villa Montana Beach Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Best for 20–50</span>
+            <span class="venue-tag">Isabela, NW Coast</span>
+            <span class="venue-tag">Boutique Resort</span>
+            <span class="venue-tag green">On-site accommodations</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The most beloved intimate beach resort in Puerto Rico among wedding photographers who've shot there for years. Set on 35 acres with 3 miles of pristine beach — the ceremony is at a gorgeous flower-surrounded oceanfront gazebo right on the beach. Guests enjoy cocktails on the oceanfront lawn after the ceremony while photos are taken. Reception at the acclaimed Eclipse Restaurant or Garden Ballroom. Full weekend experience: welcome dinner Friday, wedding Saturday, send-off brunch Sunday. Feels like a beautiful private home, not a commercial hotel. <strong>Perfect for 20–50 guests who want to all stay on-site together.</strong></p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Oceanfront gazebo ceremony — literally on the beach</td><td class="con">Northwest coast — 2.5 hrs from San Juan</td></tr>
+          <tr><td class="pro">Guests can all stay on-site in villas</td><td class="con">July = hurricane season, need insurance</td></tr>
+          <tr><td class="pro">Full weekend packages — welcome dinner + brunch</td><td class="con">More expensive than Fusion Beach Villas</td></tr>
+          <tr><td class="pro">35 acres, 3 miles of beach — never feels crowded</td><td class="con">Book 12+ months out — very popular</td></tr>
+          <tr><td class="pro">On-site activities: surfing, horseback, fishing</td><td class="con">Preferred vendor list limits some choices</td></tr>
+          <tr><td class="pro">Kids-friendly — great for a family celebration</td><td class="con">Minutes from Aguadilla airport but still a drive</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $15k–$28k</strong> for 20–50 guests · Contact for 2027 pricing</div>
+          <a class="venue-link" href="https://www.villamontana.com/weddings-events/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROYAL ISABELA -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Royal Isabela</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">Isabela, NW Coast</span>
+            <span class="venue-tag">Cliffside + Beach</span>
+            <span class="venue-tag">Ultra-exclusive</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.3<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A 2,000-acre clifftop property on the northwest coast where the ocean is directly below — ceremonies feel more dramatic here than almost anywhere else on the island. The sound of waves is constant. Afternoon light turns golden against limestone cliffs. Multiple ceremony spots including cliff-side lawn, terrace with exotic gardens, palm tree fields facing the ocean. Farm-to-table cuisine by renowned Chef Jeremie Cruz. Named one of the 10 Best Beach Hotels in the Caribbean by ABC News. Best for couples who want total exclusivity and are comfortable with a slightly higher price.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Most dramatic ocean scenery in Puerto Rico</td><td class="con">Cliffside — not toes-in-sand, but ocean views</td></tr>
+          <tr><td class="pro">2,000 acres — total privacy, no other guests around</td><td class="con">One of the pricier boutique options</td></tr>
+          <tr><td class="pro">Farm-to-table cuisine from award-winning chef</td><td class="con">Northwest coast — 2.5 hrs from San Juan</td></tr>
+          <tr><td class="pro">Wedding packages starting at $1,999</td><td class="con">Very small property — intimate only</td></tr>
+          <tr><td class="pro">Stays in private casitas — 1,500 sq ft each</td><td class="con">Limited availability — books fast</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Wedding packages from: <strong>$1,999</strong> · Full wedding est. <strong>$10k–$20k</strong> for small groups</div>
+          <a class="venue-link" href="https://www.royalisabela.com/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- COPAMARINA -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Copamarina Beach Resort & Spa</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">Guánica, South Coast</span>
+            <span class="venue-tag">Private Beach</span>
+            <span class="venue-tag green">Calmer waters</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.8<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Set on a half-mile of private beach amid 20 acres of tropical gardens on Puerto Rico's south coast. The south coast has calmer, clearer water than the north — less wave action, better for photos, and the drier southern climate means lower rain risk even in July. Full-service resort with restaurant, spa, villas. Great option if you want a genuine private beach experience away from the tourist crowds of San Juan and the northwest. More tranquil and secluded feel.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Half-mile of private beach — genuinely exclusive</td><td class="con">South coast — ~2 hrs from San Juan airport</td></tr>
+          <tr><td class="pro">South coast = calmer water + drier July weather</td><td class="con">Smaller pool of local vendors in the area</td></tr>
+          <tr><td class="pro">20 acres of tropical gardens — lush backdrop</td><td class="con">Less well-known — fewer reviews to reference</td></tr>
+          <tr><td class="pro">Full spa for bridal party prep</td><td class="con">Smaller town — fewer guest activities nearby</td></tr>
+          <tr><td class="pro">More affordable than north coast luxury resorts</td><td class="con">Farther from the "Puerto Rico experience" of Old San Juan</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $10k–$20k</strong> · Contact for 2027 small group packages</div>
+          <a class="venue-link" href="https://www.copamarina.com/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- BAREFOOT ON THE BEACH -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Barefoot on The Beach — PR Destination Weddings</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">🌊 On The Sand</span>
+            <span class="venue-tag">Island-wide locations</span>
+            <span class="venue-tag green">Full planning included</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.0<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Puerto Rico's dedicated leader in elopements and small beach weddings. This is a planning service, not a fixed venue — they bring the ceremony to the most beautiful beaches across the island, including Puerto Hermina in Quebradillas and Guajataca Tunnel in Isabela. Perfect if you want flexibility on location and a fully handled, stress-free experience. They handle officiant, legal license, florals, photography, and logistics. Their "Barefoot on the Beach" package is built exactly for 2–50 guests who want sand under their feet for their vows.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Truly on the sand — this is their specialty</td><td class="con">Not a fixed venue — no on-site reception space</td></tr>
+          <tr><td class="pro">Full planning service — they handle everything</td><td class="con">Reception must be arranged separately</td></tr>
+          <tr><td class="pro">Flexible beach locations across the island</td><td class="con">Less "resort weekend" feel</td></tr>
+          <tr><td class="pro">Most affordable way to get a real beach ceremony</td><td class="con">Public beaches — not always fully private</td></tr>
+          <tr><td class="pro">Experienced with destination couples from the mainland</td><td class="con">Weather-dependent — backup plan needed</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Packages from: <strong>~$3,000</strong> · Most affordable on the list</div>
+          <a class="venue-link" href="https://prdestinationweddings.com/barefoot-on-the-beach/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- WYNDHAM RIO MAR -->
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Wyndham Rio Mar — Beachside Events</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">🌊 Oceanfront</span>
+            <span class="venue-tag">Río Grande</span>
+            <span class="venue-tag">Full Resort</span>
+            <span class="venue-tag">El Yunque views</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.7<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A sprawling full-service resort near Bahía Beach with a dedicated beachside event space for outdoor ceremonies and celebrations right on the oceanfront. Spectacular backdrop of both the Caribbean and El Yunque rainforest in the distance. The resort has multiple restaurants, a spa, casino, and two championship golf courses — guests will never run out of things to do during a wedding weekend. Great for larger groups that still want a beach ceremony. Close to San Juan (~45 min) compared to the northwest coast venues.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Oceanfront ceremony with El Yunque backdrop</td><td class="con">Large resort — less intimate feel</td></tr>
+          <tr><td class="pro">Closest full-resort option to San Juan</td><td class="con">More corporate/convention feel than boutique</td></tr>
+          <tr><td class="pro">Full resort amenities — casino, golf, spa</td><td class="con">Pricier for small groups vs boutique venues</td></tr>
+          <tr><td class="pro">Good for groups who want lots of activities</td><td class="con">Beach shared with hotel guests</td></tr>
+          <tr><td class="pro">Experienced large-event infrastructure</td><td class="con">Less personalized service than smaller venues</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $18k–$30k</strong> · Contact for small group packages</div>
+          <a class="venue-link" href="https://www.wyndhamriomar.com/event-spaces/beachside" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+
+
+  <!-- VENUE PHOTO STRIP -->
+  <div style="margin:2rem 0 2.5rem;opacity:0;animation:fadeUp 0.7s ease 0.22s forwards;">
+    <div class="section-eyebrow" style="margin-bottom:1rem;">Venue snapshots</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">Villa Montana</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">Fusion Beach Villas</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">Royal Isabela</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">Four Seasons PR</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">La Concha Resort</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;position:relative;">
+        <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=800&q=80" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(45,26,34,0.7));padding:8px 10px;"><span style="font-size:11px;color:white;font-weight:500;">Rincón Beach</span></div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- QUICK COMPARISON -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-top:1rem;">
+      <div class="section-eyebrow" style="margin-bottom:0.75rem;">All options — quick comparison</div>
+      <div style="overflow-x:auto;">
+      <table class="pc-table" style="margin-bottom:0;min-width:600px;">
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Venue</th>
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Type</th>
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Guests</th>
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Price</th>
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Best for</th>
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);background:var(--bg3);letter-spacing:0.07em;">Link</th>
+        </tr>
+        <tr style="background:rgba(212,120,154,0.06);">
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">🏆 Fusion Beach Villas</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">Up to 30</td>
+          <td style="padding:8px 12px;color:var(--muted);">$ (~$4k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Barefoot beach, all-inclusive, best value</td>
+          <td style="padding:8px 12px;"><a href="https://fusionfloralart.com/service/simply-wed-elopement-packages/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Barefoot on the Beach PR</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">2–50</td>
+          <td style="padding:8px 12px;color:var(--muted);">$ ($3k–$8k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Elopements & small groups, full planning service</td>
+          <td style="padding:8px 12px;"><a href="https://prdestinationweddings.com/barefoot-on-the-beach/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Rincón Beach Resort</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">Up to 50</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$ ($12k–$25k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Best sunsets in PR, Caribbean lawn ceremony</td>
+          <td style="padding:8px 12px;"><a href="https://www.rinconbeach.com/weddings/villas-lawn-ceremony" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Wyndham Rio Mar Beachside</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">20–150</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$$ ($18k+)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Full resort, oceanfront ceremony, El Yunque views</td>
+          <td style="padding:8px 12px;"><a href="https://www.wyndhamriomar.com/event-spaces/beachside" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Copamarina Beach Resort</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">20–50</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$ ($10k–$20k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Private beach, south coast, calmer water</td>
+          <td style="padding:8px 12px;"><a href="https://www.ourpuertoricowedding.com/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Villa Montana Beach Resort</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">20–50</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$$ ($15k–$28k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Best overall boutique beach resort, full weekend</td>
+          <td style="padding:8px 12px;"><a href="https://www.villamontana.com/weddings-events/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Royal Isabela</td>
+          <td style="padding:8px 12px;color:var(--muted);">🌊 On Beach</td>
+          <td style="padding:8px 12px;color:var(--muted);">Up to 30</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$ ($10k–$20k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Most dramatic cliffside scenery, ultra-private</td>
+          <td style="padding:8px 12px;"><a href="https://www.royalisabela.com/weddings/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Four Seasons Puerto Rico</td>
+          <td style="padding:8px 12px;color:var(--muted);">🏨 Beach + Resort</td>
+          <td style="padding:8px 12px;color:var(--muted);">Any size</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$$$ ($30k+)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Top luxury, rainforest + private beach, brand new</td>
+          <td style="padding:8px 12px;"><a href="https://www.fourseasons.com/puertorico/weddings/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">La Concha Resort</td>
+          <td style="padding:8px 12px;color:var(--muted);">🏨 Hotel</td>
+          <td style="padding:8px 12px;color:var(--muted);">20–600</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$$ ($18k–$35k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Iconic San Juan architecture, rooftop ocean views</td>
+          <td style="padding:8px 12px;"><a href="https://www.laconcharesort.com/weddings/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;color:var(--pink);font-weight:500;">Caribe Hilton</td>
+          <td style="padding:8px 12px;color:var(--muted);">🏨 Hotel</td>
+          <td style="padding:8px 12px;color:var(--muted);">Any size</td>
+          <td style="padding:8px 12px;color:var(--muted);">$$$ ($20k–$40k)</td>
+          <td style="padding:8px 12px;color:var(--muted);">Historic San Juan, private beach, large capacity</td>
+          <td style="padding:8px 12px;"><a href="https://www.caribehilton.com/gather/weddings/" target="_blank" style="color:var(--pink);font-size:12px;">Visit →</a></td>
+        </tr>
+      </table>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:0.75rem;font-weight:300;">🌊 = beach ceremony &nbsp;·&nbsp; 🏨 = hotel/indoor option available &nbsp;·&nbsp; All prices estimated for 20–50 guests, July 2027</p>
+    </div>
+  </div>
+
+
+  <!-- PLANNING TIPS -->
+  <div class="tips-section">
+    <div class="section-eyebrow">Good to know</div>
+    <div class="section-title">Planning Tips for July 2027 🗓️</div>
+    <div class="tips-grid">
+      <div class="tip-card pink-left">
+        <div class="tip-icon">✈️</div>
+        <div class="tip-title">No passport needed</div>
+        <div class="tip-text">Puerto Rico is a U.S. territory — no passports or currency exchange for mainland U.S. guests. Easy flights from Sacramento via Miami or JFK.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Book by early 2026</div>
+        <div class="tip-text">Luxury venues book 12–18 months in advance. To secure July 20, 2027 you should be contacting venues by Jan–March 2026.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🌦</div>
+        <div class="tip-title">Get wedding insurance</div>
+        <div class="tip-text">July falls in hurricane season. Insurance is affordable and non-negotiable. Most venues have indoor backup options too.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">💰</div>
+        <div class="tip-title">Average cost guide</div>
+        <div class="tip-text">Mid-size weddings (~50 guests) in Puerto Rico run $26k–$33k. Elopements can be done beautifully for under $15k. July = off-peak = better rates.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📋</div>
+        <div class="tip-title">Marriage license</div>
+        <div class="tip-text">No blood test required. Get a medical certificate dated within 10 days of the ceremony. Puerto Rico marriage certificates are fully legal U.S. documents.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🎉</div>
+        <div class="tip-title">Plan a wedding weekend</div>
+        <div class="tip-text">The 2027 trend is 3–4 day celebrations. Welcome dinner Friday, wedding Saturday, catamaran brunch Sunday. Puerto Rico is perfect for this.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOVE NOTE -->
+  <div class="love-note">
+    <p>"Ashley, Jon, Annie, Clem, and Estella — five people becoming one family on a beach in Puerto Rico. That's not just a wedding. That's everything."</p>
+    <div class="attr">— July 20, 2027 &nbsp;·&nbsp; 💍</div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; Jon & Ashley &nbsp;·&nbsp; 🇵🇷 July 20, 2027</p></footer>
+</div>
+
+<script>
+  function updateCountdown() {
+    const wedding = new Date('2027-07-20T17:00:00');
+    const now = new Date();
+    const diff = wedding - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '🎉';
+      document.getElementById('cd-hours').textContent = '🎉';
+      document.getElementById('cd-mins').textContent = '🎉';
+      document.getElementById('cd-secs').textContent = '🎉';
+      return;
+    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById('cd-days').textContent = days.toLocaleString();
+    document.getElementById('cd-hours').textContent = hours;
+    document.getElementById('cd-mins').textContent = mins;
+    document.getElementById('cd-secs').textContent = secs;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estella · Jon Estes</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.18);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #e8a0b0;
+      --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    /* NAV */
+    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
+
+    /* HERO */
+    .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.4rem; }
+    .hero h1 em { font-style: italic; color: var(--accent2); }
+    .hero p { font-size: 14px; color: var(--muted); font-weight: 300; }
+
+    /* ALBUM LINK */
+    .album-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2rem; padding: 9px 18px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.15s, border-color 0.15s; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .album-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .album-btn span { font-size: 15px; }
+
+    /* MASONRY GRID */
+    .grid { columns: 3; column-gap: 10px; opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
+    .grid-item { break-inside: avoid; margin-bottom: 10px; position: relative; border-radius: var(--radius); overflow: hidden; cursor: pointer; }
+    .grid-item img { width: 100%; display: block; border-radius: var(--radius); transition: transform 0.3s ease, filter 0.3s ease; filter: brightness(0.92); }
+    .grid-item:hover img { transform: scale(1.03); filter: brightness(1); }
+    .grid-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 50%); border-radius: var(--radius); opacity: 0; transition: opacity 0.25s; display: flex; align-items: flex-end; padding: 12px; }
+    .grid-item:hover .overlay { opacity: 1; }
+    .overlay-icon { font-size: 18px; }
+
+    /* LIGHTBOX */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; align-items: center; justify-content: center; padding: 1.5rem; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 90vh; border-radius: var(--radius); object-fit: contain; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+    .lightbox-close { position: absolute; top: 1.25rem; right: 1.5rem; font-size: 28px; color: var(--muted); cursor: pointer; transition: color 0.15s; line-height: 1; background: none; border: none; }
+    .lightbox-close:hover { color: var(--text); }
+    .lightbox-prev, .lightbox-next { position: absolute; top: 50%; transform: translateY(-50%); font-size: 22px; color: var(--muted); cursor: pointer; background: var(--bg2); border: 1px solid var(--border); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: color 0.15s, border-color 0.15s; }
+    .lightbox-prev { left: 1.25rem; }
+    .lightbox-next { right: 1.25rem; }
+    .lightbox-prev:hover, .lightbox-next:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* FOOTER */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 640px) { .grid { columns: 2; } .hero h1 { font-size: 32px; } .lightbox-prev { left: 0.5rem; } .lightbox-next { right: 0.5rem; } }
+    @media (max-width: 400px) { .grid { columns: 2; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+    <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <div class="hero">
+    <div class="hero-label">Photo gallery</div>
+    <h1>Estella <em>Azalea</em></h1>
+    <p id="estella-age">Born November 27, 2025 🦃</p>
+  </div>
+
+  <!-- INTRO CARD -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s ease 0.08s forwards;">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">About Estella</div>
+    <p style="font-size:14px;color:var(--text);font-weight:300;line-height:1.7;margin-bottom:1rem;">
+      Estella Azalea was born on <strong>November 27, 2025</strong> — Jon's youngest daughter and the newest light in the family. Named with love, she joins big sisters Annie and Clem. This page is her little corner of the internet — photos, memories, and a head start on her future.
+    </p>
+    <a href="/529" style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:transparent;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0f0f0e'" onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
+      🎓 View Estella's 529 College Fund &rarr;
+    </a>
+  </div>
+
+  <a class="album-btn" href="https://photos.google.com/share/AF1QipNfSXHcdXueSXbTgrslqeUr8dWlSSH6i4NBm2_uZLjoO37BRvEyWjTejMU5SZKuAA?key=LUlSbXpFZDdoLVQ1Uk1iZnNDOTNCMldLemlwb1J3" target="_blank" rel="noopener">
+    <span>📷</span> View full Google Photos album
+  </a>
+
+  <div class="grid" id="grid">
+    <div class="grid-item" onclick="openLightbox(0)"><img src="https://lh3.googleusercontent.com/pw/AP1GczM1_oKRUKc3guODbLKH8017ySf6E98XoheFTzW-tCfSWMn0mE1TMccAH-XG30pmhy-Dcr3XrfrHf6pBeh8HVMXioq39dIfyoA1C2vgRWw-tRDg1jj0=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(1)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNYXzv-p65biK4TYiWyasBLBQICShHiTt_nBQ66GDAjx5rASEI08HJ6PD4lCKvh3l-9jTLw73daUIg6fSKiCAiaCMyvHfcK4NNWrbbRftrwjHH4r-A=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(2)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNREDA8JFdQmIgZlWf1CLUvGIQ13GWXjBQaK67D2MNHpfgPFr9wmoPJElomQuNDZGjhCH54p9ahCDcClV5Kl3LiYpQrRyEtdpk7CYJVBzoPCt7T11o=w600-h400-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(3)"><img src="https://lh3.googleusercontent.com/pw/AP1GczO9UICU0kEzimHgiyB2YgJQb_bR6K7jJoy7DGQGi7DslzH5uiCIwAu1mNnb48_NI_6OzrTsuyLxsAzTyhz_bTtBf9wysEhTy7uxpZbocRG_Aq5urzo=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(4)"><img src="https://lh3.googleusercontent.com/pw/AP1GczPmtJTzd7jCTGyM-YXOctE1rxyy_CGhu8aAoS7CVbQfGJsGJy4nIbhBTU4GBgzfqjiLTzpRccAonlBOOD1LBcSCPDHnnHuyTeM0J7NLpLhCwPBqpJI=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(5)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMHinUEsenqMQ_LIDE--arJ8mxHikn51lvm5B6cTb-HiXSq6Ix2Qa7F-DLepJfaBFRQ4NKCbLWe-mvCAKZLKFHuxVA6rJNf72Jy3ipaooHGEaASk9A=w600-h400-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(6)"><img src="https://lh3.googleusercontent.com/pw/AP1GczO4r_cfO6rqe-2glf_yL3A4sHs40AmeYCfGF7J4542l3ZS0Jt-Tr4rRcx7Ieg03QK4F2MdW2Q1jXMwa0uwNF770xpHntKu5huUqVP3dW7RhsJTWPEI=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(7)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMiNkBRuRDTQ9k8uPzG3kKPCiJQHl1TTiNl_91T3rEUYYbBrP-8N0oSAUGKiRPEp8Wv7GyxDpaDPyAbxfNJjrIJd1cRLVI-Yj_jAWEGH-_0Cx34f3Y=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(8)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMHFp7bJtljW6zQ5tw9sZKA4ps5j6QM14P1k4yZhD_aMV_X4ZGfQrS1ElHIo8IJWzr3Vyt9HbGV1TePvhCvV8DOUWWBa5Nu7Z_fpuCRFcyuVKywxUg=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(9)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNGYe5S-2-0_SMfEq6GS8FHDqOlxy7licFZYS6Be7WC2rJHJ8j43awMiZOL-Ls2xL_0CCN4G41c8vP8VIme4-6bxdJb-3fiSpyPwAf0i6vh704LHnA=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(10)"><img src="https://lh3.googleusercontent.com/pw/AP1GczPEwbnNhRNFXLarovoOkKF2VkxqU1T65a3UruzSOhATjTKEZtA5IC7iWnvEq2uyQDtA6kRyHHZl0ve7InDJcVmftqMGR55bGnWHWSgZdlFgyIrbbKw=w400-h700-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(11)"><img src="https://lh3.googleusercontent.com/pw/AP1GczPpOW0SHu_FcqglWpuczYkrPdRptNhoEhlk9tn9vpbg1yGSBST8F8KgqMJNzvfhH9RfC6yzblshk_z3vOfQG0ivnNvVyWcpOE1PLxAdS78onNbzuAY=w600-h400-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(12)"><img src="https://lh3.googleusercontent.com/pw/AP1GczPf_kTk89Lh7g2Qq8SlcmYHpAUjkEGM4xNqTZ4ogm5G1cdd7KJfWw2iibwqWIPlBYw30J7D-ZlQt8SadNA7DVdbw-hJ3M59tUVIywZp0YmYfZ1PMzU=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(13)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOng9WvkeB0_IYtugp7DDe_Av7eqhslL6UHyDM-w30vo92ySmp7olYZShCfDqwh4plP8FYQ-rNKjX9LpK-828Xy_ATp6tqxTKkuO-hTPnlc1hql8E4=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(14)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMYlYua6A9soc6CUTpOhKyOPM4MTX7xto27Ni4lPtAymNNGoVkfP4B9GMv5Nt25HoH_bBeAcYftSyvsvde98Y45T0u8m6cvHH06MFWmRxi3Fc70F1M=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(15)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNE7Kobz9hE_fZFS1B_N58zCRq8japnjgSRhdSLnQGkOLbWWyL6fwzcP_AK-NmnjSlFbNxSspe6bqdm9M5Cwsig-KsqF2GlwXmpqHV_jBtRWVV5ymo=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(16)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOmhNl7MjfqaO7DGvI7YrQkO3jJBBOZOVveA5vD4GInIsrGMF2Pg1EbVWRh5DrUpO4vY7GQExDFBySb6XAJ3PrHuHrGXH3G0RLmeWK9w0T0SQTFOoQ=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(17)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOCQa8xAkxjfvT5earI_gzqhAWDc2h11SquhqaGBkSzhhXtLNPaXibY5tgf-cfr8t4DB5s8aFQ90v6oaX353xfVPIftJ3aH5_oAcWoCPvqRKbi8zfw=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(18)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMw864Ckmk7u97AwGl61yBXTuZ7VPpkyHb3--8uQDFu97nq5pCGXYjnH8LlyqN0m3lBgJEmz2oC6uUX9OsfIjH2ISpLFxE-QrPlJBo27im6oPi_5xg=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(19)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOdMKfup6zq0i5SjQLw4qzRed5UNCFlha9kiQ-etInmrJndgaHrHZckboWtPmdSs3q8_A65QTuDrQoNCdpf2BKzoV3X4_RoqndvAdlHQz2I0olbXPg=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(20)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMLr6re87PoEA5FmOeThvdfhkwtNMf4hxQ0GQezxWESY0126VdhdB5CkyCpMwnK35xepeIdGOM4QPtsMcnYDCnnI-J3Vf_IaSqpcGnNSbz14PBbjKU=w600-h400-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(21)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNaiV35WX5f0B89_kHY7R6pmVbxuubaRVYmVMATyNL4b8cwv9U3qlOG1W3LKfDRCoD1ulFpvTOwbKzNohtpue6SZ3BwLzQtPuhXfcVYKrjJhlUsnBI=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(22)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOYGxrTbUQH1Er3uOFDW0IuP7NsedG0dfpsLxkCOEkRCEsDnJFKNPTvgff39OjHEKL0WSQL-OQ0dHyyIMLvw_L8VVMT1ps39pLnjrfJXk7c5gi831c=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(23)"><img src="https://lh3.googleusercontent.com/pw/AP1GczPCYaZpRn1t2lNVbFu43TsM1yhe7JVrW1ksg8w=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(24)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNb3I2YcxwfKsIPe-nSz8V-YZu2QYqvR0s-m0zShDvwhXoWQYMp5znJwG7jZPlCxAVtzdntu3_V8YTBMUfMbawVsZKw4vdqeHxN553GHPr1JKhAho0=w400-h800-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(25)"><img src="https://lh3.googleusercontent.com/pw/AP1GczMQSmTE3Xh3RlFBOChZVcgPC_Ex1cXuw9x_t21jYzgry01NhHB_A7ndIjq81aKdn_1z21fj1haG8vSeTtYV8aJqdWFYhIpZefqLWDFW_cHuXHIvYI=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(26)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOZ-KRxkwOHc3H4p6Qt5Wrl3-Odifv8WCqfCEUHm4tPEkGSZGwcwDySqN1JsgKIXPfXS6ermZGrHznk-8KqugqpRvZAa6ahYLJAEKrk=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(27)"><img src="https://lh3.googleusercontent.com/pw/AP1GczO0vlIIhDHUdF36yplq9sQtLSyCzRjKjVI0Y12MoRn4C-qrMBRF6aN252x5RdP90eha3MoJWeJghPhrpoVBg9cJVLe9VZDjwuDphObCz0niv48Wwi0=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(28)"><img src="https://lh3.googleusercontent.com/pw/AP1GczOIUMqINZYqffiEq904yqqa4rGi10UNmZFk6nniyv4SU49S2PPGruYSnVDCJyLlVf4CWxSltJkJVMMUoMvHCgwelf0GitW5AGUx7MEmXY9rrnPfW7E=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(29)"><img src="https://lh3.googleusercontent.com/pw/AP1GczNCJyVsmhCOWmindfBcxYv1YIcdd-Kqh1F0jiG07VmIreVROHF-pANlNB2naHxwHdg4kNpuwOQMc6a-Xv6snI3EVTS00_lGm1IM3pd2lp74_PYNdVw=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+    <div class="grid-item" onclick="openLightbox(30)"><img src="https://lh3.googleusercontent.com/pw/AP1GczME0loEFFo6SgVcObpYuUjB57nV2v06c9WGEEs=w400-h600-no" loading="lazy" /><div class="overlay"><span class="overlay-icon">🔍</span></div></div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-prev" onclick="changePhoto(-1); event.stopPropagation();">‹</button>
+  <img id="lightbox-img" src="" alt="Estella" />
+  <button class="lightbox-next" onclick="changePhoto(1); event.stopPropagation();">›</button>
+</div>
+
+<script>
+  const imgs = Array.from(document.querySelectorAll('.grid-item img')).map(i => i.src.replace(/=w\d+-h\d+-no/, '=w1200-h1200-no'));
+  let current = 0;
+
+  function openLightbox(i) {
+    current = i;
+    document.getElementById('lightbox-img').src = imgs[i];
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(e) {
+    if (!e || e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function changePhoto(dir) {
+    current = (current + dir + imgs.length) % imgs.length;
+    document.getElementById('lightbox-img').src = imgs[current];
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') changePhoto(1);
+    if (e.key === 'ArrowLeft') changePhoto(-1);
+    if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lightbox') });
+  });
+</script>
+
+<script>
+  function updateEstellaAge() {
+    const birth = new Date('2025-11-27T00:00:00');
+    const now = new Date();
+    const diffMs = now - birth;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const months = Math.floor(diffDays / 30.4375);
+    const remDays = Math.floor(diffDays - months * 30.4375);
+    const weeks = Math.floor(diffDays / 7);
+
+    let str = '';
+    if (months < 1) {
+      str = `${diffDays} days old 🌱`;
+    } else if (months < 6) {
+      str = `${months} month${months !== 1 ? 's' : ''}, ${remDays} day${remDays !== 1 ? 's' : ''} old 🌸`;
+    } else if (months < 24) {
+      str = `${months} months old 🌺`;
+    } else {
+      const years = Math.floor(months / 12);
+      const remMonths = months % 12;
+      str = `${years} year${years !== 1 ? 's' : ''}${remMonths ? `, ${remMonths} month${remMonths !== 1 ? 's' : ''}` : ''} old 🌟`;
+    }
+    const el = document.getElementById('estella-age');
+    if (el) el.textContent = 'Born November 27, 2025 🦃  ·  ' + str;
+  }
+  updateEstellaAge();
+  setInterval(updateEstellaAge, 60000);
+</script>
+
+</body>
+</html>

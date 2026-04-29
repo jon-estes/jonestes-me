@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estella's College Fund · Jon Estes</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --pink: #e8a0b0;
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    /* NAV */
+    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
+
+    /* HERO */
+    .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--pink); }
+    .hero p { font-size: 15px; color: var(--muted); font-weight: 300; max-width: 520px; line-height: 1.7; }
+
+    /* PROGRESS CARD */
+    .progress-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .progress-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
+    .progress-label { font-size: 12px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .progress-amount { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; color: var(--text); line-height: 1; }
+    .progress-amount span { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .progress-goal { text-align: right; }
+    .progress-goal .progress-label { text-align: right; }
+    .progress-goal .goal-num { font-size: 20px; font-weight: 500; color: var(--muted); }
+
+    .progress-bar-track { background: var(--bg3); border-radius: 999px; height: 10px; overflow: hidden; margin-bottom: 0.75rem; }
+    .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(to right, #e8a0b0, #d4789a); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 300; }
+    .progress-pct { color: var(--pink); font-weight: 500; }
+
+    /* UGIFT CARD */
+    .ugift-card { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
+    .ugift-left h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .ugift-left p { font-size: 13px; color: var(--muted); font-weight: 300; }
+    .ugift-code { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 8px 18px; font-size: 20px; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); font-family: monospace; white-space: nowrap; }
+
+    /* HOW TO SECTION */
+    .how-section { opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; margin-bottom: 2.5rem; }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .how-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    .step { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start; transition: border-color 0.15s; }
+    .step:hover { border-color: var(--border2); }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--pink); flex-shrink: 0; margin-top: 1px; }
+    .step-content h4 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .step-content p { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .step-content a { color: var(--accent3); text-decoration: none; }
+    .step-content a:hover { text-decoration: underline; }
+    .step-content .code-pill { display: inline-block; background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px; padding: 2px 10px; font-family: monospace; font-size: 13px; color: var(--accent); letter-spacing: 0.08em; margin: 2px 0; }
+
+    /* WHY SECTION */
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 1.25rem; }
+    .why-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .why-icon { font-size: 22px; margin-bottom: 8px; }
+    .why-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .why-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.55; }
+    .why-section { opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards; margin-bottom: 2.5rem; }
+
+    /* LOVE NOTE */
+    .love-note { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note p { font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; color: var(--text); line-height: 1.7; }
+    .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 8px; font-style: normal; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 32px; } .progress-top { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .ugift-card { flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+    <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">College fund</div>
+    <h1>Estella's <em>Future</em></h1>
+    <p>Every dollar here is a step toward Estella's education. Friends and family can contribute anytime using her Ugift code — no account needed.</p>
+  </div>
+
+  <!-- PROGRESS CARD -->
+  <div class="progress-card">
+    <div class="progress-top">
+      <div>
+        <div class="progress-label">Current balance</div>
+        <div class="progress-amount" id="balanceDisplay"><span>$</span><span id="balanceNum">215</span></div>
+      </div>
+      <div class="progress-goal">
+        <div class="progress-label">Goal</div>
+        <div class="goal-num">$50,000</div>
+      </div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-meta">
+      <span id="progressPct" class="progress-pct">0.43% funded</span>
+      <span id="progressLeft">$49,785 to go</span>
+    </div>
+  </div>
+
+  <!-- UGIFT CODE -->
+  <div class="ugift-card">
+    <div class="ugift-left">
+      <h3>Estella A Estes</h3>
+      <p>Use this code at <strong>Ugift529.com</strong> to make a gift contribution — no account required.</p>
+    </div>
+    <div class="ugift-code">B1A-92R</div>
+  </div>
+
+  <!-- HOW TO CONTRIBUTE -->
+  <div class="how-section">
+    <div class="section-label">Step by step</div>
+    <h2>How to contribute 🎓</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Go to Ugift529.com</h4>
+          <p>Visit <a href="https://www.ugift529.com" target="_blank" rel="noopener">ugift529.com</a> — this is the free gifting portal for 529 college savings plans. No account or login required.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Enter Estella's Ugift code</h4>
+          <p>Click <strong>"Give a gift"</strong> and enter her code: <span class="code-pill">B1A-92R</span><br />This connects your contribution directly to Estella's 529 account.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Choose your contribution amount</h4>
+          <p>Enter any amount you'd like to give — even $25 or $50 makes a difference! There's no minimum contribution required.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Enter your payment info</h4>
+          <p>Pay securely by check or electronic bank transfer (ACH). Your contribution goes directly into Estella's investment account and starts growing immediately.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>That's it! 🎉</h4>
+          <p>Your gift is confirmed and Estella's balance is updated. Contributions may be tax-deductible depending on your state — check with a tax advisor for details.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHY SECTION -->
+  <div class="why-section">
+    <div class="section-label">Why a 529?</div>
+    <h2>The smartest gift for her future</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">📈</div>
+        <div class="why-title">Tax-free growth</div>
+        <div class="why-text">Money in a 529 grows tax-free and withdrawals for education are also tax-free.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎁</div>
+        <div class="why-title">Easy gifting</div>
+        <div class="why-text">Anyone can contribute with the Ugift code — grandparents, aunts, uncles, friends.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🏫</div>
+        <div class="why-title">Flexible use</div>
+        <div class="why-text">Covers tuition, room & board, books, and even K-12 private school costs.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⏳</div>
+        <div class="why-title">Time is the best investor</div>
+        <div class="why-text">Starting now — while Estella is a baby — gives her account nearly 18 years to compound and grow.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOVE NOTE -->
+  <div class="love-note">
+    <p>"Estella just arrived and she already has a head start. Every gift here isn't just money — it's a vote of confidence in who she's going to become."</p>
+    <div class="attr">— Dad 💛</div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care &nbsp;·&nbsp; 💛 for Estella</p></footer>
+</div>
+
+<script>
+  // Animate progress bar on load
+  const balance = 215;
+  const goal = 50000;
+  const pct = (balance / goal) * 100;
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('progressFill').style.width = Math.max(pct, 0.5) + '%';
+    }, 300);
+    document.getElementById('progressPct').textContent = pct.toFixed(2) + '% funded';
+    document.getElementById('progressLeft').textContent = '$' + (goal - balance).toLocaleString() + ' to go';
+  });
+</script>
+</body>
+</html>

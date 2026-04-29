@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💍 Hawaii Wedding Research | Jon Estes</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #1a1018;
+      --surface: #221520;
+      --surface2: #2a1c28;
+      --pink: #d4789a;
+      --green: #7ecba1;
+      --blue: #6eb3c9;
+      --gold: #c9a96e;
+      --text: #e8e6e1;
+      --muted: #888884;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV — handled by nav.js */
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(212,120,154,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s ease forwards;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s ease forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--pink);
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.6s ease forwards;
+    }
+    .hero-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s ease forwards;
+    }
+    .hero-date-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+    .countdown-row {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s ease forwards;
+    }
+    .countdown-item { text-align: center; }
+    .countdown-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--pink);
+      line-height: 1;
+      display: block;
+    }
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .countdown-sep {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--border);
+      align-self: flex-start;
+      padding-top: 0.2rem;
+    }
+
+    /* SECTIONS */
+    main { position: relative; z-index: 1; }
+    section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 2rem;
+    }
+
+    /* ISLAND CARDS */
+    .island-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .island-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .island-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .island-card.oahu::before { background: radial-gradient(circle at top left, rgba(110,179,201,0.12), transparent 60%); }
+    .island-card.maui::before { background: radial-gradient(circle at top left, rgba(212,120,154,0.12), transparent 60%); }
+    .island-card.kauai::before { background: radial-gradient(circle at top left, rgba(126,203,161,0.12), transparent 60%); }
+    .island-card.bigisland::before { background: radial-gradient(circle at top left, rgba(201,169,110,0.12), transparent 60%); }
+    .island-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    .island-card:hover::before { opacity: 1; }
+
+    .island-emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+    .island-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+    .island-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .island-card.oahu .island-tag { color: var(--blue); }
+    .island-card.maui .island-tag { color: var(--pink); }
+    .island-card.kauai .island-tag { color: var(--green); }
+    .island-card.bigisland .island-tag { color: var(--gold); }
+
+    .pro-con-list { list-style: none; font-size: 0.82rem; line-height: 1.6; }
+    .pro-con-list li { padding: 0.15rem 0; padding-left: 1.2rem; position: relative; color: var(--muted); }
+    .pro-con-list li::before { position: absolute; left: 0; }
+    .pro-con-list .pro::before { content: '✓'; color: var(--green); }
+    .pro-con-list .con::before { content: '×'; color: var(--pink); }
+
+    .island-cost {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .island-cost strong { color: var(--text); }
+
+    /* BUDGET TABLE */
+    .budget-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .budget-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .budget-label { font-size: 0.9rem; }
+    .budget-range { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+    .budget-bar-wrap { grid-column: 1 / -1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+    .budget-bar { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+    .budget-total {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: var(--surface2);
+      border: 1px solid rgba(212,120,154,0.3);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .budget-total-label { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+    .budget-total-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--pink); }
+
+    /* TIPS */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .tip-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .tip-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .tip-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .tip-text { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+    /* LEGAL */
+    .legal-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .legal-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--pink);
+      line-height: 1;
+      min-width: 2rem;
+    }
+    .step-content h4 { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.25rem; }
+    .step-content p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+    /* RECOMMENDATION BANNER */
+    .rec-banner {
+      background: linear-gradient(135deg, rgba(126,203,161,0.1), rgba(212,120,154,0.08));
+      border: 1px solid rgba(126,203,161,0.25);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .rec-banner::before {
+      content: '🌺';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 4rem;
+      opacity: 0.15;
+    }
+    .rec-banner h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .rec-banner p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+    .rec-badge {
+      display: inline-block;
+      background: rgba(126,203,161,0.15);
+      border: 1px solid rgba(126,203,161,0.3);
+      color: var(--green);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* VENUE STYLES */
+    .venue-island-group { margin-bottom: 3rem; }
+    .venue-island-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .venue-island-icon { font-size: 1.5rem; }
+    .venue-island-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+    .venue-island-subtitle { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.08em; }
+
+    .venue-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .venue-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .venue-tab:hover, .venue-tab.active { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .venue-tab.active { background: var(--surface2); }
+
+    .venue-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .venue-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .venue-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
+    .venue-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+    .venue-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .venue-badge {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      white-space: nowrap;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
+    }
+    .badge-budget { background: rgba(126,203,161,0.12); color: var(--green); border: 1px solid rgba(126,203,161,0.25); }
+    .badge-mid { background: rgba(110,179,201,0.12); color: var(--blue); border: 1px solid rgba(110,179,201,0.25); }
+    .badge-luxury { background: rgba(201,169,110,0.12); color: var(--gold); border: 1px solid rgba(201,169,110,0.25); }
+    .badge-beach { background: rgba(212,120,154,0.12); color: var(--pink); border: 1px solid rgba(212,120,154,0.25); }
+
+    .venue-location { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .venue-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.85rem; }
+    .venue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .venue-pill {
+      font-size: 0.68rem;
+      background: var(--surface2);
+      border-radius: 100px;
+      padding: 0.2rem 0.6rem;
+      color: var(--muted);
+    }
+    .venue-price {
+      font-size: 0.82rem;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      padding-top: 0.65rem;
+      margin-top: 0.65rem;
+    }
+    .venue-price strong { color: var(--green); }
+    .venue-highlight {
+      font-size: 0.72rem;
+      color: var(--pink);
+      font-style: italic;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 3rem 1rem; }
+      .countdown-row { gap: 0.75rem; }
+      .countdown-num { font-size: 1.8rem; }
+    }
+
+    /* COMPARISON TABLE */
+    .comp-wrap { margin-top: 1.5rem; overflow-x: auto; }
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .comp-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 10px 14px; background: rgba(255,255,255,0.04); color: var(--muted); text-align: left; }
+    .comp-table th:first-child { border-radius: 8px 0 0 0; }
+    .comp-table th:last-child { border-radius: 0 8px 0 0; }
+    .comp-table td { padding: 10px 14px; vertical-align: middle; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; line-height: 1.5; }
+    .comp-table td:first-child { font-weight: 500; color: var(--text); }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .cpill { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 999px; border: 1px solid; }
+    .cpill-green { border-color: var(--green); color: var(--green); }
+    .cpill-yellow { border-color: var(--gold); color: var(--gold); }
+    .cpill-red { border-color: var(--pink); color: var(--pink); }
+  </style>
+</head>
+<body>
+
+<script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" style="max-width:100%; padding-top:6rem; padding-bottom:5rem;">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">💍 Save The Date</p>
+      <h1 class="hero-title">Getting <em>Married</em><br>in Hawaiʻi</h1>
+      <p class="hero-subtitle">8·20·2028 — a palindrome 🤍</p>
+      <div class="hero-date-badge">
+        <span class="dot"></span>
+        <span>Planning in progress — island TBD</span>
+      </div>
+      <div class="countdown-row">
+        <div class="countdown-item">
+          <span class="countdown-num" id="cd-days">—</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-item">
+          <span class="countdown-num" id="cd-hours">—</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-item">
+          <span class="countdown-num" id="cd-mins">—</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-item">
+          <span class="countdown-num" id="cd-secs">—</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ISLAND COMPARISON -->
+  <section class="fade-up">
+    <p class="section-label">Research</p>
+    <h2>Choose Your Island</h2>
+    <p style="color:var(--muted);font-size:0.9rem;line-height:1.7;margin-bottom:0.5rem;">
+      There are four main islands for weddings in Hawaiʻi. Each has a completely different vibe, price point, and logistics profile. Here's the honest breakdown:
+    </p>
+    <div class="island-grid">
+
+      <!-- OAHU -->
+      <div class="island-card oahu">
+        <div class="island-emoji">🏙️</div>
+        <div class="island-name">Oʻahu</div>
+        <div class="island-tag">The Gathering Place</div>
+        <ul class="pro-con-list">
+          <li class="pro">Most affordable flights & hotels</li>
+          <li class="pro">Most vendor options / competition</li>
+          <li class="pro">Easy logistics for guests</li>
+          <li class="pro">Beach packages from $395</li>
+          <li class="pro">Widest accommodation range</li>
+          <li class="con">Busy / touristy beaches</li>
+          <li class="con">Up to 6 ceremonies at once near Waikiki</li>
+          <li class="con">Heavy traffic island-wide</li>
+          <li class="con">Less intimate / romantic feel</li>
+        </ul>
+        <div class="island-cost">
+          <strong>Budget-friendliest.</strong> Ceremony packages $395–$3,300. Flights cheapest from West Coast.
+        </div>
+      </div>
+
+      <!-- MAUI -->
+      <div class="island-card maui">
+        <div class="island-emoji">🌺</div>
+        <div class="island-name">Maui</div>
+        <div class="island-tag">The Valley Isle</div>
+        <ul class="pro-con-list">
+          <li class="pro">Most romantic atmosphere</li>
+          <li class="pro">Stunning beaches (Polo, Fleming, White Rock)</li>
+          <li class="pro">Great vendor selection</li>
+          <li class="pro">Beach packages from ~$2,550</li>
+          <li class="pro">Best of city + nature blend</li>
+          <li class="con">Costs ~2× the Big Island</li>
+          <li class="con">Resort prices are premium</li>
+          <li class="con">Busy tourist spots</li>
+          <li class="con">Post-Lahaina fire some areas still recovering</li>
+        </ul>
+        <div class="island-cost">
+          <strong>Mid-range.</strong> Beach packages $2,550–$7,250. Average destination wedding ~$9,900.
+        </div>
+      </div>
+
+      <!-- KAUAI -->
+      <div class="island-card kauai">
+        <div class="island-emoji">🌿</div>
+        <div class="island-name">Kauaʻi</div>
+        <div class="island-tag">The Garden Isle</div>
+        <ul class="pro-con-list">
+          <li class="pro">Most dramatic / romantic scenery</li>
+          <li class="pro">Intimate, quiet, less crowded</li>
+          <li class="pro">Napali Coast backdrop</li>
+          <li class="pro">Fewer tourists = more privacy</li>
+          <li class="con">Wettest island — high rain risk</li>
+          <li class="con">Fewer vendors = less competition</li>
+          <li class="con">More expensive daily costs</li>
+          <li class="con">Fewer flight options</li>
+          <li class="con">Venue avg $15,000–$35,000</li>
+        </ul>
+        <div class="island-cost">
+          <strong>Priciest overall.</strong> Avg $15k–$35k. Best for intimate elopements with nature focus.
+        </div>
+      </div>
+
+      <!-- BIG ISLAND -->
+      <div class="island-card bigisland">
+        <div class="island-emoji">🌋</div>
+        <div class="island-name">Big Island</div>
+        <div class="island-tag">Hawaiʻi Island</div>
+        <ul class="pro-con-list">
+          <li class="pro">Most affordable of the four</li>
+          <li class="pro">Least crowded beaches</li>
+          <li class="pro">Dramatic lava/volcano backdrop</li>
+          <li class="pro">Authentic Hawaiian culture</li>
+          <li class="pro">Packages from $995 (photo)</li>
+          <li class="con">Very spread out — long drives</li>
+          <li class="con">Rocky/rough shoreline in spots</li>
+          <li class="con">Less infrastructure</li>
+          <li class="con">Fewer direct flights</li>
+          <li class="con">Active volcanoes (air quality risk)</li>
+        </ul>
+        <div class="island-cost">
+          <strong>Most budget-friendly.</strong> ~½ the cost of Maui. Great Kona-area beaches.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- BUDGET BREAKDOWN -->
+  <section class="fade-up">
+    <p class="section-label">Money</p>
+    <h2>Budget Breakdown <span style="color:var(--muted);font-size:1.2rem;font-style:italic;font-family:'Playfair Display',serif">$10–15k</span></h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;margin-bottom:1rem;">
+      A small beach ceremony (under 25 guests) is very achievable at this budget. Here's a realistic breakdown based on current pricing:
+    </p>
+
+    <div class="budget-grid">
+      <div class="budget-row">
+        <span class="budget-label">✈️ Flights (2 people, West Coast)</span>
+        <span class="budget-range">$800–$1,200</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:15%;background:var(--blue)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">🏨 Hotel / Airbnb (5–7 nights)</span>
+        <span class="budget-range">$1,200–$2,500</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:25%;background:var(--blue)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">💐 Ceremony Package (officiant, leis, coord)</span>
+        <span class="budget-range">$500–$2,000</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:20%;background:var(--pink)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">📸 Local Photographer (2–3 hrs)</span>
+        <span class="budget-range">$800–$1,500</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:18%;background:var(--pink)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">🎂 Small reception dinner (restaurant)</span>
+        <span class="budget-range">$500–$1,500</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:15%;background:var(--green)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">📄 Marriage license</span>
+        <span class="budget-range">$70</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:3%;background:var(--gold)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">🏖️ Beach permit + liability insurance</span>
+        <span class="budget-range">$125–$250</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:4%;background:var(--gold)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">💐 Florals (bouquet, boutonniere)</span>
+        <span class="budget-range">$200–$500</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:6%;background:var(--green)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">🚗 Car rental (per week)</span>
+        <span class="budget-range">$400–$800</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:8%;background:var(--muted)"></div></div>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">🎁 Misc (attire, hair/makeup, food, activities)</span>
+        <span class="budget-range">$800–$2,000</span>
+        <div class="budget-bar-wrap"><div class="budget-bar" style="width:20%;background:var(--muted)"></div></div>
+      </div>
+    </div>
+
+    <div class="budget-total">
+      <span class="budget-total-label">Estimated Total (just the two of you + small group)</span>
+      <span class="budget-total-num">$5,400 – $12,320</span>
+    </div>
+
+    <p style="color:var(--muted);font-size:0.78rem;margin-top:0.75rem;font-style:italic;">
+      * Elopement/just the two of you: as low as $3,500–$5,000. Each additional guest adds food + accommodation coordination costs. Always add 15% buffer per industry advice.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- VENUES SECTION -->
+  <section class="fade-up">
+    <p class="section-label">Venues</p>
+    <h2>Specific Venues by Island</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;margin-bottom:2rem;">
+      Detailed breakdowns of real venues across all four islands — from free public beaches to luxury resorts — with honest pricing and notes on each.
+    </p>
+
+    <!-- OAHU VENUES -->
+    <div class="venue-island-group">
+      <div class="venue-island-header">
+        <span class="venue-island-icon">🏙️</span>
+        <div>
+          <div class="venue-island-title">Oʻahu Venues</div>
+          <div class="venue-island-subtitle">Most accessible · Best flight options · Widest price range</div>
+        </div>
+      </div>
+      <div class="venue-cards">
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://wedhawaii.com/blog/hawaii-wedding-location-waialae-beach/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Waialae Beach ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Near Waikiki, Honolulu</div>
+          <div class="venue-desc">One of Oahu's top beach wedding spots. Palm trees, a small offshore island in the background, and shallow waters that keep swimmers away — meaning cleaner ceremony photos. Close to Waikiki hotels yet feels secluded. Highly recommended by local vendors.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Public beach</span>
+            <span class="venue-pill">Up to 25 guests</span>
+            <span class="venue-pill">Permit required</span>
+            <span class="venue-pill">Sunrise/sunset friendly</span>
+          </div>
+          <div class="venue-price">Permit: <strong>~$50</strong> · Ceremony packages from <strong>$395</strong></div>
+          <div class="venue-highlight">✦ Most popular budget beach wedding location on Oahu</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://maps.app.goo.gl/kawela-bay-oahu" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kawela Bay (North Shore) ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 North Shore, Oahu</div>
+          <div class="venue-desc">A hidden gem with a beautiful curved beach and lush forest backdrop. Much less crowded than Waikiki-area beaches. Perfect for a sunset ceremony with a more natural, off-the-beaten-path feel. Great for couples staying on the North Shore.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Secluded feel</span>
+            <span class="venue-pill">Forest + beach</span>
+            <span class="venue-pill">Up to 25 guests</span>
+          </div>
+          <div class="venue-price">Permit: <strong>~$50</strong> · Very low cost access</div>
+          <div class="venue-highlight">✦ Best "hidden gem" beach on Oahu for intimate ceremonies</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://lanikuhonua.org" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Lanikuhonua Cultural Institute ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Ko Olina, West Oahu</div>
+          <div class="venue-desc">Historic private oceanfront estate on Oahu's west coast — the name means "where heaven meets the earth." Lush tropical gardens, swaying palms, panoramic Pacific views. Customizable spaces for both intimate ceremonies and larger events. One of the most beloved private venues on the island.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Private estate</span>
+            <span class="venue-pill">Oceanfront lawn</span>
+            <span class="venue-pill">Gardens</span>
+            <span class="venue-pill">Flexible capacity</span>
+          </div>
+          <div class="venue-price">Venue fees vary — contact for quote</div>
+          <div class="venue-highlight">✦ Stunning photos, very Hawaiian feel</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.kualoa.com/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kualoa Ranch ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Kaneohe, Windward Oahu</div>
+          <div class="venue-desc">Famous for its jaw-dropping mountain/valley backdrop (you've seen it in Jurassic Park). A working ranch with multiple outdoor ceremony spaces. Dramatic, cinematic, and utterly unique — far from the typical beach wedding. Great for couples who want something different.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Mountain backdrop</span>
+            <span class="venue-pill">Windward side</span>
+            <span class="venue-pill">Iconic scenery</span>
+          </div>
+          <div class="venue-price">Custom packages — expect $3,000+ venue fees</div>
+          <div class="venue-highlight">✦ Best non-beach scenery on Oahu</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.waialuavalleyfarms.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Waialua Valley Farms ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 North Shore, Oahu</div>
+          <div class="venue-desc">A mountaintop farm venue with indoor/outdoor flow — covered patio connects to an outdoor ceremony space with mountain views. Perfect for micro weddings (50 or fewer). One of the best non-beach venues on Oahu for a natural, lush aesthetic.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Farm venue</span>
+            <span class="venue-pill">Mountaintop views</span>
+            <span class="venue-pill">Micro wedding friendly</span>
+          </div>
+          <div class="venue-price">Mid-range pricing — contact venue directly</div>
+          <div class="venue-highlight">✦ Great for couples who don't want a beach ceremony</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.royal-hawaiian.com/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Royal Hawaiian Hotel ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Waikiki, Honolulu</div>
+          <div class="venue-desc">The iconic "Pink Palace of the Pacific." Historic 1927 resort right on Waikiki Beach. Ceremony on the oceanfront coconut grove or beachside lawn. Iconic, recognizable, and unforgettable. On the higher end budget-wise but can do intimate packages.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Iconic Waikiki</span>
+            <span class="venue-pill">Historic resort</span>
+            <span class="venue-pill">Beachfront</span>
+          </div>
+          <div class="venue-price">Packages from ~$5,000+ depending on size</div>
+          <div class="venue-highlight">✦ The most "classic Hawaii wedding" experience</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAUI VENUES -->
+    <div class="venue-island-group">
+      <div class="venue-island-header">
+        <span class="venue-island-icon">🌺</span>
+        <div>
+          <div class="venue-island-title">Maui Venues</div>
+          <div class="venue-island-subtitle">Most romantic · Premium price point · World-class scenery</div>
+        </div>
+      </div>
+      <div class="venue-cards">
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://maps.app.goo.gl/makena-cove-maui" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Makena Cove (Secret Beach) ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Makena, South Maui</div>
+          <div class="venue-desc">A small, intimate rocky cove surrounded by lava outcroppings — one of Maui's most magical ceremony spots. Crystal-clear turquoise water, dramatic rock walls, and total seclusion. Sea turtles sometimes appear during ceremonies. Best for elopements and very small groups.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Elopement ideal</span>
+            <span class="venue-pill">Under 15 guests</span>
+            <span class="venue-pill">Lava + ocean</span>
+            <span class="venue-pill">Sea turtles!</span>
+          </div>
+          <div class="venue-price">Beach permit: <strong>~$40</strong> · Most affordable Maui option</div>
+          <div class="venue-highlight">✦ #1 most photographed elopement spot on Maui</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://simplemauiwedding.net/hawaii-wedding-packages-your-ultimate-guide/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Polo Beach / D.T. Fleming Beach ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Wailea / Kapalua, Maui</div>
+          <div class="venue-desc">Two of Maui's most beautiful public beach ceremony spots. Polo Beach offers stunning Wailea sunsets. D.T. Fleming is a long, natural stretch on the northwest coast with a more wild, romantic feel. Both accommodate up to 26 guests (per state regs).</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Up to 26 guests</span>
+            <span class="venue-pill">Permit required</span>
+            <span class="venue-pill">Stunning sunsets</span>
+          </div>
+          <div class="venue-price">Permit: <strong>$40</strong> · Packages from <strong>~$2,550</strong></div>
+          <div class="venue-highlight">✦ Classic Maui beach ceremony experience</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.kukahikoestate.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kukahiko Estate (Makena) ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Makena, South Maui</div>
+          <div class="venue-desc">Family-owned private oceanfront estate with a feeling of total seclusion. Dramatic lava rocks, ocean views, and sometimes sea turtles and whales visible from the property. Intimate, private, and deeply Hawaiian in feel. One of the most beautiful small venues on the island.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Private estate</span>
+            <span class="venue-pill">Oceanfront lava</span>
+            <span class="venue-pill">Intimate</span>
+            <span class="venue-pill">Sea turtles + whales</span>
+          </div>
+          <div class="venue-price">Mid-range venue fees — contact for custom quote</div>
+          <div class="venue-highlight">✦ Best private estate feel on Maui</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.mauipineapplechapel.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Pineapple Chapel (Kapalua) ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Kapalua, West Maui</div>
+          <div class="venue-desc">A charming, modern chapel on the shores of Oneloa Bay with epic cliffside ocean views. Stunning modern architecture and a unique alternative to a beach ceremony. 5-minute walk to the beach for photos. Ceremony-only packages available from $1,500.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Chapel</span>
+            <span class="venue-pill">Cliffside views</span>
+            <span class="venue-pill">Under 20 guests ideal</span>
+          </div>
+          <div class="venue-price">Ceremony only: <strong>$1,500</strong> · Full package: <strong>$3,500–$5,000</strong></div>
+          <div class="venue-highlight">✦ Best chapel experience in all of Hawaii</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.haikumill.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Haiku Mill ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Haiku, North Maui</div>
+          <div class="venue-desc">A fairytale venue — a 19th century sugar mill transformed into a lush, jungle-draped wedding space. Towering banyan trees, stone ruins, and tropical greenery. No ocean view, but the most otherworldly, magazine-worthy venue in Hawaii. Best for couples wanting something completely unique.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Historic mill</span>
+            <span class="venue-pill">Lush jungle</span>
+            <span class="venue-pill">Luxury tier</span>
+            <span class="venue-pill">Fairytale feel</span>
+          </div>
+          <div class="venue-price">Luxury pricing — starts around <strong>$8,000–$15,000+</strong></div>
+          <div class="venue-highlight">✦ Most unique / editorial venue in all of Hawaii</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.hyatt.com/andaz/en-US/oggaz-andaz-maui-at-wailea-resort/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Andaz Maui at Wailea ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Wailea, South Maui</div>
+          <div class="venue-desc">A boutique 5-star resort with multiple oceanfront ceremony lawns. Modern Hawaiian architecture, farm-to-table food, and intimate spaces for ceremonies of 50–400 guests. Consistently rated Maui's top wedding resort. Sunny, dry Wailea weather is a major plus.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">5-star resort</span>
+            <span class="venue-pill">Multiple lawns</span>
+            <span class="venue-pill">Dry weather zone</span>
+            <span class="venue-pill">Adults-only hotel</span>
+          </div>
+          <div class="venue-price">Resort packages — expect <strong>$10,000–$30,000+</strong></div>
+          <div class="venue-highlight">✦ Consistently ranked #1 wedding resort on Maui</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.fourseasons.com/maui/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Four Seasons Maui at Wailea ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Wailea, South Maui</div>
+          <div class="venue-desc">Only one wedding per day — meaning full staff attention on your celebration. Direct beach access. Three ceremony spots: Plumeria Point rooftop, Wailea Point lawn, and Plumeria Gardens. Exceptional service and stunning setting. Top of the Maui food chain.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">One wedding/day</span>
+            <span class="venue-pill">Direct beach</span>
+            <span class="venue-pill">World-class service</span>
+          </div>
+          <div class="venue-price">Premium packages — <strong>$15,000–$40,000+</strong></div>
+          <div class="venue-highlight">✦ Best full-service luxury experience on Maui</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- KAUAI VENUES -->
+    <div class="venue-island-group">
+      <div class="venue-island-header">
+        <span class="venue-island-icon">🌿</span>
+        <div>
+          <div class="venue-island-title">Kauaʻi Venues</div>
+          <div class="venue-island-subtitle">Most dramatic scenery · Rain risk · Romantic + private</div>
+        </div>
+      </div>
+      <div class="venue-cards">
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://maps.app.goo.gl/shipwreck-beach-kauai" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Shipwreck Beach ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Poipu, South Shore Kauai</div>
+          <div class="venue-desc">Dramatic, rugged beach with striking cliffs, unforgettable sunsets, and a wilder feel than most Hawaii beaches. Located near Poipu resort area — convenient for guests staying nearby. South shore means drier, sunnier weather. Up to 26 guests.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Up to 26 guests</span>
+            <span class="venue-pill">Cliffs + sunset</span>
+            <span class="venue-pill">Sunny south shore</span>
+          </div>
+          <div class="venue-price">Beach permit: <strong>~$50</strong> · Ceremony packages from <strong>~$800</strong></div>
+          <div class="venue-highlight">✦ Most dramatic beach backdrop on Kauai</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://maps.app.goo.gl/tunnels-beach-kauai" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Tunnels Beach (Haena) ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 North Shore, Kauai</div>
+          <div class="venue-desc">Crystal-clear, calm waters and an expansive sandy shore on Kauai's stunning north shore. Mountain backdrops, lush greenery, and that quintessential "Garden Isle" beauty. Perfect for small intimate ceremonies. Note: north shore gets more rain.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Crystal water</span>
+            <span class="venue-pill">Mountain views</span>
+            <span class="venue-pill">Intimate size</span>
+            <span class="venue-pill">Rain risk</span>
+          </div>
+          <div class="venue-price">Permit required · Very affordable access</div>
+          <div class="venue-highlight">✦ Most scenic north shore beach for small ceremonies</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.thebeachhousekauai.com/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Beach House (Poipu) ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Poipu, South Shore Kauai</div>
+          <div class="venue-desc">A beloved oceanfront restaurant that doubles as one of the most intimate private event spaces in Hawaii. The ceremony site is literally feet from the Pacific. Great food for a post-ceremony dinner. Consistently voted one of the best micro-wedding venues in all of Hawaii.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Restaurant + venue</span>
+            <span class="venue-pill">Oceanfront</span>
+            <span class="venue-pill">Micro-wedding ideal</span>
+            <span class="venue-pill">Dinner onsite</span>
+          </div>
+          <div class="venue-price">Venue + dinner packages — moderate pricing, contact for quote</div>
+          <div class="venue-highlight">✦ Best all-in-one ceremony + dinner spot on Kauai</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://naainakai.org/events/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Na ʻAina Kai Botanical Gardens ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 North Shore, Kauai</div>
+          <div class="venue-desc">An extraordinary 240-acre botanical garden and sculpture park on Kauai's north shore. Waterfalls, ponds, lush tropical plants, and stunning ocean views. A once-in-a-lifetime setting for couples who want lush gardens over a beach. Intimate and utterly unique.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Botanical garden</span>
+            <span class="venue-pill">240 acres</span>
+            <span class="venue-pill">Waterfall backdrop</span>
+            <span class="venue-pill">Sculptural art</span>
+          </div>
+          <div class="venue-price">Venue fee applies — contact for pricing</div>
+          <div class="venue-highlight">✦ Most unique non-beach venue on Kauai</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.waimeaplantation.com/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Waimea Plantation Cottages ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Waimea, West Kauai</div>
+          <div class="venue-desc">Voted #1 Wedding Venue on Kauai by Hawaii Magazine readers. Classic 1920s plantation-era cottage estate with old-growth coconut grove, oceanfront lawn, and historic Hawaiian charm. Perfect for intimate gatherings wanting authentic local character.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">#1 rated Kauai venue</span>
+            <span class="venue-pill">Historic plantation</span>
+            <span class="venue-pill">Oceanfront lawn</span>
+          </div>
+          <div class="venue-price">Mid-range pricing — contact for current rates</div>
+          <div class="venue-highlight">✦ Most historic, authentic Hawaiian venue on Kauai</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.marriott.com/en-us/hotels/lihsr-the-st-regis-princeville-resort/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">St. Regis Princeville Resort ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Princeville, North Shore Kauai</div>
+          <div class="venue-desc">Kauai's most iconic luxury hotel, perched on a clifftop above Hanalei Bay with views of Makana Mountain. Ceremony on the Kamani Cove beach lawn. In-house event team, orchid arrangements, and the most dramatic cliffside sunset views in Hawaii.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Clifftop resort</span>
+            <span class="venue-pill">Hanalei Bay views</span>
+            <span class="venue-pill">Full event team</span>
+          </div>
+          <div class="venue-price">Luxury tier — <strong>$15,000–$35,000+</strong></div>
+          <div class="venue-highlight">✦ Most dramatic luxury view in all of Hawaii</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BIG ISLAND VENUES -->
+    <div class="venue-island-group">
+      <div class="venue-island-header">
+        <span class="venue-island-icon">🌋</span>
+        <div>
+          <div class="venue-island-title">Big Island Venues</div>
+          <div class="venue-island-subtitle">Most affordable · Dramatic lava + ocean · Kona area = dry + sunny</div>
+        </div>
+      </div>
+      <div class="venue-cards">
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://simplehawaiiwedding.com/big-island-beach-wedding-locations" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kikaua Point Park ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Waikoloa, Kohala Coast</div>
+          <div class="venue-desc">A simple, beautiful beach perfect for small ceremonies. Calm water, gentle palms, gorgeous coastline. Near major Kohala Coast resorts so easy for guests. Permit costs only about $20. One of the most recommended budget beach options on the Big Island.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Small ceremonies</span>
+            <span class="venue-pill">Near resorts</span>
+            <span class="venue-pill">Calm water</span>
+            <span class="venue-pill">~$20 permit</span>
+          </div>
+          <div class="venue-price">Permit: <strong>~$20</strong> · Packages from <strong>~$995</strong></div>
+          <div class="venue-highlight">✦ Cheapest beautiful beach permit on any Hawaiian island</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://simplehawaiiwedding.com/big-island-beach-wedding-locations" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kukio Beach ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Kohala Coast, Big Island</div>
+          <div class="venue-desc">White sand beach with calm turquoise water and rocky outcroppings. Secluded luxury feel — it's located adjacent to the Four Seasons Hualalai but the beach itself is accessible. Perfect for sunrise or sunset elopements. Very peaceful and uncrowded.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Secluded</span>
+            <span class="venue-pill">White sand</span>
+            <span class="venue-pill">Sunrise/sunset</span>
+            <span class="venue-pill">Elopement perfect</span>
+          </div>
+          <div class="venue-price">Permit required · Very affordable</div>
+          <div class="venue-highlight">✦ Most beautiful "hidden" beach on the Big Island</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://simplehawaiiwedding.com/big-island-beach-wedding-locations" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kona Old Airport Beach ↗</a></div>
+            <span class="venue-badge badge-budget">Budget</span>
+          </div>
+          <div class="venue-location">📍 Kailua-Kona, Big Island</div>
+          <div class="venue-desc">A large, expansive beach (built on a former runway!) with ample space for groups of all sizes. The scale means you can always find a quiet ceremony spot even on busy days. Close to downtown Kona — ideal for couples staying in the Kona area. Easy parking.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Large beach</span>
+            <span class="venue-pill">Downtown Kona</span>
+            <span class="venue-pill">Easy parking</span>
+            <span class="venue-pill">All group sizes</span>
+          </div>
+          <div class="venue-price">Permit required · Very affordable access</div>
+          <div class="venue-highlight">✦ Best for groups — most space of any Kona beach</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.theknot.com/marketplace/kona-salt-farm-kailua-kona-hi-2088797" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kona Salt Farm ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Keahole Point, Kona Coast</div>
+          <div class="venue-desc">Utterly unique — a working salt farm right on the ocean at Keahole Point. Rustic, charming, and deeply Hawaiian. Salt ponds beside the open Pacific with spectacular sunsets. Customizable, intimate, and budget-friendlier than resort venues. One of the most distinctive venues in all Hawaii.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Working salt farm</span>
+            <span class="venue-pill">Ocean views</span>
+            <span class="venue-pill">Rustic + unique</span>
+            <span class="venue-pill">Customizable</span>
+          </div>
+          <div class="venue-price">Mid-range · More affordable than resorts · Contact for quote</div>
+          <div class="venue-highlight">✦ Most unique venue in all of Hawaii — nowhere else like it</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.holualoa-inn.com/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Holualoa Inn ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Holualoa (above Kona), Big Island</div>
+          <div class="venue-desc">A stunning 30-acre private estate perched at 1,400 ft above the Kona coast, surrounded by coffee trees and tropical gardens. Multiple ceremony spots: Rooftop Gazebo, Zen Buddha Garden, Blue Jade Garden, and the Malulani Pavilion for larger events. Panoramic ocean views from every angle. Can often host entire small guest lists on-property.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">B&B estate</span>
+            <span class="venue-pill">30 acres</span>
+            <span class="venue-pill">Coffee farm</span>
+            <span class="venue-pill">Multiple ceremony spots</span>
+            <span class="venue-pill">Accommodations onsite</span>
+          </div>
+          <div class="venue-price">Mid-range · Small wedding packages · Contact for rates</div>
+          <div class="venue-highlight">✦ Best "stay on the venue" option — guests can sleep there!</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.puakearanch.com/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Puakea Ranch ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Hawi, North Kohala</div>
+          <div class="venue-desc">A romantic private ranch in the lush hills of North Kohala with stunning Pacific views and a magical old-growth monkey pod tree as the ceremony backdrop. Cottages on-site for guests. Sweeping Kohala hills and ocean views. Ideal for couples who want a ranch/nature wedding instead of beach.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Private ranch</span>
+            <span class="venue-pill">Monkey pod tree</span>
+            <span class="venue-pill">Cottages onsite</span>
+            <span class="venue-pill">Ocean + hill views</span>
+          </div>
+          <div class="venue-price">Mid-range · Boutique pricing · Contact for quote</div>
+          <div class="venue-highlight">✦ Best ranch / non-beach wedding venue on the Big Island</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://simplehawaiiwedding.com/big-island-wedding-venues/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Royal Kona Resort ↗</a></div>
+            <span class="venue-badge badge-mid">Mid-Range</span>
+          </div>
+          <div class="venue-location">📍 Kailua-Kona, Big Island</div>
+          <div class="venue-desc">Oceanfront resort in the heart of Kona with two standout ceremony locations: Sunset Cove (lava rocks + sandy terrace) and Nohea Point (tucked-away gated oasis with pure serenity). Ceremony packages available through Simple Hawaii Wedding. Great cocktail hour and dinner options on-site.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Oceanfront resort</span>
+            <span class="venue-pill">2 ceremony spots</span>
+            <span class="venue-pill">Package-friendly</span>
+            <span class="venue-pill">Downtown Kona</span>
+          </div>
+          <div class="venue-price">Ceremony packages: <strong>~$2,000–$5,000</strong> · Resort fees extra</div>
+          <div class="venue-highlight">✦ Best mid-range resort ceremony experience on the Big Island</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.fairmont.com/orchid-hawaii/weddings/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Fairmont Orchid ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Waikoloa, Kohala Coast</div>
+          <div class="venue-desc">A lavish resort on the Kohala Coast with gorgeous beach ceremony locations and an expansive oceanfront grassy lawn. Recently seen on The Bachelor. Lush gardens, waterfalls, and world-class service. One of the most visually stunning resort venues on the Big Island.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Kohala Coast</span>
+            <span class="venue-pill">Beach + lawn</span>
+            <span class="venue-pill">Waterfalls + gardens</span>
+            <span class="venue-pill">Full event team</span>
+          </div>
+          <div class="venue-price">Luxury packages — <strong>$8,000–$25,000+</strong></div>
+          <div class="venue-highlight">✦ Most visually stunning luxury resort on the Big Island</div>
+        </div>
+
+        <div class="venue-card">
+          <div class="venue-card-top">
+            <div class="venue-card-name"><a href="https://www.konavillage.com/weddings" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--pink)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">Kona Village (Hualalai) ↗</a></div>
+            <span class="venue-badge badge-luxury">Luxury</span>
+          </div>
+          <div class="venue-location">📍 Kailua-Kona, Big Island</div>
+          <div class="venue-desc">The most coveted luxury venue on the Big Island — modern design blended with dramatic black lava rock, turquoise water, and lush flora. Thoughtfully designed property that immerses you in Hawaii's natural beauty. Top recommendation from local photographers and videographers. The price reflects it.</div>
+          <div class="venue-meta">
+            <span class="venue-pill">Ultra-luxury</span>
+            <span class="venue-pill">Lava + ocean</span>
+            <span class="venue-pill">Modern architecture</span>
+            <span class="venue-pill">Top-rated</span>
+          </div>
+          <div class="venue-price">Top luxury tier — <strong>$20,000–$50,000+</strong></div>
+          <div class="venue-highlight">✦ #1 luxury wedding venue recommendation on the Big Island</div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="divider" />
+
+  <!-- LEGAL / PERMITS -->
+  <section class="fade-up">
+    <p class="section-label">Legal Requirements</p>
+    <h2>What You Need to Get Married</h2>
+    <div class="legal-steps">
+      <div class="legal-step">
+        <span class="step-num">1</span>
+        <div class="step-content">
+          <h4>Hawaii Marriage License — $70</h4>
+          <p>Apply online in advance at ehawaii.gov, then meet with a licensed agent in person upon arrival. License is valid for 30 days. Must be obtained before the ceremony.</p>
+        </div>
+      </div>
+      <div class="legal-step">
+        <span class="step-num">2</span>
+        <div class="step-content">
+          <h4>Beach Permit (DLNR Wiki Permit) — $40–$50</h4>
+          <p>All public beach weddings in Hawaiʻi are classified as "commercial activity" and require a Right-of-Entry permit from the Dept. of Land & Natural Resources. Max 25 guests. Apply at ehawaii.gov/permits.</p>
+        </div>
+      </div>
+      <div class="legal-step">
+        <span class="step-num">3</span>
+        <div class="step-content">
+          <h4>Liability Insurance — $75–$150</h4>
+          <p>State requires a $1 million liability policy. One-day "special event" insurance is available from many providers for $75–$150. Must name the State of Hawaii as additional insured.</p>
+        </div>
+      </div>
+      <div class="legal-step">
+        <span class="step-num">4</span>
+        <div class="step-content">
+          <h4>Licensed Officiant</h4>
+          <p>Must be licensed by the State of Hawaiʻi. Most wedding packages include an officiant. You can also register a friend/family member through the state's online system at ehawaii.gov.</p>
+        </div>
+      </div>
+      <div class="legal-step">
+        <span class="step-num">5</span>
+        <div class="step-content">
+          <h4>Beach Rules to Know</h4>
+          <p>No arches, gazebos, chairs, or amplified sound on most public beaches without a special permit. No artificial flowers. "Leave No Trace" required. Max 25 guests at beach ceremonies. No alcohol on beaches.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TIPS -->
+  <section class="fade-up">
+    <p class="section-label">Smart Planning</p>
+    <h2>Budget-Saving Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Book Way Early (You Have Time!)</div>
+        <div class="tip-text">With 8/20/2028 as your date, you have over 2 years. Affordable vendors get booked first — locking in early saves significantly on photography and ceremony packages.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📆</div>
+        <div class="tip-title">Choose a Weekday</div>
+        <div class="tip-text">Monday–Thursday weddings are often significantly cheaper for venues and vendors. Since guests are traveling anyway, a mid-week date makes sense.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🏖️</div>
+        <div class="tip-title">Go Beach Over Resort</div>
+        <div class="tip-text">A public beach permit costs $40–$50 vs. resort venue fees of $3,000–$20,000+. A beach ceremony can be more beautiful and intimate anyway.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📸</div>
+        <div class="tip-title">Hire a Local Photographer</div>
+        <div class="tip-text">A mainland photographer can add $2,000+ in travel costs. Local Hawaii photographers know the best light, spots, and weather patterns — and cost less.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🍽️</div>
+        <div class="tip-title">Reception at a Restaurant</div>
+        <div class="tip-text">Skip the catered venue reception. Book a private lanai or back room at a local restaurant for your group dinner — far more affordable and often more fun.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📦</div>
+        <div class="tip-title">Use All-in-One Packages</div>
+        <div class="tip-text">Companies like Simple Maui Wedding, Weddings of Hawaii, and AlohaFunWeddings bundle officiant + photographer + permit + florals. Bundling saves vs. booking separately.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌧️</div>
+        <div class="tip-title">Avoid Rainy Season</div>
+        <div class="tip-text">August is generally dry season in Hawaii — great news for 8/20! The drier west/south shores of each island are your safest bets for outdoor ceremonies.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🏡</div>
+        <div class="tip-title">Consider Airbnb + Private Property</div>
+        <div class="tip-text">A private property wedding requires no beach permit, allows arches + chairs, and a well-chosen Airbnb can double as lodging. Can actually save money overall.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- RECOMMENDATION -->
+  <section class="fade-up">
+    <p class="section-label">Recommendation</p>
+    <h2>Best Fit for Your Budget</h2>
+    <div class="rec-banner">
+      <span class="rec-badge">Best Budget Pick</span>
+      <h3>🌋 Big Island (Kona Area) — or — 🏙️ Oʻahu</h3>
+      <p>
+        For a $10–15k budget with a small, intimate group, the <strong style="color:var(--text)">Big Island's Kona coast</strong> is the most affordable choice — about half the cost of Maui, uncrowded beaches, and dramatic scenery. Kukio Beach and Kikaua Point Park are stunning ceremony spots. <br><br>
+        If easy flight access for guests (flying from the mainland) is a priority, <strong style="color:var(--text)">Oʻahu</strong> is the practical pick — the most direct flights, widest hotel range, and ceremony packages starting at $395. Just steer away from the Waikiki corridor for a more intimate feel. <br><br>
+        <strong style="color:var(--text)">Maui</strong> is the most romantic but pushes your budget harder. <strong style="color:var(--text)">Kauaʻi</strong> is spectacular but priciest overall and has the most rain risk.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ISLAND COMPARISON TABLE -->
+  <section class="fade-up">
+    <p class="section-label">Side by Side</p>
+    <h2>Island Comparison 📊</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;margin-bottom:0.5rem;">
+      All four islands at a glance — vibe, weather, cost, and what makes each one worth considering.
+    </p>
+    <div class="comp-wrap">
+    <table class="comp-table">
+      <tr>
+        <th>Island</th>
+        <th>Vibe</th>
+        <th>Aug Weather</th>
+        <th>Flights from Sac</th>
+        <th>Ceremony Cost</th>
+        <th>Crowds</th>
+        <th>Rain Risk</th>
+        <th>Best For</th>
+      </tr>
+      <tr>
+        <td>🏙️ Oʻahu</td>
+        <td>City meets beach</td>
+        <td>85°F, sunny</td>
+        <td>~5.5 hrs direct</td>
+        <td><span class="cpill cpill-green">$395–$3,300</span></td>
+        <td><span class="cpill cpill-red">High</span></td>
+        <td><span class="cpill cpill-green">Low</span></td>
+        <td>Budget, easy logistics</td>
+      </tr>
+      <tr>
+        <td>🌺 Maui</td>
+        <td>Romantic paradise</td>
+        <td>85°F, sunny</td>
+        <td>~5.5 hrs direct</td>
+        <td><span class="cpill cpill-yellow">$2,550–$7,250</span></td>
+        <td><span class="cpill cpill-yellow">Medium</span></td>
+        <td><span class="cpill cpill-green">Low (Wailea)</span></td>
+        <td>Romance, luxury, scenery</td>
+      </tr>
+      <tr>
+        <td>🌿 Kauaʻi</td>
+        <td>Lush + dramatic</td>
+        <td>80°F, variable</td>
+        <td>~5.5 hrs (1 stop)</td>
+        <td><span class="cpill cpill-red">$15k–$35k avg</span></td>
+        <td><span class="cpill cpill-green">Low</span></td>
+        <td><span class="cpill cpill-red">High (north shore)</span></td>
+        <td>Intimacy, nature, seclusion</td>
+      </tr>
+      <tr>
+        <td>🌋 Big Island</td>
+        <td>Raw + volcanic</td>
+        <td>85°F (Kona)</td>
+        <td>~5.5 hrs direct</td>
+        <td><span class="cpill cpill-green">$995–$5,000</span></td>
+        <td><span class="cpill cpill-green">Low</span></td>
+        <td><span class="cpill cpill-green">Low (Kona)</span></td>
+        <td>Budget, authenticity, unique</td>
+      </tr>
+    </table>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-top:0.75rem;font-weight:300;font-style:italic;">Ceremony cost ranges are for small beach packages. Resort weddings cost significantly more on all islands.</p>
+
+    <div class="comp-wrap" style="margin-top:2rem;">
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:0.75rem;">Venue type breakdown by island:</p>
+    <table class="comp-table">
+      <tr>
+        <th>Island</th>
+        <th>Budget Beach</th>
+        <th>Private Estate</th>
+        <th>Resort</th>
+        <th>Garden / Ranch</th>
+        <th>Chapel</th>
+        <th># of Vendors</th>
+      </tr>
+      <tr>
+        <td>🏙️ Oʻahu</td>
+        <td><span class="cpill cpill-green">✓ Many</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Tons</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-yellow">Limited</span></td>
+        <td><span class="cpill cpill-green">Most of any island</span></td>
+      </tr>
+      <tr>
+        <td>🌺 Maui</td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ World-class</span></td>
+        <td><span class="cpill cpill-green">✓ Upcountry</span></td>
+        <td><span class="cpill cpill-green">✓ Pineapple Chapel</span></td>
+        <td><span class="cpill cpill-green">Excellent variety</span></td>
+      </tr>
+      <tr>
+        <td>🌿 Kauaʻi</td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-yellow">Fewer options</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-red">Very limited</span></td>
+        <td><span class="cpill cpill-yellow">Fewer vendors</span></td>
+      </tr>
+      <tr>
+        <td>🌋 Big Island</td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Yes</span></td>
+        <td><span class="cpill cpill-green">✓ Ranches</span></td>
+        <td><span class="cpill cpill-red">Very limited</span></td>
+        <td><span class="cpill cpill-yellow">Good in Kona</span></td>
+      </tr>
+    </table>
+    </div>
+
+    <div class="comp-wrap" style="margin-top:2rem;">
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:0.75rem;">Guest experience comparison:</p>
+    <table class="comp-table">
+      <tr>
+        <th>Island</th>
+        <th>Flight Options</th>
+        <th>Hotels</th>
+        <th>Restaurants</th>
+        <th>Activities</th>
+        <th>Nightlife</th>
+        <th>Kid-Friendly</th>
+      </tr>
+      <tr>
+        <td>🏙️ Oʻahu</td>
+        <td><span class="cpill cpill-green">Most flights</span></td>
+        <td><span class="cpill cpill-green">Every budget</span></td>
+        <td><span class="cpill cpill-green">World-class</span></td>
+        <td><span class="cpill cpill-green">Everything</span></td>
+        <td><span class="cpill cpill-green">Yes</span></td>
+        <td><span class="cpill cpill-green">Great</span></td>
+      </tr>
+      <tr>
+        <td>🌺 Maui</td>
+        <td><span class="cpill cpill-green">Many direct</span></td>
+        <td><span class="cpill cpill-yellow">Mostly upscale</span></td>
+        <td><span class="cpill cpill-green">Excellent</span></td>
+        <td><span class="cpill cpill-green">Road to Hana, whales</span></td>
+        <td><span class="cpill cpill-yellow">Mild</span></td>
+        <td><span class="cpill cpill-green">Great</span></td>
+      </tr>
+      <tr>
+        <td>🌿 Kauaʻi</td>
+        <td><span class="cpill cpill-yellow">Fewer direct</span></td>
+        <td><span class="cpill cpill-yellow">Limited budget</span></td>
+        <td><span class="cpill cpill-yellow">Good, not epic</span></td>
+        <td><span class="cpill cpill-green">Napali, hiking</span></td>
+        <td><span class="cpill cpill-red">Minimal</span></td>
+        <td><span class="cpill cpill-yellow">OK</span></td>
+      </tr>
+      <tr>
+        <td>🌋 Big Island</td>
+        <td><span class="cpill cpill-yellow">Some direct</span></td>
+        <td><span class="cpill cpill-green">Range available</span></td>
+        <td><span class="cpill cpill-yellow">Good in Kona</span></td>
+        <td><span class="cpill cpill-green">Volcanoes, snorkel</span></td>
+        <td><span class="cpill cpill-red">Minimal</span></td>
+        <td><span class="cpill cpill-green">Great (turtles!)</span></td>
+      </tr>
+    </table>
+    </div>
+  </section>
+
+
+</main>
+
+<footer>
+  <p style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--pink);margin-bottom:0.5rem;">💍 8·20·2028 · Hawaiʻi</p>
+  <p>jonestes.me · All research current as of 2025–2026</p>
+</footer>
+
+<script>
+  // Countdown
+  function updateCountdown() {
+    const target = new Date('2028-08-20T17:00:00');
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) return;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById('cd-days').textContent = days.toLocaleString();
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Scroll fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

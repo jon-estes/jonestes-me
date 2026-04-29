@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jon & Ashley · Lake Tahoe · July 20, 2027</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fdf6f8; --bg2: #fff0f4; --bg3: #fce4ec;
+      --border: rgba(212,120,154,0.18); --border2: rgba(212,120,154,0.35);
+      --text: #2d1a22; --muted: #9e6e7e;
+      --pink: #c0446e; --pink2: #e07898; --pink3: rgba(212,120,154,0.1);
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,182,210,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,210,230,0.15) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+    .page { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.5s ease forwards; flex-wrap: wrap; }
+    nav a { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--pink); border-color: var(--pink); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 11px; color: var(--muted); display: block; width: 100%; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--pink); }
+    .hero { text-align: center; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.05s forwards; }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 10vw, 90px); font-weight: 300; line-height: 1.0; color: var(--text); margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--pink2); }
+    .hero-date { font-size: 14px; color: var(--muted); font-weight: 300; letter-spacing: 0.08em; margin-top: 0.75rem; }
+    .hero-divider { width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--pink), transparent); margin: 1.25rem auto; }
+    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards; }
+    .cd-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 0.5rem; text-align: center; }
+    .cd-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: var(--pink); line-height: 1; }
+    .cd-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.15s forwards; }
+    .couple-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .couple-card.pink-border { border-left: 2px solid var(--pink); }
+    .couple-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; }
+    .couple-name em { font-style: italic; color: var(--pink2); }
+    .couple-facts { list-style: none; }
+    .couple-facts li { font-size: 13px; color: var(--muted); font-weight: 300; padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .couple-facts li:last-child { border-bottom: none; }
+    .couple-facts li span { color: var(--text); font-weight: 400; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--text); margin-bottom: 1.5rem; }
+    .venues-section { opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; margin-bottom: 3.5rem; }
+    .venue-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+    .venue-card:hover { border-color: var(--border2); }
+    .venue-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .venue-header-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 3px; }
+    .venue-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .venue-tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+    .venue-tag.pink { border-color: var(--pink); color: var(--pink); }
+    .venue-tag.green { border-color: #7ecba1; color: #7ecba1; }
+    .venue-rating { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--pink); white-space: nowrap; }
+    .venue-rating span { font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+    .venue-body { padding: 0 1.5rem 1.25rem; }
+    .venue-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1rem; }
+    .pc-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+    .pc-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 8px 12px; background: var(--bg3); }
+    .pc-table th.pros { color: #7ecba1; text-align: left; border-radius: 6px 0 0 0; }
+    .pc-table th.cons { color: #e8896a; text-align: left; border-radius: 0 6px 0 0; }
+    .pc-table td { padding: 7px 12px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; line-height: 1.55; }
+    .pc-table td.pro::before { content: '✓ '; color: #7ecba1; font-weight: 500; }
+    .pc-table td.con::before { content: '✕ '; color: #e8896a; font-weight: 500; }
+    .pc-table tr:last-child td { border-bottom: none; }
+    .venue-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .venue-price { font-size: 12px; color: var(--muted); font-weight: 300; }
+    .venue-price strong { color: var(--text); font-weight: 500; }
+    .venue-link { font-size: 12px; color: var(--pink); text-decoration: none; font-weight: 500; }
+    .venue-link:hover { text-decoration: underline; }
+    .tips-section { opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; margin-bottom: 3.5rem; }
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .tip-icon { font-size: 20px; margin-bottom: 8px; }
+    .tip-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .tip-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .tip-card.pink-left { border-left: 2px solid var(--pink); }
+    .love-note { text-align: center; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note p { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 300; color: var(--pink); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+    .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 1rem; font-style: normal; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.5s ease 0.02s forwards; transition: color 0.15s; }
+    .back-link:hover { color: var(--pink); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 560px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 48px; } .couple-grid { grid-template-columns: 1fr; } .countdown { grid-template-columns: repeat(2, 1fr); } .venue-header { flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <a class="back-link" href="wedding.html">← Back to all venues</a>
+
+  <div class="hero">
+    <div class="hero-eyebrow">🏔️ Lake Tahoe, California/Nevada · July 20, 2027</div>
+    <h1>Jon <em>&</em> Ashley</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Sacramento → Lake Tahoe &nbsp;·&nbsp; A mountain lake like nowhere else on earth — just 2 hours away</div>
+  </div>
+
+  <div class="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">Seconds</div></div>
+  </div>
+
+  <div style="margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.7s ease 0.12s forwards;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:180px 180px;gap:8px;border-radius:16px;overflow:hidden;">
+      <div style="grid-row:1/3;background:url('https://images.unsplash.com/photo-1531210483974-4f8205d8b5ef?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80') center/cover no-repeat;"></div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.05em;font-style:italic;">Lake Tahoe 🏔️ — the most breathtaking lake in North America, 2 hours from Sacramento</p>
+  </div>
+
+  <div class="couple-grid">
+    <div class="couple-card pink-border">
+      <div class="couple-name">Jon <em>Estes</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇳 <span>Chinese American</span></li>
+        <li>⚽ <span>Soccer lover & coach</span></li>
+        <li>🃏 <span>Poker player & former dealer</span></li>
+        <li>📐 <span>Math enthusiast</span></li>
+        <li>🧩 <span>Collector — coins, cubes, chips, kicks</span></li>
+        <li>👧👧👧 <span>Dad to Annie, Clem & Estella</span></li>
+      </ul>
+    </div>
+    <div class="couple-card pink-border">
+      <div class="couple-name">Ashley <em>Xiong</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇷 <span>Costa Rican</span></li>
+        <li>🌊 <span>Beach lover</span></li>
+        <li>🛍️ <span>Shopping enthusiast</span></li>
+        <li>🩰 <span>Pure Barre Princess</span></li>
+        <li>👧👧👧 <span>Mom to Annie, Clem & Estella</span></li>
+        <li>💕 <span>The reason Jon smiles like that</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="venues-section">
+    <div class="section-eyebrow">Where it happens</div>
+    <div class="section-title">Lake Tahoe Venue Options 🏔️</div>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem;line-height:1.7;">July at Lake Tahoe is spectacular — warm, clear days, the impossibly blue lake, and Sierra Nevada peaks as your backdrop. It's 2 hours from Sacramento, making it the closest "wow" destination on this list. Ashley wants coastal/beach — Tahoe has stunning beaches with crystal-clear water and sandy shores, just mountain-style. <strong style="color:var(--text);">A real hidden gem for weddings.</strong></p>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Edgewood Tahoe Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">⭐ Top Pick</span>
+            <span class="venue-tag">Stateline, NV</span>
+            <span class="venue-tag">Luxury Lakefront</span>
+            <span class="venue-tag">Beachfront</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.7<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The crown jewel of Lake Tahoe weddings. Edgewood sits directly on the lake's southern shore with its own private beach, boathouse, and 180° views of the lake and mountains. The Lodge opened in 2017 — pristine, modern luxury with the natural beauty of Tahoe as your canvas. Ceremonies happen on the beach, lakeside lawn, or the iconic Boat House pier over the water. One of the top-rated resort wedding venues in America. For a couple who wants scenery that makes guests weep, this is it.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Private beach directly on Lake Tahoe</td><td class="con">Very expensive — premium summer pricing</td></tr>
+          <tr><td class="pro">Boathouse ceremony over the water — stunning</td><td class="con">Books 12–18 months out for July</td></tr>
+          <tr><td class="pro">Mountain + lake backdrop = unbeatable photos</td><td class="con">Nevada side — small drive from South Shore</td></tr>
+          <tr><td class="pro">Full resort — spa, golf, beach, boat rentals</td><td class="con">Minimum spend requirements</td></tr>
+          <tr><td class="pro">Only 2 hours from Sacramento — easy for family</td><td class="con">High elevation (6,200 ft) — some guests may feel it</td></tr>
+          <tr><td class="pro">July weather is ideal — 75°F, sunny, clear</td><td class="con">Wildfire smoke risk in dry years</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$$ · $30k–$70k+</strong> · Contact for 2027 pricing</div>
+          <a class="venue-link" href="https://www.edgewood-tahoe.com/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>The Landing Resort & Spa</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Best Boutique</span>
+            <span class="venue-tag">South Lake Tahoe</span>
+            <span class="venue-tag">Lakeside</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.0<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A boutique luxury resort directly on the South Lake Tahoe shoreline with stunning lake views, a private pier, and beautiful indoor/outdoor event spaces. The Landing is more intimate than Edgewood — perfect for 20–80 guests. The lakeside ceremony space with the Sierra backdrop is breathtaking. Full-service wedding coordination on-site. The resort itself is exceptionally designed with mountain-modern aesthetics. Guests can kayak, paddleboard, or swim right from the property.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Private pier directly on the lake</td><td class="con">Smaller — best for under 80 guests</td></tr>
+          <tr><td class="pro">More affordable than Edgewood</td><td class="con">Less resort amenities than Edgewood</td></tr>
+          <tr><td class="pro">Intimate and boutique — personal service</td><td class="con">South Lake Tahoe area can be busy in summer</td></tr>
+          <tr><td class="pro">Beautiful mountain-modern design</td><td class="con">Limited ceremony locations vs. larger venues</td></tr>
+          <tr><td class="pro">Water sports right from property</td><td class="con">High demand — books fast</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $18k–$40k</strong> · Best boutique option</div>
+          <a class="venue-link" href="https://www.thelandingtahoe.com/events/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Camp Richardson Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Ashley's Vibe</span>
+            <span class="venue-tag">South Shore</span>
+            <span class="venue-tag">Beach Ceremony</span>
+            <span class="venue-tag green">Best Sandy Beach</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.8<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Camp Richardson has the best sandy beach on Lake Tahoe — wide, soft, and stretching along the south shore with the mountains reflected in the crystal-clear water. If Ashley wants toes in the sand with water in the background, this is the closest Tahoe gets to a true beach wedding. The venue has a wonderful rustic-resort character, multiple ceremony and reception options, a full-service marina, and accommodations on-site. July here is pure magic — warm, sunny, and the lake is an unreal shade of blue.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Best sandy beach on the lake — toes in sand</td><td class="con">More rustic/casual than luxury resorts</td></tr>
+          <tr><td class="pro">True beach ceremony feel in the mountains</td><td class="con">Public beach nearby — some foot traffic</td></tr>
+          <tr><td class="pro">More affordable than Edgewood/Landing</td><td class="con">Not ultra-luxury — more camp-style</td></tr>
+          <tr><td class="pro">Marina, kayaking, paddleboarding on-site</td><td class="con">Kids' accommodations more cabin-style</td></tr>
+          <tr><td class="pro">Full resort — food, lodging, activities</td><td class="con">July books fast — reserve early</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $12k–$25k</strong> · Best beach value at Tahoe</div>
+          <a class="venue-link" href="https://www.camprichardson.com/events" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Thunderbird Lodge</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">Incline Village, NV</span>
+            <span class="venue-tag">Historic Estate</span>
+            <span class="venue-tag">Private Cove</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.5<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A legendary 1930s historic estate on the east shore of Lake Tahoe with a private cove and boathouse. This is one of the most unique and exclusive wedding venues in Nevada — a National Historic Landmark with old-world architecture, sweeping lake views, and an incredibly romantic atmosphere. The ceremony is held on the private beach cove, reception in the beautiful stone lodge. Best for couples who want something truly one-of-a-kind and historically significant.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Completely unique — private historic estate</td><td class="con">Capacity limits — intimate ceremonies only</td></tr>
+          <tr><td class="pro">Private cove and boathouse on the lake</td><td class="con">East shore — further from Sacramento</td></tr>
+          <tr><td class="pro">Historic National Landmark — incredible story</td><td class="con">No on-site hotel — guests stay elsewhere</td></tr>
+          <tr><td class="pro">Photography backdrops are extraordinary</td><td class="con">Premium pricing for exclusivity</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $20k–$45k</strong> · Exclusive historic estate</div>
+          <a class="venue-link" href="https://thunderbirdtahoe.org/private-events/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-section">
+    <div class="section-eyebrow">Good to know</div>
+    <div class="section-title">Planning Tips for Tahoe July 2027 🗓️</div>
+    <div class="tips-grid">
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🚗</div>
+        <div class="tip-title">Closest destination on the list</div>
+        <div class="tip-text">Just 2 hours from Sacramento. Mom, dad, and sister drive up the same day. No plane tickets, no passports, no logistics stress. It's practically your backyard — but it doesn't feel like it.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🌊</div>
+        <div class="tip-title">Yes, it has beaches</div>
+        <div class="tip-text">Lake Tahoe has wide sandy beaches with crystal-clear water. July water temperature is 65–70°F — perfect for the kids. It's not the ocean, but it's breathtakingly beautiful and genuinely beach-like.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">☀️</div>
+        <div class="tip-title">Peak summer weather</div>
+        <div class="tip-text">July averages 75°F with low humidity and nearly zero rain. Cool mountain evenings are perfect for outdoor receptions. Occasional afternoon thunderstorms — have a backup plan.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🔥</div>
+        <div class="tip-title">Wildfire smoke risk</div>
+        <div class="tip-text">This is the one caveat — California's fire season overlaps with July. Some years are fine, others have smoke. Check the forecast close to the date and have an indoor backup option.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Book ASAP</div>
+        <div class="tip-text">Tahoe July weekends are the most in-demand wedding dates in Northern California. Contact venues by early 2026. Edgewood and Landing especially fill up 12–18 months out.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🎉</div>
+        <div class="tip-title">Wedding weekend activities</div>
+        <div class="tip-text">Tahoe is perfect for a full weekend — boat rentals, kayaking, Emerald Bay hikes, Sand Harbor, casino night in Stateline, and beach days for Annie, Clem & Estella.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="love-note">
+    <p>"Ashley, Jon, Annie, Clem, and Estella — five people becoming one family on the shores of the most beautiful lake in North America. Two hours from home. A lifetime away from ordinary."</p>
+    <div class="attr">— July 20, 2027 &nbsp;·&nbsp; 💍</div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; Jon & Ashley &nbsp;·&nbsp; 🏔️ Lake Tahoe · July 20, 2027</p></footer>
+</div>
+
+<script>
+  function updateCountdown() {
+    const wedding = new Date('2027-07-20T17:00:00');
+    const now = new Date();
+    const diff = wedding - now;
+    if (diff <= 0) { ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '🎉'); return; }
+    document.getElementById('cd-days').textContent = Math.floor(diff / 86400000).toLocaleString();
+    document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+    document.getElementById('cd-mins').textContent = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cd-secs').textContent = Math.floor((diff % 60000) / 1000);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

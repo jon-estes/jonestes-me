@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jon & Ashley · Southern California Coast · July 20, 2027</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fdf6f8; --bg2: #fff0f4; --bg3: #fce4ec;
+      --border: rgba(212,120,154,0.18); --border2: rgba(212,120,154,0.35);
+      --text: #2d1a22; --muted: #9e6e7e;
+      --pink: #c0446e; --pink2: #e07898;
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,182,210,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,210,230,0.15) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+    .page { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.5s ease forwards; flex-wrap: wrap; }
+    nav a { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--pink); border-color: var(--pink); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 11px; color: var(--muted); display: block; width: 100%; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--pink); }
+    .hero { text-align: center; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.05s forwards; }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 10vw, 90px); font-weight: 300; line-height: 1.0; color: var(--text); }
+    .hero h1 em { font-style: italic; color: var(--pink2); }
+    .hero-date { font-size: 14px; color: var(--muted); font-weight: 300; letter-spacing: 0.08em; margin-top: 0.75rem; }
+    .hero-divider { width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--pink), transparent); margin: 1.25rem auto; }
+    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards; }
+    .cd-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 0.5rem; text-align: center; }
+    .cd-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: var(--pink); line-height: 1; }
+    .cd-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.15s forwards; }
+    .couple-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .couple-card.pink-border { border-left: 2px solid var(--pink); }
+    .couple-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; }
+    .couple-name em { font-style: italic; color: var(--pink2); }
+    .couple-facts { list-style: none; }
+    .couple-facts li { font-size: 13px; color: var(--muted); font-weight: 300; padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .couple-facts li:last-child { border-bottom: none; }
+    .couple-facts li span { color: var(--text); font-weight: 400; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--text); margin-bottom: 1.5rem; }
+    .venues-section { opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; margin-bottom: 3.5rem; }
+    .venue-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+    .venue-card:hover { border-color: var(--border2); }
+    .venue-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .venue-header-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 3px; }
+    .venue-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .venue-tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+    .venue-tag.pink { border-color: var(--pink); color: var(--pink); }
+    .venue-tag.green { border-color: #7ecba1; color: #7ecba1; }
+    .venue-rating { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--pink); white-space: nowrap; }
+    .venue-rating span { font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+    .venue-body { padding: 0 1.5rem 1.25rem; }
+    .venue-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1rem; }
+    .pc-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 1rem; }
+    .pc-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 8px 12px; background: var(--bg3); }
+    .pc-table th.pros { color: #7ecba1; text-align: left; border-radius: 6px 0 0 0; }
+    .pc-table th.cons { color: #e8896a; text-align: left; border-radius: 0 6px 0 0; }
+    .pc-table td { padding: 7px 12px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; line-height: 1.55; }
+    .pc-table td.pro::before { content: '✓ '; color: #7ecba1; font-weight: 500; }
+    .pc-table td.con::before { content: '✕ '; color: #e8896a; font-weight: 500; }
+    .pc-table tr:last-child td { border-bottom: none; }
+    .venue-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+    .venue-price { font-size: 12px; color: var(--muted); font-weight: 300; }
+    .venue-price strong { color: var(--text); font-weight: 500; }
+    .venue-link { font-size: 12px; color: var(--pink); text-decoration: none; font-weight: 500; }
+    .venue-link:hover { text-decoration: underline; }
+    .tips-section { opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; margin-bottom: 3.5rem; }
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .tip-icon { font-size: 20px; margin-bottom: 8px; }
+    .tip-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .tip-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+    .tip-card.pink-left { border-left: 2px solid var(--pink); }
+    .love-note { text-align: center; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note p { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 300; color: var(--pink); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+    .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 1rem; font-style: normal; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.5s ease 0.02s forwards; transition: color 0.15s; }
+    .back-link:hover { color: var(--pink); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 560px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 48px; } .couple-grid { grid-template-columns: 1fr; } .countdown { grid-template-columns: repeat(2, 1fr); } .venue-header { flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <a class="back-link" href="wedding.html">← Back to all venues</a>
+
+  <div class="hero">
+    <div class="hero-eyebrow">🎡 SoCal Coast — Near Disneyland · July 20, 2027</div>
+    <h1>Jon <em>&</em> Ashley</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Sacramento → Orange County &nbsp;·&nbsp; Coastal luxury, beach ceremony, and Disneyland for the girls</div>
+  </div>
+
+  <div class="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">Seconds</div></div>
+  </div>
+
+  <div style="margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.7s ease 0.12s forwards;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:180px 180px;gap:8px;border-radius:16px;overflow:hidden;">
+      <div style="grid-row:1/3;background:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80') center/cover no-repeat;"></div>
+      <div style="background:url('https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=800&q=80') center/cover no-repeat;"></div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.05em;font-style:italic;">Orange County Coast 🌊 — beach ceremony, coastal luxury, and Disneyland 20 minutes away</p>
+  </div>
+
+  <div class="couple-grid">
+    <div class="couple-card pink-border">
+      <div class="couple-name">Jon <em>Estes</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇳 <span>Chinese American</span></li>
+        <li>⚽ <span>Soccer lover & coach</span></li>
+        <li>🃏 <span>Poker player & former dealer</span></li>
+        <li>📐 <span>Math enthusiast</span></li>
+        <li>🧩 <span>Collector — coins, cubes, chips, kicks</span></li>
+        <li>👧👧👧 <span>Dad to Annie, Clem & Estella</span></li>
+      </ul>
+    </div>
+    <div class="couple-card pink-border">
+      <div class="couple-name">Ashley <em>Xiong</em></div>
+      <ul class="couple-facts">
+        <li>🇨🇷 <span>Costa Rican</span></li>
+        <li>🌊 <span>Beach lover</span></li>
+        <li>🛍️ <span>Shopping enthusiast</span></li>
+        <li>🩰 <span>Pure Barre Princess</span></li>
+        <li>👧👧👧 <span>Mom to Annie, Clem & Estella</span></li>
+        <li>💕 <span>The reason Jon smiles like that</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="venues-section">
+    <div class="section-eyebrow">Where it happens</div>
+    <div class="section-title">SoCal Coast Venue Options 🌊</div>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem;line-height:1.7;">The Orange County and Laguna Beach coastline is one of the most stunning in California — dramatic sea cliffs, golden coves, and crystal-clear Pacific water. Disneyland is 20–30 minutes from Laguna Beach, making this the perfect combo: beach wedding for Ashley, Disneyland trip for Annie, Clem, and Estella. It's 7–8 hours from Sacramento by car, 1.5 hrs by plane. <strong style="color:var(--text);">Best of both worlds: coastal ceremony + theme park magic.</strong></p>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Montage Laguna Beach</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">⭐ Top Pick</span>
+            <span class="venue-tag">Laguna Beach</span>
+            <span class="venue-tag">Cliffside Luxury</span>
+            <span class="venue-tag">Ocean Views</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.8<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The crown jewel of California coastal weddings. Montage Laguna Beach sits atop dramatic sea cliffs above a private cove, with 360° Pacific Ocean views. Consistently rated one of the top 5 wedding venues in California. Ceremonies happen on the oceanfront lawn or bluff overlooking the ocean — waves crashing below, sunset light painting everything gold. The resort is pure luxury: private beach access, cliff-side pools, spa, and world-class dining. 25 minutes from Disneyland. This is the venue where Ashley's coastal dream meets California luxury at its finest.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Dramatic cliffside ocean views — unforgettable</td><td class="con">Most expensive venue on this list</td></tr>
+          <tr><td class="pro">Private beach access for guests</td><td class="con">Books up 12–18 months out in summer</td></tr>
+          <tr><td class="pro">25 min to Disneyland — best of both worlds</td><td class="con">Minimum spend requirements are high</td></tr>
+          <tr><td class="pro">World-class resort — spa, pools, dining</td><td class="con">Cliff setting — no sand-ceremony beach</td></tr>
+          <tr><td class="pro">Perfect July weather — 75°F, ocean breeze</td><td class="con">Laguna Beach traffic in summer</td></tr>
+          <tr><td class="pro">Ashley's coastal requirement fully met</td><td class="con">Exclusive vendor restrictions may apply</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$$ · $40k–$100k+</strong> · Contact for 2027 pricing</div>
+          <a class="venue-link" href="https://www.montagehotels.com/lagunabeach/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Surf & Sand Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Ashley's Vibe</span>
+            <span class="venue-tag">Laguna Beach</span>
+            <span class="venue-tag">On the Sand</span>
+            <span class="venue-tag green">Toes in the Sand</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.4<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">The Surf & Sand Resort in Laguna Beach puts you literally on the sand — not above a cliff, not near a beach, but directly on it. This is the most "Ashley" venue on this list: toes in the sand, waves within reach, ocean backdrop for the ceremony. The resort sits on a private stretch of Laguna Beach with ceremonies held right on the beach. The restaurant (Splashes) has floor-to-ceiling ocean views. 25 minutes from Disneyland. Slightly more affordable than Montage but equally stunning for a beach-forward couple.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Ceremony directly ON the sand — toes in beach</td><td class="con">Smaller resort than Montage</td></tr>
+          <tr><td class="pro">Private Laguna Beach oceanfront</td><td class="con">Fewer resort amenities than Montage</td></tr>
+          <tr><td class="pro">More affordable than Montage</td><td class="con">Rooms book fast in summer</td></tr>
+          <tr><td class="pro">25 min to Disneyland</td><td class="con">Ocean-facing but smaller capacity for receptions</td></tr>
+          <tr><td class="pro">Floor-to-ceiling ocean views in reception space</td><td class="con">Laguna Beach summer traffic</td></tr>
+          <tr><td class="pro">Intimate and romantic — smaller wedding feel</td><td class="con">Limited vendor flexibility</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$ · $20k–$50k</strong> · Best sand ceremony near Disney</div>
+          <a class="venue-link" href="https://www.surfandsandresort.com/weddings" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Pelican Hill Resort</h3>
+          <div class="venue-meta">
+            <span class="venue-tag">Newport Coast</span>
+            <span class="venue-tag">Luxury Estate</span>
+            <span class="venue-tag">Ocean Views</span>
+          </div>
+        </div>
+        <div class="venue-rating">9.2<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">A palatial Italian Renaissance-style resort on Newport Coast with sweeping views of the Pacific and Catalina Island. Pelican Hill is grand, dramatic, and architectural — ceremony in the Coliseum Bowl (a literal open-air coliseum with ocean views) or the Garden Terrace. The resort has a legendary circular pool, two championship golf courses, and is 20 minutes from Disneyland and 10 minutes from Newport Beach. Perfect for couples who want something that feels more estate-grand than beach-casual.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Grand Coliseum ceremony setting — stunning</td><td class="con">Not a beach venue — hillside/cliff setting</td></tr>
+          <tr><td class="pro">Catalina Island + Pacific views</td><td class="con">Very expensive — one of priciest in OC</td></tr>
+          <tr><td class="pro">20 min from Disneyland</td><td class="con">More formal/grand than beach-casual</td></tr>
+          <tr><td class="pro">Legendary circular pool — kids love it</td><td class="con">Exclusive catering — limited menu flexibility</td></tr>
+          <tr><td class="pro">Two golf courses — Jon will love this</td><td class="con">Less intimate than Laguna Beach venues</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$$$ · $40k–$90k+</strong> · Grand estate experience</div>
+          <a class="venue-link" href="https://www.pelicanhill.com/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="venue-card">
+      <div class="venue-header">
+        <div class="venue-header-left">
+          <h3>Laguna Cliffs Marriott</h3>
+          <div class="venue-meta">
+            <span class="venue-tag pink">Best Value</span>
+            <span class="venue-tag">Dana Point</span>
+            <span class="venue-tag">Coastal Views</span>
+            <span class="venue-tag green">Family Friendly</span>
+          </div>
+        </div>
+        <div class="venue-rating">8.6<span>/10</span></div>
+      </div>
+      <div class="venue-body">
+        <p class="venue-desc">Perched above the Pacific in Dana Point, the Laguna Cliffs Marriott offers breathtaking coastal views without the Montage price tag. The resort has a beautiful outdoor terrace for ceremonies with sweeping ocean panoramas, a harbor view, and easy access to the beach below. Dana Point is a charming surf town known as the "Dolphin & Whale Watching Capital of the World." It's 30 minutes from Disneyland, right on the coast, and more affordable than Laguna Beach's luxury properties. Great for larger guest lists.</p>
+        <table class="pc-table">
+          <tr><th class="pros">Pros</th><th class="cons">Cons</th></tr>
+          <tr><td class="pro">Stunning coastal views at a lower price point</td><td class="con">Marriott brand — less boutique/exclusive</td></tr>
+          <tr><td class="pro">30 min from Disneyland</td><td class="con">Not directly on the beach</td></tr>
+          <tr><td class="pro">Great for larger guest lists</td><td class="con">More standard resort than luxury estate</td></tr>
+          <tr><td class="pro">Harbor + ocean views — very photogenic</td><td class="con">Dana Point less glamorous than Laguna</td></tr>
+          <tr><td class="pro">Most affordable coastal option near Disney</td><td class="con">July books up — reserve early</td></tr>
+        </table>
+        <div class="venue-footer">
+          <div class="venue-price">Est. starting cost: <strong>$$ · $12k–$28k</strong> · Best coastal value near Disneyland</div>
+          <a class="venue-link" href="https://www.marriott.com/en-us/hotels/laxlc-laguna-cliffs-marriott-resort-and-spa/events/weddings/" target="_blank" rel="noopener">Visit website →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-section">
+    <div class="section-eyebrow">Good to know</div>
+    <div class="section-title">Planning Tips for SoCal Coast July 2027 🗓️</div>
+    <div class="tips-grid">
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🎡</div>
+        <div class="tip-title">Disneyland is 20–30 min away</div>
+        <div class="tip-text">The magic of this option: beach wedding for Ashley, then Disneyland for Annie, Clem, and Estella the next day. It's the only venue location that does both. Jon wins too — Downtown Disney has poker lounges nearby.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🌊</div>
+        <div class="tip-title">Ashley's beach requirement: met</div>
+        <div class="tip-text">Laguna Beach and Dana Point are among the most beautiful stretches of California coast. Surf & Sand puts the ceremony literally on the sand. Montage has private beach access. Ashley will love it.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">☀️</div>
+        <div class="tip-title">Perfect July weather</div>
+        <div class="tip-text">Orange County in July is consistently 72–78°F with ocean breezes and minimal rain. Mornings can be overcast ("June Gloom") but afternoons clear — perfect for a 5pm ceremony.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🚗</div>
+        <div class="tip-title">Easy for family</div>
+        <div class="tip-text">7–8 hours by car from Sacramento, 1.5 hrs by plane. Your mom, dad, and sister can make the trip with minimal hassle. John Wayne Airport (SNA) is 20 min away.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Book by early 2026</div>
+        <div class="tip-text">Laguna Beach is one of the most in-demand wedding destinations in Southern California. July weekends go fast. Contact venues by January 2026 at the latest for July 20, 2027.</div>
+      </div>
+      <div class="tip-card pink-left">
+        <div class="tip-icon">🛍️</div>
+        <div class="tip-title">Ashley will be in shopping heaven</div>
+        <div class="tip-text">Laguna Beach's art galleries and boutiques, Fashion Island in Newport Beach, and South Coast Plaza (one of the most upscale malls in America) are all within 20 minutes. Pre-wedding shopping trip confirmed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="love-note">
+    <p>"Ashley, Jon, Annie, Clem, and Estella — a beach ceremony at sunset, then Disneyland the next morning. That's not just a wedding weekend. That's the perfect family story."</p>
+    <div class="attr">— July 20, 2027 &nbsp;·&nbsp; 💍</div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; Jon & Ashley &nbsp;·&nbsp; 🌊 SoCal Coast · July 20, 2027</p></footer>
+</div>
+
+<script>
+  function updateCountdown() {
+    const wedding = new Date('2027-07-20T17:00:00');
+    const now = new Date();
+    const diff = wedding - now;
+    if (diff <= 0) { ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '🎉'); return; }
+    document.getElementById('cd-days').textContent = Math.floor(diff / 86400000).toLocaleString();
+    document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+    document.getElementById('cd-mins').textContent = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cd-secs').textContent = Math.floor((diff % 60000) / 1000);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

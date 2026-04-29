@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Story · Jon Estes</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --gold: #c9a96e; --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+    .hero { margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 400; line-height: 1.1; margin-bottom: 0.6rem; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p { font-size: 14px; color: var(--muted); font-weight: 300; max-width: 520px; line-height: 1.7; }
+
+    .stats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem 1.1rem; text-align: center; flex: 1; min-width: 90px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 400; line-height: 1; }
+    .stat-num.pink { color: var(--accent); }
+    .stat-num.green { color: var(--accent2); }
+    .stat-num.blue { color: var(--accent3); }
+    .stat-num.gold { color: var(--gold); }
+    .stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 6px; margin-bottom: 2rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s ease 0.12s forwards; }
+    .tab { background: var(--bg2); border: 1px solid var(--border); border-radius: 999px; padding: 6px 16px; font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .tab:hover { color: var(--text); border-color: var(--border2); }
+    .tab.active { color: var(--accent); border-color: var(--accent); background: rgba(212,120,154,0.06); }
+
+    /* SECTION HEADERS */
+    .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .dot-pink { background: var(--accent); }
+    .dot-green { background: var(--accent2); }
+    .dot-blue { background: var(--accent3); }
+    .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+    /* TIMELINE */
+    .timeline-wrap { opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
+    .timeline { position: relative; }
+    .timeline-line { position: absolute; left: 88px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+    .timeline-item { display: grid; grid-template-columns: 88px 1fr; position: relative; }
+    .timeline-year-col { padding: 1.3rem 1.1rem 1.3rem 0; text-align: right; }
+    .timeline-year { font-family: 'Playfair Display', serif; font-size: 0.8rem; color: var(--muted); line-height: 1.3; }
+    .timeline-dot { position: absolute; left: 84px; top: 1.55rem; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--muted); z-index: 1; transition: border-color 0.2s, background 0.2s; }
+    .timeline-item:hover .timeline-dot { border-color: var(--accent); }
+    .timeline-item.highlight .timeline-dot { background: var(--accent); border-color: var(--accent); width: 11px; height: 11px; left: 83px; top: 1.5rem; }
+    .timeline-item.big .timeline-dot { background: var(--accent2); border-color: var(--accent2); width: 13px; height: 13px; left: 82px; top: 1.45rem; }
+    .timeline-content { padding: 1.1rem 0 1.1rem 1.75rem; border-bottom: 1px solid var(--border); }
+    .timeline-item:last-child .timeline-content { border-bottom: none; }
+    .timeline-emoji { font-size: 1rem; margin-bottom: 0.25rem; }
+    .timeline-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; line-height: 1.35; }
+    .timeline-item.highlight .timeline-title { color: var(--accent); }
+    .timeline-item.big .timeline-title { color: var(--accent2); font-size: 15px; }
+    .timeline-desc { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.65; }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.4rem; }
+    .tag { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid; }
+    .tag-pink { color: var(--accent); border-color: rgba(212,120,154,0.3); }
+    .tag-green { color: var(--accent2); border-color: rgba(126,203,161,0.3); }
+    .tag-blue { color: var(--accent3); border-color: rgba(110,179,201,0.3); }
+    .tag-gold { color: var(--gold); border-color: rgba(201,169,110,0.3); }
+    .tag-muted { color: var(--muted); border-color: rgba(138,136,128,0.25); }
+
+    /* MAP */
+    .map-section { margin-top: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
+    #world-map { width: 100%; height: 360px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; }
+    #map-svg { width: 100%; height: 100%; }
+    .country { fill: var(--bg3); stroke: rgba(255,255,255,0.04); stroke-width: 0.8; }
+    .visited { cursor: pointer; transition: opacity 0.15s; }
+    .visited:hover { opacity: 1 !important; }
+    .map-tooltip { position: absolute; background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px; padding: 5px 11px; font-size: 12px; color: var(--text); pointer-events: none; display: none; z-index: 10; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .map-legend { display: flex; gap: 1.25rem; margin-top: 0.85rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    .places-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.5rem; margin-top: 1.25rem; }
+    .place-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.85rem; font-size: 13px; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; transition: border-color 0.15s; }
+    .place-chip:hover { border-color: var(--border2); }
+    .place-name { font-weight: 400; color: var(--text); font-size: 13px; }
+    .place-note { font-size: 10px; color: var(--muted); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 520px) {
+      .timeline-line { left: 60px; }
+      .timeline-item { grid-template-columns: 60px 1fr; }
+      .timeline-dot { left: 56px; }
+      .timeline-item.highlight .timeline-dot { left: 55px; }
+      .timeline-item.big .timeline-dot { left: 54px; }
+      #world-map { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-label">The story so far</div>
+    <h1>A <em>life</em> in chapters</h1>
+    <p>Born in Walnut Creek. Raised in Roseville. Teacher, coach, Peace Corps volunteer, poker dealer, marathon runner, world traveler, and father of three daughters. Still going.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num pink">28</div><div class="stat-label">Years Old</div></div>
+    <div class="stat"><div class="stat-num green">4</div><div class="stat-label">Years Teaching</div></div>
+    <div class="stat"><div class="stat-num blue">3</div><div class="stat-label">Daughters</div></div>
+    <div class="stat"><div class="stat-num gold">5</div><div class="stat-label">World Cup Games</div></div>
+    <div class="stat"><div class="stat-num pink">1</div><div class="stat-label">Marathon</div></div>
+    <div class="stat"><div class="stat-num green">20+</div><div class="stat-label">Yrs Soccer</div></div>
+    <div class="stat"><div class="stat-num blue">2</div><div class="stat-label">Founding Classes</div></div>
+    <div class="stat"><div class="stat-num gold">26.2</div><div class="stat-label">Miles Run</div></div>
+    <div class="stat"><div class="stat-num pink">2</div><div class="stat-label">Mexio Trips</div></div>
+    <div class="stat"><div class="stat-num green">5</div><div class="stat-label">Months in Africa</div></div>
+    <div class="stat"><div class="stat-num blue">3</div><div class="stat-label">Marathons (Dad)</div></div>
+    <div class="stat"><div class="stat-num gold">10/3</div><div class="stat-label">Anniversary 💍</div></div>
+  </div>
+
+  <!-- FILTER TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="filterTimeline('all', this)">All</button>
+    <button class="tab" onclick="filterTimeline('education', this)">📐 Education</button>
+    <button class="tab" onclick="filterTimeline('soccer', this)">⚽ Soccer</button>
+    <button class="tab" onclick="filterTimeline('travel', this)">✈️ Travel</button>
+    <button class="tab" onclick="filterTimeline('career', this)">💼 Career</button>
+    <button class="tab" onclick="filterTimeline('family', this)">👨‍👧 Family</button>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="section-head"><div class="section-dot dot-pink"></div><div class="section-title">Timeline</div></div>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-item big" data-cat="family">
+        <div class="timeline-year-col"><div class="timeline-year">Sep 22<br>1997</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🌱</div>
+          <div class="timeline-title">Born in Walnut Creek, CA</div>
+          <div class="timeline-desc">The third of four kids — one older sister, two older brothers. Chinese American family. Walnut Creek, California.</div>
+          <div class="tags"><span class="tag tag-pink">Family</span><span class="tag tag-blue">Walnut Creek</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="family">
+        <div class="timeline-year-col"><div class="timeline-year">2002</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">📦</div>
+          <div class="timeline-title">Moved to Roseville, CA</div>
+          <div class="timeline-desc">The family relocated to Roseville — the city that would shape everything. Season tickets to Disneyland growing up, frequent trips with cousins and family.</div>
+          <div class="tags"><span class="tag tag-blue">Roseville</span><span class="tag tag-gold">Family</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="education soccer">
+        <div class="timeline-year-col"><div class="timeline-year">2002–<br>2008</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏫</div>
+          <div class="timeline-title">Coyote Ridge Elementary — Founding Fifth Grader</div>
+          <div class="timeline-desc">One of the founding students at Coyote Ridge Elementary. Showed a natural aptitude for math early on, and admittedly hated reading. Started youth soccer at age 5, quickly moved into competitive play — Placer United, FC Sporting, Roseville Select. Beach soccer tournaments every summer from 2008 to 2014.</div>
+          <div class="tags"><span class="tag tag-pink">Education</span><span class="tag tag-green">Soccer</span><span class="tag tag-blue">Founding Student</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="education soccer">
+        <div class="timeline-year-col"><div class="timeline-year">2008–<br>2011</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏃</div>
+          <div class="timeline-title">Creekview Ranch Middle School — Founding Eighth Grader</div>
+          <div class="timeline-desc">Another founding-class distinction at Creekview Ranch. Identified as a GATE student with advanced math placement. Ran track all three years, wrestled all three years, and continued competitive soccer throughout. The academic and athletic foundation was set.</div>
+          <div class="tags"><span class="tag tag-pink">Education</span><span class="tag tag-green">Soccer</span><span class="tag tag-muted">GATE</span><span class="tag tag-blue">Track & Wrestling</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">2008</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🌺</div>
+          <div class="timeline-title">Maui — Visiting Grandpa's Roots</div>
+          <div class="timeline-desc">Family trip to Maui to visit the neighborhood where grandpa grew up. A meaningful connection to family history and the islands — long before Hawaii became the wedding destination.</div>
+          <div class="tags"><span class="tag tag-gold">Travel</span><span class="tag tag-pink">Family</span><span class="tag tag-green">Hawaii</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item highlight" data-cat="education soccer">
+        <div class="timeline-year-col"><div class="timeline-year">2011–<br>2015</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">⚽</div>
+          <div class="timeline-title">Woodcreek High School — Varsity Soccer Captain</div>
+          <div class="timeline-desc">Four years of varsity soccer, capped with the captaincy as a senior. Took Spanish all four years. Academically pushed hard — doubled up Algebra 2 and Honors Precalculus freshman year, then crushed AP Calculus as a sophomore and AP Statistics as a junior. Senior year included a couple suspensions, but still made it out. 🤝</div>
+          <div class="tags"><span class="tag tag-green">Soccer Captain</span><span class="tag tag-pink">AP Calc & Stats</span><span class="tag tag-blue">Spanish</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">2014</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏆</div>
+          <div class="timeline-title">Brazil — 2014 FIFA World Cup</div>
+          <div class="timeline-desc">Two weeks in Rio de Janeiro for the World Cup. Attended five games — all in the first round — including Messi on the scoresheet and witnessing James Rodríguez's iconic golden goal for Colombia. Toured Christ the Redeemer, played beach soccer, and ate incredibly well.</div>
+          <div class="tags"><span class="tag tag-gold">Brazil</span><span class="tag tag-green">World Cup</span><span class="tag tag-pink">5 Games Attended</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="education">
+        <div class="timeline-year-col"><div class="timeline-year">2015</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🎢</div>
+          <div class="timeline-title">Disneyland Sober Grad Night</div>
+          <div class="timeline-desc">Celebrated high school graduation the classic way — a sober grad night at Disneyland. A park that had been a fixture of childhood from season tickets with cousins.</div>
+          <div class="tags"><span class="tag tag-muted">Milestone</span><span class="tag tag-blue">Class of 2015</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item highlight" data-cat="education">
+        <div class="timeline-year-col"><div class="timeline-year">2015–<br>2018</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">📐</div>
+          <div class="timeline-title">CSU Chico — Mathematics Education</div>
+          <div class="timeline-desc">Pursued a Mathematics Education degree at CSU Chico. Worked as a math tutor for local schools throughout — teaching had already begun before the credential was official.</div>
+          <div class="tags"><span class="tag tag-pink">Mathematics Education</span><span class="tag tag-green">Tutoring</span><span class="tag tag-blue">CSU Chico</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">2017</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🗽</div>
+          <div class="timeline-title">Solo Day Trip to New York City</div>
+          <div class="timeline-desc">A solo, spontaneous day trip to NYC that turned out to be deeply spiritual. A series of coincidences that felt too meaningful to dismiss. The trip marked the beginning of believing in something bigger — a genuine shift in perspective.</div>
+          <div class="tags"><span class="tag tag-gold">New York</span><span class="tag tag-pink">Spiritual</span><span class="tag tag-muted">Solo Travel</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">Dec 31<br>2018</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🎆</div>
+          <div class="timeline-title">Disney World — New Year's Eve with the Family</div>
+          <div class="timeline-desc">Brought the whole family to Walt Disney World for New Year's Eve 2018, ringing in 2019 together and celebrating graduating from CSU Chico. A full-circle moment with a park the family had always loved.</div>
+          <div class="tags"><span class="tag tag-gold">Travel</span><span class="tag tag-pink">Family</span><span class="tag tag-green">Graduation Celebration</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="career">
+        <div class="timeline-year-col"><div class="timeline-year">2019</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🃏</div>
+          <div class="timeline-title">Poker Guest Services — Learning the Room</div>
+          <div class="timeline-desc">Started working in poker as a guest services representative, learning the ins and outs of running a poker room. The first step into a side of the game beyond just playing it.</div>
+          <div class="tags"><span class="tag tag-gold">Poker</span><span class="tag tag-muted">Side Gig</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="education">
+        <div class="timeline-year-col"><div class="timeline-year">2019–<br>2020</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">📜</div>
+          <div class="timeline-title">CSU Sacramento — Teaching Credential</div>
+          <div class="timeline-desc">Completed the teaching credential program at Sacramento State. The official qualification to turn a passion for math and teaching into a career in the classroom.</div>
+          <div class="tags"><span class="tag tag-pink">Credential</span><span class="tag tag-blue">Sac State</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item highlight" data-cat="career soccer">
+        <div class="timeline-year-col"><div class="timeline-year">2020–<br>2022</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏫</div>
+          <div class="timeline-title">Full-Time Math Teacher & Varsity Head Coach</div>
+          <div class="timeline-desc">First full-time teaching role at a local charter high school in Sacramento. Taught Integrated Math 2 & 3, AP Calculus, and Principles of Engineering. Simultaneously served as Varsity Head Coach for both the girls and boys soccer teams.</div>
+          <div class="tags"><span class="tag tag-pink">Teaching</span><span class="tag tag-green">Soccer Coach</span><span class="tag tag-blue">AP Calculus</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">Dec<br>2021</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏅</div>
+          <div class="timeline-title">Honolulu Marathon — With Dad</div>
+          <div class="timeline-desc">Completed a full marathon in Honolulu, Hawaii — 26.2 miles — with his dad by his side the entire way. One of the most memorable physical and emotional accomplishments of his life.</div>
+          <div class="tags"><span class="tag tag-green">Marathon</span><span class="tag tag-gold">Hawaii</span><span class="tag tag-pink">With Dad</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="career">
+        <div class="timeline-year-col"><div class="timeline-year">2021–<br>2023</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🎰</div>
+          <div class="timeline-title">Poker Dealer — Thunder Valley</div>
+          <div class="timeline-desc">Dealt poker at Thunder Valley Casino as a side gig alongside teaching. Good money, sharp skills, and a front-row seat to the psychology of the game. Made it through 2023.</div>
+          <div class="tags"><span class="tag tag-gold">Poker</span><span class="tag tag-muted">Thunder Valley</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel family">
+        <div class="timeline-year-col"><div class="timeline-year">Feb 6<br>2022</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🫶</div>
+          <div class="timeline-title">Seattle Surprise — Mom's 60th Birthday</div>
+          <div class="timeline-desc">Surprised his mom with a day trip to Seattle for her 60th birthday. Just the two of them. A simple but deeply meaningful gesture.</div>
+          <div class="tags"><span class="tag tag-pink">Family</span><span class="tag tag-blue">Seattle</span><span class="tag tag-gold">Mom's 60th</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item highlight" data-cat="career soccer">
+        <div class="timeline-year-col"><div class="timeline-year">2022–<br>2023</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">📏</div>
+          <div class="timeline-title">Charter Academy — 6th Grade Math & Varsity Coach</div>
+          <div class="timeline-desc">Moved to a local charter 6–12th school in Sacramento, teaching 6th grade math and continuing as varsity head coach for boys soccer. Gained experience across a wide span of grade levels — from 6th grade all the way through AP Calculus.</div>
+          <div class="tags"><span class="tag tag-pink">Teaching</span><span class="tag tag-green">Soccer Coach</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">May<br>2022</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🇲🇽</div>
+          <div class="timeline-title">Mexico — Valle de Santiago</div>
+          <div class="timeline-desc">A few weeks in Valle de Santiago, Guanajuato with a friend and her family. An authentic, off-the-tourist-track experience in central Mexico. Returned the following May for a second trip, same destination, same hosts.</div>
+          <div class="tags"><span class="tag tag-gold">Mexico</span><span class="tag tag-muted">Valle de Santiago</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">Apr<br>2023</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🗼</div>
+          <div class="timeline-title">Paris — Dad's Marathon & Birthday</div>
+          <div class="timeline-desc">A week in Paris with his sister and dad. Dad ran the Paris Marathon on April 4th — his birthday. Saw the city, watched the race, celebrated the man who ran a marathon beside him in Honolulu just 16 months prior. A special trip.</div>
+          <div class="tags"><span class="tag tag-blue">Paris</span><span class="tag tag-pink">Dad's Birthday</span><span class="tag tag-green">Marathon</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="travel">
+        <div class="timeline-year-col"><div class="timeline-year">May<br>2023</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🇲🇽</div>
+          <div class="timeline-title">Mexico — Valle de Santiago Again</div>
+          <div class="timeline-desc">Second consecutive May trip to Valle de Santiago, returning to the same friend and her welcoming family. A tradition that felt like a second home.</div>
+          <div class="tags"><span class="tag tag-gold">Mexico</span><span class="tag tag-muted">Return Trip</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item big" data-cat="career travel">
+        <div class="timeline-year-col"><div class="timeline-year">Jul–Nov<br>2023</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🌍</div>
+          <div class="timeline-title">Peace Corps — Sierra Leone, West Africa</div>
+          <div class="timeline-desc">Served as a Peace Corps volunteer in Sierra Leone from July to November 2023. No running water. No electricity. Living and working in communities that fundamentally shifted his worldview. One of the most challenging and transformative chapters of his life.</div>
+          <div class="tags"><span class="tag tag-green">Peace Corps</span><span class="tag tag-gold">Sierra Leone</span><span class="tag tag-pink">West Africa</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="career">
+        <div class="timeline-year-col"><div class="timeline-year">2024</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">💻</div>
+          <div class="timeline-title">Curriculum Writer & Tutor — Kiddom + Local Programs</div>
+          <div class="timeline-desc">Wrote math curriculum for Kiddom, an ed-tech startup, while tutoring students through a local education enrichment program. Staying in the education world while exploring different formats.</div>
+          <div class="tags"><span class="tag tag-blue">EdTech</span><span class="tag tag-pink">Curriculum</span><span class="tag tag-muted">Kiddom</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-cat="career">
+        <div class="timeline-year-col"><div class="timeline-year">2025–<br>Now</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🏥</div>
+          <div class="timeline-title">Training Specialist — Medical Device Company</div>
+          <div class="timeline-desc">Moved into the medical device industry as a training specialist — applying years of teaching expertise in a new professional context. A pivot that honors the core skill: making complex things understandable.</div>
+          <div class="tags"><span class="tag tag-blue">Medical Device</span><span class="tag tag-green">Training</span><span class="tag tag-muted">New Chapter</span></div>
+        </div>
+      </div>
+
+
+      <div class="timeline-item highlight" data-cat="family">
+        <div class="timeline-year-col"><div class="timeline-year">Oct 3<br>2024</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">💕</div>
+          <div class="timeline-title">Started Dating Ashley Marie Lopez Xiong</div>
+          <div class="timeline-desc">October 3rd, 2024 — the day it became official with Ashley. She already had two daughters: Clementine, born July 18th, 2022, and Anneliese, born August 2nd, 2024. Jon became a bonus dad to two little girls before Estella arrived.</div>
+          <div class="tags"><span class="tag tag-pink">Ashley</span><span class="tag tag-green">Clementine & Anneliese</span><span class="tag tag-gold">New Chapter</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item big" data-cat="family">
+        <div class="timeline-year-col"><div class="timeline-year">Oct 3<br>2025</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">💍</div>
+          <div class="timeline-title">Proposed to Ashley — Monterey Bay</div>
+          <div class="timeline-desc">On their one-year anniversary, Jon proposed to Ashley at Schooner's Restaurant in Monterey Bay. The perfect setting. She said yes. 💍</div>
+          <div class="tags"><span class="tag tag-pink">Engaged</span><span class="tag tag-blue">Monterey Bay</span><span class="tag tag-gold">Anniversary</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item big" data-cat="family">
+        <div class="timeline-year-col"><div class="timeline-year">Nov 27<br>2025</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">🦃</div>
+          <div class="timeline-title">Estella Azalea is Born — Thanksgiving Day</div>
+          <div class="timeline-desc">Youngest daughter Estella arrives on Thanksgiving, November 27, 2025. She joins big sisters Annie and Clem. The newest, most precious chapter begins.</div>
+          <div class="tags"><span class="tag tag-pink">Family</span><span class="tag tag-green">Estella</span><span class="tag tag-gold">Thanksgiving</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item highlight" data-cat="family travel">
+        <div class="timeline-year-col"><div class="timeline-year">Aug 20<br>2028</div></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-emoji">💍</div>
+          <div class="timeline-title">Hawaii Wedding — 8·20·2028</div>
+          <div class="timeline-desc">Getting married in Hawaiʻi on a palindrome date. The next great adventure.</div>
+          <div class="tags"><span class="tag tag-gold">Coming Soon</span><span class="tag tag-green">Hawaii</span><span class="tag tag-pink">Palindrome</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <div class="section-head" style="margin-top:3rem;"><div class="section-dot dot-green"></div><div class="section-title">Places I've Been</div></div>
+
+    <div id="world-map">
+      <div class="map-tooltip" id="map-tooltip"></div>
+      <svg id="map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- BASE CONTINENTS (non-interactive background) -->
+        <path class="country" d="M60,55 L295,50 L315,90 L295,200 L255,260 L195,280 L145,270 L95,240 L60,190 L45,130 Z"/>
+        <path class="country" d="M185,275 L285,268 L308,305 L298,395 L255,430 L208,418 L178,372 L178,310 Z"/>
+        <path class="country" d="M415,88 L535,83 L548,138 L518,162 L455,167 L422,148 L408,118 Z"/>
+        <path class="country" d="M415,162 L538,156 L552,215 L548,325 L495,382 L438,378 L390,308 L385,228 Z"/>
+        <path class="country" d="M538,78 L855,72 L875,138 L858,215 L808,258 L722,272 L645,252 L575,208 L542,158 Z"/>
+        <path class="country" d="M715,308 L822,302 L842,345 L828,388 L768,398 L715,372 L700,338 Z"/>
+
+        <!-- VISITED COUNTRIES — drawn on top -->
+
+        <!-- USA (highlighted) -->
+        <path class="visited" fill="var(--accent)" opacity="0.75"
+          d="M82,100 L232,96 L248,128 L240,175 L218,198 L175,205 L125,198 L88,178 L72,145 Z"
+          data-name="🇺🇸 United States — Home"/>
+
+        <!-- Mexico -->
+        <path class="visited" fill="var(--accent2)" opacity="0.55"
+          d="M118,198 L196,196 L210,228 L188,248 L148,240 L112,220 Z"
+          data-name="🇲🇽 Mexico — Valle de Santiago (2022 & 2023)"/>
+
+        <!-- Brazil -->
+        <path class="visited" fill="var(--accent)" opacity="0.75"
+          d="M225,290 L282,285 L298,320 L288,375 L248,405 L210,392 L188,355 L192,308 Z"
+          data-name="🇧🇷 Brazil — 2014 World Cup, Rio de Janeiro"/>
+
+        <!-- France -->
+        <path class="visited" fill="var(--accent2)" opacity="0.6"
+          d="M448,118 L472,115 L478,138 L462,148 L445,140 Z"
+          data-name="🇫🇷 France — Paris (April 2023)"/>
+
+        <!-- Sierra Leone (highlighted) -->
+        <path class="visited" fill="var(--accent)" opacity="0.85"
+          d="M388,248 L402,245 L407,258 L398,268 L385,262 Z"
+          data-name="🇸🇱 Sierra Leone — Peace Corps (2023)"/>
+
+        <!-- Hawaii dot -->
+        <circle class="visited" cx="108" cy="232" r="7" fill="var(--accent)" opacity="0.9"
+          data-name="🌺 Hawaiʻi — Maui (2008), Honolulu Marathon (2021), Wedding 2028 💍"/>
+
+        <!-- NYC dot -->
+        <circle class="visited" cx="228" cy="148" r="5" fill="var(--accent3)" opacity="0.9"
+          data-name="🗽 New York City — Solo trip (2017)"/>
+
+        <!-- Seattle dot -->
+        <circle class="visited" cx="98" cy="108" r="5" fill="var(--accent3)" opacity="0.9"
+          data-name="🌧️ Seattle — Mom's 60th Birthday (2022)"/>
+
+        <!-- Disney World / Florida dot -->
+        <circle class="visited" cx="208" cy="188" r="5" fill="var(--accent3)" opacity="0.9"
+          data-name="🏰 Orlando, FL — Disney World New Year's Eve (2018)"/>
+
+        <!-- Rio de Janeiro dot (more precise) -->
+        <circle class="visited" cx="252" cy="358" r="5" fill="var(--accent)" opacity="0.9"
+          data-name="🏖️ Rio de Janeiro — World Cup 2014, Christ the Redeemer"/>
+
+        <!-- Valle de Santiago dot -->
+        <circle class="visited" cx="155" cy="220" r="5" fill="var(--accent2)" opacity="0.9"
+          data-name="🇲🇽 Valle de Santiago, Mexico — 2022 & 2023"/>
+
+        <!-- Monterey dot -->
+        <circle class="visited" cx="88" cy="162" r="5" fill="var(--accent)" opacity="0.9"
+          data-name="🌊 Monterey Bay, CA — Proposed to Ashley (Oct 3, 2025)"/>
+
+        <!-- Paris dot (more precise) -->
+        <circle class="visited" cx="458" cy="125" r="5" fill="var(--accent3)" opacity="0.9"
+          data-name="🗼 Paris, France — Dad's Marathon & Birthday (April 2023)"/>
+
+      </svg>
+    </div>
+
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent);border-radius:50%;"></div>Meaningful / long stay</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent2);border-radius:50%;"></div>Visited</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent3);border-radius:50%;"></div>City / moment</div>
+    </div>
+
+    <div class="places-grid">
+      <div class="place-chip"><span style="font-size:1.1rem;">🇺🇸</span><div><div class="place-name">United States</div><div class="place-note">Home base</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🇧🇷</span><div><div class="place-name">Brazil</div><div class="place-note">World Cup 2014</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🇸🇱</span><div><div class="place-name">Sierra Leone</div><div class="place-note">Peace Corps 2023</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🇫🇷</span><div><div class="place-name">France</div><div class="place-note">Paris, April 2023</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🇲🇽</span><div><div class="place-name">Mexico</div><div class="place-note">Valle de Santiago ×2</div></div></div>
+<div class="place-note">Heritage</div></div></div>
+<div class="place-note">Visited</div></div></div>
+<div class="place-note">Visited</div></div></div>
+<div class="place-note">Visited</div></div></div>
+<div class="place-note">Peace Corps travel</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🌺</span><div><div class="place-name">Hawaiʻi</div><div class="place-note">Maui · Honolulu · 2028 💍</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🗽</span><div><div class="place-name">New York City</div><div class="place-note">Solo day trip 2017</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🌧️</span><div><div class="place-name">Seattle</div><div class="place-note">Mom's 60th birthday</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🌊</span><div><div class="place-name">Monterey Bay</div><div class="place-note">Proposal 10/3/2025</div></div></div>
+      <div class="place-chip"><span style="font-size:1.1rem;">🏰</span><div><div class="place-name">Orlando, FL</div><div class="place-note">Disney World NYE 2018</div></div></div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
+
+<script>
+  // Map tooltips
+  document.querySelectorAll('.visited').forEach(el => {
+    el.addEventListener('mouseenter', function(e) {
+      const name = this.getAttribute('data-name');
+      if (!name) return;
+      const tip = document.getElementById('map-tooltip');
+      tip.textContent = name;
+      tip.style.display = 'block';
+    });
+    el.addEventListener('mousemove', function(e) {
+      const map = document.getElementById('world-map');
+      const rect = map.getBoundingClientRect();
+      const tip = document.getElementById('map-tooltip');
+      let x = e.clientX - rect.left + 14;
+      let y = e.clientY - rect.top - 36;
+      if (x + 200 > rect.width) x = e.clientX - rect.left - 180;
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    });
+    el.addEventListener('mouseleave', function() {
+      document.getElementById('map-tooltip').style.display = 'none';
+    });
+  });
+
+  // Timeline filter
+  function filterTimeline(cat, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      if (cat === 'all') {
+        item.style.display = '';
+      } else {
+        const cats = (item.getAttribute('data-cat') || '').split(' ');
+        item.style.display = cats.includes(cat) ? '' : 'none';
+      }
+    });
+  }
+  window.filterTimeline = filterTimeline;
+</script>
+</body>
+</html>
