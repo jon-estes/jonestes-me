@@ -44,6 +44,12 @@
     @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
   </style>
   <script src="theme.js"></script>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
   <div class="box">
@@ -62,5 +68,12 @@
 
     <div class="footer-note">jonestes.me</div>
   </div>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
 </body>
 </html>

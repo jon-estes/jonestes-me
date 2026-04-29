@@ -68,6 +68,12 @@
     @media (max-width: 640px) { .grid { columns: 2; } .hero h1 { font-size: 32px; } .lightbox-prev { left: 0.5rem; } .lightbox-next { right: 0.5rem; } }
     @media (max-width: 400px) { .grid { columns: 2; } }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
@@ -202,5 +208,12 @@
   setInterval(updateEstellaAge, 60000);
 </script>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
 </body>
 </html>

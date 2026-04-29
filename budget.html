@@ -179,6 +179,12 @@
       td:nth-child(4),th:nth-child(4) { display:none; }
     }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
@@ -729,6 +735,13 @@ function renderTable(){
 }
 
 init();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
 </script>
 </body>
 </html>

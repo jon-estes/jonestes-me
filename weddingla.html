@@ -93,6 +93,12 @@
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 560px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 48px; } .couple-grid { grid-template-columns: 1fr; } .countdown { grid-template-columns: repeat(2, 1fr); } .venue-header { flex-direction: column; } }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
@@ -337,6 +343,13 @@
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
 </script>
 </body>
 </html>
