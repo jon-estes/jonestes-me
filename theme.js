@@ -58,6 +58,7 @@
     { title: 'About',        url: '/about',     desc: 'About Jon Estes' },
     { title: 'Story 🗺️',    url: '/story',     desc: 'Life timeline, world map, places visited, Peace Corps, teaching, family' },
     { title: 'Guestbook 💌', url: '/guestbook', desc: 'Leave a message for Jon' },
+    { title: 'Budget 📊', url: '/budget', desc: 'Full budget tracker — income, spending, savings charts and transactions' },
   ];
 
   const searchStyle = document.createElement('style');

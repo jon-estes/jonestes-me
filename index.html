@@ -356,20 +356,25 @@ function renderBudget(view) {
     who: r['Ashley or Jon?'] || r['Who'] || 'Unknown'
   })).filter(r => r.amount > 0);
 
-  const total = rows.reduce((s, r) => s + r.amount, 0);
-  const avg = rows.length ? total / rows.length : 0;
+  const income = rows.filter(r => r.category === 'Income').reduce((s,r) => s + r.amount, 0);
+  const spending = rows.filter(r => r.category !== 'Income').reduce((s,r) => s + r.amount, 0);
+  const savings = income - spending;
+  const savingsColor = savings >= 0 ? 'var(--accent2)' : 'var(--accent)';
+  const spendRows = rows.filter(r => r.category !== 'Income');
+  const avg = spendRows.length ? spending / spendRows.length : 0;
 
   // Stats
   document.getElementById('budget-stats').innerHTML = `
-    <div class="chart-stat"><div class="chart-stat-num">$${total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Total Spent</div></div>
-    <div class="chart-stat"><div class="chart-stat-num">${rows.length}</div><div class="chart-stat-label">Transactions</div></div>
-    <div class="chart-stat"><div class="chart-stat-num">$${avg.toFixed(2)}</div><div class="chart-stat-label">Avg per Item</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">$${income.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Income</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">$${spending.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Spending</div></div>
+    <div class="chart-stat"><div class="chart-stat-num" style="color:${savingsColor}">$${Math.abs(savings).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}${savings < 0 ? ' 🔴' : ' 🟢'}</div><div class="chart-stat-label">Savings</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">${spendRows.length}</div><div class="chart-stat-label">Transactions</div></div>
   `;
 
   if (view === 'pie') {
-    // By category
+    // By category (exclude Income)
     const cats = {};
-    rows.forEach(r => { cats[r.category] = (cats[r.category] || 0) + r.amount; });
+    rows.filter(r => r.category !== 'Income').forEach(r => { cats[r.category] = (cats[r.category] || 0) + r.amount; });
     const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
     budgetChartInst = new Chart(ctx, {
       type: 'doughnut',
@@ -380,9 +385,9 @@ function renderBudget(view) {
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8a8880', font: { size: 11 }, boxWidth: 12 } } } }
     });
   } else if (view === 'bar') {
-    // By month
+    // By month (exclude Income)
     const months = {};
-    rows.forEach(r => {
+    rows.filter(r => r.category !== 'Income').forEach(r => {
       const d = new Date(r.date);
       if (isNaN(d)) return;
       const key = d.toLocaleString('default', { month: 'short', year: '2-digit' });
