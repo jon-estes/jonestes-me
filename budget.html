@@ -225,24 +225,7 @@
         <option value="">All Months</option>
       </select>
       <select class="filter-sel" id="g-who" onchange="applyGlobalFilters()">
-        <option value="">Ashley & Jon</option>
-      </select>
-      <select class="filter-sel" id="g-cat" onchange="applyGlobalFilters()">
-        <option value="">All Categories</option>
-        <option value="Income">Income</option>
-        <option value="Household Necessities">Household Necessities</option>
-        <option value="Subscriptions">Subscriptions</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Food & Drink (Eating Out)">Food & Drink</option>
-        <option value="Groceries">Groceries</option>
-        <option value="Health & Wellbeing">Health & Wellbeing</option>
-        <option value="Bills">Bills</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Transport">Transport</option>
-        <option value="Vacation">Vacation</option>
-        <option value="Gifts">Gifts</option>
-        <option value="Kids">Kids</option>
-        <option value="Business">Business</option>
+        <option value="">All People</option>
       </select>
       <span class="filter-badge" id="filter-badge">Filtered view</span>
       <button class="filter-reset" id="filter-reset" onclick="resetGlobalFilters()">✕ Reset</button>
@@ -785,56 +768,56 @@ function renderTable(){
 let filteredRows = [];
 
 function populateGlobalFilters(){
-  // Populate month dropdown from actual data
+  // Populate month dropdown — use allRows directly so months are never filtered out
   const mf = document.getElementById('g-month');
-  allMonths().forEach(m=>{
+  // Clear any existing options except first
+  while(mf.options.length > 1) mf.remove(1);
+  const allM = [...new Set(allRows.map(r=>mkKey(r.date)).filter(Boolean))]
+    .sort((a,b)=>sortKey('01 '+a)-sortKey('01 '+b));
+  allM.forEach(m=>{
     const o = document.createElement('option');
     o.value = m; o.textContent = m;
     mf.appendChild(o);
   });
-  // Populate who dropdown from actual data
+
+  // Populate who dropdown — use allRows so all people always appear
   const wf = document.getElementById('g-who');
+  while(wf.options.length > 1) wf.remove(1);
   [...new Set(allRows.map(r=>r.who).filter(Boolean))].sort().forEach(p=>{
     const o = document.createElement('option');
     o.value = p; o.textContent = p;
     wf.appendChild(o);
   });
-  // Set initial filteredRows = all rows
+
   filteredRows = [...allRows];
 }
 
 function applyGlobalFilters(){
   const month = document.getElementById('g-month').value;
   const who   = document.getElementById('g-who').value;
-  const cat   = document.getElementById('g-cat').value;
-  const active = month || who || cat;
+  const active = month || who;
 
-  // Build filteredRows from allRows based on selections
   filteredRows = allRows.filter(r => {
     if(month && mkKey(r.date) !== month) return false;
     if(who   && r.who !== who)           return false;
-    if(cat   && r.category !== cat)      return false;
     return true;
   });
 
-  // Visual feedback on active filters
-  ['g-month','g-who','g-cat'].forEach(id => {
-    document.getElementById(id).classList.toggle('filter-active', document.getElementById(id).value !== '');
-  });
+  // Visual feedback
+  document.getElementById('g-month').classList.toggle('filter-active', month !== '');
+  document.getElementById('g-who').classList.toggle('filter-active', who !== '');
   document.getElementById('filter-badge').style.display = active ? 'inline-flex' : 'none';
-  const resetBtn = document.getElementById('filter-reset');
-  resetBtn.style.color = active ? 'var(--accent)' : '';
-  resetBtn.style.borderColor = active ? 'var(--accent)' : '';
+  document.getElementById('filter-reset').style.color = active ? 'var(--accent)' : '';
+  document.getElementById('filter-reset').style.borderColor = active ? 'var(--accent)' : '';
 
-  // Re-render ALL sections with filteredRows
   reRenderAll();
 }
 
 function resetGlobalFilters(){
   document.getElementById('g-month').value = '';
   document.getElementById('g-who').value   = '';
-  document.getElementById('g-cat').value   = '';
-  ['g-month','g-who','g-cat'].forEach(id => document.getElementById(id).classList.remove('filter-active'));
+  document.getElementById('g-month').classList.remove('filter-active');
+  document.getElementById('g-who').classList.remove('filter-active');
   document.getElementById('filter-badge').style.display = 'none';
   document.getElementById('filter-reset').style.color = '';
   document.getElementById('filter-reset').style.borderColor = '';
