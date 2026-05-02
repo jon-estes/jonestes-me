@@ -397,7 +397,7 @@ function parseCSV(txt) {
 function fmt(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function fmtShort(n){ if(n>=1000) return '$'+(n/1000).toFixed(1)+'k'; return '$'+n.toFixed(0); }
 
-let allRows=[], sortKey='date', sortDir=-1;
+let allRows=[], filteredRows=[], sortKey='date', sortDir=-1;
 
 async function init(){
   try {
@@ -436,14 +436,14 @@ async function init(){
 }
 
 function getSpend(){ return filteredRows.filter(r=>r.category!=='Income'); }
-function getIncome(){ return allRows.filter(r=>r.category==='Income'); }
+function getIncome(){ return filteredRows.filter(r=>r.category==='Income'); }
 function sum(rows){ return rows.reduce((s,r)=>s+r.amount,0); }
 
 function getMonthKey(d){ const dt=new Date(d); return isNaN(dt)?null:dt.toLocaleString('default',{month:'short',year:'2-digit'}); }
 function getMonthSort(d){ const dt=new Date(d); return isNaN(dt)?0:dt.getFullYear()*100+dt.getMonth(); }
 
 function allMonths(){
-  const s=new Set(allRows.map(r=>getMonthKey(r.date)).filter(Boolean));
+  const s=new Set(filteredRows.map(r=>getMonthKey(r.date)).filter(Boolean));
   return [...s].sort((a,b)=>getMonthSort('01 '+a)-getMonthSort('01 '+b));
 }
 
@@ -482,7 +482,7 @@ function renderMonthly(view){
   if(monthlyChartInst){monthlyChartInst.destroy();monthlyChartInst=null;}
   const months=allMonths();
   const spendByMonth={}, incomeByMonth={};
-  allRows.forEach(r=>{
+  filteredRows.forEach(r=>{
     const k=getMonthKey(r.date); if(!k)return;
     if(r.category==='Income') incomeByMonth[k]=(incomeByMonth[k]||0)+r.amount;
     else spendByMonth[k]=(spendByMonth[k]||0)+r.amount;
@@ -765,15 +765,14 @@ function renderTable(){
 // ── GLOBAL FILTERS ───────────────────────────────────────────
 // filteredRows is what ALL render functions use
 // allRows is the master untouched dataset — never modified
-let filteredRows = [];
 
 function populateGlobalFilters(){
   // Populate month dropdown — use allRows directly so months are never filtered out
   const mf = document.getElementById('g-month');
   // Clear any existing options except first
   while(mf.options.length > 1) mf.remove(1);
-  const allM = [...new Set(allRows.map(r=>mkKey(r.date)).filter(Boolean))]
-    .sort((a,b)=>sortKey('01 '+a)-sortKey('01 '+b));
+  const allM = [...new Set(allRows.map(r=>getMonthKey(r.date)).filter(Boolean))]
+    .sort((a,b)=>getMonthSort('01 '+a)-getMonthSort('01 '+b));
   allM.forEach(m=>{
     const o = document.createElement('option');
     o.value = m; o.textContent = m;
@@ -789,7 +788,7 @@ function populateGlobalFilters(){
     wf.appendChild(o);
   });
 
-  filteredRows = [...allRows];
+  // filteredRows already set by boot()
 }
 
 function applyGlobalFilters(){
@@ -798,7 +797,7 @@ function applyGlobalFilters(){
   const active = month || who;
 
   filteredRows = allRows.filter(r => {
-    if(month && mkKey(r.date) !== month) return false;
+    if(month && getMonthKey(r.date) !== month) return false;
     if(who   && r.who !== who)           return false;
     return true;
   });
