@@ -67,14 +67,14 @@
     .section:nth-child(7) { animation-delay:0.29s; }
     .section:nth-child(8) { animation-delay:0.33s; }
 
-    .section-hd { display:flex; align-items:center; gap:8px; margin-bottom:1rem; }
-    .section-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+    .section-hd { display:flex; align-items:center; gap:10px; margin-bottom:1.25rem; }
+    .section-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
     .dot-pink { background:var(--pink); }
     .dot-green { background:var(--green); }
     .dot-blue { background:var(--blue); }
     .dot-gold { background:var(--gold); }
     .dot-purple { background:var(--purple); }
-    .section-title { font-size:11px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+    .section-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:400; font-style:italic; letter-spacing:0; text-transform:none; color:var(--text); }
     .section-note { font-size:11px; color:var(--muted2); margin-left:auto; }
 
     /* CARDS */
@@ -261,7 +261,11 @@
       </div>
     </div>
 
-    <hr class="divider" style="margin:1.5rem 0;" />
+    <div style="margin:2.5rem 0;display:flex;align-items:center;gap:1rem;">
+      <div style="flex:1;height:2px;background:linear-gradient(to right,var(--pink),var(--blue));border-radius:2px;opacity:0.8;"></div>
+      <span style="font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Person Breakdown</span>
+      <div style="flex:1;height:2px;background:linear-gradient(to left,var(--pink),var(--blue));border-radius:2px;opacity:0.8;"></div>
+    </div>
 
     <!-- ROW 4: ASHLEY VS JON -->
     <div class="section">
