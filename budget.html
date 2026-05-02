@@ -169,6 +169,18 @@
     .txn-empty { text-align:center; padding:2.5rem; color:var(--muted); font-size:13px; }
 
     .divider { border:none; border-top:1px solid var(--border); margin:2.5rem 0; }
+
+    /* GLOBAL FILTER BAR */
+    .filter-bar { display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:0.85rem 1.1rem; margin-bottom:2rem; opacity:0; animation:fadeUp 0.5s ease 0.09s forwards; }
+    .filter-bar-label { font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; margin-right:4px; }
+    .filter-sel { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12px; outline:none; cursor:pointer; transition:border-color 0.15s; }
+    .filter-sel:focus { border-color:var(--accent); }
+    .filter-sel option { background:var(--bg3); }
+    .filter-active { border-color:var(--accent) !important; color:var(--accent); }
+    .filter-reset { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.15s; margin-left:auto; }
+    .filter-reset:hover { border-color:var(--accent); color:var(--accent); }
+    .filter-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(126,203,161,0.1); border:1px solid rgba(126,203,161,0.3); border-radius:999px; padding:2px 10px; font-size:11px; color:var(--green); display:none; }
+
     .loading { text-align:center; padding:5rem; color:var(--muted); font-size:14px; }
     footer { text-align:center; font-size:12px; color:var(--muted2); }
     @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
@@ -205,6 +217,36 @@
 
     <!-- HERO STATS -->
     <div class="hero-stats" id="hero-stats"></div>
+
+    <!-- GLOBAL FILTER BAR -->
+    <div class="filter-bar" id="filter-bar">
+      <span class="filter-bar-label">Filter:</span>
+      <select class="filter-sel" id="g-month" onchange="applyGlobalFilters()">
+        <option value="">All Months</option>
+      </select>
+      <select class="filter-sel" id="g-who" onchange="applyGlobalFilters()">
+        <option value="">Ashley & Jon</option>
+      </select>
+      <select class="filter-sel" id="g-cat" onchange="applyGlobalFilters()">
+        <option value="">All Categories</option>
+        <option value="Income">Income</option>
+        <option value="Household Necessities">Household Necessities</option>
+        <option value="Subscriptions">Subscriptions</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Food & Drink (Eating Out)">Food & Drink</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Health & Wellbeing">Health & Wellbeing</option>
+        <option value="Bills">Bills</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Transport">Transport</option>
+        <option value="Vacation">Vacation</option>
+        <option value="Gifts">Gifts</option>
+        <option value="Kids">Kids</option>
+        <option value="Business">Business</option>
+      </select>
+      <span class="filter-badge" id="filter-badge">Filtered view</span>
+      <button class="filter-reset" id="filter-reset" onclick="resetGlobalFilters()">✕ Reset</button>
+    </div>
 
     <!-- ROW 1: INCOME vs SPENDING + SAVINGS RATE -->
     <div class="section">
@@ -504,7 +546,9 @@ function renderMonthly(view){
   });
 }
 
+let currentMonthlyView='spending';
 function switchMonthly(view,btn){
+  currentMonthlyView=view;
   document.querySelectorAll('#monthly-tabs .tab').forEach(t=>t.className='tab');
   const cls=view==='income'?'active-green':view==='savings'?'active-blue':'active-pink';
   btn.classList.add(cls);
@@ -732,6 +776,74 @@ function renderTable(){
   document.getElementById('txn-count').textContent=`${rows.length} transactions`;
   document.getElementById('txn-note').textContent=`${rows.length} shown`;
   document.getElementById('txn-total').textContent=`Spending: ${fmt(spending)}${inc>0?' · Income: '+fmt(inc):''}`;
+}
+
+
+// ── GLOBAL FILTERS ───────────────────────────────────────────
+let gFilterMonth = '', gFilterWho = '', gFilterCat = '';
+
+function populateGlobalFilters(){
+  const months = allMonths();
+  const mf = document.getElementById('g-month');
+  months.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; mf.appendChild(o); });
+  const wf = document.getElementById('g-who');
+  const people = [...new Set(allRows.map(r=>r.who).filter(Boolean))].sort();
+  people.forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; wf.appendChild(o); });
+}
+
+function getFilteredRows(){
+  return allRows.filter(r => {
+    if(gFilterMonth && mkKey(r.date) !== gFilterMonth) return false;
+    if(gFilterWho && r.who !== gFilterWho) return false;
+    if(gFilterCat && r.category !== gFilterCat) return false;
+    return true;
+  });
+}
+
+function applyGlobalFilters(){
+  gFilterMonth = document.getElementById('g-month').value;
+  gFilterWho = document.getElementById('g-who').value;
+  gFilterCat = document.getElementById('g-cat').value;
+  const active = gFilterMonth || gFilterWho || gFilterCat;
+
+  // Highlight active filters
+  ['g-month','g-who','g-cat'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.toggle('filter-active', el.value !== '');
+  });
+  document.getElementById('filter-badge').style.display = active ? 'inline-flex' : 'none';
+  document.getElementById('filter-reset').style.color = active ? 'var(--accent)' : '';
+  document.getElementById('filter-reset').style.borderColor = active ? 'var(--accent)' : '';
+
+  // Re-render everything with filtered data
+  const saved = allRows;
+  allRows = getFilteredRows();
+  renderHeroStats();
+  renderMonthly(currentMonthlyView || 'spending');
+  renderCatPie();
+  renderCatList();
+  renderGoals();
+  renderCatTrends();
+  renderPersonCards();
+  renderWhoPie();
+  renderWhoCat();
+  renderTopExpenses();
+  renderInsights();
+  renderCumulative();
+  renderTable();
+  allRows = saved;
+}
+
+function resetGlobalFilters(){
+  gFilterMonth = ''; gFilterWho = ''; gFilterCat = '';
+  document.getElementById('g-month').value = '';
+  document.getElementById('g-who').value = '';
+  document.getElementById('g-cat').value = '';
+  ['g-month','g-who','g-cat'].forEach(id => document.getElementById(id).classList.remove('filter-active'));
+  document.getElementById('filter-badge').style.display = 'none';
+  document.getElementById('filter-reset').style.color = '';
+  document.getElementById('filter-reset').style.borderColor = '';
+  applyGlobalFilters();
 }
 
 init();
