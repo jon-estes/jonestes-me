@@ -261,16 +261,7 @@
       </div>
     </div>
 
-    <!-- ROW 3: CATEGORY OVER TIME -->
-    <div class="section">
-      <div class="section-hd"><div class="section-dot dot-blue"></div><div class="section-title">Category Trends Over Time</div></div>
-      <div class="card full">
-        <div class="tabs" id="cat-trend-tabs"></div>
-        <div class="chart-h-tall"><canvas id="cat-trend-chart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- ROW 4: ASHLEY VS JON -->
+    <!-- ROW 3: ASHLEY VS JON (was ROW 4) -->
     <div class="section">
       <div class="section-hd"><div class="section-dot dot-purple"></div><div class="section-title">Ashley vs Jon</div></div>
       <div class="person-grid" id="person-grid"></div>
@@ -311,6 +302,15 @@
       <div class="card full">
         <div class="card-title">Total spend over the year — each step is one transaction</div>
         <div class="chart-h-tall"><canvas id="cumulative-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY OVER TIME (moved to bottom) -->
+    <div class="section">
+      <div class="section-hd"><div class="section-dot dot-blue"></div><div class="section-title">Category Trends Over Time</div></div>
+      <div class="card full">
+        <div class="tabs" id="cat-trend-tabs"></div>
+        <div class="chart-h-tall"><canvas id="cat-trend-chart"></canvas></div>
       </div>
     </div>
 
@@ -606,15 +606,17 @@ function showCatTrend(cat, btn){
 }
 
 function renderPersonCards(){
-  const people=['Ashley','Jon'];
-  const cats=Object.keys(catTotals()).sort((a,b)=>catTotals()[b]-catTotals()[a]);
+  const people=[...new Set(filteredRows.map(r=>r.who).filter(Boolean))].sort();
+  if(people.length<=1){document.getElementById('person-section').style.display='none';return;}
+  document.getElementById('person-section').style.display='block';
+  const PCOLS=['pink','blue','green','gold'];
   document.getElementById('person-grid').innerHTML=people.map((who,pi)=>{
-    const rows=getSpend().filter(r=>r.who.toLowerCase().includes(who.toLowerCase()));
+    const rows=getSpend().filter(r=>r.who===who);
     const total=sum(rows);
     const topCats=Object.entries(rows.reduce((acc,r)=>{acc[r.category]=(acc[r.category]||0)+r.amount;return acc;},{})).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const avgTxn=rows.length?total/rows.length:0;
     const months=allMonths().length||1;
-    const col=pi===0?'pink':'blue';
+    const col=PCOLS[pi%PCOLS.length];
     return `<div class="person-card">
       <div class="person-name ${col}">${who}</div>
       <div class="person-stats">
@@ -667,7 +669,7 @@ function renderWhoCat(){
 }
 
 function renderTopExpenses(){
-  const top=getSpend().sort((a,b)=>b.amount-a.amount).slice(0,8);
+  const top=[...getSpend()].sort((a,b)=>b.amount-a.amount).slice(0,8);
   document.getElementById('top-list').innerHTML=top.map((r,i)=>`
     <div class="top-item">
       <div class="top-rank">${i+1}</div>
@@ -708,7 +710,7 @@ function renderInsights(){
 
 function renderCumulative(){
   if(charts.cumul)charts.cumul.destroy();
-  const sorted=getSpend().sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const sorted=[...getSpend()].sort((a,b)=>new Date(a.date)-new Date(b.date));
   let running=0;
   const labels=[], data=[];
   sorted.forEach(r=>{ running+=r.amount; labels.push(r.date); data.push(running.toFixed(2)); });
