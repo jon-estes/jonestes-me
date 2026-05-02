@@ -170,16 +170,15 @@
 
     .divider { border:none; border-top:1px solid var(--border); margin:2.5rem 0; }
 
-    /* GLOBAL FILTER BAR */
-    .filter-bar { display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:0.85rem 1.1rem; margin-bottom:2rem; opacity:0; animation:fadeUp 0.5s ease 0.09s forwards; }
-    .filter-bar-label { font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; margin-right:4px; }
-    .filter-sel { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12px; outline:none; cursor:pointer; transition:border-color 0.15s; }
-    .filter-sel:focus { border-color:var(--accent); }
+
+    .filter-bar { display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:0.75rem 1.1rem; margin-bottom:2rem; }
+    .filter-bar-label { font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+    .filter-sel { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; cursor:pointer; }
     .filter-sel option { background:var(--bg3); }
-    .filter-active { border-color:var(--accent) !important; color:var(--accent); }
-    .filter-reset { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.15s; margin-left:auto; }
+    .filter-active { border-color:var(--accent) !important; color:var(--accent) !important; }
+    .filter-badge { background:rgba(126,203,161,0.1); border:1px solid rgba(126,203,161,0.3); border-radius:999px; padding:3px 12px; font-size:11px; color:var(--green); }
+    .filter-reset { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; margin-left:auto; transition:all 0.15s; }
     .filter-reset:hover { border-color:var(--accent); color:var(--accent); }
-    .filter-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(126,203,161,0.1); border:1px solid rgba(126,203,161,0.3); border-radius:999px; padding:2px 10px; font-size:11px; color:var(--green); display:none; }
 
     .loading { text-align:center; padding:5rem; color:var(--muted); font-size:14px; }
     footer { text-align:center; font-size:12px; color:var(--muted2); }
@@ -218,19 +217,17 @@
     <!-- HERO STATS -->
     <div class="hero-stats" id="hero-stats"></div>
 
-    <!-- GLOBAL FILTER BAR -->
-    <div class="filter-bar" id="filter-bar">
-      <span class="filter-bar-label">Filter:</span>
-      <select class="filter-sel" id="g-month" onchange="applyGlobalFilters()">
+    <div class="filter-bar">
+      <span class="filter-bar-label">Filter by:</span>
+      <select class="filter-sel" id="g-month" onchange="applyFilters()">
         <option value="">All Months</option>
       </select>
-      <select class="filter-sel" id="g-who" onchange="applyGlobalFilters()">
+      <select class="filter-sel" id="g-who" onchange="applyFilters()">
         <option value="">All People</option>
       </select>
-      <span class="filter-badge" id="filter-badge">Filtered view</span>
-      <button class="filter-reset" id="filter-reset" onclick="resetGlobalFilters()">✕ Reset</button>
+      <span class="filter-badge" id="filter-badge" style="display:none">Filtered</span>
+      <button class="filter-reset" id="filter-reset" onclick="resetFilters()">&#x2715; Reset</button>
     </div>
-
     <!-- ROW 1: INCOME vs SPENDING + SAVINGS RATE -->
     <div class="section">
       <div class="section-hd"><div class="section-dot dot-green"></div><div class="section-title">Monthly Overview</div><div class="section-note" id="month-range-note"></div></div>
@@ -261,7 +258,16 @@
       </div>
     </div>
 
-    <!-- ROW 3: ASHLEY VS JON (was ROW 4) -->
+    <!-- ROW 3: CATEGORY OVER TIME -->
+    <div class="section">
+      <div class="section-hd"><div class="section-dot dot-blue"></div><div class="section-title">Category Trends Over Time</div></div>
+      <div class="card full">
+        <div class="tabs" id="cat-trend-tabs"></div>
+        <div class="chart-h-tall"><canvas id="cat-trend-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ROW 4: ASHLEY VS JON -->
     <div class="section">
       <div class="section-hd"><div class="section-dot dot-purple"></div><div class="section-title">Ashley vs Jon</div></div>
       <div class="person-grid" id="person-grid"></div>
@@ -302,15 +308,6 @@
       <div class="card full">
         <div class="card-title">Total spend over the year — each step is one transaction</div>
         <div class="chart-h-tall"><canvas id="cumulative-chart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- CATEGORY OVER TIME (moved to bottom) -->
-    <div class="section">
-      <div class="section-hd"><div class="section-dot dot-blue"></div><div class="section-title">Category Trends Over Time</div></div>
-      <div class="card full">
-        <div class="tabs" id="cat-trend-tabs"></div>
-        <div class="chart-h-tall"><canvas id="cat-trend-chart"></canvas></div>
       </div>
     </div>
 
@@ -397,7 +394,7 @@ function parseCSV(txt) {
 function fmt(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function fmtShort(n){ if(n>=1000) return '$'+(n/1000).toFixed(1)+'k'; return '$'+n.toFixed(0); }
 
-let allRows=[], filteredRows=[], sortKey='date', sortDir=-1;
+let allRows=[], sortKey='date', sortDir=-1;
 
 async function init(){
   try {
@@ -415,10 +412,7 @@ async function init(){
     document.getElementById('main-loading').style.display='none';
     document.getElementById('main-content').style.display='block';
 
-    // MUST set filteredRows before any render call
-    filteredRows = [...allRows];
     populateMonthFilter();
-    populateGlobalFilters();
     renderHeroStats();
     renderMonthly('spending');
     renderCatPie();
@@ -438,17 +432,14 @@ async function init(){
   }
 }
 
-function getSpend(){ return filteredRows.filter(r=>r.category!=='Income'); }
-function getIncome(){ return filteredRows.filter(r=>r.category==='Income'); }
+function getSpend(){ return (window._fr||allRows).filter(r=>r.category!=='Income'); }
+function getIncome(){ return (window._fr||allRows).filter(r=>r.category==='Income'); }
 function sum(rows){ return rows.reduce((s,r)=>s+r.amount,0); }
 
 function getMonthKey(d){ const dt=new Date(d); return isNaN(dt)?null:dt.toLocaleString('default',{month:'short',year:'2-digit'}); }
 function getMonthSort(d){ const dt=new Date(d); return isNaN(dt)?0:dt.getFullYear()*100+dt.getMonth(); }
 
-function allMonths(){
-  const s=new Set(filteredRows.map(r=>getMonthKey(r.date)).filter(Boolean));
-  return [...s].sort((a,b)=>getMonthSort('01 '+a)-getMonthSort('01 '+b));
-}
+function allMonths(){ const s=new Set((window._fr||allRows).map(r=>getMonthKey(r.date)).filter(Boolean)); return [...s].sort((a,b)=>getMonthSort('01 '+a)-getMonthSort('01 '+b)); }
 
 function populateMonthFilter(){
   const sel=document.getElementById('month-filter');
@@ -463,7 +454,7 @@ function renderHeroStats(){
   const topCatEntry=Object.entries(catTotals()).sort((a,b)=>b[1]-a[1])[0];
   const topCat=topCatEntry?topCatEntry[0]:'—';
 
-  document.getElementById('hero-sub').textContent=`${filteredRows.length} transactions across ${months} month${months!==1?'s':''} · live from Google Sheets`;
+  document.getElementById('hero-sub').textContent=`${(window._fr||allRows).length} transactions across ${months} month${months!==1?'s':''} · live from Google Sheets`;
   document.getElementById('hero-stats').innerHTML=`
     <div class="hstat income"><div class="hstat-label">Total Income</div><div class="hstat-num green">${fmt(income)}</div><div class="hstat-sub">${fmtShort(income/months)}/mo avg</div></div>
     <div class="hstat spending"><div class="hstat-label">Total Spending</div><div class="hstat-num pink">${fmt(spending)}</div><div class="hstat-sub">${fmtShort(spending/months)}/mo avg</div></div>
@@ -474,8 +465,7 @@ function renderHeroStats(){
   `;
 }
 
-function catTotals(){
-  const c={};
+function catTotals(){ const c={}; getSpend().forEach(r=>c[r.category]=(c[r.category]||0)+r.amount); return c; };
   getSpend().forEach(r=>c[r.category]=(c[r.category]||0)+r.amount);
   return c;
 }
@@ -485,7 +475,7 @@ function renderMonthly(view){
   if(monthlyChartInst){monthlyChartInst.destroy();monthlyChartInst=null;}
   const months=allMonths();
   const spendByMonth={}, incomeByMonth={};
-  filteredRows.forEach(r=>{
+  (window._fr||allRows).forEach(r=>{
     const k=getMonthKey(r.date); if(!k)return;
     if(r.category==='Income') incomeByMonth[k]=(incomeByMonth[k]||0)+r.amount;
     else spendByMonth[k]=(spendByMonth[k]||0)+r.amount;
@@ -532,9 +522,7 @@ function renderMonthly(view){
   });
 }
 
-let currentMonthlyView='spending';
 function switchMonthly(view,btn){
-  currentMonthlyView=view;
   document.querySelectorAll('#monthly-tabs .tab').forEach(t=>t.className='tab');
   const cls=view==='income'?'active-green':view==='savings'?'active-blue':'active-pink';
   btn.classList.add(cls);
@@ -606,17 +594,15 @@ function showCatTrend(cat, btn){
 }
 
 function renderPersonCards(){
-  const people=[...new Set(filteredRows.map(r=>r.who).filter(Boolean))].sort();
-  if(people.length<=1){document.getElementById('person-section').style.display='none';return;}
-  document.getElementById('person-section').style.display='block';
-  const PCOLS=['pink','blue','green','gold'];
+  const people=['Ashley','Jon'];
+  const cats=Object.keys(catTotals()).sort((a,b)=>catTotals()[b]-catTotals()[a]);
   document.getElementById('person-grid').innerHTML=people.map((who,pi)=>{
-    const rows=getSpend().filter(r=>r.who===who);
+    const rows=getSpend().filter(r=>r.who.toLowerCase().includes(who.toLowerCase()));
     const total=sum(rows);
     const topCats=Object.entries(rows.reduce((acc,r)=>{acc[r.category]=(acc[r.category]||0)+r.amount;return acc;},{})).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const avgTxn=rows.length?total/rows.length:0;
     const months=allMonths().length||1;
-    const col=PCOLS[pi%PCOLS.length];
+    const col=pi===0?'pink':'blue';
     return `<div class="person-card">
       <div class="person-name ${col}">${who}</div>
       <div class="person-stats">
@@ -669,7 +655,7 @@ function renderWhoCat(){
 }
 
 function renderTopExpenses(){
-  const top=[...getSpend()].sort((a,b)=>b.amount-a.amount).slice(0,8);
+  const top=getSpend().sort((a,b)=>b.amount-a.amount).slice(0,8);
   document.getElementById('top-list').innerHTML=top.map((r,i)=>`
     <div class="top-item">
       <div class="top-rank">${i+1}</div>
@@ -710,7 +696,7 @@ function renderInsights(){
 
 function renderCumulative(){
   if(charts.cumul)charts.cumul.destroy();
-  const sorted=[...getSpend()].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const sorted=getSpend().sort((a,b)=>new Date(a.date)-new Date(b.date));
   let running=0;
   const labels=[], data=[];
   sorted.forEach(r=>{ running+=r.amount; labels.push(r.date); data.push(running.toFixed(2)); });
@@ -732,7 +718,7 @@ function renderTable(){
   const month=document.getElementById('month-filter').value;
   const sort=document.getElementById('sort-filter').value;
 
-  let rows=[...filteredRows].filter(r=>{
+  let rows=[...(window._fr||allRows)].filter(r=>{
     if(cat&&r.category!==cat)return false;
     if(who&&!r.who.toLowerCase().includes(who.toLowerCase()))return false;
     if(month&&getMonthKey(r.date)!==month)return false;
@@ -767,55 +753,55 @@ function renderTable(){
 }
 
 
-// ── GLOBAL FILTERS ───────────────────────────────────────────
-// filteredRows is what ALL render functions use
-// allRows is the master untouched dataset — never modified
+// ─────────────────────────────────────────────
+// GLOBAL FILTERS — clean simple implementation
+// window._fr = filtered dataset (undefined = use allRows)
+// ─────────────────────────────────────────────
 
-function populateGlobalFilters(){
-  // Month dropdown — always built from allRows so all months always show
-  const mf = document.getElementById('g-month');
-  while(mf.options.length > 1) mf.remove(1);
+function setupFilters(){
+  // Populate month dropdown from all data
+  const mSel = document.getElementById('g-month');
   const allM = [...new Set(allRows.map(r=>getMonthKey(r.date)).filter(Boolean))]
     .sort((a,b)=>getMonthSort('01 '+a)-getMonthSort('01 '+b));
   allM.forEach(m=>{
-    const o = document.createElement('option');
-    o.value = m; o.textContent = m;
-    mf.appendChild(o);
+    const o=document.createElement('option');
+    o.value=m; o.textContent=m; mSel.appendChild(o);
   });
 
-  // Who dropdown — always built from allRows so all people always show
-  const wf = document.getElementById('g-who');
-  while(wf.options.length > 1) wf.remove(1);
+  // Populate person dropdown from all data
+  const wSel = document.getElementById('g-who');
   [...new Set(allRows.map(r=>r.who).filter(Boolean))].sort().forEach(p=>{
-    const o = document.createElement('option');
-    o.value = p; o.textContent = p;
-    wf.appendChild(o);
+    const o=document.createElement('option');
+    o.value=p; o.textContent=p; wSel.appendChild(o);
   });
 }
 
-function applyGlobalFilters(){
+function applyFilters(){
   const month = document.getElementById('g-month').value;
   const who   = document.getElementById('g-who').value;
   const active = !!(month || who);
 
-  // Rebuild filteredRows from the MASTER allRows dataset
-  filteredRows = allRows.filter(r => {
-    if(month && getMonthKey(r.date) !== month) return false;
-    if(who   && r.who !== who)                 return false;
-    return true;
-  });
+  // Build filtered dataset
+  window._fr = active
+    ? allRows.filter(r=>{
+        if(month && getMonthKey(r.date) !== month) return false;
+        if(who   && r.who !== who)                 return false;
+        return true;
+      })
+    : undefined; // undefined = use allRows everywhere
 
-  // Visual feedback
+  // UI feedback
   document.getElementById('g-month').classList.toggle('filter-active', !!month);
   document.getElementById('g-who').classList.toggle('filter-active', !!who);
   document.getElementById('filter-badge').style.display = active ? 'inline-flex' : 'none';
   document.getElementById('filter-reset').style.color = active ? 'var(--accent)' : '';
   document.getElementById('filter-reset').style.borderColor = active ? 'var(--accent)' : '';
 
-  reRenderAll();
+  // Re-render everything
+  renderAll();
 }
 
-function resetGlobalFilters(){
+function resetFilters(){
   document.getElementById('g-month').value = '';
   document.getElementById('g-who').value   = '';
   document.getElementById('g-month').classList.remove('filter-active');
@@ -823,14 +809,13 @@ function resetGlobalFilters(){
   document.getElementById('filter-badge').style.display = 'none';
   document.getElementById('filter-reset').style.color = '';
   document.getElementById('filter-reset').style.borderColor = '';
-  // Restore full dataset
-  filteredRows = [...allRows];
-  reRenderAll();
+  window._fr = undefined;
+  renderAll();
 }
 
-function reRenderAll(){
+function renderAll(){
   renderHeroStats();
-  renderMonthly(currentMonthlyView || 'spending');
+  renderMonthly(window._currentMonthlyView||'spending');
   renderCatPie();
   renderCatList();
   renderGoals();
@@ -843,6 +828,7 @@ function reRenderAll(){
   renderCumulative();
   renderTable();
 }
+
 
 init();
 </script>
