@@ -527,7 +527,7 @@ function renderMonthly(view){
   });
 }
 
-function switchMonthly(view,btn){
+function switchMonthly(view,btn){ window._currentMonthlyView=view;
   document.querySelectorAll('#monthly-tabs .tab').forEach(t=>t.className='tab');
   const cls=view==='income'?'active-green':view==='savings'?'active-blue':'active-pink';
   btn.classList.add(cls);
@@ -845,7 +845,21 @@ function toggleBusiness(){
     btn.textContent = _bizIncluded ? '💼 Business: Included' : '💼 Business: Excluded';
     btn.classList.toggle('included', _bizIncluded);
   }
-  reRenderAll();
+  // Destroy all existing charts so they redraw cleanly
+  Object.keys(charts).forEach(k=>{ if(charts[k]){charts[k].destroy();charts[k]=null;} });
+  // Re-render every section
+  renderHeroStats();
+  renderMonthly(window._currentMonthlyView||'spending');
+  renderCatPie();
+  renderCatList();
+  renderCatTrends();
+  renderPersonCards();
+  renderWhoPie();
+  renderWhoCat();
+  renderTopExpenses();
+  renderInsights();
+  renderCumulative();
+  renderTable();
 }
 
 
