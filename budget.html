@@ -465,13 +465,11 @@ function renderHeroStats(){
     <div class="hstat rate"><div class="hstat-label">Avg / Month</div><div class="hstat-num gold">${fmtShort(spending/months)}</div><div class="hstat-sub">spending per month</div></div>
     <div class="hstat txns"><div class="hstat-label">Transactions</div><div class="hstat-num purple">${getSpend().length}</div><div class="hstat-sub">${(getSpend().length/months).toFixed(1)} per month avg</div></div>
     <div class="hstat top"><div class="hstat-label">Top Category</div><div class="hstat-num" style="font-size:1rem;margin-top:4px;color:var(--orange)">${ICONS[topCat]||''} ${topCat}</div><div class="hstat-sub">${fmt(topCatEntry?.[1]||0)} total</div></div>
+    ${bizTotal>0?`<div class="hstat" style="border-top:2px solid #c9a96e"><div class="hstat-label">Business</div><div class="hstat-num gold">${fmt(bizTotal)}</div><div class="hstat-sub">excluded from spending</div></div>`:''}
   `;
 }
 
-function catTotals(){ const c={}; getSpend().forEach(r=>c[r.category]=(c[r.category]||0)+r.amount); return c; };
-  getSpend().forEach(r=>c[r.category]=(c[r.category]||0)+r.amount);
-  return c;
-}
+function catTotals(){ const c={}; getSpend().forEach(r=>c[r.category]=(c[r.category]||0)+r.amount); return c; }
 
 let monthlyChartInst=null;
 function renderMonthly(view){
