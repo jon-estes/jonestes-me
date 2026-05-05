@@ -437,7 +437,7 @@ async function init(){
   }
 }
 
-function getSpend(){ return (window._fr||allRows).filter(r=>r.category!=='Income'&&r.category!=='Business'); }
+function getSpend(){ return (window._fr||allRows).filter(r=>{ if(r.category==='Income') return false; if(r.category==='Business' && !_bizIncluded) return false; return true; }); }
 function getIncome(){ return (window._fr||allRows).filter(r=>r.category==='Income'); }
 function getBusiness(){ return (window._fr||allRows).filter(r=>r.category==='Business'); }
 function sum(rows){ return rows.reduce((s,r)=>s+r.amount,0); }
@@ -832,6 +832,20 @@ function renderAll(){
   renderInsights();
   renderCumulative();
   renderTable();
+}
+
+
+// -- BUSINESS TOGGLE --
+let _bizIncluded = false;
+
+function toggleBusiness(){
+  _bizIncluded = !_bizIncluded;
+  const btn = document.getElementById('biz-toggle');
+  if(btn){
+    btn.textContent = _bizIncluded ? '💼 Business: Included' : '💼 Business: Excluded';
+    btn.classList.toggle('included', _bizIncluded);
+  }
+  reRenderAll();
 }
 
 
