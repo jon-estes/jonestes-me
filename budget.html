@@ -179,6 +179,9 @@
     .filter-badge { background:rgba(126,203,161,0.1); border:1px solid rgba(126,203,161,0.3); border-radius:999px; padding:3px 12px; font-size:11px; color:var(--green); }
     .filter-reset { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; margin-left:auto; transition:all 0.15s; }
     .filter-reset:hover { border-color:var(--accent); color:var(--accent); }
+    .biz-toggle { background:rgba(201,169,110,0.08); border:1px solid rgba(201,169,110,0.35); border-radius:8px; padding:0.45rem 0.85rem; color:#c9a96e; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .biz-toggle:hover { background:rgba(201,169,110,0.15); }
+    .biz-toggle.included { background:rgba(201,169,110,0.2); border-color:#c9a96e; font-weight:500; }
 
     .loading { text-align:center; padding:5rem; color:var(--muted); font-size:14px; }
     footer { text-align:center; font-size:12px; color:var(--muted2); }
@@ -228,6 +231,7 @@
       </select>
       <span class="filter-badge" id="filter-badge" style="display:none">Filtered</span>
       <button class="filter-reset" id="filter-reset" onclick="resetFilters()">&#x2715; Reset</button>
+      <button class="biz-toggle" id="biz-toggle" onclick="toggleBusiness()" title="Toggle business expenses">💼 Business: Excluded</button>
     </div>
     <!-- ROW 1: INCOME vs SPENDING + SAVINGS RATE -->
     <div class="section">
@@ -465,7 +469,7 @@ function renderHeroStats(){
     <div class="hstat rate"><div class="hstat-label">Avg / Month</div><div class="hstat-num gold">${fmtShort(spending/months)}</div><div class="hstat-sub">spending per month</div></div>
     <div class="hstat txns"><div class="hstat-label">Transactions</div><div class="hstat-num purple">${getSpend().length}</div><div class="hstat-sub">${(getSpend().length/months).toFixed(1)} per month avg</div></div>
     <div class="hstat top"><div class="hstat-label">Top Category</div><div class="hstat-num" style="font-size:1rem;margin-top:4px;color:var(--orange)">${ICONS[topCat]||''} ${topCat}</div><div class="hstat-sub">${fmt(topCatEntry?.[1]||0)} total</div></div>
-    ${bizTotal>0?`<div class="hstat" style="border-top:2px solid #c9a96e"><div class="hstat-label">Business</div><div class="hstat-num gold">${fmt(bizTotal)}</div><div class="hstat-sub">excluded from spending</div></div>`:''}
+    ${bizTotal>0?`<div class="hstat" style="border-top:2px solid #c9a96e"><div class="hstat-label">Business</div><div class="hstat-num gold">${fmt(bizTotal)}</div><div class="hstat-sub">${window._bizIncluded?'included in spending':'excluded from spending'}</div></div>`:''}
   `;
 }
 
