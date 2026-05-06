@@ -166,10 +166,10 @@
 </div>
 
 <script>
-  // metals.dev spot endpoint — response shape:
-  // { status, timestamp, currency, unit, metal, rate: { price, ask, bid, high, low, change, change_percent } }
+  // metals.dev /v1/latest — free plan endpoint
+  // Response: { status, metals: { silver: 32.40, ... }, currencies: {...}, timestamps: {...} }
   const API_KEY = 'PHKEEZ233NOPITRZOIFR936RZOIFR';
-  const API_URL = 'https://api.metals.dev/v1/metal/spot?api_key=' + API_KEY + '&metal=silver&currency=USD';
+  const API_URL = 'https://api.metals.dev/v1/latest?api_key=' + API_KEY + '&currency=USD&unit=toz';
 
   let priceHistory = [];
   let chartView = 'live';
@@ -287,26 +287,75 @@
     });
   }
 
-  async function fetchSilver() {
-    try {
-      const res = await fetch(API_URL);
-      const json = await res.json();
-
-      // Log to console so you can debug in browser devtools if needed
-      console.log('metals.dev response:', json);
-
-      if (json.status === 'success' && json.rate && json.rate.price != null) {
-        updateUI(json.rate);
-      } else {
-        // API returned an error object
-        const msg = json.error_message || ('status: ' + json.status);
-        console.error('metals.dev error:', msg);
-        setStatus('error', 'API error — check console');
-      }
-    } catch (err) {
-      console.error('Fetch failed:', err);
-      setStatus('error', 'fetch failed — retrying…');
+  // Primary: metals.dev /v1/latest (free plan)
+  // Response shape: { status:"success", metals:{ silver: 32.40 }, timestamps:{...} }
+  async function fetchFromMetalsDev() {
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    console.log('metals.dev /v1/latest response:', json);
+    if (json.status === 'success' && json.metals && json.metals.silver != null) {
+      // /v1/latest doesn't give bid/ask/high/low — pass what we have
+      updateUI({
+        price: json.metals.silver,
+        high: null, low: null, bid: null, ask: null,
+        change: null, change_percent: null
+      });
+      return true;
     }
+    throw new Error(json.error_message || 'metals.dev: unexpected response');
+  }
+
+  // Fallback: metals-api.com free tier
+  // Response shape: { success:true, rates:{ USDXAG: 32.40, XAG: 0.031 } }
+  async function fetchFromMetalsApi() {
+    const r = await fetch('https://metals-api.com/api/latest?access_key=demo&base=USD&symbols=XAG');
+    const j = await r.json();
+    console.log('metals-api.com response:', j);
+    // USDXAG = price of 1 USD worth of silver in oz → invert to get $/oz
+    if (j.success && j.rates && j.rates.XAG) {
+      const price = 1 / j.rates.XAG;
+      updateUI({ price, high: null, low: null, bid: null, ask: null, change: null, change_percent: null });
+      return true;
+    }
+    throw new Error('metals-api.com fallback failed');
+  }
+
+  // Second fallback: frankfurter-style open metals endpoint
+  async function fetchFromOpenMetals() {
+    const r = await fetch('https://api.metals.live/v1/spot/silver');
+    const j = await r.json();
+    console.log('metals.live response:', j);
+    const price = j?.price || (Array.isArray(j) && j[0]?.price) || j?.silver;
+    if (price && !isNaN(price)) {
+      updateUI({ price: Number(price), high: null, low: null, bid: null, ask: null, change: null, change_percent: null });
+      return true;
+    }
+    throw new Error('metals.live fallback failed');
+  }
+
+  async function fetchSilver() {
+    // Try primary, then fallbacks in order
+    const sources = [
+      { fn: fetchFromMetalsDev,  label: 'metals.dev' },
+      { fn: fetchFromOpenMetals, label: 'metals.live' },
+      { fn: fetchFromMetalsApi,  label: 'metals-api' },
+    ];
+
+    for (const source of sources) {
+      try {
+        const ok = await source.fn();
+        if (ok) {
+          console.log('✓ price from', source.label);
+          return;
+        }
+      } catch (err) {
+        console.warn('✗', source.label, err.message);
+      }
+    }
+
+    // All sources failed
+    console.error('All price sources failed');
+    setStatus('error', 'all sources failed — retrying in 60s');
   }
 
   fetchSilver();
