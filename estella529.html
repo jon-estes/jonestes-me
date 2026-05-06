@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Estella's College Fund · Jon Estes</title>
-  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Oon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -23,45 +24,83 @@
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
     .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 
-    /* NAV */
     nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
     nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
     nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
 
-    /* HERO */
     .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
     .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.6rem; }
     .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
     .hero h1 em { font-style: italic; color: var(--pink); }
     .hero p { font-size: 15px; color: var(--muted); font-weight: 300; max-width: 520px; line-height: 1.7; }
 
-    /* PROGRESS CARD */
     .progress-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
     .progress-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
     .progress-label { font-size: 12px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
     .progress-amount { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; color: var(--text); line-height: 1; }
-    .progress-amount span { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .progress-amount .dollar { font-size: 18px; color: var(--muted); font-weight: 400; }
     .progress-goal { text-align: right; }
-    .progress-goal .progress-label { text-align: right; }
     .progress-goal .goal-num { font-size: 20px; font-weight: 500; color: var(--muted); }
-
     .progress-bar-track { background: var(--bg3); border-radius: 999px; height: 10px; overflow: hidden; margin-bottom: 0.75rem; }
     .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(to right, #e8a0b0, #d4789a); width: 0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-
-    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 300; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 300; margin-bottom: 1.25rem; }
     .progress-pct { color: var(--pink); font-weight: 500; }
 
-    /* UGIFT CARD */
+    .accounts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .account-mini { background: var(--bg3); border-radius: 10px; padding: 0.85rem 1rem; }
+    .account-mini-label { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
+    .account-mini-val { font-size: 18px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+    .account-mini-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+
     .ugift-card { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
     .ugift-left h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
     .ugift-left p { font-size: 13px; color: var(--muted); font-weight: 300; }
     .ugift-code { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 8px 18px; font-size: 20px; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); font-family: monospace; white-space: nowrap; }
 
-    /* HOW TO SECTION */
-    .how-section { opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; margin-bottom: 2.5rem; }
+    /* HISTORY */
+    .history-section { opacity: 0; animation: fadeUp 0.6s ease 0.17s forwards; margin-bottom: 2.5rem; }
     .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
-    .how-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+    .history-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+    .chart-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .chart-container { position: relative; width: 100%; height: 240px; margin-bottom: 1.5rem; }
 
+    .log-table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .log-table thead tr { background: var(--bg3); }
+    .log-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .log-table th:not(:first-child) { text-align: right; }
+    .log-table td { padding: 10px 14px; color: var(--text); border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 13px; }
+    .log-table td:first-child { font-family: 'DM Sans', sans-serif; color: var(--muted); font-size: 12px; font-weight: 300; }
+    .log-table td:not(:first-child) { text-align: right; }
+    .log-table tbody tr:last-child td { border-bottom: none; color: var(--pink); font-weight: 500; }
+    .log-table tbody tr:last-child td:first-child { font-family: 'DM Sans', sans-serif; }
+    .log-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    .ch-pos { color: var(--accent2) !important; font-weight: 400; }
+    .ch-neg { color: var(--accent) !important; font-weight: 400; }
+    .ch-neu { color: var(--muted) !important; font-weight: 400; }
+
+    /* PROJECTION */
+    .projection-section { opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; margin-bottom: 2.5rem; }
+    .projection-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+    .proj-controls { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .proj-control { flex: 1; min-width: 160px; }
+    .proj-control label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .proj-control-row { display: flex; align-items: center; gap: 10px; }
+    .proj-control input[type=range] { flex: 1; -webkit-appearance: none; appearance: none; height: 3px; background: var(--bg3); border-radius: 2px; outline: none; cursor: pointer; }
+    .proj-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--pink); cursor: pointer; border: 2px solid var(--bg); }
+    .proj-control input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--pink); cursor: pointer; border: 2px solid var(--bg); }
+    .proj-val { font-size: 13px; font-weight: 500; color: var(--text); min-width: 60px; text-align: right; font-family: 'DM Mono', monospace; }
+    .proj-summary-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+    .proj-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+    .proj-stat-label { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
+    .proj-stat-val { font-size: 20px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+    .proj-stat-val.highlight { color: var(--accent2); }
+
+    /* HOW TO */
+    .how-section { opacity: 0; animation: fadeUp 0.6s ease 0.24s forwards; margin-bottom: 2.5rem; }
+    .how-section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
     .steps { display: flex; flex-direction: column; gap: 10px; }
     .step { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start; transition: border-color 0.15s; }
     .step:hover { border-color: var(--border2); }
@@ -72,16 +111,14 @@
     .step-content a:hover { text-decoration: underline; }
     .step-content .code-pill { display: inline-block; background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px; padding: 2px 10px; font-family: monospace; font-size: 13px; color: var(--accent); letter-spacing: 0.08em; margin: 2px 0; }
 
-    /* WHY SECTION */
     .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 1.25rem; }
     .why-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
     .why-icon { font-size: 22px; margin-bottom: 8px; }
     .why-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
     .why-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.55; }
-    .why-section { opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards; margin-bottom: 2.5rem; }
+    .why-section { opacity: 0; animation: fadeUp 0.6s ease 0.28s forwards; margin-bottom: 2.5rem; }
 
-    /* LOVE NOTE */
-    .love-note { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; margin-bottom: 2.5rem; }
+    .love-note { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; opacity: 0; animation: fadeUp 0.6s ease 0.33s forwards; margin-bottom: 2.5rem; }
     .love-note p { font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; color: var(--text); line-height: 1.7; }
     .love-note .attr { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); margin-top: 8px; font-style: normal; }
 
@@ -89,34 +126,33 @@
     footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 480px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 32px; } .progress-top { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .ugift-card { flex-direction: column; } }
+    @media (max-width: 480px) {
+      .page { padding: 2rem 1rem 4rem; }
+      .hero h1 { font-size: 32px; }
+      .progress-top { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .ugift-card { flex-direction: column; }
+      .proj-controls { flex-direction: column; }
+      .accounts-row { grid-template-columns: 1fr; }
+    }
   </style>
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#0f0f0e" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
-  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
 
-    <script src="nav.js"></script>
+  <script src="nav.js"></script>
   <script src="theme.js"></script>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-label">College fund</div>
     <h1>Estella's <em>Future</em></h1>
     <p>Every dollar here is a step toward Estella's education. Friends and family can contribute anytime using her Ugift code — no account needed.</p>
   </div>
 
-  <!-- PROGRESS CARD -->
   <div class="progress-card">
     <div class="progress-top">
       <div>
         <div class="progress-label">Current balance</div>
-        <div class="progress-amount" id="balanceDisplay"><span>$</span><span id="balanceNum">215</span></div>
+        <div class="progress-amount"><span class="dollar">$</span>497.11</div>
       </div>
       <div class="progress-goal">
         <div class="progress-label">Goal</div>
@@ -127,12 +163,23 @@
       <div class="progress-bar-fill" id="progressFill"></div>
     </div>
     <div class="progress-meta">
-      <span id="progressPct" class="progress-pct">0.43% funded</span>
-      <span id="progressLeft">$49,785 to go</span>
+      <span id="progressPct" class="progress-pct"></span>
+      <span id="progressLeft"></span>
+    </div>
+    <div class="accounts-row">
+      <div class="account-mini">
+        <div class="account-mini-label">CalKIDS account</div>
+        <div class="account-mini-val">$183.65</div>
+        <div class="account-mini-sub">as of 05/04/2026</div>
+      </div>
+      <div class="account-mini">
+        <div class="account-mini-label">ScholarShare 529</div>
+        <div class="account-mini-val">$313.46</div>
+        <div class="account-mini-sub">as of 05/04/2026</div>
+      </div>
     </div>
   </div>
 
-  <!-- UGIFT CODE -->
   <div class="ugift-card">
     <div class="ugift-left">
       <h3>Estella A Estes</h3>
@@ -141,12 +188,83 @@
     <div class="ugift-code">B1A-92R</div>
   </div>
 
-  <!-- HOW TO CONTRIBUTE -->
+  <!-- HISTORY SECTION -->
+  <div class="history-section">
+    <div class="section-label">Balance history</div>
+    <h2>Growing since <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--pink)">day one</em></h2>
+
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(110,179,201,0.8);"></div> CalKIDS</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(232,160,176,0.7);"></div> ScholarShare 529</div>
+    </div>
+    <div class="chart-container">
+      <canvas id="historyChart" role="img" aria-label="Stacked bar chart of Estella's 529 balance history from December 2025 to May 2026. Total grew from $95 to $497.11.">Balance history: Dec 2025 $95, Jan 2026 $110, Feb 2026 $255, Mar 2026 $330, Apr 2026 $400, May 2026 $497.11.</canvas>
+    </div>
+
+    <div class="log-table-wrap">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>CalKIDS</th>
+            <th>ScholarShare</th>
+            <th>Total</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PROJECTION SECTION -->
+  <div class="projection-section">
+    <div class="section-label">Growth projection</div>
+    <h2>Watch it <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--pink)">compound</em></h2>
+    <div class="proj-controls">
+      <div class="proj-control">
+        <label>Monthly contribution</label>
+        <div class="proj-control-row">
+          <input type="range" id="monthly" min="0" max="500" step="10" value="100">
+          <span class="proj-val" id="monthly-out">$100/mo</span>
+        </div>
+      </div>
+      <div class="proj-control">
+        <label>Annual return</label>
+        <div class="proj-control-row">
+          <input type="range" id="rate" min="3" max="12" step="0.5" value="7">
+          <span class="proj-val" id="rate-out">7.0%</span>
+        </div>
+      </div>
+      <div class="proj-control">
+        <label>Years to college</label>
+        <div class="proj-control-row">
+          <input type="range" id="years" min="1" max="22" step="1" value="18">
+          <span class="proj-val" id="years-out">18 yrs</span>
+        </div>
+      </div>
+    </div>
+    <div class="proj-summary-cards">
+      <div class="proj-stat"><div class="proj-stat-label">Projected balance</div><div class="proj-stat-val highlight" id="stat-final">—</div></div>
+      <div class="proj-stat"><div class="proj-stat-label">Total contributed</div><div class="proj-stat-val" id="stat-contrib">—</div></div>
+      <div class="proj-stat"><div class="proj-stat-label">Growth from returns</div><div class="proj-stat-val" id="stat-growth">—</div></div>
+      <div class="proj-stat"><div class="proj-stat-label">Goal reached</div><div class="proj-stat-val" id="stat-goal">—</div></div>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#7ecba1;"></div> projected balance</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#6eb3c9;"></div> contributions only</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(232,160,176,0.4);border:1px dashed #e8a0b0;"></div> $50k goal</div>
+    </div>
+    <div class="chart-container">
+      <canvas id="projChart" role="img" aria-label="Line chart showing projected 529 balance growth over time with compound interest">Projected 529 balance growth chart for Estella's college fund.</canvas>
+    </div>
+  </div>
+
+  <!-- HOW TO -->
   <div class="how-section">
     <div class="section-label">Step by step</div>
     <h2>How to contribute 🎓</h2>
     <div class="steps">
-
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
@@ -154,15 +272,13 @@
           <p>Visit <a href="https://www.ugift529.com" target="_blank" rel="noopener">ugift529.com</a> — this is the free gifting portal for 529 college savings plans. No account or login required.</p>
         </div>
       </div>
-
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
           <h4>Enter Estella's Ugift code</h4>
-          <p>Click <strong>"Give a gift"</strong> and enter her code: <span class="code-pill">B1A-92R</span><br />This connects your contribution directly to Estella's 529 account.</p>
+          <p>Click <strong>"Give a gift"</strong> and enter her code: <span class="code-pill">B1A-92R</span><br>This connects your contribution directly to Estella's 529 account.</p>
         </div>
       </div>
-
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-content">
@@ -170,7 +286,6 @@
           <p>Enter any amount you'd like to give — even $25 or $50 makes a difference! There's no minimum contribution required.</p>
         </div>
       </div>
-
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
@@ -178,7 +293,6 @@
           <p>Pay securely by check or electronic bank transfer (ACH). Your contribution goes directly into Estella's investment account and starts growing immediately.</p>
         </div>
       </div>
-
       <div class="step">
         <div class="step-num">5</div>
         <div class="step-content">
@@ -186,39 +300,20 @@
           <p>Your gift is confirmed and Estella's balance is updated. Contributions may be tax-deductible depending on your state — check with a tax advisor for details.</p>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- WHY SECTION -->
   <div class="why-section">
     <div class="section-label">Why a 529?</div>
     <h2>The smartest gift for her future</h2>
     <div class="why-grid">
-      <div class="why-card">
-        <div class="why-icon">📈</div>
-        <div class="why-title">Tax-free growth</div>
-        <div class="why-text">Money in a 529 grows tax-free and withdrawals for education are also tax-free.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon">🎁</div>
-        <div class="why-title">Easy gifting</div>
-        <div class="why-text">Anyone can contribute with the Ugift code — grandparents, aunts, uncles, friends.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon">🏫</div>
-        <div class="why-title">Flexible use</div>
-        <div class="why-text">Covers tuition, room & board, books, and even K-12 private school costs.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon">⏳</div>
-        <div class="why-title">Time is the best investor</div>
-        <div class="why-text">Starting now — while Estella is a baby — gives her account nearly 18 years to compound and grow.</div>
-      </div>
+      <div class="why-card"><div class="why-icon">📈</div><div class="why-title">Tax-free growth</div><div class="why-text">Money in a 529 grows tax-free and withdrawals for education are also tax-free.</div></div>
+      <div class="why-card"><div class="why-icon">🎁</div><div class="why-title">Easy gifting</div><div class="why-text">Anyone can contribute with the Ugift code — grandparents, aunts, uncles, friends.</div></div>
+      <div class="why-card"><div class="why-icon">🏫</div><div class="why-title">Flexible use</div><div class="why-text">Covers tuition, room &amp; board, books, and even K-12 private school costs.</div></div>
+      <div class="why-card"><div class="why-icon">⏳</div><div class="why-title">Time is the best investor</div><div class="why-text">Starting now — while Estella is a baby — gives her account nearly 18 years to compound and grow.</div></div>
     </div>
   </div>
 
-  <!-- LOVE NOTE -->
   <div class="love-note">
     <p>"Estella just arrived and she already has a head start. Every gift here isn't just money — it's a vote of confidence in who she's going to become."</p>
     <div class="attr">— Dad 💛</div>
@@ -229,25 +324,173 @@
 </div>
 
 <script>
-  // Animate progress bar on load
-  const balance = 215;
+  // ── PROGRESS BAR ─────────────────────────────────────────────────────
+  const balance = 497.11;
   const goal = 50000;
   const pct = (balance / goal) * 100;
-
   window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('progressFill').style.width = Math.max(pct, 0.5) + '%';
-    }, 300);
+    setTimeout(() => { document.getElementById('progressFill').style.width = Math.max(pct, 0.5) + '%'; }, 300);
     document.getElementById('progressPct').textContent = pct.toFixed(2) + '% funded';
-    document.getElementById('progressLeft').textContent = '$' + (goal - balance).toLocaleString() + ' to go';
+    document.getElementById('progressLeft').textContent = '$' + (goal - balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' to go';
   });
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js');
+
+  // ── HISTORICAL DATA ───────────────────────────────────────────────────
+  // To update: add a new object to the end of this array each month.
+  // calkids + scholarshare should sum to total.
+  const history = [
+    { date: 'Dec 15, 2025', calkids: 95.00,  scholarshare: 0,      total: 95.00  },
+    { date: 'Jan 1, 2026',  calkids: 110.00, scholarshare: 0,      total: 110.00 },
+    { date: 'Feb 1, 2026',  calkids: 115.00, scholarshare: 140.00, total: 255.00 },
+    { date: 'Mar 1, 2026',  calkids: 150.00, scholarshare: 180.00, total: 330.00 },
+    { date: 'Apr 1, 2026',  calkids: 165.00, scholarshare: 235.00, total: 400.00 },
+    { date: 'May 4, 2026',  calkids: 183.65, scholarshare: 313.46, total: 497.11 },
+  ];
+
+  // Build table
+  const tbody = document.getElementById('logBody');
+  history.forEach((row, i) => {
+    const prev = i > 0 ? history[i - 1].total : null;
+    const change = prev != null ? row.total - prev : null;
+    const sign = change != null ? (change >= 0 ? '+' : '-') : '';
+    const changeStr = change != null ? sign + '$' + Math.abs(change).toFixed(2) : '—';
+    const cls = change == null ? 'ch-neu' : change > 0 ? 'ch-pos' : 'ch-neg';
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>' + row.date + '</td>' +
+      '<td>$' + row.calkids.toFixed(2) + '</td>' +
+      '<td>' + (row.scholarshare > 0 ? '$' + row.scholarshare.toFixed(2) : '—') + '</td>' +
+      '<td>$' + row.total.toFixed(2) + '</td>' +
+      '<td class="' + cls + '">' + changeStr + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  // History chart
+  (function () {
+    const labels = history.map(r => {
+      const parts = r.date.split(', ');
+      return parts[0].replace(/(\w+ )(\d+)/, '$1$2').replace(/(\w{3})\w+ /, '$1 ');
+    });
+    const ctx = document.getElementById('historyChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'CalKIDS',
+            data: history.map(r => r.calkids),
+            backgroundColor: 'rgba(110,179,201,0.75)',
+            borderColor: '#6eb3c9',
+            borderWidth: 1,
+            borderRadius: 4,
+            stack: 'bal',
+          },
+          {
+            label: 'ScholarShare 529',
+            data: history.map(r => r.scholarshare),
+            backgroundColor: 'rgba(232,160,176,0.65)',
+            borderColor: '#e8a0b0',
+            borderWidth: 1,
+            borderRadius: 4,
+            stack: 'bal',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#181816',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            titleColor: '#8a8880',
+            bodyColor: '#f0ede6',
+            callbacks: {
+              label: c => ' ' + c.dataset.label + ': $' + c.parsed.y.toFixed(2),
+              footer: items => {
+                const tot = items.reduce((s, i) => s + i.parsed.y, 0);
+                return ' Total: $' + tot.toFixed(2);
+              }
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true, ticks: { font: { size: 11, family: 'DM Sans' }, color: '#8a8880' }, grid: { display: false }, border: { color: 'rgba(255,255,255,0.08)' } },
+          y: { stacked: true, ticks: { font: { size: 11, family: 'DM Sans' }, color: '#8a8880', callback: v => '$' + v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } }
+        }
+      }
+    });
+  })();
+
+  // ── PROJECTION CHART ──────────────────────────────────────────────────
+  let projChart;
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+  function buildProjection() {
+    const monthly = +document.getElementById('monthly').value;
+    const rate = +document.getElementById('rate').value;
+    const years = +document.getElementById('years').value;
+    document.getElementById('monthly-out').textContent = '$' + monthly + '/mo';
+    document.getElementById('rate-out').textContent = rate.toFixed(1) + '%';
+    document.getElementById('years-out').textContent = years + ' yrs';
+
+    const monthRate = rate / 100 / 12;
+    const labels = [], projData = [], contribData = [], goalLine = [];
+    let bal = balance;
+    for (let y = 0; y <= years; y++) {
+      labels.push(y === 0 ? 'Now' : 'Yr ' + y);
+      projData.push(Math.round(bal));
+      contribData.push(Math.round(balance + monthly * 12 * y));
+      goalLine.push(50000);
+      for (let m = 0; m < 12; m++) bal = bal * (1 + monthRate) + monthly;
+    }
+
+    const finalBal = projData[projData.length - 1];
+    const totalContrib = balance + monthly * 12 * years;
+    const growth = finalBal - totalContrib;
+    const goalYear = projData.findIndex(v => v >= 50000);
+
+    document.getElementById('stat-final').textContent = fmt(finalBal);
+    document.getElementById('stat-contrib').textContent = fmt(totalContrib);
+    document.getElementById('stat-growth').textContent = fmt(Math.max(0, growth));
+    document.getElementById('stat-goal').textContent = goalYear > 0 ? 'Year ' + goalYear : finalBal >= 50000 ? 'Already!' : 'Not yet';
+
+    const ctx = document.getElementById('projChart').getContext('2d');
+    if (projChart) projChart.destroy();
+    projChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Projected balance', data: projData, borderColor: '#7ecba1', backgroundColor: 'rgba(126,203,161,0.08)', fill: true, tension: 0.35, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+          { label: 'Contributions only', data: contribData, borderColor: '#6eb3c9', backgroundColor: 'transparent', fill: false, tension: 0, borderWidth: 1.5, pointRadius: 0 },
+          { label: '$50k goal', data: goalLine, borderColor: 'rgba(232,160,176,0.5)', backgroundColor: 'transparent', fill: false, tension: 0, borderWidth: 1, pointRadius: 0, borderDash: [5, 4] }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#181816', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+            titleColor: '#8a8880', bodyColor: '#f0ede6',
+            callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y) }
+          }
+        },
+        scales: {
+          x: { ticks: { font: { size: 11, family: 'DM Sans' }, color: '#8a8880', autoSkip: true, maxTicksLimit: 10 }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } },
+          y: { ticks: { font: { size: 11, family: 'DM Sans' }, color: '#8a8880', callback: v => v >= 1000 ? '$' + (v / 1000).toFixed(0) + 'k' : '$' + v }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } }
+        }
+      }
     });
   }
+
+  ['monthly', 'rate', 'years'].forEach(id => document.getElementById(id).addEventListener('input', buildProjection));
+  buildProjection();
 </script>
 </body>
 </html>
