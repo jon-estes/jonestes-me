@@ -4,362 +4,566 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Silver · Jon Estes</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%AA%99%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
-      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
-      --text: #f0ede6; --muted: #8a8880;
-      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
-      --silver: #c8cdd4; --silver2: #a0a8b2; --silver-glow: rgba(200,205,212,0.12);
-      --radius: 14px;
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --silver: #c8cdd4;
+      --silver-dim: #7a8290;
+      --accent: #e2e8f0;
+      --up: #6ee7b7;
+      --down: #fca5a5;
+      --text: #d4d8de;
+      --muted: #525a65;
+      --font-serif: 'Libre Baskerville', Georgia, serif;
+      --font-mono: 'DM Mono', 'Courier New', monospace;
     }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
-    .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 
-    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
-    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
-    nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
-
-    .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
-    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver2); margin-bottom: 0.6rem; }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
-    .hero h1 em { font-style: italic; color: var(--silver); }
-    .hero p { font-size: 15px; color: var(--muted); font-weight: 300; max-width: 520px; line-height: 1.7; }
-
-    .ticker-card { background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--silver); border-radius: var(--radius); padding: 2rem 2rem 1.75rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
-    .ticker-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
-    .ticker-label-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-    .live-dot.live { background: var(--accent2); animation: pulse 2s infinite; }
-    .live-dot.error { background: var(--accent); }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
-    .live-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-    .live-status { font-size: 11px; color: var(--muted); font-weight: 300; }
-
-    .ticker-price-main { font-family: 'DM Mono', monospace; font-size: 52px; font-weight: 500; color: var(--silver); line-height: 1; letter-spacing: -0.01em; transition: color 0.4s; }
-    .ticker-price-main.up { color: #7ecba1; }
-    .ticker-price-main.down { color: #d4789a; }
-    .ticker-price-sub { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; }
-
-    .ticker-change-block { text-align: right; padding-top: 4px; }
-    .ticker-change-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; margin-bottom: 3px; }
-    .ticker-change-val.up { color: #7ecba1; }
-    .ticker-change-val.down { color: #d4789a; }
-    .ticker-change-val.neutral { color: var(--muted); }
-    .ticker-change-label { font-size: 11px; color: var(--muted); font-weight: 300; }
-    .ticker-updated { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 6px; font-family: 'DM Mono', monospace; }
-
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-    .stat-mini { background: var(--bg3); border-radius: 10px; padding: 0.85rem 1rem; }
-    .stat-mini-label { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
-    .stat-mini-val { font-size: 16px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
-
-    .chart-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
-    .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
-    .chart-title { font-size: 13px; font-weight: 500; color: var(--text); }
-    .chart-subtitle { font-size: 12px; color: var(--muted); font-weight: 300; }
-    .chart-tabs { display: flex; gap: 4px; }
-    .chart-tab { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); cursor: pointer; background: transparent; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
-    .chart-tab:hover { border-color: var(--border2); color: var(--text); }
-    .chart-tab.active { background: var(--bg3); border-color: var(--silver2); color: var(--silver); }
-    .chart-container { position: relative; width: 100%; height: 200px; }
-    .chart-placeholder { display: flex; align-items: center; justify-content: center; height: 200px; font-size: 13px; color: var(--muted); font-weight: 300; }
-
-    .context-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
-    .context-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
-    .context-icon { font-size: 20px; margin-bottom: 8px; }
-    .context-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
-    .context-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.55; }
-
-    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
-    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
-
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes flash { 0%,100%{background:transparent} 40%{background:var(--silver-glow)} }
-    .price-flash { animation: flash 0.5s ease; }
-
-    @media (max-width: 480px) {
-      .page { padding: 2rem 1rem 4rem; }
-      .hero h1 { font-size: 32px; }
-      .ticker-price-main { font-size: 38px; }
-      .ticker-top { flex-direction: column; }
-      .ticker-change-block { text-align: left; }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
     }
+
+    body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 6rem;
+    }
+
+    /* ── HEADER ── */
+    .eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-weight: 400;
+      color: var(--silver);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .subtitle {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 3rem;
+    }
+
+    /* ── TICKER ── */
+    .ticker-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .pair-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: inline-block;
+      margin-left: 2px;
+      vertical-align: middle;
+      transition: background 0.4s;
+    }
+    .status-dot.live { background: var(--up); box-shadow: 0 0 6px var(--up); animation: pulse 2s infinite; }
+    .status-dot.error { background: var(--down); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    #price-main {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      transition: color 0.6s;
+    }
+
+    .price-unit {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .change-row {
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .change-pill {
+      font-size: 0.78rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      font-weight: 500;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.4s;
+    }
+    .change-pill.up   { border-color: var(--up);   color: var(--up); }
+    .change-pill.down { border-color: var(--down);  color: var(--down); }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      padding: 0.85rem 1rem;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      color: var(--silver);
+      font-weight: 500;
+    }
+
+    /* ── CHART ── */
+    .chart-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .chart-tabs {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      border-color: var(--silver-dim);
+      color: var(--silver);
+    }
+
+    .chart-wrap {
+      width: 100%;
+      height: 120px;
+      position: relative;
+    }
+
+    #price-chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 0.65rem;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 3px;
+    }
+
+    /* ── CONTEXT ── */
+    .context-section {}
+
+    .context-item {
+      display: flex;
+      gap: 0.9rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .context-item:last-child { border-bottom: none; }
+
+    .ctx-emoji { font-size: 1rem; flex-shrink: 0; padding-top: 1px; }
+
+    .ctx-body {}
+    .ctx-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--silver-dim);
+      margin-bottom: 0.3rem;
+    }
+    .ctx-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 4rem;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    #last-updated { color: var(--muted); }
+
+    /* ── FLASH ANIMATION ── */
+    @keyframes flash-up   { 0%,100%{color:var(--accent)} 30%{color:var(--up)} }
+    @keyframes flash-down { 0%,100%{color:var(--accent)} 30%{color:var(--down)} }
+    .flash-up   { animation: flash-up   0.8s ease; }
+    .flash-down { animation: flash-down 0.8s ease; }
   </style>
 </head>
 <body>
-<div class="page">
 
-  <script src="nav.js"></script>
-  <script src="theme.js"></script>
+  <p class="eyebrow">Spot price</p>
+  <h1>Silver</h1>
+  <p class="subtitle">Live silver spot price, updated in real time. XAG/USD — troy ounce.</p>
 
-  <div class="hero">
-    <div class="hero-label">Spot price</div>
-    <h1><em>Silver</em></h1>
-    <p>Live silver spot price, updated every 60 seconds. XAG/USD — troy ounce.</p>
+  <!-- TICKER -->
+  <div class="ticker-row">
+    <span class="pair-label">XAG / USD</span>
+    <span class="status-dot" id="status-dot"></span>
   </div>
 
-  <div class="ticker-card" id="tickerCard">
-    <div class="ticker-top">
-      <div>
-        <div class="ticker-label-row">
-          <div class="live-dot" id="liveDot"></div>
-          <span class="live-label">XAG / USD</span>
-          <span class="live-status" id="liveStatus">loading…</span>
-        </div>
-        <div class="ticker-price-main" id="priceMain">—</div>
-        <div class="ticker-price-sub">per troy ounce &nbsp;·&nbsp; spot price</div>
-      </div>
-      <div class="ticker-change-block">
-        <div class="ticker-change-val neutral" id="changeVal">—</div>
-        <div class="ticker-change-label">change</div>
-        <div class="ticker-change-val neutral" id="changePct" style="font-size:16px;margin-top:4px;">—</div>
-        <div class="ticker-change-label">% vs prev. close</div>
-        <div class="ticker-updated" id="updatedTime">—</div>
-      </div>
+  <div id="price-main">—</div>
+  <p class="price-unit">per troy ounce · spot price</p>
+
+  <div class="change-row">
+    <span class="change-pill" id="change-abs">— change</span>
+    <span class="change-pill" id="change-pct">— % change</span>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">Session high</div>
+      <div class="stat-value" id="stat-high">—</div>
     </div>
-    <div class="stats-row">
-      <div class="stat-mini"><div class="stat-mini-label">Day high</div><div class="stat-mini-val" id="statHigh">—</div></div>
-      <div class="stat-mini"><div class="stat-mini-label">Day low</div><div class="stat-mini-val" id="statLow">—</div></div>
-      <div class="stat-mini"><div class="stat-mini-label">Bid</div><div class="stat-mini-val" id="statBid">—</div></div>
-      <div class="stat-mini"><div class="stat-mini-label">Ask</div><div class="stat-mini-val" id="statAsk">—</div></div>
+    <div class="stat-cell">
+      <div class="stat-label">Session low</div>
+      <div class="stat-value" id="stat-low">—</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Open</div>
+      <div class="stat-value" id="stat-open">—</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Prev. close</div>
+      <div class="stat-value" id="stat-prev">—</div>
     </div>
   </div>
 
+  <!-- CHART -->
   <div class="chart-section">
     <div class="chart-header">
-      <div>
-        <div class="chart-title">Session history</div>
-        <div class="chart-subtitle" id="chartSubtitle">Collecting data points…</div>
-      </div>
+      <span class="section-label">Session history</span>
       <div class="chart-tabs">
-        <button class="chart-tab active" onclick="setView('live',this)">Live</button>
-        <button class="chart-tab" onclick="setView('50',this)">50pt</button>
-        <button class="chart-tab" onclick="setView('all',this)">All</button>
+        <button class="tab-btn active" id="tab-live">Live</button>
+        <button class="tab-btn" id="tab-50">50pt</button>
+        <button class="tab-btn" id="tab-all">All</button>
       </div>
     </div>
-    <div class="chart-container">
-      <div class="chart-placeholder" id="chartPlaceholder">Waiting for first data point…</div>
-      <canvas id="silverChart" style="display:none;" role="img" aria-label="Live silver price session chart"></canvas>
+    <div class="chart-wrap">
+      <canvas id="price-chart"></canvas>
     </div>
   </div>
 
-  <div class="section-label">Context</div>
-  <div class="context-grid">
-    <div class="context-card"><div class="context-icon">⚖️</div><div class="context-title">Troy ounce</div><div class="context-text">Silver is priced per troy ounce — 31.1 grams. Different from the avoirdupois ounce (28.35g) used in everyday measurements.</div></div>
-    <div class="context-card"><div class="context-icon">🌍</div><div class="context-title">Spot vs. physical</div><div class="context-text">Spot price is the current market rate for immediate delivery. Physical silver (coins, bars) usually costs more due to premiums and fabrication.</div></div>
-    <div class="context-card"><div class="context-icon">🏭</div><div class="context-title">Industrial demand</div><div class="context-text">Over 50% of silver demand is industrial — used in solar panels, electronics, and EV batteries — meaning it tracks the economy as much as it tracks fear.</div></div>
-    <div class="context-card"><div class="context-icon">📊</div><div class="context-title">Gold/silver ratio</div><div class="context-text">Historically, it takes 15–80 oz of silver to buy 1 oz of gold. The ratio is a common way to gauge relative value between the two metals.</div></div>
+  <!-- CONTEXT -->
+  <div class="context-section">
+    <p class="section-label" style="margin-bottom:0.5rem">Context</p>
+    <div class="context-item">
+      <span class="ctx-emoji">⚖️</span>
+      <div class="ctx-body">
+        <div class="ctx-title">Troy ounce</div>
+        <div class="ctx-text">Silver is priced per troy ounce — 31.1 grams. Different from the avoirdupois ounce (28.35g) used in everyday measurements.</div>
+      </div>
+    </div>
+    <div class="context-item">
+      <span class="ctx-emoji">🌍</span>
+      <div class="ctx-body">
+        <div class="ctx-title">Spot vs. physical</div>
+        <div class="ctx-text">Spot price is the current market rate for immediate delivery. Physical silver (coins, bars) usually costs more due to premiums and fabrication.</div>
+      </div>
+    </div>
+    <div class="context-item">
+      <span class="ctx-emoji">🏭</span>
+      <div class="ctx-body">
+        <div class="ctx-title">Industrial demand</div>
+        <div class="ctx-text">Over 50% of silver demand is industrial — used in solar panels, electronics, and EV batteries — meaning it tracks the economy as much as it tracks fear.</div>
+      </div>
+    </div>
+    <div class="context-item">
+      <span class="ctx-emoji">📊</span>
+      <div class="ctx-body">
+        <div class="ctx-title">Gold/silver ratio</div>
+        <div class="ctx-text">Historically, it takes 15–80 oz of silver to buy 1 oz of gold. The ratio is a common way to gauge relative value between the two metals.</div>
+      </div>
+    </div>
   </div>
 
-  <hr class="divider" />
-  <footer><p>jonestes.me &nbsp;·&nbsp; built with care &nbsp;·&nbsp; prices via metals.dev</p></footer>
-</div>
+  <footer>
+    <span>jonestes.me · built with care · prices via goldapi.io</span>
+    <span id="last-updated">—</span>
+  </footer>
 
-<script>
-  // metals.dev /v1/latest — free plan endpoint
-  // Response: { status, metals: { silver: 32.40, ... }, currencies: {...}, timestamps: {...} }
-  const API_KEY = 'PHKEEZ233NOPITRZOIFR936RZOIFR';
-  const API_URL = 'https://api.metals.dev/v1/latest?api_key=' + API_KEY + '&currency=USD&unit=toz';
+  <script>
+    // ════════════════════════════════════════════════
+    //  ⚙️  PASTE YOUR GOLDAPI.IO KEY BELOW
+    //  Get one free at: https://www.goldapi.io
+    // ════════════════════════════════════════════════
+    const API_KEY = 'goldapi-ca743cebefe21269cb125e73979bedcd-io';
 
-  let priceHistory = [];
-  let chartView = 'live';
-  let chart = null;
-  let lastPrice = null;
+    // ── STATE ──────────────────────────────────────
+    const history = [];       // { time, price }
+    let lastPrice  = null;
+    let viewMode   = 'live';  // 'live' | '50' | 'all'
+    let chartCtx   = null;
 
-  function $(id) { return document.getElementById(id); }
-  function fp(n) { return '$' + Number(n).toFixed(2); }
+    const $ = id => document.getElementById(id);
+    const fmt = n  => n != null ? `$${Number(n).toFixed(2)}` : '—';
 
-  function setStatus(state, text) {
-    $('liveDot').className = 'live-dot ' + state;
-    $('liveStatus').textContent = text;
-  }
-
-  function setView(v, btn) {
-    chartView = v;
-    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    renderChart();
-  }
-
-  function updateUI(rate) {
-    // rate = { price, ask, bid, high, low, change, change_percent }
-    const price        = Number(rate.price);
-    const high         = rate.high   != null ? Number(rate.high)   : null;
-    const low          = rate.low    != null ? Number(rate.low)    : null;
-    const bid          = rate.bid    != null ? Number(rate.bid)    : null;
-    const ask          = rate.ask    != null ? Number(rate.ask)    : null;
-    const change       = rate.change         != null ? Number(rate.change)         : null;
-    const changePct    = rate.change_percent  != null ? Number(rate.change_percent)  : null;
-
-    // Flash direction
-    const dir = lastPrice == null ? '' : price > lastPrice ? 'up' : price < lastPrice ? 'down' : '';
-    const priceEl = $('priceMain');
-    priceEl.textContent = fp(price);
-    priceEl.className = 'ticker-price-main' + (dir ? ' ' + dir : '');
-    $('tickerCard').classList.add('price-flash');
-    setTimeout(() => $('tickerCard').classList.remove('price-flash'), 600);
-
-    // Change vs prev close
-    if (change != null) {
-      const sign = change >= 0 ? '+' : '';
-      const cls  = change > 0 ? 'up' : change < 0 ? 'down' : 'neutral';
-      $('changeVal').textContent = sign + (change >= 0 ? fp(change) : '-' + fp(Math.abs(change)));
-      $('changeVal').className = 'ticker-change-val ' + cls;
-      $('changePct').textContent = (changePct >= 0 ? '+' : '') + changePct.toFixed(2) + '%';
-      $('changePct').className = 'ticker-change-val ' + cls;
+    // ── CANVAS CHART ──────────────────────────────
+    function initChart() {
+      const canvas = $('price-chart');
+      canvas.width  = canvas.offsetWidth  * devicePixelRatio;
+      canvas.height = canvas.offsetHeight * devicePixelRatio;
+      chartCtx = canvas.getContext('2d');
     }
 
-    $('statHigh').textContent = high != null ? fp(high) : '—';
-    $('statLow').textContent  = low  != null ? fp(low)  : '—';
-    $('statBid').textContent  = bid  != null ? fp(bid)  : '—';
-    $('statAsk').textContent  = ask  != null ? fp(ask)  : '—';
-    $('updatedTime').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-    priceHistory.push({ t: new Date(), p: price });
-    if (priceHistory.length > 500) priceHistory.shift();
-    $('chartSubtitle').textContent = priceHistory.length + ' data point' + (priceHistory.length === 1 ? '' : 's') + ' this session';
-
-    lastPrice = price;
-    setStatus('live', 'live · metals.dev');
-    renderChart();
-  }
-
-  function renderChart() {
-    if (priceHistory.length < 2) return;
-
-    let data = priceHistory;
-    if (chartView === 'live') data = priceHistory.slice(-30);
-    else if (chartView === '50') data = priceHistory.slice(-50);
-
-    const labels = data.map(d => d.t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    const values = data.map(d => d.p);
-
-    $('chartPlaceholder').style.display = 'none';
-    const canvas = $('silverChart');
-    canvas.style.display = 'block';
-    const ctx = canvas.getContext('2d');
-
-    if (chart) {
-      chart.data.labels = labels;
-      chart.data.datasets[0].data = values;
-      chart.update('none');
-      return;
+    function getViewSlice() {
+      if (viewMode === 'live') return history.slice(-20);
+      if (viewMode === '50')   return history.slice(-50);
+      return history;
     }
 
-    chart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Silver USD/oz',
-          data: values,
-          borderColor: '#c8cdd4',
-          backgroundColor: 'rgba(200,205,212,0.06)',
-          fill: true, tension: 0.3, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, animation: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#181816', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-            titleColor: '#8a8880', bodyColor: '#f0ede6',
-            callbacks: { label: c => ' $' + c.parsed.y.toFixed(2) + ' / oz' }
-          }
-        },
-        scales: {
-          x: { ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', maxTicksLimit: 6, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } },
-          y: { ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', callback: v => '$' + v.toFixed(2) }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } }
-        }
-      }
-    });
-  }
+    function drawChart() {
+      if (!chartCtx) return;
+      const canvas = $('price-chart');
+      const W = canvas.width, H = canvas.height;
+      chartCtx.clearRect(0, 0, W, H);
 
-  // Primary: metals.dev /v1/latest (free plan)
-  // Response shape: { status:"success", metals:{ silver: 32.40 }, timestamps:{...} }
-  async function fetchFromMetalsDev() {
-    const res = await fetch(API_URL);
-    const json = await res.json();
-    console.log('metals.dev /v1/latest response:', json);
-    if (json.status === 'success' && json.metals && json.metals.silver != null) {
-      // /v1/latest doesn't give bid/ask/high/low — pass what we have
-      updateUI({
-        price: json.metals.silver,
-        high: null, low: null, bid: null, ask: null,
-        change: null, change_percent: null
+      const pts = getViewSlice();
+      if (pts.length < 2) return;
+
+      const prices = pts.map(p => p.price);
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      const range = max - min || 0.01;
+      const pad = { t: 12, b: 12, l: 8, r: 8 };
+      const W2 = W - pad.l - pad.r;
+      const H2 = H - pad.t - pad.b;
+
+      const x = i  => pad.l + (i / (pts.length - 1)) * W2;
+      const y = px => pad.t + (1 - (px - min) / range) * H2;
+
+      // gradient fill
+      const grad = chartCtx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0,   'rgba(200,205,212,0.15)');
+      grad.addColorStop(1,   'rgba(200,205,212,0)');
+
+      chartCtx.beginPath();
+      chartCtx.moveTo(x(0), y(pts[0].price));
+      pts.forEach((p, i) => { if (i > 0) chartCtx.lineTo(x(i), y(p.price)); });
+      chartCtx.lineTo(x(pts.length - 1), H);
+      chartCtx.lineTo(x(0), H);
+      chartCtx.closePath();
+      chartCtx.fillStyle = grad;
+      chartCtx.fill();
+
+      // line
+      chartCtx.beginPath();
+      pts.forEach((p, i) => {
+        i === 0 ? chartCtx.moveTo(x(i), y(p.price)) : chartCtx.lineTo(x(i), y(p.price));
       });
-      return true;
+      chartCtx.strokeStyle = 'rgba(200,205,212,0.7)';
+      chartCtx.lineWidth    = 1.5 * devicePixelRatio;
+      chartCtx.lineJoin     = 'round';
+      chartCtx.stroke();
+
+      // latest dot
+      const lx = x(pts.length - 1), ly = y(pts[pts.length - 1].price);
+      chartCtx.beginPath();
+      chartCtx.arc(lx, ly, 3 * devicePixelRatio, 0, Math.PI * 2);
+      chartCtx.fillStyle = '#e2e8f0';
+      chartCtx.fill();
     }
-    throw new Error(json.error_message || 'metals.dev: unexpected response');
-  }
 
-  // Fallback: metals-api.com free tier
-  // Response shape: { success:true, rates:{ USDXAG: 32.40, XAG: 0.031 } }
-  async function fetchFromMetalsApi() {
-    const r = await fetch('https://metals-api.com/api/latest?access_key=demo&base=USD&symbols=XAG');
-    const j = await r.json();
-    console.log('metals-api.com response:', j);
-    // USDXAG = price of 1 USD worth of silver in oz → invert to get $/oz
-    if (j.success && j.rates && j.rates.XAG) {
-      const price = 1 / j.rates.XAG;
-      updateUI({ price, high: null, low: null, bid: null, ask: null, change: null, change_percent: null });
-      return true;
-    }
-    throw new Error('metals-api.com fallback failed');
-  }
+    // ── FETCH ──────────────────────────────────────
+    async function fetchSilver() {
+      if (API_KEY === 'YOUR_GOLDAPI_KEY_HERE') {
+        showDemoMode();
+        return;
+      }
 
-  // Second fallback: frankfurter-style open metals endpoint
-  async function fetchFromOpenMetals() {
-    const r = await fetch('https://api.metals.live/v1/spot/silver');
-    const j = await r.json();
-    console.log('metals.live response:', j);
-    const price = j?.price || (Array.isArray(j) && j[0]?.price) || j?.silver;
-    if (price && !isNaN(price)) {
-      updateUI({ price: Number(price), high: null, low: null, bid: null, ask: null, change: null, change_percent: null });
-      return true;
-    }
-    throw new Error('metals.live fallback failed');
-  }
-
-  async function fetchSilver() {
-    // Try primary, then fallbacks in order
-    const sources = [
-      { fn: fetchFromMetalsDev,  label: 'metals.dev' },
-      { fn: fetchFromOpenMetals, label: 'metals.live' },
-      { fn: fetchFromMetalsApi,  label: 'metals-api' },
-    ];
-
-    for (const source of sources) {
       try {
-        const ok = await source.fn();
-        if (ok) {
-          console.log('✓ price from', source.label);
-          return;
-        }
+        const res  = await fetch('https://www.goldapi.io/api/XAG/USD', {
+          headers: { 'x-access-token': API_KEY, 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+        updateUI(d);
       } catch (err) {
-        console.warn('✗', source.label, err.message);
+        console.error('Fetch failed:', err);
+        setStatus('error');
       }
     }
 
-    // All sources failed
-    console.error('All price sources failed');
-    setStatus('error', 'all sources failed — retrying in 60s');
-  }
+    function updateUI(d) {
+      const price = d.price;
+      const ch    = d.ch   ?? 0;
+      const chp   = d.chp  ?? 0;
+      const isUp  = ch >= 0;
 
-  fetchSilver();
-  setInterval(fetchSilver, 60000);
-</script>
+      // flash price
+      const el = $('price-main');
+      el.classList.remove('flash-up','flash-down');
+      void el.offsetWidth; // reflow
+      if (lastPrice !== null && price !== lastPrice) {
+        el.classList.add(price > lastPrice ? 'flash-up' : 'flash-down');
+      }
+      lastPrice = price;
+
+      el.textContent = fmt(price);
+
+      // change pills
+      const absEl = $('change-abs');
+      const pctEl = $('change-pct');
+      absEl.textContent = `${isUp ? '+' : ''}${ch.toFixed(2)}`;
+      pctEl.textContent = `${isUp ? '+' : ''}${chp.toFixed(2)}%`;
+      absEl.className = `change-pill ${isUp ? 'up' : 'down'}`;
+      pctEl.className = `change-pill ${isUp ? 'up' : 'down'}`;
+
+      // stats
+      $('stat-high').textContent = fmt(d.high_price);
+      $('stat-low').textContent  = fmt(d.low_price);
+      $('stat-open').textContent = fmt(d.open_price);
+      $('stat-prev').textContent = fmt(d.prev_close_price);
+
+      // history + chart
+      history.push({ time: Date.now(), price });
+      drawChart();
+
+      // status + timestamp
+      setStatus('live');
+      const now = new Date();
+      $('last-updated').textContent = `updated ${now.toLocaleTimeString()}`;
+    }
+
+    function setStatus(state) {
+      const dot = $('status-dot');
+      dot.className = 'status-dot';
+      if (state) dot.classList.add(state);
+    }
+
+    // ── DEMO MODE (no key yet) ─────────────────────
+    function showDemoMode() {
+      // Inject a fake realistic price so layout looks right
+      const fakePrice = 32.41;
+      $('price-main').textContent = fmt(fakePrice);
+      $('change-abs').textContent = '+0.18';
+      $('change-abs').className   = 'change-pill up';
+      $('change-pct').textContent = '+0.56%';
+      $('change-pct').className   = 'change-pill up';
+      $('stat-high').textContent  = '$32.80';
+      $('stat-low').textContent   = '$32.10';
+      $('stat-open').textContent  = '$32.23';
+      $('stat-prev').textContent  = '$32.23';
+      $('last-updated').textContent = '⚠ demo mode — add your API key';
+      setStatus('error');
+
+      // fake chart
+      for (let i = 0; i < 30; i++) {
+        history.push({ time: Date.now() - (30 - i) * 60000, price: 32.1 + Math.sin(i * 0.4) * 0.4 + Math.random() * 0.15 });
+      }
+      drawChart();
+    }
+
+    // ── TABS ──────────────────────────────────────
+    ['live','50','all'].forEach(mode => {
+      $(`tab-${mode}`).addEventListener('click', () => {
+        viewMode = mode;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        $(`tab-${mode}`).classList.add('active');
+        drawChart();
+      });
+    });
+
+    // ── INIT ──────────────────────────────────────
+    window.addEventListener('load', () => {
+      initChart();
+      setStatus('');
+      fetchSilver();
+      setInterval(fetchSilver, 60_000);
+    });
+
+    window.addEventListener('resize', () => {
+      initChart();
+      drawChart();
+    });
+  </script>
 </body>
 </html>
