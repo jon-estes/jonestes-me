@@ -3,454 +3,539 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#0f0f0e" />
   <title>Jon Estes · Personal Dashboard</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0f0f0e;
-      --surface: #161616;
-      --border: #272727;
-      --silver: #c8cdd4;
-      --silver-dim: #7a8290;
-      --accent: #e2e8f0;
-      --muted: #525a65;
-      --font-serif: 'Libre Baskerville', Georgia, serif;
-      --font-mono: 'DM Mono', 'Courier New', monospace;
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --radius: 14px; --radius-sm: 8px;
     }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 
-    html, body {
-      background: var(--bg);
-      color: var(--accent);
-      font-family: var(--font-mono);
-      min-height: 100vh;
-    }
+    /* NAV */
+    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 140px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: flex; flex-direction: column; gap: 2px; }
+    .nav-dropdown-menu a { border: none !important; border-radius: 6px; padding: 7px 12px !important; font-size: 12px; color: var(--muted); display: block; width: 100%; background: transparent; }
+    .nav-dropdown-menu a:hover { background: var(--bg3); color: var(--accent); }
 
-    body {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 6rem;
-    }
+    /* HEADER */
+    header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .avatar { width: 62px; height: 62px; border-radius: 50%; border: 1.5px solid var(--accent); background: var(--bg3); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 24px; color: var(--accent); flex-shrink: 0; }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); line-height: 1.1; }
+    .header-text p { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 300; letter-spacing: 0.02em; }
 
-    /* ── HEADER ── */
-    .monogram {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 1.25rem;
-    }
+    /* SECTIONS */
+    .section { margin-bottom: 2.25rem; opacity: 0; animation: fadeUp 0.6s ease forwards; }
+    .section:nth-child(3) { animation-delay: 0.1s; }
+    .section:nth-child(4) { animation-delay: 0.2s; }
+    .section:nth-child(5) { animation-delay: 0.3s; }
+    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.9rem; }
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .section-dot.green { background: var(--accent2); }
+    .section-dot.blue { background: var(--accent3); }
+    .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 
-    h1 {
-      font-family: var(--font-serif);
-      font-weight: 400;
-      font-size: clamp(2rem, 6vw, 2.8rem);
-      color: var(--silver);
-      margin-bottom: 0.4rem;
-      letter-spacing: -0.01em;
-    }
+    /* CARDS */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+    .card { display: block; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; text-decoration: none; color: inherit; transition: border-color 0.18s, background 0.18s, transform 0.15s; position: relative; overflow: hidden; }
+    .card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%); pointer-events: none; }
+    .card:hover { border-color: var(--border2); background: var(--bg3); transform: translateY(-2px); }
+    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .card-emoji { font-size: 20px; line-height: 1; }
+    .card-arrow { font-size: 12px; color: var(--muted); opacity: 0; transform: translateX(-4px); transition: opacity 0.15s, transform 0.15s; }
+    .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+    .card-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .card-desc { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.5; }
+    .card.primary { border-left: 2px solid var(--accent); }
+    .card.success { border-left: 2px solid var(--accent2); }
+    .card.info { border-left: 2px solid var(--accent3); }
 
-    .tagline {
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      margin-bottom: 3rem;
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; margin-top: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
 
-    /* ── SECTIONS ── */
-    .section {
-      margin-bottom: 2.5rem;
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .page { padding: 2rem 1rem 4rem; } .header-text h1 { font-size: 22px; } .card-grid { grid-template-columns: 1fr 1fr; } }
 
-    .section-label {
-      font-size: 0.58rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* ── LINKS ── */
-    .link-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-
-    .link-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 0.75rem;
-      border-radius: 3px;
-      text-decoration: none;
-      color: var(--accent);
-      transition: background 0.15s;
-      cursor: pointer;
-    }
-    .link-item:hover { background: var(--surface); }
-
-    .link-icon {
-      font-size: 1rem;
-      width: 1.4rem;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .link-body { flex: 1; min-width: 0; }
-
-    .link-title {
-      font-size: 0.82rem;
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .link-desc {
-      font-size: 0.62rem;
-      color: var(--muted);
-      margin-top: 0.1rem;
-    }
-
-    .link-badge {
-      font-size: 0.52rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.15rem 0.4rem;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-    .link-badge.external { color: var(--silver-dim); border-color: #333; }
-    .link-badge.modal    { color: #6ee7b7; border-color: #6ee7b755; }
-
-    /* ── MODALS ── */
+    /* EXPENSE MODAL */
     .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 100;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 1rem;
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 1rem;
     }
     .modal-overlay.open { display: flex; }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      width: 100%;
-      max-width: 560px;
-      max-height: 90vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+    .modal-box {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 18px; width: 100%; max-width: 560px;
+      max-height: 90vh; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      display: flex; flex-direction: column;
     }
-
     .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
-
-    .modal-title {
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--silver-dim);
-    }
-
+    .modal-title { font-size: 14px; font-weight: 500; color: var(--text); }
     .modal-close {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 1rem;
-      cursor: pointer;
-      padding: 0.1rem 0.3rem;
-      line-height: 1;
+      background: none; border: 1px solid var(--border); border-radius: 999px;
+      color: var(--muted); font-size: 16px; width: 30px; height: 30px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, color 0.15s; line-height: 1;
     }
-    .modal-close:hover { color: var(--accent); }
-
-    .modal-body {
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .modal-body iframe {
-      width: 100%;
-      border: none;
-      min-height: 500px;
-    }
-
-    /* ── CHART MODAL ── */
-    .chart-tabs {
-      display: flex;
-      gap: 1px;
-      background: var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .chart-tab {
-      flex: 1;
-      background: var(--surface);
-      border: none;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.55rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .chart-tab.active, .chart-tab:hover {
-      background: #1e1e1e;
-      color: var(--silver);
-    }
-
-    .chart-pane { display: none; }
-    .chart-pane.active { display: block; }
-
-    /* ── FOOTER ── */
-    footer {
-      margin-top: 4rem;
-      font-size: 0.58rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-    }
+    .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+    .modal-body { flex: 1; overflow-y: auto; }
+    .modal-body iframe { display: block; width: 100%; border: none; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* CHART MODALS */
+    .chart-wrap { padding: 1.25rem; }
+    .chart-canvas-wrap { position: relative; height: 280px; margin-bottom: 1rem; }
+    .chart-stats { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .chart-stat { background: var(--bg3); border-radius: 10px; padding: 0.6rem 1rem; flex: 1; min-width: 80px; text-align: center; }
+    .chart-stat-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent); line-height: 1; }
+    .chart-stat-num.green { color: var(--accent2); }
+    .chart-stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+    .chart-loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
+    .chart-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+    .chart-tab { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .chart-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(212,120,154,0.06); }
+    .chart-tab.green.active { color: var(--accent2); border-color: var(--accent2); background: rgba(126,203,161,0.06); }
   </style>
 </head>
 <body>
+<div class="page">
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
 
-  <p class="monogram">JE</p>
-  <h1>Jon Estes</h1>
-  <p class="tagline">Personal dashboard — finance, health &amp; collections</p>
+  <header>
+    <div class="avatar">JE</div>
+    <div class="header-text">
+      <h1>Jon Estes</h1>
+      <p>Personal dashboard &mdash; finance, health &amp; collections</p>
+    </div>
+  </header>
 
-  <!-- FINANCE -->
-  <div class="section">
-    <p class="section-label">Finance</p>
-    <div class="link-list">
-      <a class="link-item" onclick="openModal('modal-expense')">
-        <span class="link-icon">➕</span>
-        <div class="link-body">
-          <div class="link-title">Log expense</div>
-          <div class="link-desc">Add a new entry to your budget tracker</div>
-        </div>
-        <span class="link-badge modal">⊕</span>
+  <section class="section">
+    <div class="section-header"><div class="section-dot"></div><span class="section-title">Finance</span></div>
+    <div class="card-grid">
+      <a class="card primary" href="#" onclick="openExpenseModal(); return false;">
+        <div class="card-top"><span class="card-emoji">➕</span><span class="card-arrow">⊕</span></div>
+        <div class="card-title">Log expense</div>
+        <div class="card-desc">Add a new entry to your budget tracker</div>
       </a>
-      <a class="link-item" onclick="openModal('modal-budget')">
-        <span class="link-icon">📊</span>
-        <div class="link-body">
-          <div class="link-title">Budget overview</div>
-          <div class="link-desc">Spending charts by category</div>
-        </div>
-        <span class="link-badge modal">⊕</span>
+      <a class="card primary" href="#" onclick="openBudgetModal(); return false;">
+        <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">⊕</span></div>
+        <div class="card-title">Budget overview</div>
+        <div class="card-desc">Spending charts by category</div>
       </a>
-      <a class="link-item" href="https://jonestes.me/budget">
-        <span class="link-icon">🔥</span>
-        <div class="link-body">
-          <div class="link-title">Full dashboard</div>
-          <div class="link-desc">Deep dive — all charts, trends &amp; transactions</div>
-        </div>
-        <span class="link-badge external">↗</span>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><div class="section-dot green"></div><span class="section-title">Health</span></div>
+    <div class="card-grid">
+      <a class="card success" href="#" onclick="openWeightModal(); return false;">
+        <div class="card-top"><span class="card-emoji">⚖️</span><span class="card-arrow">⊕</span></div>
+        <div class="card-title">Log weight</div>
+        <div class="card-desc">Record today's check-in</div>
       </a>
-      <a class="link-item" href="https://jonestes.me/silver">
-        <span class="link-icon">🪙</span>
-        <div class="link-body">
-          <div class="link-title">Silver spot price</div>
-          <div class="link-desc">Live XAG/USD — updated in real time</div>
-        </div>
-        <span class="link-badge external">↗</span>
+      <a class="card success" href="#" onclick="openWeightChartModal(); return false;">
+        <div class="card-top"><span class="card-emoji">📉</span><span class="card-arrow">⊕</span></div>
+        <div class="card-title">Weight graph</div>
+        <div class="card-desc">Your progress over time</div>
       </a>
     </div>
-  </div>
+  </section>
 
-  <!-- HEALTH -->
-  <div class="section">
-    <p class="section-label">Health</p>
-    <div class="link-list">
-      <a class="link-item" onclick="openModal('modal-weight')">
-        <span class="link-icon">⚖️</span>
-        <div class="link-body">
-          <div class="link-title">Log weight</div>
-          <div class="link-desc">Record today's check-in</div>
-        </div>
-        <span class="link-badge modal">⊕</span>
+  <section class="section">
+    <div class="section-header"><div class="section-dot blue"></div><span class="section-title">Collections</span></div>
+    <div class="card-grid">
+      <a class="card info" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS7JBktCAjC8oVg8JpAkA50MdKGdhcvCmRc0x-PZ3RRPNBfBVOT7eeS2OHuuObiouGQ81SCi60Ivm8X/pubhtml" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">🪙</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Coin collection</div>
+        <div class="card-desc">Browse and manage your coins</div>
       </a>
-      <a class="link-item" onclick="openModal('modal-weight-graph')">
-        <span class="link-icon">📉</span>
-        <div class="link-body">
-          <div class="link-title">Weight graph</div>
-          <div class="link-desc">Your progress over time</div>
-        </div>
-        <span class="link-badge modal">⊕</span>
+      <a class="card info" href="https://photos.app.goo.gl/TYEGcE1hXKBsWNeZ9" target="_blank" rel="noopener">
+        <div class="card-top"><span class="card-emoji">⭐</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Estella</div>
+        <div class="card-desc">Family photos album</div>
       </a>
     </div>
-  </div>
+  </section>
 
-  <!-- SCHEDULE -->
-  <div class="section">
-    <p class="section-label">Schedule</p>
-    <div class="link-list">
-      <a class="link-item" href="https://jonestes.me/calendar">
-        <span class="link-icon">📅</span>
-        <div class="link-body">
-          <div class="link-title">Calendar</div>
-          <div class="link-desc">Upcoming events, synced with Google Calendar</div>
-        </div>
-        <span class="link-badge external">↗</span>
+  <section class="section">
+    <div class="section-header"><div class="section-dot" style="background:#a78bca;"></div><span class="section-title">Sierra Leone</span></div>
+    <div class="card-grid">
+      <a class="card" style="border-left:2px solid #a78bca;" href="salone.html">
+        <div class="card-top"><span class="card-emoji">🇸🇱</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Salone</div>
+        <div class="card-desc">Peace Corps memories & Sierra Leone stories</div>
       </a>
     </div>
-  </div>
+  </section>
 
-  <!-- COLLECTIONS -->
-  <div class="section">
-    <p class="section-label">Collections</p>
-    <div class="link-list">
-      <a class="link-item" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS7JBktCAjC8oVg8JpAkA50MdKGdhcvCmRc0x-PZ3RRPNBfBVOT7eeS2OHuuObiouGQ81SCi60Ivm8X/pubhtml" target="_blank" rel="noopener">
-        <span class="link-icon">🪙</span>
-        <div class="link-body">
-          <div class="link-title">Coin collection</div>
-          <div class="link-desc">Browse and manage your coins</div>
-        </div>
-        <span class="link-badge external">↗</span>
-      </a>
-      <a class="link-item" href="https://jonestes.me/estella">
-        <span class="link-icon">⭐</span>
-        <div class="link-body">
-          <div class="link-title">Estella</div>
-          <div class="link-desc">Family photos album</div>
-        </div>
-        <span class="link-badge external">↗</span>
-      </a>
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
+
+<!-- EXPENSE MODAL -->
+<div class="modal-overlay" id="expense-modal" onclick="if(event.target===this)closeExpenseModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">➕ Log Expense</span>
+      <button class="modal-close" onclick="closeExpenseModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSe0sw1M7CuqeeEZMCYdxlq0fnc6P5lvyjv7MyrfjQHKeCQCWQ/viewform?embedded=true"
+        width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe>
     </div>
   </div>
+</div>
 
-  <!-- SIERRA LEONE -->
-  <div class="section">
-    <p class="section-label">Sierra Leone</p>
-    <div class="link-list">
-      <a class="link-item" href="https://jonestes.me/salone">
-        <span class="link-icon">🇸🇱</span>
-        <div class="link-body">
-          <div class="link-title">Salone</div>
-          <div class="link-desc">Peace Corps memories &amp; Sierra Leone stories</div>
+<script>
+  function openExpenseModal() {
+    document.getElementById('expense-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeExpenseModal() {
+    document.getElementById('expense-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeExpenseModal();
+  });
+</script>
+
+
+<!-- WEIGHT MODAL -->
+<div class="modal-overlay" id="weight-modal" onclick="if(event.target===this)closeWeightModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">⚖️ Log Weight</span>
+      <button class="modal-close" onclick="closeWeightModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSeMZTu8cbOIfNk-MOVXlRq7FDHt4NjER5AkKMj-gKHL59o4GQ/viewform?embedded=true"
+        width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openWeightModal() {
+    document.getElementById('weight-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeWeightModal() {
+    document.getElementById('weight-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeWeightModal(); closeExpenseModal(); }
+  });
+</script>
+
+
+<!-- BUDGET MODAL -->
+<div class="modal-overlay" id="budget-modal" onclick="if(event.target===this)closeBudgetModal()">
+  <div class="modal-box" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">📊 Budget Overview — 2026</span>
+      <button class="modal-close" onclick="closeBudgetModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="chart-wrap">
+        <div id="budget-loading" class="chart-loading">Loading your data…</div>
+        <div id="budget-content" style="display:none;">
+          <div class="chart-stats" id="budget-stats"></div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="showBudgetChart('pie', this)">By Category</button>
+            <button class="chart-tab" onclick="showBudgetChart('bar', this)">By Month</button>
+            <button class="chart-tab" onclick="showBudgetChart('who', this)">Ashley vs Jon</button>
+          </div>
+          <div class="chart-canvas-wrap"><canvas id="budget-chart"></canvas></div>
         </div>
-        <span class="link-badge external">↗</span>
-      </a>
-    </div>
-  </div>
-
-  <footer>jonestes.me · built with care</footer>
-
-  <!-- ── MODALS ── -->
-
-  <!-- Log Expense -->
-  <div class="modal-overlay" id="modal-expense" onclick="closeOnOverlay(event, 'modal-expense')">
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-title">➕ Log Expense</span>
-        <button class="modal-close" onclick="closeModal('modal-expense')">✕</button>
-      </div>
-      <div class="modal-body">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe0sw1M7CuqeeEZMCYdxlq0fnc6P5lvyjv7MyrfjQHKeCQCWQ/viewform?embedded=true" loading="lazy"></iframe>
-      </div>
-    </div>
-  </div>
-
-  <!-- Log Weight -->
-  <div class="modal-overlay" id="modal-weight" onclick="closeOnOverlay(event, 'modal-weight')">
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-title">⚖️ Log Weight</span>
-        <button class="modal-close" onclick="closeModal('modal-weight')">✕</button>
-      </div>
-      <div class="modal-body">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeMZTu8cbOIfNk-MOVXlRq7FDHt4NjER5AkKMj-gKHL59o4GQ/viewform?embedded=true" loading="lazy"></iframe>
-      </div>
-    </div>
-  </div>
-
-  <!-- Budget Overview -->
-  <div class="modal-overlay" id="modal-budget" onclick="closeOnOverlay(event, 'modal-budget')">
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-title">📊 Budget Overview — 2026</span>
-        <button class="modal-close" onclick="closeModal('modal-budget')">✕</button>
-      </div>
-      <div class="chart-tabs">
-        <button class="chart-tab active" onclick="switchTab('budget', 'category', this)">By Category</button>
-        <button class="chart-tab" onclick="switchTab('budget', 'month', this)">By Month</button>
-        <button class="chart-tab" onclick="switchTab('budget', 'ashley', this)">Ashley vs Jon</button>
-      </div>
-      <div class="modal-body" id="budget-body">
-        <div class="chart-pane active" id="budget-category">
-          <div style="padding:2rem;text-align:center;font-size:0.65rem;color:var(--muted)">Loading your data…</div>
-        </div>
-        <div class="chart-pane" id="budget-month"></div>
-        <div class="chart-pane" id="budget-ashley"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Weight Graph -->
-  <div class="modal-overlay" id="modal-weight-graph" onclick="closeOnOverlay(event, 'modal-weight-graph')">
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-title">📉 Weight Progress</span>
-        <button class="modal-close" onclick="closeModal('modal-weight-graph')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="padding:2rem;text-align:center;font-size:0.65rem;color:var(--muted)">Loading your data…</div>
+<!-- WEIGHT CHART MODAL -->
+<div class="modal-overlay" id="weight-chart-modal" onclick="if(event.target===this)closeWeightChartModal()">
+  <div class="modal-box" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">📉 Weight Progress</span>
+      <button class="modal-close" onclick="closeWeightChartModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="chart-wrap">
+        <div id="weight-loading" class="chart-loading">Loading your data…</div>
+        <div id="weight-content" style="display:none;">
+          <div class="chart-stats" id="weight-stats"></div>
+          <div class="chart-canvas-wrap"><canvas id="weight-chart"></canvas></div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    function openModal(id) {
-      document.getElementById(id).classList.add('open');
-      document.body.style.overflow = 'hidden';
+<script>
+const BUDGET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT5jGSINGX-mmk5ZzWE-odDuzkAeDbpfhSs6r3CyH_MZjBbiZ9QAhLzy6_mMRbG-VZoAwt2XqyolPq7/pub?output=csv';
+const WEIGHT_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZms_WvCj3ehN_dOxEUooxy-7pCK396BjDOqS1YZtslE7LdPw3Hq4EebPOJMIWELoNDKzYrnZ9lde/pub?output=csv';
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  return lines.slice(1).map(line => {
+    // Handle quoted commas
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let ch of line) {
+      if (ch === '"') inQ = !inQ;
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else cur += ch;
     }
+    cols.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (cols[i] || '').replace(/"/g,'').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-      document.body.style.overflow = '';
-    }
+// ── BUDGET ────────────────────────────────────────────────
+let budgetData = null, budgetChartInst = null, currentBudgetView = 'pie';
+const COLORS = ['#d4789a','#7ecba1','#6eb3c9','#c9a96e','#a78bca','#e8916a','#5bb8a0','#e8c96a','#8ab4d4','#d4a0c9'];
 
-    function closeOnOverlay(e, id) {
-      if (e.target === e.currentTarget) closeModal(id);
-    }
+async function loadBudget() {
+  if (budgetData) return;
+  try {
+    const res = await fetch(BUDGET_CSV);
+    const text = await res.text();
+    budgetData = parseCSV(text);
+    renderBudget('pie');
+    document.getElementById('budget-loading').style.display = 'none';
+    document.getElementById('budget-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('budget-loading').textContent = 'Could not load data — check sheet is published as CSV.';
+  }
+}
 
-    function switchTab(modal, pane, btn) {
-      document.querySelectorAll(`#modal-${modal} .chart-tab`).forEach(t => t.classList.remove('active'));
-      document.querySelectorAll(`#${modal}-body .chart-pane`).forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`${modal}-${pane}`).classList.add('active');
-    }
+function renderBudget(view) {
+  currentBudgetView = view;
+  if (budgetChartInst) { budgetChartInst.destroy(); budgetChartInst = null; }
+  const ctx = document.getElementById('budget-chart').getContext('2d');
 
-    // Close modals on Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(m => {
-          m.classList.remove('open');
-          document.body.style.overflow = '';
-        });
-      }
+  // Parse amounts
+  const rows = budgetData.map(r => ({
+    date: r['Purchase Date'] || r['Date'] || '',
+    item: r['Item'] || '',
+    amount: parseFloat((r['Amount'] || '0').replace(/[$,]/g, '')) || 0,
+    category: r['Category'] || 'Other',
+    who: r['Ashley or Jon?'] || r['Who'] || 'Unknown'
+  })).filter(r => r.amount > 0);
+
+  const income = rows.filter(r => r.category === 'Income').reduce((s,r) => s + r.amount, 0);
+  const spending = rows.filter(r => r.category !== 'Income').reduce((s,r) => s + r.amount, 0);
+  const savings = income - spending;
+  const savingsColor = savings >= 0 ? 'var(--accent2)' : 'var(--accent)';
+  const spendRows = rows.filter(r => r.category !== 'Income');
+  const avg = spendRows.length ? spending / spendRows.length : 0;
+
+  // Stats
+  document.getElementById('budget-stats').innerHTML = `
+    <div class="chart-stat"><div class="chart-stat-num green">$${income.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Income</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">$${spending.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="chart-stat-label">Spending</div></div>
+    <div class="chart-stat"><div class="chart-stat-num" style="color:${savingsColor}">$${Math.abs(savings).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}${savings < 0 ? ' 🔴' : ' 🟢'}</div><div class="chart-stat-label">Savings</div></div>
+    <div class="chart-stat"><div class="chart-stat-num">${spendRows.length}</div><div class="chart-stat-label">Transactions</div></div>
+  `;
+
+  if (view === 'pie') {
+    // By category (exclude Income)
+    const cats = {};
+    rows.filter(r => r.category !== 'Income').forEach(r => { cats[r.category] = (cats[r.category] || 0) + r.amount; });
+    const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
+    budgetChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: sorted.map(([k]) => k),
+        datasets: [{ data: sorted.map(([,v]) => v.toFixed(2)), backgroundColor: COLORS, borderColor: '#181816', borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8a8880', font: { size: 11 }, boxWidth: 12 } } } }
     });
-  </script>
+  } else if (view === 'bar') {
+    // By month (exclude Income)
+    const months = {};
+    rows.filter(r => r.category !== 'Income').forEach(r => {
+      const d = new Date(r.date);
+      if (isNaN(d)) return;
+      const key = d.toLocaleString('default', { month: 'short', year: '2-digit' });
+      months[key] = (months[key] || 0) + r.amount;
+    });
+    const keys = Object.keys(months);
+    budgetChartInst = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: keys,
+        datasets: [{ label: 'Spending ($)', data: keys.map(k => months[k].toFixed(2)), backgroundColor: 'rgba(212,120,154,0.7)', borderColor: '#d4789a', borderWidth: 1, borderRadius: 6 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#8a8880' }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { ticks: { color: '#8a8880', callback: v => '$'+v }, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+    });
+  } else if (view === 'who') {
+    // Ashley vs Jon
+    const who = {};
+    rows.forEach(r => { const w = r.who || 'Unknown'; who[w] = (who[w] || 0) + r.amount; });
+    const entries = Object.entries(who);
+    budgetChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: entries.map(([k]) => k),
+        datasets: [{ data: entries.map(([,v]) => v.toFixed(2)), backgroundColor: ['#d4789a','#7ecba1','#6eb3c9'], borderColor: '#181816', borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#8a8880', font: { size: 12 }, boxWidth: 14 } } } }
+    });
+  }
+}
+
+function showBudgetChart(view, btn) {
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderBudget(view);
+}
+
+function openBudgetModal() {
+  document.getElementById('budget-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadBudget();
+}
+function closeBudgetModal() {
+  document.getElementById('budget-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── WEIGHT ────────────────────────────────────────────────
+let weightData = null, weightChartInst = null;
+
+async function loadWeight() {
+  if (weightData) return;
+  try {
+    const res = await fetch(WEIGHT_CSV);
+    const text = await res.text();
+    weightData = parseCSV(text);
+    renderWeight();
+    document.getElementById('weight-loading').style.display = 'none';
+    document.getElementById('weight-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('weight-loading').textContent = 'Could not load data — check sheet is published as CSV.';
+  }
+}
+
+function renderWeight() {
+  if (weightChartInst) { weightChartInst.destroy(); weightChartInst = null; }
+  const ctx = document.getElementById('weight-chart').getContext('2d');
+
+  // Find weight and date columns flexibly
+  const sample = weightData[0] || {};
+  const weightKey = Object.keys(sample).find(k => k.toLowerCase().includes('weight') || k.toLowerCase().includes('lbs') || k.toLowerCase().includes('kg')) || Object.keys(sample)[1];
+  const dateKey = Object.keys(sample).find(k => k.toLowerCase().includes('date') || k.toLowerCase().includes('time') || k.toLowerCase().includes('stamp')) || Object.keys(sample)[0];
+
+  const rows = weightData.map(r => ({
+    date: new Date(r[dateKey]),
+    weight: parseFloat((r[weightKey] || '0').replace(/[^0-9.]/g,''))
+  })).filter(r => !isNaN(r.date) && r.weight > 0).sort((a,b) => a.date - b.date);
+
+  if (!rows.length) {
+    document.getElementById('weight-loading').textContent = 'No weight data found yet — log your first entry!';
+    document.getElementById('weight-loading').style.display = 'block';
+    document.getElementById('weight-content').style.display = 'none';
+    return;
+  }
+
+  const first = rows[0].weight, last = rows[rows.length-1].weight;
+  const min = Math.min(...rows.map(r => r.weight));
+  const change = (last - first).toFixed(1);
+  const changeStr = change > 0 ? '+'+change : change;
+  const trend = change < 0 ? '📉' : change > 0 ? '📈' : '➡️';
+
+  document.getElementById('weight-stats').innerHTML = `
+    <div class="chart-stat"><div class="chart-stat-num green">${last} <span style="font-size:1rem">lbs</span></div><div class="chart-stat-label">Current</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${changeStr} lbs</div><div class="chart-stat-label">Total Change ${trend}</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${min}</div><div class="chart-stat-label">Lowest</div></div>
+    <div class="chart-stat"><div class="chart-stat-num green">${rows.length}</div><div class="chart-stat-label">Entries</div></div>
+  `;
+
+  // Gradient fill
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+  gradient.addColorStop(0, 'rgba(126,203,161,0.3)');
+  gradient.addColorStop(1, 'rgba(126,203,161,0.01)');
+
+  weightChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [{
+        label: 'Weight (lbs)',
+        data: rows.map(r => r.weight),
+        borderColor: '#7ecba1',
+        backgroundColor: gradient,
+        borderWidth: 2,
+        pointRadius: rows.length > 30 ? 0 : 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#7ecba1',
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} lbs` } } },
+      scales: {
+        x: { ticks: { color: '#8a8880', maxTicksLimit: 10, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#8a8880', callback: v => v+' lbs' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+}
+
+function openWeightChartModal() {
+  document.getElementById('weight-chart-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadWeight();
+}
+function closeWeightChartModal() {
+  document.getElementById('weight-chart-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Global escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeBudgetModal(); closeWeightChartModal();
+    closeExpenseModal(); closeWeightModal();
+  }
+});
+</script>
+
 </body>
 </html>
