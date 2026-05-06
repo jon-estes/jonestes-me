@@ -116,6 +116,12 @@
     .chart-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(212,120,154,0.06); }
     .chart-tab.green.active { color: var(--accent2); border-color: var(--accent2); background: rgba(126,203,161,0.06); }
   </style>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
@@ -142,6 +148,11 @@
         <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">⊕</span></div>
         <div class="card-title">Budget overview</div>
         <div class="card-desc">Spending charts by category</div>
+      </a>
+      <a class="card primary" href="/budget">
+        <div class="card-top"><span class="card-emoji">🔥</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Full dashboard</div>
+        <div class="card-desc">Deep dive — all charts, trends & transactions</div>
       </a>
 
     </div>
@@ -537,5 +548,12 @@ document.addEventListener('keydown', e => {
 });
 </script>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
 </body>
 </html>

@@ -3,631 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Directory · Jon Estes</title>
+  <title>Directory · jonestes.me</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Noon2XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0e0e0e;
-      --surface: #161616;
-      --border: #2a2a2a;
-      --silver: #c8cdd4;
-      --silver-dim: #7a8290;
-      --accent: #e2e8f0;
-      --up: #6ee7b7;
-      --down: #fca5a5;
-      --text: #d4d8de;
-      --muted: #525a65;
-      --font-serif: 'Libre Baskerville', Georgia, serif;
-      --font-mono: 'DM Mono', 'Courier New', monospace;
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --gold: #c9a96e; --radius: 14px;
     }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
 
-    html, body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-mono);
-      min-height: 100vh;
+    .hero { margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3rem); font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.7; }
+
+    .section { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards; }
+    .section:nth-child(2) { animation-delay: 0.08s; }
+    .section:nth-child(3) { animation-delay: 0.12s; }
+    .section:nth-child(4) { animation-delay: 0.16s; }
+    .section:nth-child(5) { animation-delay: 0.20s; }
+    .section:nth-child(6) { animation-delay: 0.24s; }
+    .section:nth-child(7) { animation-delay: 0.28s; }
+    .section:nth-child(8) { animation-delay: 0.32s; }
+
+    .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+    .section-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .dot-pink { background: var(--accent); }
+    .dot-green { background: var(--accent2); }
+    .dot-blue { background: var(--accent3); }
+    .dot-gold { background: var(--gold); }
+    .dot-muted { background: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+    .page-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .page-item {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.85rem 1.1rem;
+      text-decoration: none; color: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.12s;
     }
-
-    body {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 6rem;
+    .page-item:hover { border-color: var(--border2); background: var(--bg3); transform: translateX(3px); }
+    .page-icon { font-size: 1.2rem; flex-shrink: 0; width: 28px; text-align: center; }
+    .page-info { flex: 1; }
+    .page-name { font-size: 14px; font-weight: 500; color: var(--text); }
+    .page-url { font-size: 11px; color: var(--muted); font-family: monospace; letter-spacing: 0.02em; }
+    .page-desc { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .page-arrow { font-size: 12px; color: var(--muted); opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
+    .page-item:hover .page-arrow { opacity: 1; }
+    .page-badge {
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 999px; border: 1px solid;
+      flex-shrink: 0;
     }
+    .badge-public { color: var(--accent2); border-color: rgba(126,203,161,0.3); }
+    .badge-hidden { color: var(--muted); border-color: rgba(138,136,128,0.3); }
+    .badge-private { color: var(--gold); border-color: rgba(201,169,110,0.3); }
 
-    .eyebrow {
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-
-    h1 {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(2.8rem, 8vw, 4.5rem);
-      font-weight: 400;
-      color: var(--silver);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-
-    .subtitle {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      margin-bottom: 3rem;
-    }
-
-    /* ── MONTH NAV ── */
-    .month-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-
-    .month-label {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 1.4rem;
-      color: var(--silver);
-      font-weight: 400;
-    }
-
-    .nav-btns { display: flex; gap: 0.4rem; }
-
-    .nav-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .nav-btn:hover { border-color: var(--silver-dim); color: var(--silver); }
-
-    /* ── MINI CALENDAR GRID ── */
-    .cal-grid {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 2.5rem;
-    }
-
-    .cal-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cal-wd {
-      text-align: center;
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.6rem 0;
-    }
-
-    .cal-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      background: var(--bg);
-    }
-
-    .cal-day {
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-      position: relative;
-      gap: 2px;
-      padding: 4px 2px;
-    }
-    .cal-day:nth-child(7n) { border-right: none; }
-    .cal-day:hover { background: var(--surface); }
-
-    .cal-day.empty { cursor: default; }
-    .cal-day.empty:hover { background: transparent; }
-
-    .cal-day.today .day-num {
-      background: var(--silver);
-      color: var(--bg);
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cal-day.selected { background: #1e1e1e; }
-    .cal-day.has-events .day-num { color: var(--accent); }
-
-    .day-num {
-      font-size: 0.72rem;
-      color: var(--silver-dim);
-      line-height: 1;
-    }
-
-    .day-dots {
-      display: flex;
-      gap: 2px;
-      flex-wrap: wrap;
-      justify-content: center;
-      min-height: 5px;
-    }
-
-    .day-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--up);
-      opacity: 0.7;
-    }
-
-    /* ── EVENT LIST ── */
-    .events-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .section-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .event-count {
-      font-size: 0.6rem;
-      color: var(--muted);
-    }
-
-    .events-list { display: flex; flex-direction: column; gap: 1px; }
-
-    .event-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 0.85rem 1rem;
-      display: grid;
-      grid-template-columns: 3.5rem 1fr;
-      gap: 0.75rem;
-      align-items: start;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .event-card:hover { border-color: var(--silver-dim); }
-
-    .event-date-col {
-      text-align: center;
-      border-right: 1px solid var(--border);
-      padding-right: 0.75rem;
-    }
-
-    .event-month {
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.1rem;
-    }
-
-    .event-day-num {
-      font-family: var(--font-serif);
-      font-size: 1.6rem;
-      color: var(--silver);
-      line-height: 1;
-      font-weight: 700;
-    }
-
-    .event-dow {
-      font-size: 0.55rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .event-body {}
-
-    .event-title {
-      font-size: 0.9rem;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-      font-weight: 500;
-    }
-
-    .event-meta {
-      font-size: 0.65rem;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .event-time { color: var(--silver-dim); }
-    .event-location { color: var(--muted); font-size: 0.6rem; }
-
-    .no-events {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-align: center;
-      padding: 2rem 0;
-      border: 1px dashed var(--border);
-      border-radius: 3px;
-    }
-
-    /* ── CALENDAR FILTER PILLS ── */
-    .cal-filters {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-
-    .cal-pill {
-      font-size: 0.6rem;
-      padding: 0.2rem 0.65rem;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      letter-spacing: 0.06em;
-    }
-    .cal-pill:hover, .cal-pill.active {
-      border-color: var(--silver-dim);
-      color: var(--silver);
-    }
-
-    footer {
-      margin-top: 4rem;
-      font-size: 0.6rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    /* ── LOADING ── */
-    .loading {
-      font-size: 0.65rem;
-      color: var(--muted);
-      text-align: center;
-      padding: 2rem 0;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
+<div class="page">
 
-  <p class="eyebrow">📅 Schedule</p>
-  <h1>Calendar</h1>
-  <p class="subtitle">Jon's schedule — synced with Google Calendar.</p>
+  <div class="hero">
+    <div class="hero-label">jonestes.me</div>
+    <h1>Site <em>Directory</em></h1>
+    <p>Every page on this site, organized by section. Your personal map to everything that lives here.</p>
+  </div>
 
-  <!-- MONTH NAV -->
-  <div class="month-nav">
-    <span class="month-label" id="month-label">—</span>
-    <div class="nav-btns">
-      <button class="nav-btn" id="prev-btn">‹</button>
-      <button class="nav-btn" id="today-btn" style="width:auto;padding:0 0.5rem;font-size:0.55rem;letter-spacing:0.1em;">TODAY</button>
-      <button class="nav-btn" id="next-btn">›</button>
+  <!-- MAIN / PUBLIC -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-pink"></div><div class="section-label">Main Pages</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/">
+        <div class="page-icon">🏠</div>
+        <div class="page-info"><div class="page-name">Home Dashboard</div><div class="page-url">jonestes.me</div><div class="page-desc">Finance, health tracking, collections — the main hub</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/about">
+        <div class="page-icon">👤</div>
+        <div class="page-info"><div class="page-name">About</div><div class="page-url">jonestes.me/about</div><div class="page-desc">About Jon Estes</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/contact">
+        <div class="page-icon">✉️</div>
+        <div class="page-info"><div class="page-name">Contact</div><div class="page-url">jonestes.me/contact</div><div class="page-desc">Get in touch</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
     </div>
   </div>
 
-  <!-- MINI GRID -->
-  <div class="cal-grid">
-    <div class="cal-weekdays">
-      <div class="cal-wd">Sun</div>
-      <div class="cal-wd">Mon</div>
-      <div class="cal-wd">Tue</div>
-      <div class="cal-wd">Wed</div>
-      <div class="cal-wd">Thu</div>
-      <div class="cal-wd">Fri</div>
-      <div class="cal-wd">Sat</div>
+  <!-- FAMILY -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-pink"></div><div class="section-label">Family</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/estella">
+        <div class="page-icon">👶</div>
+        <div class="page-info"><div class="page-name">Estella</div><div class="page-url">jonestes.me/estella</div><div class="page-desc">Estella Azalea — photo gallery & baby updates</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/529">
+        <div class="page-icon">🎓</div>
+        <div class="page-info"><div class="page-name">Estella's 529 Plan</div><div class="page-url">jonestes.me/529</div><div class="page-desc">College savings tracker — $497.11 and growing</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
     </div>
-    <div class="cal-days" id="cal-days"></div>
   </div>
 
-  <!-- CALENDAR FILTERS -->
-  <div class="cal-filters" id="cal-filters"></div>
-
-  <!-- EVENT LIST -->
-  <div class="events-header">
-    <span class="section-label" id="events-section-label">Upcoming events</span>
-    <span class="event-count" id="event-count"></span>
+  <!-- FINANCE -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-green"></div><div class="section-label">Finance & Markets</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/silver">
+        <div class="page-icon">🪙</div>
+        <div class="page-info"><div class="page-name">Silver Spot Price</div><div class="page-url">jonestes.me/silver</div><div class="page-desc">Live XAG/USD ticker — updates every 60 seconds</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
   </div>
-  <div class="events-list" id="events-list">
-    <div class="loading">Loading events…</div>
+
+  <!-- PERSONAL -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-green"></div><div class="section-label">Personal</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/story">
+        <div class="page-icon">🗺️</div>
+        <div class="page-info"><div class="page-name">Story — Timeline & Map</div><div class="page-url">jonestes.me/story</div><div class="page-desc">Life timeline, world map, places visited</div></div>
+        <span class="page-badge badge-hidden">Hidden</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/guestbook">
+        <div class="page-icon">💌</div>
+        <div class="page-info"><div class="page-name">Guestbook</div><div class="page-url">jonestes.me/guestbook</div><div class="page-desc">Leave a message for Jon</div></div>
+        <span class="page-badge badge-hidden">Hidden</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/salone">
+        <div class="page-icon">🌍</div>
+        <div class="page-info"><div class="page-name">Salone</div><div class="page-url">jonestes.me/salone</div><div class="page-desc">Sierra Leone — Peace Corps memories</div></div>
+        <span class="page-badge badge-hidden">Hidden</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
   </div>
 
-  <footer>
-    <span>jonestes.me · built with care</span>
-    <span id="last-updated">—</span>
-  </footer>
+  <!-- HAWAII / WEDDING -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-gold"></div><div class="section-label">Wedding Planning</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/hawaii">
+        <div class="page-icon">🌺</div>
+        <div class="page-info"><div class="page-name">Hawaii Research</div><div class="page-url">jonestes.me/hawaii</div><div class="page-desc">Island comparison, venues, budget, 8·20·2028</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/wedding">
+        <div class="page-icon">💍</div>
+        <div class="page-info"><div class="page-name">Wedding</div><div class="page-url">jonestes.me/wedding</div><div class="page-desc">Wedding planning page</div></div>
+        <span class="page-badge badge-private">Private</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
+  </div>
 
-  <script>
-    // ── DATA (injected from Google Calendar) ──────────────────────────────────
-    // This page is pre-rendered with your real event data.
-    // To keep it live, re-generate this file periodically (e.g. with a cron job
-    // hitting your server), or wire it to the Google Calendar JS API directly.
+  <!-- RESEARCH -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-blue"></div><div class="section-label">Research</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/mm">
+        <div class="page-icon">💕</div>
+        <div class="page-info"><div class="page-name">Mommy Makeover Research</div><div class="page-url">jonestes.me/mm</div><div class="page-desc">22 providers in Sacramento &amp; within 2hrs — for Ashley</div></div>
+        <span class="page-badge badge-private">Private</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
+  </div>
 
-    const CALENDARS = [
-      { id: "jonstutoring530@gmail.com",                        name: "Jon",      color: "#6ee7b7" },
-      { id: "lorinaestes@gmail.com",                            name: "Lorina",   color: "#93c5fd" },
-      { id: "ashleymarie0497@gmail.com",                        name: "Ashley",   color: "#f9a8d4" },
-      { id: "daminestes@gmail.com",                             name: "Damin",    color: "#fcd34d" },
-      { id: "family12059815905162115878@group.calendar.google.com", name: "Family", color: "#c4b5fd" },
-      { id: "7odq1gp8pered4rgn93e6ljkqg@group.calendar.google.com", name: "Birthdays", color: "#fb923c" },
-    ];
+  <!-- UTILITY -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-muted"></div><div class="section-label">Utility</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/directory">
+        <div class="page-icon">📋</div>
+        <div class="page-info"><div class="page-name">Directory</div><div class="page-url">jonestes.me/directory</div><div class="page-desc">You are here — all pages in one place</div></div>
+        <span class="page-badge badge-private">Private</span>
+        <div class="page-arrow">→</div>
+      </a>
+      <a class="page-item" href="/404">
+        <div class="page-icon">🚫</div>
+        <div class="page-info"><div class="page-name">404 Page</div><div class="page-url">jonestes.me/404</div><div class="page-desc">Page not found</div></div>
+        <span class="page-badge badge-hidden">Hidden</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
+  </div>
 
-    // Events fetched from your Google Calendar (May–Jun 2026)
-    const ALL_EVENTS = [
-      {
-        id: "01mtvclff0067u7t6aro08d8kc",
-        summary: "Placer Family Court",
-        start: "2026-06-12T13:30:00-07:00",
-        end:   "2026-06-12T14:30:00-07:00",
-        location: "Department 43, 10820 Justice Center Dr, Roseville, CA 95678",
-        calendarId: "jonstutoring530@gmail.com",
-        link: "https://www.google.com/calendar/event?eid=MDFtdHZjbGZmMDA2N3U3dDZhcm8wOGQ4a2Mgam9uc3R1dG9yaW5nNTMwQG0"
-      },
-      {
-        id: "0i64od9bv1surrrl8lmrujprbs",
-        summary: "Dentist",
-        start: "2026-06-25T09:00:00-07:00",
-        end:   "2026-06-25T10:00:00-07:00",
-        location: null,
-        calendarId: "jonstutoring530@gmail.com",
-        link: "https://www.google.com/calendar/event?eid=MGk2NG9kOWJ2MXN1cnJybDhsbXJ1anByYnMgam9uc3R1dG9yaW5nNTMwQG0"
-      }
-    ];
+  <!-- LEGEND -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-top:1rem;opacity:0;animation:fadeUp 0.6s ease 0.3s forwards;">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Badge Legend</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--muted);">
+      <div style="display:flex;align-items:center;gap:6px;"><span class="page-badge badge-public">Public</span> Linked from the nav bar</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span class="page-badge badge-hidden">Hidden</span> Exists but not in nav — share the link directly</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span class="page-badge badge-private">Private</span> Just for you — don't share publicly</div>
+    </div>
+  </div>
 
-    // ── STATE ─────────────────────────────────────────────────────────────────
-    const today    = new Date();
-    let viewYear   = today.getFullYear();
-    let viewMonth  = today.getMonth(); // 0-indexed
-    let selectedDay = null;
-    let activeCalendars = new Set(CALENDARS.map(c => c.id));
-
-    // ── HELPERS ───────────────────────────────────────────────────────────────
-    const MONTHS = ["January","February","March","April","May","June",
-                    "July","August","September","October","November","December"];
-    const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
-    function calColor(calId) {
-      return CALENDARS.find(c => c.id === calId)?.color ?? '#c8cdd4';
-    }
-
-    function parseDate(str) { return new Date(str); }
-
-    function sameDay(a, b) {
-      return a.getFullYear() === b.getFullYear() &&
-             a.getMonth()    === b.getMonth()    &&
-             a.getDate()     === b.getDate();
-    }
-
-    function formatTime(str) {
-      const d = parseDate(str);
-      return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    }
-
-    function eventsOnDay(year, month, day) {
-      const target = new Date(year, month, day);
-      return ALL_EVENTS.filter(e => {
-        if (!activeCalendars.has(e.calendarId)) return false;
-        return sameDay(parseDate(e.start), target);
-      });
-    }
-
-    function visibleEvents() {
-      if (selectedDay) {
-        const target = new Date(viewYear, viewMonth, selectedDay);
-        return ALL_EVENTS.filter(e =>
-          activeCalendars.has(e.calendarId) && sameDay(parseDate(e.start), target)
-        );
-      }
-      // Show all events in current month, sorted
-      return ALL_EVENTS
-        .filter(e => {
-          if (!activeCalendars.has(e.calendarId)) return false;
-          const d = parseDate(e.start);
-          return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
-        })
-        .sort((a, b) => parseDate(a.start) - parseDate(b.start));
-    }
-
-    // ── RENDER CALENDAR GRID ──────────────────────────────────────────────────
-    function renderGrid() {
-      document.getElementById('month-label').textContent = `${MONTHS[viewMonth]} ${viewYear}`;
-      const container = document.getElementById('cal-days');
-      container.innerHTML = '';
-
-      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-
-      // blank cells
-      for (let i = 0; i < firstDay; i++) {
-        const el = document.createElement('div');
-        el.className = 'cal-day empty';
-        container.appendChild(el);
-      }
-
-      for (let d = 1; d <= daysInMonth; d++) {
-        const el = document.createElement('div');
-        el.className = 'cal-day';
-
-        const isToday = sameDay(new Date(viewYear, viewMonth, d), today);
-        const isSel   = selectedDay === d;
-        if (isToday) el.classList.add('today');
-        if (isSel)   el.classList.add('selected');
-
-        const evs = eventsOnDay(viewYear, viewMonth, d);
-        if (evs.length) el.classList.add('has-events');
-
-        const numEl = document.createElement('span');
-        numEl.className = 'day-num';
-        numEl.textContent = d;
-        el.appendChild(numEl);
-
-        if (evs.length) {
-          const dots = document.createElement('div');
-          dots.className = 'day-dots';
-          evs.slice(0, 3).forEach(e => {
-            const dot = document.createElement('div');
-            dot.className = 'day-dot';
-            dot.style.background = calColor(e.calendarId);
-            dots.appendChild(dot);
-          });
-          el.appendChild(dots);
-        }
-
-        el.addEventListener('click', () => {
-          selectedDay = (selectedDay === d) ? null : d;
-          renderGrid();
-          renderEvents();
-        });
-
-        container.appendChild(el);
-      }
-    }
-
-    // ── RENDER EVENT LIST ─────────────────────────────────────────────────────
-    function renderEvents() {
-      const list   = document.getElementById('events-list');
-      const label  = document.getElementById('events-section-label');
-      const count  = document.getElementById('event-count');
-      const evs    = visibleEvents();
-
-      if (selectedDay) {
-        const d = new Date(viewYear, viewMonth, selectedDay);
-        label.textContent = `${DAYS[d.getDay()]}, ${MONTHS[viewMonth]} ${selectedDay}`;
-      } else {
-        label.textContent = `Upcoming — ${MONTHS[viewMonth]}`;
-      }
-
-      count.textContent = evs.length ? `${evs.length} event${evs.length > 1 ? 's' : ''}` : '';
-      list.innerHTML = '';
-
-      if (!evs.length) {
-        list.innerHTML = `<div class="no-events">No events${selectedDay ? ' on this day' : ' this month'}.</div>`;
-        return;
-      }
-
-      evs.forEach(e => {
-        const d     = parseDate(e.start);
-        const color = calColor(e.calendarId);
-        const calName = CALENDARS.find(c => c.id === e.calendarId)?.name ?? '';
-
-        const card = document.createElement('a');
-        card.className = 'event-card';
-        card.href      = e.link;
-        card.target    = '_blank';
-        card.rel       = 'noopener';
-        card.style.textDecoration = 'none';
-        card.style.borderLeftColor = color;
-        card.style.borderLeftWidth = '3px';
-
-        card.innerHTML = `
-          <div class="event-date-col">
-            <div class="event-month">${MONTHS[d.getMonth()].slice(0,3)}</div>
-            <div class="event-day-num">${d.getDate()}</div>
-            <div class="event-dow">${DAYS[d.getDay()]}</div>
-          </div>
-          <div class="event-body">
-            <div class="event-title">${e.summary}</div>
-            <div class="event-meta">
-              <span class="event-time">${formatTime(e.start)} – ${formatTime(e.end)}</span>
-              ${e.location ? `<span class="event-location">📍 ${e.location}</span>` : ''}
-              <span style="font-size:0.55rem;color:${color};margin-top:2px;letter-spacing:0.08em;text-transform:uppercase;">${calName}</span>
-            </div>
-          </div>
-        `;
-        list.appendChild(card);
-      });
-    }
-
-    // ── RENDER FILTERS ────────────────────────────────────────────────────────
-    function renderFilters() {
-      const container = document.getElementById('cal-filters');
-      container.innerHTML = '';
-      CALENDARS.forEach(cal => {
-        const pill = document.createElement('button');
-        pill.className = 'cal-pill' + (activeCalendars.has(cal.id) ? ' active' : '');
-        pill.textContent = cal.name;
-        pill.style.setProperty('--dot', cal.color);
-        if (activeCalendars.has(cal.id)) {
-          pill.style.borderColor = cal.color;
-          pill.style.color = cal.color;
-        }
-        pill.addEventListener('click', () => {
-          if (activeCalendars.has(cal.id)) {
-            activeCalendars.delete(cal.id);
-          } else {
-            activeCalendars.add(cal.id);
-          }
-          renderFilters();
-          renderGrid();
-          renderEvents();
-        });
-        container.appendChild(pill);
-      });
-    }
-
-    // ── NAV ───────────────────────────────────────────────────────────────────
-    document.getElementById('prev-btn').addEventListener('click', () => {
-      viewMonth--;
-      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-      selectedDay = null;
-      renderGrid(); renderEvents();
-    });
-
-    document.getElementById('next-btn').addEventListener('click', () => {
-      viewMonth++;
-      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-      selectedDay = null;
-      renderGrid(); renderEvents();
-    });
-
-    document.getElementById('today-btn').addEventListener('click', () => {
-      viewYear  = today.getFullYear();
-      viewMonth = today.getMonth();
-      selectedDay = null;
-      renderGrid(); renderEvents();
-    });
-
-    // ── INIT ──────────────────────────────────────────────────────────────────
-    document.getElementById('last-updated').textContent =
-      `synced ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-
-    renderFilters();
-    renderGrid();
-    renderEvents();
-  </script>
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
+</div>
 </body>
 </html>
