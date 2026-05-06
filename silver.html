@@ -28,7 +28,6 @@
     nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
     nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
 
-    /* HERO */
     .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
     .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver2); margin-bottom: 0.6rem; }
     .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
@@ -39,16 +38,16 @@
     .ticker-card { background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--silver); border-radius: var(--radius); padding: 2rem 2rem 1.75rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
 
     .ticker-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
-    .ticker-price-block { }
     .ticker-label-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
     .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
-    .live-dot.connecting { background: var(--muted); animation: none; }
+    .live-dot.connecting { background: var(--muted); }
     .live-dot.live { animation: pulse 2s infinite; }
+    .live-dot.error { background: var(--accent); }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
     .live-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
     .live-status { font-size: 11px; color: var(--muted); font-weight: 300; }
 
-    .ticker-price-main { font-family: 'DM Mono', monospace; font-size: 52px; font-weight: 500; color: var(--silver); line-height: 1; letter-spacing: -0.01em; transition: color 0.3s; }
+    .ticker-price-main { font-family: 'DM Mono', monospace; font-size: 52px; font-weight: 500; color: var(--silver); line-height: 1; letter-spacing: -0.01em; transition: color 0.4s; }
     .ticker-price-main.up { color: #7ecba1; }
     .ticker-price-main.down { color: #d4789a; }
     .ticker-price-sub { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; }
@@ -61,13 +60,11 @@
     .ticker-change-label { font-size: 11px; color: var(--muted); font-weight: 300; }
     .ticker-updated { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 4px; font-family: 'DM Mono', monospace; }
 
-    /* STATS ROW */
     .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
     .stat-mini { background: var(--bg3); border-radius: 10px; padding: 0.85rem 1rem; }
     .stat-mini-label { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
     .stat-mini-val { font-size: 16px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
 
-    /* MINI CHART */
     .chart-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards; }
     .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
     .chart-title { font-size: 13px; font-weight: 500; color: var(--text); }
@@ -77,9 +74,8 @@
     .chart-tab:hover { border-color: var(--border2); color: var(--text); }
     .chart-tab.active { background: var(--bg3); border-color: var(--silver2); color: var(--silver); }
     .chart-container { position: relative; width: 100%; height: 200px; }
-    .chart-no-data { display: flex; align-items: center; justify-content: center; height: 200px; font-size: 13px; color: var(--muted); font-weight: 300; }
+    .chart-placeholder { display: flex; align-items: center; justify-content: center; height: 200px; font-size: 13px; color: var(--muted); font-weight: 300; }
 
-    /* CONTEXT CARDS */
     .context-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
     .context-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
     .context-icon { font-size: 20px; margin-bottom: 8px; }
@@ -92,7 +88,7 @@
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes flash { 0%,100%{background:transparent} 40%{background:var(--silver-glow)} }
-    .price-flash { animation: flash 0.6s ease; }
+    .price-flash { animation: flash 0.5s ease; }
 
     @media (max-width: 480px) {
       .page { padding: 2rem 1rem 4rem; }
@@ -112,17 +108,16 @@
   <div class="hero">
     <div class="hero-label">Spot price</div>
     <h1><em>Silver</em></h1>
-    <p>Live silver spot price, updated in real time. XAG/USD — troy ounce.</p>
+    <p>Live silver spot price, updated every 60 seconds. XAG/USD — troy ounce.</p>
   </div>
 
-  <!-- MAIN TICKER -->
-  <div class="ticker-card">
+  <div class="ticker-card" id="tickerCard">
     <div class="ticker-top">
-      <div class="ticker-price-block">
+      <div>
         <div class="ticker-label-row">
           <div class="live-dot connecting" id="liveDot"></div>
           <span class="live-label">XAG / USD</span>
-          <span class="live-status" id="liveStatus">connecting…</span>
+          <span class="live-status" id="liveStatus">loading…</span>
         </div>
         <div class="ticker-price-main" id="priceMain">—</div>
         <div class="ticker-price-sub">per troy ounce &nbsp;·&nbsp; spot price</div>
@@ -130,154 +125,113 @@
       <div class="ticker-change-block">
         <div class="ticker-change-val neutral" id="changeVal">—</div>
         <div class="ticker-change-label">change</div>
-        <div class="ticker-change-val neutral" id="changePct" style="font-size:16px;margin-top:2px;">—</div>
-        <div class="ticker-change-label">% change</div>
+        <div class="ticker-change-val neutral" id="changePct" style="font-size:16px;margin-top:4px;">—</div>
+        <div class="ticker-change-label">% vs prev. close</div>
         <div class="ticker-updated" id="updatedTime">—</div>
       </div>
     </div>
     <div class="stats-row">
-      <div class="stat-mini">
-        <div class="stat-mini-label">Session high</div>
-        <div class="stat-mini-val" id="statHigh">—</div>
-      </div>
-      <div class="stat-mini">
-        <div class="stat-mini-label">Session low</div>
-        <div class="stat-mini-val" id="statLow">—</div>
-      </div>
-      <div class="stat-mini">
-        <div class="stat-mini-label">Open</div>
-        <div class="stat-mini-val" id="statOpen">—</div>
-      </div>
-      <div class="stat-mini">
-        <div class="stat-mini-label">Prev. close</div>
-        <div class="stat-mini-val" id="statPrev">—</div>
-      </div>
+      <div class="stat-mini"><div class="stat-mini-label">Day high</div><div class="stat-mini-val" id="statHigh">—</div></div>
+      <div class="stat-mini"><div class="stat-mini-label">Day low</div><div class="stat-mini-val" id="statLow">—</div></div>
+      <div class="stat-mini"><div class="stat-mini-label">Bid</div><div class="stat-mini-val" id="statBid">—</div></div>
+      <div class="stat-mini"><div class="stat-mini-label">Ask</div><div class="stat-mini-val" id="statAsk">—</div></div>
     </div>
   </div>
 
-  <!-- PRICE CHART -->
   <div class="chart-section">
     <div class="chart-header">
       <div>
         <div class="chart-title">Session history</div>
-        <div class="chart-subtitle" id="chartSubtitle">Waiting for data…</div>
+        <div class="chart-subtitle" id="chartSubtitle">Collecting data points…</div>
       </div>
       <div class="chart-tabs">
-        <button class="chart-tab active" onclick="setView('live')">Live</button>
-        <button class="chart-tab" onclick="setView('50')">50pt</button>
-        <button class="chart-tab" onclick="setView('all')">All</button>
+        <button class="chart-tab active" id="tab-live" onclick="setView('live',this)">Live</button>
+        <button class="chart-tab" id="tab-50" onclick="setView('50',this)">50pt</button>
+        <button class="chart-tab" id="tab-all" onclick="setView('all',this)">All</button>
       </div>
     </div>
     <div class="chart-container">
-      <div class="chart-no-data" id="chartNoData">Collecting price history…</div>
-      <canvas id="silverChart" role="img" aria-label="Live silver price chart" style="display:none;"></canvas>
+      <div class="chart-placeholder" id="chartPlaceholder">Waiting for first data point…</div>
+      <canvas id="silverChart" style="display:none;" role="img" aria-label="Live silver price session chart"></canvas>
     </div>
   </div>
 
-  <!-- CONTEXT -->
   <div class="section-label">Context</div>
   <div class="context-grid">
-    <div class="context-card">
-      <div class="context-icon">⚖️</div>
-      <div class="context-title">Troy ounce</div>
-      <div class="context-text">Silver is priced per troy ounce — 31.1 grams. Different from the avoirdupois ounce (28.35g) used in everyday measurements.</div>
-    </div>
-    <div class="context-card">
-      <div class="context-icon">🌍</div>
-      <div class="context-title">Spot vs. physical</div>
-      <div class="context-text">Spot price is the current market rate for immediate delivery. Physical silver (coins, bars) usually costs more due to premiums and fabrication.</div>
-    </div>
-    <div class="context-card">
-      <div class="context-icon">🏭</div>
-      <div class="context-title">Industrial demand</div>
-      <div class="context-text">Over 50% of silver demand is industrial — used in solar panels, electronics, and EV batteries — meaning it tracks the economy as much as it tracks fear.</div>
-    </div>
-    <div class="context-card">
-      <div class="context-icon">📊</div>
-      <div class="context-title">Gold/silver ratio</div>
-      <div class="context-text">Historically, it takes 15–80 oz of silver to buy 1 oz of gold. The ratio is a common way to gauge relative value between the two metals.</div>
-    </div>
+    <div class="context-card"><div class="context-icon">⚖️</div><div class="context-title">Troy ounce</div><div class="context-text">Silver is priced per troy ounce — 31.1 grams. Different from the avoirdupois ounce (28.35g) used in everyday measurements.</div></div>
+    <div class="context-card"><div class="context-icon">🌍</div><div class="context-title">Spot vs. physical</div><div class="context-text">Spot price is the current market rate for immediate delivery. Physical silver (coins, bars) usually costs more due to premiums and fabrication.</div></div>
+    <div class="context-card"><div class="context-icon">🏭</div><div class="context-title">Industrial demand</div><div class="context-text">Over 50% of silver demand is industrial — used in solar panels, electronics, and EV batteries — meaning it tracks the economy as much as it tracks fear.</div></div>
+    <div class="context-card"><div class="context-icon">📊</div><div class="context-title">Gold/silver ratio</div><div class="context-text">Historically, it takes 15–80 oz of silver to buy 1 oz of gold. The ratio is a common way to gauge relative value between the two metals.</div></div>
   </div>
 
   <hr class="divider" />
-  <footer><p>jonestes.me &nbsp;·&nbsp; built with care &nbsp;·&nbsp; prices via metals.live</p></footer>
+  <footer><p>jonestes.me &nbsp;·&nbsp; built with care &nbsp;·&nbsp; prices via metals.dev</p></footer>
 </div>
 
 <script>
-  // State
+  const API_KEY = 'PHKEEZ233NOPITRZOIFR936RZOIFR';
+  const API_URL = 'https://api.metals.dev/v1/metal/spot?api_key=' + API_KEY + '&metal=silver&currency=USD';
+  const POLL_MS = 60000; // metals.dev free plan updates ~60s
+
   let priceHistory = [];
-  let sessionHigh = null;
-  let sessionLow = null;
-  let sessionOpen = null;
-  let prevClose = null;
-  let lastPrice = null;
-  let chart = null;
   let chartView = 'live';
-  let pollInterval = null;
-  let wsRetries = 0;
+  let chart = null;
+  let lastPrice = null;
 
-  const MAX_HISTORY = 500;
+  function $(id) { return document.getElementById(id); }
+  function fmtPrice(n) { return '$' + Number(n).toFixed(2); }
 
-  function setView(v) {
+  function setStatus(state, text) {
+    $('liveDot').className = 'live-dot ' + state;
+    $('liveStatus').textContent = text;
+  }
+
+  function setView(v, btn) {
     chartView = v;
     document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    btn.classList.add('active');
     renderChart();
   }
 
-  function fmt(n) {
-    return n != null ? '$' + Number(n).toFixed(2) : '—';
-  }
+  function updateUI(data) {
+    const price = data.price;
+    const high  = data.high;
+    const low   = data.low;
+    const bid   = data.bid;
+    const ask   = data.ask;
+    const change    = data.change;
+    const changePct = data.change_percentage;
 
-  function updateUI(price, source) {
-    const el = document.getElementById('priceMain');
-    const now = new Date();
+    // Direction flash
+    const dir = lastPrice == null ? 'neutral' : price > lastPrice ? 'up' : price < lastPrice ? 'down' : 'neutral';
+    const priceEl = $('priceMain');
+    priceEl.textContent = fmtPrice(price);
+    priceEl.className = 'ticker-price-main ' + dir;
+    $('tickerCard').classList.add('price-flash');
+    setTimeout(() => $('tickerCard').classList.remove('price-flash'), 600);
 
-    // Direction
-    let dir = 'neutral';
-    if (lastPrice != null) {
-      dir = price > lastPrice ? 'up' : price < lastPrice ? 'down' : 'neutral';
-    }
-
-    // Update price
-    el.textContent = fmt(price);
-    el.className = 'ticker-price-main ' + dir;
-    el.closest('.ticker-card').classList.add('price-flash');
-    setTimeout(() => el.closest('.ticker-card').classList.remove('price-flash'), 700);
-
-    // Session stats
-    if (sessionOpen == null) sessionOpen = price;
-    if (sessionHigh == null || price > sessionHigh) sessionHigh = price;
-    if (sessionLow == null || price < sessionLow) sessionLow = price;
-
-    // Change from open
-    const change = sessionOpen != null ? price - sessionOpen : null;
-    const changePct = sessionOpen != null ? ((price - sessionOpen) / sessionOpen) * 100 : null;
-
-    const changeEl = document.getElementById('changeVal');
-    const pctEl = document.getElementById('changePct');
+    // Change vs previous close
     if (change != null) {
       const sign = change >= 0 ? '+' : '';
-      changeEl.textContent = sign + fmt(change).replace('$', '');
-      pctEl.textContent = sign + changePct.toFixed(2) + '%';
       const cls = change > 0 ? 'up' : change < 0 ? 'down' : 'neutral';
-      changeEl.className = 'ticker-change-val ' + cls;
-      pctEl.className = 'ticker-change-val ' + cls;
+      $('changeVal').textContent = sign + fmtPrice(Math.abs(change)).replace('$','') ;
+      $('changeVal').className = 'ticker-change-val ' + cls;
+      $('changePct').textContent = (changePct >= 0 ? '+' : '') + Number(changePct).toFixed(2) + '%';
+      $('changePct').className = 'ticker-change-val ' + cls;
     }
 
-    document.getElementById('statHigh').textContent = fmt(sessionHigh);
-    document.getElementById('statLow').textContent = fmt(sessionLow);
-    document.getElementById('statOpen').textContent = fmt(sessionOpen);
-    document.getElementById('statPrev').textContent = prevClose != null ? fmt(prevClose) : '—';
-    document.getElementById('updatedTime').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    $('statHigh').textContent = high ? fmtPrice(high) : '—';
+    $('statLow').textContent  = low  ? fmtPrice(low)  : '—';
+    $('statBid').textContent  = bid  ? fmtPrice(bid)  : '—';
+    $('statAsk').textContent  = ask  ? fmtPrice(ask)  : '—';
+    $('updatedTime').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    // History
-    priceHistory.push({ t: now, p: price });
-    if (priceHistory.length > MAX_HISTORY) priceHistory.shift();
+    priceHistory.push({ t: new Date(), p: price });
+    if (priceHistory.length > 500) priceHistory.shift();
 
+    $('chartSubtitle').textContent = priceHistory.length + ' data point' + (priceHistory.length === 1 ? '' : 's') + ' this session';
     lastPrice = price;
-
-    document.getElementById('chartSubtitle').textContent = priceHistory.length + ' data points this session';
+    setStatus('live', 'live · metals.dev');
     renderChart();
   }
 
@@ -288,11 +242,11 @@
     if (chartView === 'live') data = priceHistory.slice(-30);
     else if (chartView === '50') data = priceHistory.slice(-50);
 
-    const labels = data.map(d => d.t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    const labels = data.map(d => d.t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     const values = data.map(d => d.p);
 
-    document.getElementById('chartNoData').style.display = 'none';
-    const canvas = document.getElementById('silverChart');
+    $('chartPlaceholder').style.display = 'none';
+    const canvas = $('silverChart');
     canvas.style.display = 'block';
 
     const ctx = canvas.getContext('2d');
@@ -316,7 +270,7 @@
           tension: 0.3,
           borderWidth: 1.5,
           pointRadius: 0,
-          pointHoverRadius: 3,
+          pointHoverRadius: 4,
         }]
       },
       options: {
@@ -332,106 +286,39 @@
             borderWidth: 1,
             titleColor: '#8a8880',
             bodyColor: '#f0ede6',
-            callbacks: { label: ctx => ' $' + ctx.parsed.y.toFixed(2) + ' / oz' }
+            callbacks: { label: c => ' $' + c.parsed.y.toFixed(2) + ' / oz' }
           }
         },
         scales: {
-          x: {
-            ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', maxTicksLimit: 6, maxRotation: 0 },
-            grid: { color: 'rgba(255,255,255,0.04)' },
-            border: { color: 'rgba(255,255,255,0.08)' }
-          },
-          y: {
-            ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', callback: v => '$' + v.toFixed(2) },
-            grid: { color: 'rgba(255,255,255,0.04)' },
-            border: { color: 'rgba(255,255,255,0.08)' }
-          }
+          x: { ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', maxTicksLimit: 6, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } },
+          y: { ticks: { font: { size: 10, family: 'DM Mono' }, color: '#8a8880', callback: v => '$' + v.toFixed(2) }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' } }
         }
       }
     });
   }
 
-  function setStatus(state, text) {
-    const dot = document.getElementById('liveDot');
-    const status = document.getElementById('liveStatus');
-    dot.className = 'live-dot ' + state;
-    status.textContent = text;
-  }
-
-  // --- WebSocket attempt (metals.live) ---
-  function tryWebSocket() {
+  async function fetchSilver() {
     try {
-      const ws = new WebSocket('wss://metals.live/ws');
-      ws.onopen = () => {
-        setStatus('live', 'live · websocket');
-        wsRetries = 0;
-        if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-      };
-      ws.onmessage = (e) => {
-        try {
-          const data = JSON.parse(e.data);
-          const price = data?.silver ?? data?.XAG ?? data?.price;
-          if (price) updateUI(Number(price), 'ws');
-        } catch (err) {}
-      };
-      ws.onerror = () => {};
-      ws.onclose = () => {
-        wsRetries++;
-        if (wsRetries < 3) setTimeout(tryWebSocket, 5000);
-        else startPolling();
-      };
-    } catch (e) {
-      startPolling();
-    }
-  }
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
 
-  // --- REST polling fallback ---
-  async function fetchPrice() {
-    const sources = [
-      async () => {
-        const r = await fetch('https://api.metals.live/v1/spot/silver', { cache: 'no-store' });
-        const d = await r.json();
-        return d?.price || (Array.isArray(d) && d[0]?.price) || d?.silver;
-      },
-      async () => {
-        const r = await fetch('https://api.metals.live/v1/spot', { cache: 'no-store' });
-        const d = await r.json();
-        if (Array.isArray(d)) {
-          const s = d.find(x => x.metal === 'silver' || x.symbol === 'XAG');
-          return s?.price;
-        }
-        return d?.silver;
+      // metals.dev returns { metal: "silver", price: ..., high: ..., low: ..., bid: ..., ask: ..., change: ..., change_percentage: ... }
+      if (json && json.price) {
+        updateUI(json);
+      } else {
+        throw new Error('unexpected response shape');
       }
-    ];
-
-    for (const fn of sources) {
-      try {
-        const price = await fn();
-        if (price && !isNaN(price)) {
-          updateUI(Number(price), 'poll');
-          return;
-        }
-      } catch (e) {}
-    }
-
-    // If all fail, show stale notice
-    if (priceHistory.length === 0) {
-      setStatus('connecting', 'price unavailable');
+    } catch (err) {
+      console.error('Silver fetch error:', err);
+      setStatus('error', 'retrying…');
+      // Keep last displayed price if any
     }
   }
 
-  function startPolling() {
-    setStatus('live', 'live · polling');
-    fetchPrice();
-    if (!pollInterval) pollInterval = setInterval(fetchPrice, 5000);
-  }
-
-  // Kick it off — try WS first, fall back to polling
-  tryWebSocket();
-  // Also start polling immediately as a guaranteed baseline
-  setTimeout(() => {
-    if (priceHistory.length === 0) startPolling();
-  }, 3000);
+  // Kick off immediately, then poll every 60s
+  fetchSilver();
+  setInterval(fetchSilver, POLL_MS);
 </script>
 </body>
 </html>
