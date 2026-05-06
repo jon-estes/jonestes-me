@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mommy Makeover Research · Jon Estes</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8D%91%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0e; --bg2: #181816; --bg3: #222220;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #f0ede6; --muted: #8a8880;
+      --accent: #d4789a; --accent2: #7ecba1; --accent3: #6eb3c9;
+      --pink: #e8a0b0; --gold: #c9a96e;
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+    .page { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    nav { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    nav a { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; transition: color 0.15s, border-color 0.15s; }
+    nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+    .hero { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.05s forwards; }
+    .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); margin-bottom: 0.6rem; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
+    .hero h1 em { font-style: italic; color: var(--pink); }
+    .hero p { font-size: 15px; color: var(--muted); font-weight: 300; max-width: 600px; line-height: 1.7; }
+
+    /* WHAT IS IT */
+    .explainer { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--pink); border-radius: var(--radius); padding: 1.5rem 1.75rem; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .explainer h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .explainer p { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.7; }
+    .proc-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.85rem; }
+    .proc-pill { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 999px; background: var(--bg3); border: 1px solid var(--border2); color: var(--accent3); letter-spacing: 0.04em; }
+
+    /* COST BANNER */
+    .cost-banner { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.13s forwards; }
+    .cost-mini { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+    .cost-mini-label { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
+    .cost-mini-val { font-size: 18px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+    .cost-mini-val.hi { color: var(--accent2); }
+
+    /* SECTION */
+    .section-wrap { opacity: 0; animation: fadeUp 0.6s ease 0.16s forwards; margin-bottom: 2.5rem; }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .section-wrap h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+
+    /* PROVIDER CARD */
+    .provider-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.15s; }
+    .provider-card:hover { border-color: var(--border2); }
+    .provider-card.top-pick { border-top: 2px solid var(--gold); }
+    .provider-card.top-pick .provider-header { border-top: none; }
+
+    .provider-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; cursor: pointer; }
+    .provider-header:hover .provider-name { color: var(--pink); }
+
+    .provider-left { flex: 1; min-width: 200px; }
+    .provider-badge-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 999px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .badge-top { background: rgba(201,169,110,0.15); color: var(--gold); border: 1px solid rgba(201,169,110,0.3); }
+    .badge-sac { background: rgba(110,179,201,0.12); color: var(--accent3); border: 1px solid rgba(110,179,201,0.25); }
+    .badge-bay { background: rgba(126,203,161,0.12); color: var(--accent2); border: 1px solid rgba(126,203,161,0.25); }
+    .badge-far { background: rgba(232,160,176,0.12); color: var(--pink); border: 1px solid rgba(232,160,176,0.25); }
+    .badge-board { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+    .provider-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 2px; transition: color 0.15s; }
+    .provider-sub { font-size: 12px; color: var(--muted); font-weight: 300; }
+
+    .provider-right { text-align: right; flex-shrink: 0; }
+    .provider-cost { font-size: 18px; font-weight: 500; color: var(--accent2); font-family: 'DM Mono', monospace; }
+    .provider-location { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 2px; }
+
+    .provider-body { padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--border); }
+
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 1rem; margin-bottom: 1rem; }
+    .pros-box, .cons-box { background: var(--bg3); border-radius: 10px; padding: 0.85rem 1rem; }
+    .pros-box-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
+    .cons-box-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .pros-box ul, .cons-box ul { list-style: none; }
+    .pros-box ul li, .cons-box ul li { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.55; padding: 2px 0; }
+    .pros-box ul li::before { content: '+ '; color: var(--accent2); font-weight: 500; }
+    .cons-box ul li::before { content: '− '; color: var(--accent); font-weight: 500; }
+
+    .provider-note { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.6; margin-bottom: 0.85rem; font-style: italic; border-left: 2px solid var(--border2); padding-left: 10px; }
+
+    .visit-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--accent3); text-decoration: none; border: 1px solid rgba(110,179,201,0.3); border-radius: 999px; padding: 6px 16px; transition: all 0.15s; letter-spacing: 0.04em; }
+    .visit-btn:hover { background: rgba(110,179,201,0.1); border-color: var(--accent3); }
+
+    /* QUICK TABLE */
+    .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2.5rem; }
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .comp-table thead tr { background: var(--bg3); }
+    .comp-table th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .comp-table td { padding: 10px 14px; color: var(--text); border-bottom: 1px solid var(--border); font-size: 12px; }
+    .comp-table td:first-child { font-weight: 500; }
+    .comp-table tbody tr:last-child td { border-bottom: none; }
+    .comp-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    .comp-table a { color: var(--accent3); text-decoration: none; font-size: 11px; }
+    .comp-table a:hover { text-decoration: underline; }
+    .tag-sac { color: var(--accent3); font-size: 10px; font-weight: 500; }
+    .tag-bay { color: var(--accent2); font-size: 10px; font-weight: 500; }
+    .tag-far { color: var(--pink); font-size: 10px; font-weight: 500; }
+
+    /* TIPS */
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 1rem; }
+    .tip-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+    .tip-icon { font-size: 20px; margin-bottom: 8px; }
+    .tip-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+    .tip-text { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.55; }
+
+    /* DISCLAIMER */
+    .disclaimer { background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--gold); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+    .disclaimer p { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.65; }
+    .disclaimer strong { color: var(--text); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) {
+      .page { padding: 2rem 1rem 4rem; }
+      .hero h1 { font-size: 30px; }
+      .pros-cons { grid-template-columns: 1fr; }
+      .provider-header { flex-direction: column; }
+      .provider-right { text-align: left; }
+      .cost-banner { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+
+  <div class="hero">
+    <div class="hero-label">For Ashley 💕</div>
+    <h1>Mommy Makeover <em>Research</em></h1>
+    <p>20+ board-certified plastic surgery providers in Sacramento and within a 2-hour radius — all with real pricing, honest pros &amp; cons, and working links. Researched May 2026.</p>
+  </div>
+
+  <div class="explainer">
+    <h3>What is a Mommy Makeover?</h3>
+    <p>A mommy makeover is a personalized combination of cosmetic surgery procedures designed to restore a woman's body after pregnancy, childbirth, and breastfeeding. There is no single set procedure — it's customized to each patient's goals. Most commonly includes a tummy tuck (abdominoplasty), breast surgery (lift, augmentation, or both), and liposuction. Additional procedures can include a Brazilian butt lift, labiaplasty, arm lift, or thigh lift. All procedures are typically performed in a single surgery session under general anesthesia, reducing overall recovery time and cost compared to doing each separately.</p>
+    <div class="proc-pills">
+      <span class="proc-pill">Tummy Tuck</span>
+      <span class="proc-pill">Breast Lift</span>
+      <span class="proc-pill">Breast Augmentation</span>
+      <span class="proc-pill">Liposuction</span>
+      <span class="proc-pill">Brazilian Butt Lift</span>
+      <span class="proc-pill">Labiaplasty</span>
+      <span class="proc-pill">Arm Lift</span>
+      <span class="proc-pill">Thigh Lift</span>
+    </div>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-mini"><div class="cost-mini-label">Sacramento avg.</div><div class="cost-mini-val">$15–25k</div></div>
+    <div class="cost-mini"><div class="cost-mini-label">Bay Area avg.</div><div class="cost-mini-val">$24–41k</div></div>
+    <div class="cost-mini"><div class="cost-mini-label">National avg.</div><div class="cost-mini-val">~$25k</div></div>
+    <div class="cost-mini"><div class="cost-mini-label">Recovery time</div><div class="cost-mini-val">2–6 wks</div></div>
+    <div class="cost-mini"><div class="cost-mini-label">Surgery length</div><div class="cost-mini-val">3–6 hrs</div></div>
+    <div class="cost-mini"><div class="cost-mini-label">Consult fee</div><div class="cost-mini-val hi">$0–$150</div></div>
+  </div>
+
+  <!-- SACRAMENTO AREA -->
+  <div class="section-wrap">
+    <div class="section-label">Sacramento &amp; surrounding area</div>
+    <h2>Local Providers 📍</h2>
+
+    <!-- 1 -->
+    <div class="provider-card top-pick">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-top">⭐ Top Pick</span>
+            <span class="badge badge-sac">Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">SVIA Plastic Surgery — Drs. Tom &amp; Jerome Liu</div>
+          <div class="provider-sub">Silicon Valley Institute for Aesthetics · Sacramento</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$18–30k</div>
+          <div class="provider-location">Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Father-son duo with among the highest patient review scores in Northern California. Offer their proprietary RNR® aftercare protocol that reduces downtime, eliminates surgical bras and cumbersome dressings, and minimizes need for narcotic pain meds — patients consistently praise faster recovery. One of the most frequently mentioned practices on RealSelf for Sacramento.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Exceptional patient reviews on RealSelf &amp; Google</li>
+              <li>Proprietary RNR® aftercare = faster recovery</li>
+              <li>Two experienced board-certified surgeons</li>
+              <li>Highly customized treatment plans</li>
+              <li>Extensive before/after gallery</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Pricing on the higher end for Sacramento</li>
+              <li>Waitlist for popular surgeons</li>
+              <li>Consultation required for exact quote</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.liuplasticsurgerysacramento.com/procedures/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="provider-card top-pick">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-top">⭐ Top Pick</span>
+            <span class="badge badge-sac">Sacramento / Folsom</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">The Natural Result — Drs. Kaufman, Davis &amp; Daly</div>
+          <div class="provider-sub">Center for Aesthetic Artistry · Sacramento &amp; Folsom</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$20–35k</div>
+          <div class="provider-location">Sacramento &amp; Folsom, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">One of the most established multi-surgeon practices in Sacramento — serving patients since 2006. Dr. Kaufman is frequently cited in patient reviews as transformative. Practice handles high volumes of mommy makeovers annually and has thousands of before/after photos. Real patient quote: "Dr. Kaufman did my tummy tuck and breast lift and augmentation and when I say it has been life changing, it's an understatement."</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>3 experienced board-certified surgeons on staff</li>
+              <li>Established since 2006 — deep local roots</li>
+              <li>Thousands of patient before/after photos</li>
+              <li>Serves Sacramento &amp; Folsom — two locations</li>
+              <li>Very high review scores across platforms</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Pricing at upper end of Sacramento range</li>
+              <li>Busy practice — scheduling can take time</li>
+              <li>Exact surgeon assignment varies</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://thenaturalresult.com/breast-procedures/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Sacramento / Granite Bay</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Scott Green — The Plastic Surgery Center</div>
+          <div class="provider-sub">Board Certified · Sacramento &amp; Granite Bay</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$18–30k</div>
+          <div class="provider-location">Sacramento &amp; Granite Bay, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Certified by the American Board of Plastic Surgery since 2002. Known for an artistic approach — described by patients as a "master" and a "sculptor." Has an on-site Quad A-accredited surgical center and in-house medical spa. Reviewed as one of Sacramento's most skilled tummy tuck surgeons. Has performed humanitarian surgical missions in Baja, Mexico and Haiti. Initial consultation is $100, credited toward surgery cost.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Exceptional patient reviews — "master" surgeon</li>
+              <li>Board certified since 2002 — deep experience</li>
+              <li>Own accredited on-site surgical center</li>
+              <li>Strong tummy tuck &amp; mommy makeover reputation</li>
+              <li>In-house medical spa for complementary treatments</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>$100 consultation fee (credited to surgery)</li>
+              <li>High demand — can have waitlist</li>
+              <li>Pricing not listed publicly</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.drscottgreen.com/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Folsom / Stockton</span>
+            <span class="badge badge-board">Double Board Certified</span>
+          </div>
+          <div class="provider-name">Folsom Plastic Surgery — Dr. Shahriar Mabourakh</div>
+          <div class="provider-sub">Double Board Certified · Folsom &amp; Stockton</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$15–28k</div>
+          <div class="provider-location">Folsom &amp; Stockton, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Double board-certified by both the American Board of Plastic Surgery and the American Board of Surgery — a rare credential. Patients rave about his calm, educational consultation style. One RealSelf review: "I had been planning a mommy makeover for over 3 years, and after going to 3 yearly consultations with him, I finally decided to move forward — and I couldn't be happier." Two convenient locations serving Sacramento/Folsom and Stockton.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Rare double board certification — high credential bar</li>
+              <li>Folsom location convenient for east Sacramento</li>
+              <li>Patient-focused, educational approach</li>
+              <li>Stockton office serves Central Valley</li>
+              <li>Strong long-term patient relationships</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Exact pricing requires consultation</li>
+              <li>Folsom location may require travel for some</li>
+              <li>Busy schedule — book in advance</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.psaf.com/procedures/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Granite Bay / Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Wayne Yamahata</div>
+          <div class="provider-sub">Board Certified · Sacramento &amp; Granite Bay</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$15–28k</div>
+          <div class="provider-location">Granite Bay, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Decades of board-certified experience in Sacramento's Granite Bay area. His 2-story practice has an on-site Quad A-accredited surgical center and in-house medical spa (The Skin Care Center). Serves patients from Folsom, Roseville, El Dorado Hills, and surrounding foothill communities. Known for a personal, human-centered approach and natural-looking results.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Decades of experience in Sacramento area</li>
+              <li>On-site accredited surgical center</li>
+              <li>In-house medical spa for full care</li>
+              <li>Convenient Granite Bay location for east residents</li>
+              <li>Emphasis on natural-looking results</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Pricing only available via consultation</li>
+              <li>Limited website pricing transparency</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.wayneyamahatamd.com/procedures/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Granite Bay / Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Christa Clark — Granite Bay Cosmetic Surgery</div>
+          <div class="provider-sub">Board Certified · Granite Bay</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$16–28k</div>
+          <div class="provider-location">Granite Bay, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Dr. Clark is especially passionate about mommy makeovers and helping women feel confident post-pregnancy. The practice also has Dr. Haley Bray (facial specialist, fellowship-trained in Roseville and Beverly Hills). Detailed quotes given after personal consultation — no surprises policy. Financing available. Serves Roseville, Folsom, El Dorado Hills.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Mommy makeover is Dr. Clark's primary passion</li>
+              <li>No-surprise pricing policy</li>
+              <li>Financing available</li>
+              <li>Two surgeons — facial &amp; body specialist on staff</li>
+              <li>Serves broad Sacramento foothill area</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Smaller practice — less volume than larger centers</li>
+              <li>Granite Bay only — one location</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.granitebaycosmetic.com/body/mommy-makeover-granite-bay/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Chrysalis Cosmetics — Dr. Charles Perry</div>
+          <div class="provider-sub">Board Certified · Sacramento &amp; Stockton</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$15–25k</div>
+          <div class="provider-location">Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">One of the most comprehensive mommy makeover practices in the region — Dr. Perry offers surgical procedures plus skin care, fillers, and laser treatments as part of a holistic "age management plan." Published pricing range of $15,000–$25,000 on their website — one of the more transparent practices in Sacramento. Nicotine test required pre-surgery. Financing available through reputable lenders.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Published pricing range ($15–25k) — transparent</li>
+              <li>Holistic approach: surgery + skin care + fillers</li>
+              <li>Financing available</li>
+              <li>Serves Sacramento and Stockton</li>
+              <li>Detailed treatment planning process</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Nicotine test required — must quit 4 weeks pre-surgery</li>
+              <li>Less name recognition than top competitors</li>
+              <li>Smaller online review presence</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.sacramentoplastics.com/surgical-procedures/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Granite Bay / Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Rudy Coscia — The Plastic Surgery Center</div>
+          <div class="provider-sub">Board Certified · Granite Bay &amp; Sacramento</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$16–30k</div>
+          <div class="provider-location">Granite Bay &amp; Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Board certified by the American Board of Plastic Surgery, member of ASPS and California Society of Plastic Surgeons. Earned his MD from University of Tennessee. Strong patient reviews on Yelp and RealSelf — noted for making patients feel comfortable and confident. $100 consult fee credited to surgery. Financing available via M-Lend and CareCredit. Two office locations in Sacramento region.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Strong Yelp reviews — top 10 Sacramento mommy makeover</li>
+              <li>CareCredit &amp; M-Lend financing available</li>
+              <li>Two Sacramento-area locations</li>
+              <li>ASPS &amp; California Society member</li>
+              <li>Consult fee credited toward surgery</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>$100 consultation fee</li>
+              <li>No public pricing — consult required</li>
+              <li>Also has Idaho satellite office — scheduling varies</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.drrudycoscia.com/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Fair Oaks / Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">J. Sweat Plastic Surgery — Dr. Jeffrey Sweat</div>
+          <div class="provider-sub">Board Certified · Sacramento (Fair Oaks)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$15–27k</div>
+          <div class="provider-location">Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Unique in offering a holistic approach that includes hormone therapy and lifestyle consultations alongside surgical services. Described by one patient as "an artist" after a multi-procedure surgery including breast lift, lower body lift, and BBL. Strong patient testimonials on Google and RealSelf. Also provides Elk Grove patients convenient access. Staff described as making patients "feel like family."</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Holistic approach — hormone therapy &amp; wellness included</li>
+              <li>Stellar patient satisfaction reviews</li>
+              <li>Serves Fair Oaks, Elk Grove &amp; broader Sacramento</li>
+              <li>Known for complex multi-procedure surgeries</li>
+              <li>"Family feel" — warm patient experience</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Smaller practice footprint</li>
+              <li>No published pricing</li>
+              <li>Less Bay Area name recognition</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.plasticsurgerycenterofsacramento.com/procedures/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">El Dorado Hills</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Foothills Plastic Surgery — Dr. Amie Miller</div>
+          <div class="provider-sub">Board Certified · El Dorado Hills / Placerville</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$14–24k</div>
+          <div class="provider-location">El Dorado Hills, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Dr. Miller offers a compassionate, down-to-earth approach with technical precision. Serves patients in El Dorado Hills, Roseville, and surrounding foothills. Uses the El Dorado Surgery Center in Placerville — noted by patients for its exceptional and compassionate team. One patient: "Dr. Miller is a highly skilled and outstanding plastic surgeon... very little bruising and swelling... sutures were perfect and done with precision."</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Compassionate, patient-focused practice</li>
+              <li>Excellent for east Sacramento / foothills patients</li>
+              <li>Boutique feel — personalized attention</li>
+              <li>Accredited El Dorado Surgery Center</li>
+              <li>Known for minimal scarring &amp; precise technique</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Smaller practice — limited volume</li>
+              <li>Placerville surgery center requires some travel</li>
+              <li>Fewer online reviews than larger Sacramento practices</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.foothillsplastics.com/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Ideal Plastic Surgery — Sacramento</div>
+          <div class="provider-sub">Board Certified · Midtown Sacramento</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$14–22k</div>
+          <div class="provider-location">Sacramento, CA (77 Cadillac Dr.)</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Centrally located in Sacramento at 77 Cadillac Dr., Suite 170. Mon–Sat 9am–5pm hours (Saturday availability is unusual and convenient for working patients). Board-certified staff offering full suite of mommy makeover procedures. Yelp-listed in top Sacramento mommy makeover providers. Good option for patients who need weekend scheduling flexibility.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Saturday appointments available — rare convenience</li>
+              <li>Central Sacramento location</li>
+              <li>Full mommy makeover procedure menu</li>
+              <li>Competitive pricing for Sacramento</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Less prominent online review presence</li>
+              <li>Fewer patient testimonials than larger practices</li>
+              <li>Website has less detail than top competitors</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.idealplasticsurgery.com/dt_procedures/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Granite Bay / Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">The Plastic Surgery Center — Granite Bay &amp; Sacramento</div>
+          <div class="provider-sub">Multi-surgeon practice · Granite Bay &amp; Sacramento</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$16–30k</div>
+          <div class="provider-location">Granite Bay &amp; Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Established multi-surgeon practice with offices in both Sacramento and Granite Bay. Focused exclusively on body and breast procedures — this is their specialty. Extensive before/after gallery. Phone: (916) 848-5780 (Sacramento) or (916) 773-5559 (Granite Bay). Offers consultations to help patients determine which procedures will best achieve their goals.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Two convenient locations</li>
+              <li>Body &amp; breast surgery specialty focus</li>
+              <li>Large before/after gallery</li>
+              <li>Phone consultations available</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Website branding overlaps with other practices</li>
+              <li>No published pricing</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.sacplasticsurgery.com/plastic-surgery-procedures-sacramento/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Jesus Garcia — Sacramento</div>
+          <div class="provider-sub">Board Certified · Sacramento Area</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$14–24k</div>
+          <div class="provider-location">Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Frequently mentioned on RealSelf by patients doing multi-surgeon comparison searches. One 42-year-old patient with 5 kids chose Dr. Garcia after narrowing to top 3 surgeons in Sacramento — praised as affordable and skilled. Good reputation for cases involving significant weight loss post-pregnancy. Consultation-based pricing.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Noted for accessibility and affordability</li>
+              <li>Good for complex weight-loss + post-pregnancy cases</li>
+              <li>Active on RealSelf — can ask questions before committing</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Less prominent web presence than competitors</li>
+              <li>Fewer searchable patient reviews</li>
+              <li>Pricing requires consultation</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.realself.com/find/California/Sacramento/Mommy-Makeover" target="_blank" rel="noopener">View on RealSelf →</a>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-sac">Sacramento</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Zimmerman — Sacramento</div>
+          <div class="provider-sub">Board Certified · Sacramento Area</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$15–26k</div>
+          <div class="provider-location">Sacramento, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Multiple RealSelf reviews praising attentiveness during appointments and gentleness during post-op care. Patient: "I recently had a Mommy makeover performed by Dr. Zimmerman. He was very attentive at all of my appointments and took time to answer my many questions. My results are absolutely stunning." Strong post-operative care reputation. The Natural Result practice offers mommy makeovers starting at $25,000 (per RealSelf listing).</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Praised for attentiveness and patient care</li>
+              <li>Gentle post-op approach</li>
+              <li>"Stunning" results per multiple patients</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Less independently prominent web presence</li>
+              <li>Pricing on higher end (~$25k starting)</li>
+              <li>Associated practice details require direct inquiry</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://thenaturalresult.com/breast-procedures/mommy-makeover/" target="_blank" rel="noopener">Visit The Natural Result →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAY AREA / 2 HOUR RADIUS -->
+  <div class="section-wrap" style="animation-delay:0.22s">
+    <div class="section-label">Within 2-hour radius · Bay Area &amp; Northern California</div>
+    <h2>Extended Range Providers 🚗</h2>
+
+    <!-- 15 -->
+    <div class="provider-card top-pick">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-top">⭐ Top Pick</span>
+            <span class="badge badge-bay">San Francisco</span>
+            <span class="badge badge-board">Board Certified · Mom of Twins</span>
+          </div>
+          <div class="provider-name">Dr. Karen Horton — San Francisco</div>
+          <div class="provider-sub">Board Certified · Pacific Heights, San Francisco (1.5 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$20–40k</div>
+          <div class="provider-location">San Francisco, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Dr. Horton is a board-certified plastic surgeon who had a mommy makeover herself — and shares all the details on her blog. She's a mom of twins, which gives her unique empathy for her patients. Specializes in natural, beautiful results through personalized treatment plans. One patient after 3 kids: "I finally feel sexy, young and like the vital woman I am on the inside. Having my Mommy Makeover was the best decision I could have made for myself, my marriage and my family." Also offers non-surgical complementary procedures (Botox, fillers, laser, microneedling).</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Had a mommy makeover herself — unmatched empathy</li>
+              <li>Mom of twins — deeply understands the patient journey</li>
+              <li>Exceptional patient reviews across the board</li>
+              <li>Adds non-surgical options to complement surgery</li>
+              <li>Natural-looking results philosophy</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>San Francisco pricing premium ($20–40k)</li>
+              <li>~1.5 hours from Sacramento</li>
+              <li>Bay Area cost of living adds to overall expenses</li>
+              <li>Waitlist for popular dates</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.drkarenhorton.com/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 16 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-bay">San Francisco</span>
+            <span class="badge badge-board">Double Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Shahin Javaheri — San Francisco Plastic Surgeon</div>
+          <div class="provider-sub">Double Board Certified · San Francisco (1.5 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$10–30k</div>
+          <div class="provider-location">San Francisco, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">One of the most accessible San Francisco mommy makeover specialists — pricing starts at $10,000, making him among the more affordable Bay Area options. Double board-certified. Specializes in personalized combinations of breast surgery and abdominoplasty. Serves Berkeley and the broader Bay Area. Consultations help determine exact estimate for each patient's specific plan.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>More affordable Bay Area pricing (from $10k)</li>
+              <li>Double board certified</li>
+              <li>Convenient for Berkeley/East Bay access too</li>
+              <li>Personalized consultation-based approach</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>1.5 hours from Sacramento</li>
+              <li>San Francisco parking/logistics overhead</li>
+              <li>Lower end pricing may reflect less experienced or simpler procedure scope</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://sfplasticsurgeon.com/mommy-makeover-san-francisco/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 17 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-bay">San Francisco</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. David Sieber — Sieber Plastic Surgery</div>
+          <div class="provider-sub">Board Certified + Fellowship Training · San Francisco (1.5 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$20–38k</div>
+          <div class="provider-location">San Francisco, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Fellowship-trained in cosmetic surgery with a fully accredited surgical suite adjacent to his office — meaning you recover in a familiar environment. Specializes in mommy makeover with a focus on doing all procedures in a single outpatient day for maximum convenience. Known for a thorough pre-surgical examination process. Non-surgical procedures also available (Botox, fillers, laser).</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Fellowship-trained — elite surgical education</li>
+              <li>Accredited surgical suite adjacent to office</li>
+              <li>All procedures in single outpatient day</li>
+              <li>Thorough pre-surgical examination process</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>1.5 hours from Sacramento</li>
+              <li>Bay Area premium pricing</li>
+              <li>San Francisco travel logistics</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.sieberplasticsurgery.com/procedures/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 18 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-bay">San Francisco</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Kenneth Bermudez — San Francisco</div>
+          <div class="provider-sub">Board Certified, FACS · Pacific Heights, San Francisco (1.5 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$20–40k</div>
+          <div class="provider-location">525 Spruce St., San Francisco, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">FACS designation (Fellow of American College of Surgeons) — a step above standard board certification. Specializes in tummy tucks combined with breast surgery and is known for natural-looking results. Strong reputation for surgical precision and patient safety emphasis. Also serves San Jose and Santa Rosa. Offers thorough pre-surgery discussion of all possible complications and risks.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>FACS designation — elite credential</li>
+              <li>Strong tummy tuck + breast surgery reputation</li>
+              <li>Transparent about risks and complications</li>
+              <li>Serves San Jose &amp; Santa Rosa too</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>1.5+ hours from Sacramento</li>
+              <li>Top-end Bay Area pricing</li>
+              <li>Silicone implant patients need imaging every 3 years post-op</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.plasticsurgery-sf.com/mommy-makeover.html" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 19 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-bay">San Francisco / Marin</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Dr. Joel Liu — Bay Area Aesthetic Surgery</div>
+          <div class="provider-sub">Board Certified · San Francisco / San Jose (1.5 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$18–35k</div>
+          <div class="provider-location">San Francisco, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">International reputation for fresh, natural-looking results. Also uses the RNR® aftercare system (same as SVIA Sacramento) — accelerates healing, reduces opioid dependence, eliminates drains and surgical dressings. Strong San Francisco / San Jose patient base. Expertise in advanced breast and body techniques. Board certified with extensive surgical artistry reputation.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>RNR® aftercare — faster, more comfortable recovery</li>
+              <li>International reputation for natural results</li>
+              <li>No drains or surgical bras post-op</li>
+              <li>Serves San Jose too — southward Bay reach</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>1.5 hours from Sacramento</li>
+              <li>Higher Bay Area pricing tier</li>
+              <li>Insurance does not cover aesthetic procedures</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.bayareaaestheticsurgery.com/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 20 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-bay">Walnut Creek / Marin</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">NorCal Plastic Surgery — Dr. Timothy Rankin</div>
+          <div class="provider-sub">Board Certified · Walnut Creek &amp; Marin County (1.5–2 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$24–41k</div>
+          <div class="provider-location">Walnut Creek &amp; Marin, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Published pricing range of $24,000–$41,000 on their website — one of the most transparent Bay Area practices. Trained in "one of the world's most advanced plastic surgery programs." Walnut Creek office is the most accessible to Sacramento-area patients (I-680 corridor). Two office locations — East Bay (925) 966-3920 and North Bay (415) 727-9666. Recommends 12-week pre-event buffer for photo-ready results.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Published pricing ($24–41k) — fully transparent</li>
+              <li>Walnut Creek office closest Bay Area option to Sacramento</li>
+              <li>Elite training program credentials</li>
+              <li>Two offices — East Bay &amp; North Bay flexibility</li>
+              <li>Detailed recovery guidance</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Most expensive on this list ($24–41k)</li>
+              <li>1.5–2 hours from Sacramento</li>
+              <li>8-week cardio restriction post-op</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.norcalsurgery.com/body/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 21 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-far">Santa Clara / Marin</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Aesthetx — Drs. Bao Tran &amp; Shirley Liu</div>
+          <div class="provider-sub">Board Certified · Santa Clara &amp; Marin County (~2 hrs)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$25–35k</div>
+          <div class="provider-location">Santa Clara &amp; Marin, CA</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Two-surgeon practice with complementary specialties — Dr. Tran is a leader in aesthetic surgery with artistic precision; Dr. Liu has an arts background and specializes in body contouring and reconstruction. Published average mommy makeover cost: $25,000. Very detailed pricing breakdown on website including per-procedure estimates. Gummy bear implants, mesh reinforcement, and high-def liposuction all available as add-ons.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Most detailed online pricing breakdown available</li>
+              <li>Two specialized surgeons — broader skill coverage</li>
+              <li>Arts background approach — unique aesthetic sensibility</li>
+              <li>Advanced options: gummy bear implants, HD lipo</li>
+              <li>Strong financing options</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>~2 hours from Sacramento</li>
+              <li>Silicon Valley pricing tier</li>
+              <li>Busy practice — scheduling lead time required</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.aesthetx.com/blog/mommy-makeover-cost/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+
+    <!-- 22 -->
+    <div class="provider-card">
+      <div class="provider-header">
+        <div class="provider-left">
+          <div class="provider-badge-row">
+            <span class="badge badge-far">Stockton / Modesto</span>
+            <span class="badge badge-board">Board Certified</span>
+          </div>
+          <div class="provider-name">Folsom Plastic Surgery — Stockton Office</div>
+          <div class="provider-sub">Dr. Mabourakh · Stockton, CA (45 min south)</div>
+        </div>
+        <div class="provider-right">
+          <div class="provider-cost">$14–25k</div>
+          <div class="provider-location">Stockton, CA · (209) 464-5656</div>
+        </div>
+      </div>
+      <div class="provider-body">
+        <p class="provider-note">Same double board-certified surgeon as the Folsom office (#4 above), but the Stockton location serves patients south of Sacramento in the Central Valley. Generally among the most affordable options in the region due to lower Central Valley overhead. Good choice if you live south of Sacramento or want the same surgeon at a potentially lower total cost. Stockton is only ~45 minutes from Sacramento.</p>
+        <div class="pros-cons">
+          <div class="pros-box">
+            <div class="pros-box-label">Pros</div>
+            <ul>
+              <li>Same excellent double board-certified surgeon</li>
+              <li>Central Valley pricing (more affordable)</li>
+              <li>Only 45 min from Sacramento</li>
+              <li>Good for south Sacramento / Stockton area patients</li>
+            </ul>
+          </div>
+          <div class="cons-box">
+            <div class="cons-box-label">Cons</div>
+            <ul>
+              <li>Stockton may require travel for post-op visits</li>
+              <li>Less amenity-rich area vs. Sacramento/Bay Area</li>
+            </ul>
+          </div>
+        </div>
+        <a class="visit-btn" href="https://www.psaf.com/procedures/mommy-makeover/" target="_blank" rel="noopener">Visit website →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK COMPARE TABLE -->
+  <div class="section-wrap" style="animation-delay:0.26s">
+    <div class="section-label">All 22 providers — quick compare</div>
+    <h2>Side-by-side <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--pink)">at a glance</em></h2>
+    <div class="table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Provider</th>
+            <th>Location</th>
+            <th>Distance</th>
+            <th>Cert.</th>
+            <th>Est. Cost</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>SVIA / Drs. Liu (Tom &amp; Jerome)</td><td>Sacramento</td><td class="tag-sac">Local</td><td>✓✓</td><td>$18–30k</td><td><a href="https://www.liuplasticsurgerysacramento.com/procedures/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>2</td><td>The Natural Result (Kaufman, Davis, Daly)</td><td>Sac &amp; Folsom</td><td class="tag-sac">Local</td><td>✓✓✓</td><td>$20–35k</td><td><a href="https://thenaturalresult.com/breast-procedures/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>3</td><td>Dr. Scott Green</td><td>Sacramento / Granite Bay</td><td class="tag-sac">Local</td><td>✓</td><td>$18–30k</td><td><a href="https://www.drscottgreen.com/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>4</td><td>Dr. Mabourakh — Folsom Plastic Surgery</td><td>Folsom &amp; Stockton</td><td class="tag-sac">Local</td><td>✓✓</td><td>$15–28k</td><td><a href="https://www.psaf.com/procedures/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>5</td><td>Dr. Wayne Yamahata</td><td>Granite Bay</td><td class="tag-sac">Local</td><td>✓</td><td>$15–28k</td><td><a href="https://www.wayneyamahatamd.com/procedures/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>6</td><td>Dr. Christa Clark — Granite Bay Cosmetic</td><td>Granite Bay</td><td class="tag-sac">Local</td><td>✓</td><td>$16–28k</td><td><a href="https://www.granitebaycosmetic.com/body/mommy-makeover-granite-bay/" target="_blank">Visit →</a></td></tr>
+          <tr><td>7</td><td>Chrysalis Cosmetics — Dr. Perry</td><td>Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$15–25k</td><td><a href="https://www.sacramentoplastics.com/surgical-procedures/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>8</td><td>Dr. Rudy Coscia</td><td>Granite Bay &amp; Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$16–30k</td><td><a href="https://www.drrudycoscia.com/" target="_blank">Visit →</a></td></tr>
+          <tr><td>9</td><td>J. Sweat Plastic Surgery</td><td>Sacramento (Fair Oaks)</td><td class="tag-sac">Local</td><td>✓</td><td>$15–27k</td><td><a href="https://www.plasticsurgerycenterofsacramento.com/procedures/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>10</td><td>Foothills Plastic Surgery — Dr. Amie Miller</td><td>El Dorado Hills</td><td class="tag-sac">Local</td><td>✓</td><td>$14–24k</td><td><a href="https://www.foothillsplastics.com/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>11</td><td>Ideal Plastic Surgery</td><td>Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$14–22k</td><td><a href="https://www.idealplasticsurgery.com/dt_procedures/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>12</td><td>The Plastic Surgery Center (Granite Bay)</td><td>Granite Bay &amp; Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$16–30k</td><td><a href="https://www.sacplasticsurgery.com/plastic-surgery-procedures-sacramento/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>13</td><td>Dr. Jesus Garcia</td><td>Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$14–24k</td><td><a href="https://www.realself.com/find/California/Sacramento/Mommy-Makeover" target="_blank">RealSelf →</a></td></tr>
+          <tr><td>14</td><td>Dr. Zimmerman</td><td>Sacramento</td><td class="tag-sac">Local</td><td>✓</td><td>$15–26k</td><td><a href="https://thenaturalresult.com/breast-procedures/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>15</td><td>Dr. Karen Horton</td><td>San Francisco</td><td class="tag-bay">~1.5 hrs</td><td>✓</td><td>$20–40k</td><td><a href="https://www.drkarenhorton.com/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>16</td><td>Dr. Shahin Javaheri</td><td>San Francisco</td><td class="tag-bay">~1.5 hrs</td><td>✓✓</td><td>$10–30k</td><td><a href="https://sfplasticsurgeon.com/mommy-makeover-san-francisco/" target="_blank">Visit →</a></td></tr>
+          <tr><td>17</td><td>Dr. David Sieber</td><td>San Francisco</td><td class="tag-bay">~1.5 hrs</td><td>✓</td><td>$20–38k</td><td><a href="https://www.sieberplasticsurgery.com/procedures/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>18</td><td>Dr. Kenneth Bermudez</td><td>San Francisco</td><td class="tag-bay">~1.5 hrs</td><td>✓ FACS</td><td>$20–40k</td><td><a href="https://www.plasticsurgery-sf.com/mommy-makeover.html" target="_blank">Visit →</a></td></tr>
+          <tr><td>19</td><td>Dr. Joel Liu — Bay Area Aesthetic Surgery</td><td>San Francisco</td><td class="tag-bay">~1.5 hrs</td><td>✓</td><td>$18–35k</td><td><a href="https://www.bayareaaestheticsurgery.com/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>20</td><td>NorCal Plastic Surgery — Dr. Rankin</td><td>Walnut Creek &amp; Marin</td><td class="tag-bay">~1.5–2 hrs</td><td>✓</td><td>$24–41k</td><td><a href="https://www.norcalsurgery.com/body/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+          <tr><td>21</td><td>Aesthetx — Drs. Tran &amp; Liu</td><td>Santa Clara &amp; Marin</td><td class="tag-far">~2 hrs</td><td>✓✓</td><td>$25–35k</td><td><a href="https://www.aesthetx.com/blog/mommy-makeover-cost/" target="_blank">Visit →</a></td></tr>
+          <tr><td>22</td><td>Dr. Mabourakh — Stockton Office</td><td>Stockton</td><td class="tag-sac">~45 min</td><td>✓✓</td><td>$14–25k</td><td><a href="https://www.psaf.com/procedures/mommy-makeover/" target="_blank">Visit →</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SMART TIPS -->
+  <div class="section-wrap" style="animation-delay:0.3s">
+    <div class="section-label">Smart planning</div>
+    <h2>Tips for Ashley 💕</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🏥</div>
+        <div class="tip-title">Always go board certified</div>
+        <div class="tip-text">Every surgeon on this list is board certified by the American Board of Plastic Surgery. Never settle for a "cosmetic surgeon" without this credential — it's the most important safety factor.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📋</div>
+        <div class="tip-title">Book 3 consultations minimum</div>
+        <div class="tip-text">Most consults are free or $100 (credited to surgery). Seeing 3 surgeons gives you a baseline for pricing, and helps you find the personality fit that matters during recovery.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">⚖️</div>
+        <div class="tip-title">Be at stable weight first</div>
+        <div class="tip-text">All surgeons recommend waiting until you're at or near your goal weight and finished having children. Pregnancy or major weight change after surgery can undo results.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💳</div>
+        <div class="tip-title">Financing is normal &amp; available</div>
+        <div class="tip-text">Nearly every practice on this list offers CareCredit, M-Lend Financial, or in-house financing. No shame in financing — most patients do. CareCredit often has 0% interest promotional periods.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📸</div>
+        <div class="tip-title">Study before/after galleries hard</div>
+        <div class="tip-text">Every surgeon's aesthetic sensibility is slightly different. Spend time in the before/after gallery before booking a consult — find surgeons whose natural results match the look Ashley wants.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🗓️</div>
+        <div class="tip-title">Plan 4–6 weeks off</div>
+        <div class="tip-text">Recovery from a full mommy makeover is 2–6 weeks depending on procedures. Plan for childcare, household help, and no lifting for 4+ weeks. Time it around family schedules carefully.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🚭</div>
+        <div class="tip-title">No smoking — strict rule</div>
+        <div class="tip-text">Every surgeon requires stopping smoking 4+ weeks before and after surgery. Nicotine dramatically impairs healing and can cause serious complications. This is non-negotiable.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💬</div>
+        <div class="tip-title">Read RealSelf reviews</div>
+        <div class="tip-text">RealSelf has verified patient reviews with before/after photos for most surgeons on this list. It's the most honest source for what the actual patient experience is like post-surgery.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <p><strong>Important note:</strong> This page is research-only and compiled from publicly available information as of May 2026. Pricing is estimated and varies significantly based on the specific procedures included. Always verify pricing, credentials, and availability directly with each provider. This is not medical advice — please consult with a board-certified plastic surgeon to determine what's right for Ashley's specific situation.</p>
+  </div>
+
+  <hr class="divider" />
+  <footer><p>jonestes.me &nbsp;·&nbsp; researched with care &nbsp;·&nbsp; 💕 for Ashley</p></footer>
+</div>
+</body>
+</html>

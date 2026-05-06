@@ -32,9 +32,12 @@
 
     .section { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards; }
     .section:nth-child(2) { animation-delay: 0.08s; }
-    .section:nth-child(3) { animation-delay: 0.14s; }
-    .section:nth-child(4) { animation-delay: 0.20s; }
-    .section:nth-child(5) { animation-delay: 0.26s; }
+    .section:nth-child(3) { animation-delay: 0.12s; }
+    .section:nth-child(4) { animation-delay: 0.16s; }
+    .section:nth-child(5) { animation-delay: 0.20s; }
+    .section:nth-child(6) { animation-delay: 0.24s; }
+    .section:nth-child(7) { animation-delay: 0.28s; }
+    .section:nth-child(8) { animation-delay: 0.32s; }
 
     .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
     .section-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -74,12 +77,6 @@
     footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   </style>
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#0f0f0e" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Jon Estes" />
-  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body>
 <div class="page">
@@ -115,19 +112,6 @@
     </div>
   </div>
 
-  <!-- FINANCE -->
-  <div class="section">
-    <div class="section-head"><div class="section-dot dot-green"></div><div class="section-label">Finance</div></div>
-    <div class="page-list">
-      <a class="page-item" href="/budget">
-        <div class="page-icon">📊</div>
-        <div class="page-info"><div class="page-name">Budget Dashboard</div><div class="page-url">jonestes.me/budget</div><div class="page-desc">Full budget tracker — income, spending, savings, charts & transactions</div></div>
-        <span class="page-badge badge-private">Private</span>
-        <div class="page-arrow">→</div>
-      </a>
-    </div>
-  </div>
-
   <!-- FAMILY -->
   <div class="section">
     <div class="section-head"><div class="section-dot dot-pink"></div><div class="section-label">Family</div></div>
@@ -140,7 +124,20 @@
       </a>
       <a class="page-item" href="/529">
         <div class="page-icon">🎓</div>
-        <div class="page-info"><div class="page-name">Estella's 529 Plan</div><div class="page-url">jonestes.me/529</div><div class="page-desc">College savings fund tracker</div></div>
+        <div class="page-info"><div class="page-name">Estella's 529 Plan</div><div class="page-url">jonestes.me/529</div><div class="page-desc">College savings tracker — $497.11 and growing</div></div>
+        <span class="page-badge badge-public">Public</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- FINANCE -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-green"></div><div class="section-label">Finance & Markets</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/silver">
+        <div class="page-icon">🪙</div>
+        <div class="page-info"><div class="page-name">Silver Spot Price</div><div class="page-url">jonestes.me/silver</div><div class="page-desc">Live XAG/USD ticker — updates every 60 seconds</div></div>
         <span class="page-badge badge-public">Public</span>
         <div class="page-arrow">→</div>
       </a>
@@ -153,13 +150,13 @@
     <div class="page-list">
       <a class="page-item" href="/story">
         <div class="page-icon">🗺️</div>
-        <div class="page-info"><div class="page-name">Story — Timeline & Map</div><div class="page-url">jonestes.me/story</div><div class="page-desc">Full life timeline with filter tabs, interactive world map, places visited</div></div>
+        <div class="page-info"><div class="page-name">Story — Timeline & Map</div><div class="page-url">jonestes.me/story</div><div class="page-desc">Life timeline, world map, places visited</div></div>
         <span class="page-badge badge-hidden">Hidden</span>
         <div class="page-arrow">→</div>
       </a>
       <a class="page-item" href="/guestbook">
         <div class="page-icon">💌</div>
-        <div class="page-info"><div class="page-name">Guestbook</div><div class="page-url">jonestes.me/guestbook</div><div class="page-desc">Leave a message — powered by Netlify Forms</div></div>
+        <div class="page-info"><div class="page-name">Guestbook</div><div class="page-url">jonestes.me/guestbook</div><div class="page-desc">Leave a message for Jon</div></div>
         <span class="page-badge badge-hidden">Hidden</span>
         <div class="page-arrow">→</div>
       </a>
@@ -185,6 +182,19 @@
       <a class="page-item" href="/wedding">
         <div class="page-icon">💍</div>
         <div class="page-info"><div class="page-name">Wedding</div><div class="page-url">jonestes.me/wedding</div><div class="page-desc">Wedding planning page</div></div>
+        <span class="page-badge badge-private">Private</span>
+        <div class="page-arrow">→</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="section">
+    <div class="section-head"><div class="section-dot dot-blue"></div><div class="section-label">Research</div></div>
+    <div class="page-list">
+      <a class="page-item" href="/mm">
+        <div class="page-icon">💕</div>
+        <div class="page-info"><div class="page-name">Mommy Makeover Research</div><div class="page-url">jonestes.me/mm</div><div class="page-desc">22 providers in Sacramento &amp; within 2hrs — for Ashley</div></div>
         <span class="page-badge badge-private">Private</span>
         <div class="page-arrow">→</div>
       </a>
@@ -223,12 +233,5 @@
   <hr class="divider" />
   <footer><p>jonestes.me &nbsp;·&nbsp; built with care</p></footer>
 </div>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js');
-    });
-  }
-</script>
 </body>
 </html>
