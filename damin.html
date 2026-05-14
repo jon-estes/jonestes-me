@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estes Avocado Company, LLC — Avocado Scions & Cuttings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F6F1;--surface:#FFFFFF;--border:#D9D4C7;--border-dark:#B8B0A0;
+  --grove:#2C4A1C;--grove-mid:#3D6628;--grove-light:#8FB870;--grove-pale:#E8F0DF;
+  --gold:#A07800;--gold-light:#E8B800;--gold-pale:#FDF8E0;
+  --bark:#3B2410;--text:#1A1A16;--text-mid:#3D3D35;--text-muted:#7A7A6E;
+  --link:#1A4D2E;--out-color:#A0A098;
+}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+a{color:var(--link)}a:hover{color:var(--grove-mid)}
+
+/* HEADER */
+header{background:var(--grove);color:white;border-bottom:3px solid var(--gold-light)}
+.header-inner{max-width:880px;margin:0 auto;padding:1.4rem 1.5rem 1.2rem}
+.site-name{font-family:'Lora',serif;font-size:1.7rem;font-weight:700;color:white;text-decoration:none;display:block;letter-spacing:-0.01em;line-height:1.2}
+.site-tagline{font-size:0.78rem;font-weight:300;color:rgba(255,255,255,0.65);letter-spacing:0.06em;margin-top:0.2rem}
+
+/* NAV */
+nav{background:var(--bark);border-bottom:1px solid rgba(255,255,255,0.08)}
+.nav-inner{max-width:880px;margin:0 auto;padding:0 1.5rem;display:flex;gap:0}
+.nav-inner a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.76rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;padding:0.6rem 0;margin-right:1.4rem;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;cursor:pointer}
+.nav-inner a:hover,.nav-inner a.active{color:white;border-bottom-color:var(--gold-light)}
+
+/* CONTAINER */
+.container{max-width:880px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* TABS */
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* NOTICE */
+.notice{background:var(--gold-pale);border:1px solid #C8A020;border-left:4px solid var(--gold);padding:.9rem 1.15rem;margin-bottom:1.75rem;font-size:.88rem;line-height:1.7;border-radius:2px}
+.notice strong{color:var(--bark)}.notice p+p{margin-top:.4rem}
+
+/* INTRO */
+.intro{margin-bottom:2rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border)}
+.intro p{font-size:.92rem;color:var(--text-mid);line-height:1.85;font-weight:300;max-width:64ch}
+.intro p+p{margin-top:.6rem}
+
+/* PAGE LAYOUT */
+.page-layout{display:grid;grid-template-columns:1fr 230px;gap:2.5rem;align-items:start}
+@media(max-width:700px){.page-layout{grid-template-columns:1fr}.sidebar{order:-1;position:static}}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:1.25rem}
+.sidebar-card{background:var(--surface);border:1px solid var(--border);padding:1.1rem 1.15rem;margin-bottom:1.1rem;font-size:.82rem;border-radius:2px}
+.sidebar-card h3{font-family:'Lora',serif;font-size:.88rem;font-weight:700;color:var(--grove);margin-bottom:.6rem;padding-bottom:.45rem;border-bottom:1px solid var(--border)}
+.sidebar-card p{font-size:.8rem;color:var(--text-muted);line-height:1.7;font-weight:300;margin-bottom:.5rem}
+.sidebar-card p:last-child{margin-bottom:0}
+.sidebar-card ul{list-style:none;font-size:.8rem;color:var(--text-mid);line-height:2;font-weight:300}
+.sidebar-card ul li::before{content:'·';margin-right:.45em;color:var(--grove-light);font-weight:700}
+
+/* SECTION HEAD */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:2px solid var(--grove);flex-wrap:wrap}
+.section-head h2{font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--grove);letter-spacing:-.01em}
+.section-head .snote{font-size:.72rem;color:var(--text-muted);font-style:italic}
+
+/* VARIETY INTRO */
+.var-intro{background:var(--grove-pale);border-left:3px solid var(--grove-light);padding:.7rem .95rem;margin-bottom:.35rem;font-size:.8rem;color:var(--text-mid);line-height:1.65;font-weight:300}
+.var-intro strong{font-weight:500;color:var(--grove)}
+.var-intro.gold-intro{background:var(--gold-pale);border-left-color:var(--gold-light)}
+
+/* PRODUCT TABLE */
+.product-table{width:100%;border-collapse:collapse;font-size:.86rem;background:var(--surface);border:1px solid var(--border);margin-bottom:1.5rem}
+.product-table thead th{text-align:left;padding:.55rem .8rem;font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);background:var(--bg);border-bottom:1px solid var(--border-dark)}
+.product-table thead th.rp{text-align:right}.product-table thead th.cp{text-align:center}
+.product-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.product-table tbody tr:last-child{border-bottom:none}
+.product-table tbody tr:hover{background:#F4F2EC}
+.product-table td{padding:.6rem .8rem;vertical-align:middle}
+.sku-cell{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--text-muted);white-space:nowrap}
+.desc-cell{width:100%}
+.var-name{font-weight:500;color:var(--text)}
+.var-name em{font-style:italic;font-size:.75rem;color:var(--text-muted);font-weight:300;margin-left:.25em}
+.var-meta{font-size:.73rem;color:var(--text-muted);margin-top:.12rem;font-weight:300}
+.price-cell{text-align:right;font-weight:500;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:.86rem;color:var(--text)}
+.avail-cell{text-align:center;white-space:nowrap}
+.qty-cell{text-align:center}
+
+/* BADGES */
+.b-out{display:inline-block;font-size:.65rem;font-weight:500;letter-spacing:.06em;color:var(--out-color);background:#F0EFE8;border:1px solid #D0CFC5;padding:.18rem .5rem;border-radius:2px;text-transform:uppercase}
+.b-avail{display:inline-block;font-size:.65rem;font-weight:500;letter-spacing:.06em;color:var(--grove);background:var(--grove-pale);border:1px solid var(--grove-light);padding:.18rem .5rem;border-radius:2px;text-transform:uppercase}
+.b-soon{display:inline-block;font-size:.65rem;font-weight:500;letter-spacing:.06em;color:#7A5500;background:var(--gold-pale);border:1px solid #C8A020;padding:.18rem .5rem;border-radius:2px;text-transform:uppercase}
+
+/* QTY CONTROLS */
+.qty-wrap{display:flex;align-items:center;justify-content:center}
+.q-btn{width:22px;height:22px;background:var(--bg);border:1px solid var(--border-dark);cursor:pointer;font-size:.88rem;color:var(--text-mid);display:flex;align-items:center;justify-content:center;transition:background .1s;user-select:none;line-height:1}
+.q-btn:hover{background:var(--border)}.q-btn.qm{border-radius:2px 0 0 2px}.q-btn.qp{border-radius:0 2px 2px 0}
+.q-num{width:28px;height:22px;text-align:center;border:1px solid var(--border-dark);border-left:none;border-right:none;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--text);background:white;outline:none}
+.q-num:focus{background:var(--grove-pale)}
+.q-disabled .q-btn,.q-disabled .q-num{opacity:.32;cursor:not-allowed;pointer-events:none}
+
+/* CART BAR */
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:var(--grove);color:white;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-top:3px solid var(--gold-light);z-index:80;font-size:.86rem;gap:1rem;flex-wrap:wrap}
+.cart-left{display:flex;align-items:center;gap:1.25rem}
+.cart-lbl{color:rgba(255,255,255,.65);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}
+.cart-num{font-family:'IBM Plex Mono',monospace;font-size:1.05rem;font-weight:500}
+.cart-total{font-family:'IBM Plex Mono',monospace;font-size:1.05rem;font-weight:500;color:var(--gold-light)}
+.checkout-btn{background:var(--gold);color:white;border:none;padding:.55rem 1.35rem;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .15s;white-space:nowrap}
+.checkout-btn:hover{background:#7A5500}.checkout-btn:disabled{opacity:.38;cursor:not-allowed}
+
+/* NOTIFY BLOCK */
+.notify-block{background:var(--grove-pale);border:1px solid var(--grove-light);padding:1.35rem;margin-top:.25rem}
+.notify-block h3{font-family:'Lora',serif;font-size:.95rem;color:var(--grove);margin-bottom:.4rem}
+.notify-block p{font-size:.82rem;color:var(--text-mid);font-weight:300;margin-bottom:.9rem}
+.notify-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.nf-input{flex:1;min-width:130px;padding:.55rem .8rem;border:1px solid var(--border-dark);background:white;font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;outline:none;border-radius:2px}
+.nf-input:focus{border-color:var(--grove)}
+.nf-btn{background:var(--grove);color:white;border:none;padding:.55rem 1.15rem;font-family:'IBM Plex Sans',sans-serif;font-size:.73rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .15s;white-space:nowrap}
+.nf-btn:hover{background:var(--bark)}
+.notify-ok{display:none;font-size:.85rem;color:var(--grove);font-weight:500;margin-top:.65rem}
+
+/* ABOUT / INFO PAGES */
+.prose{max-width:60ch}
+.prose h2{font-family:'Lora',serif;font-size:1.25rem;color:var(--grove);margin:2rem 0 .65rem}
+.prose h2:first-child{margin-top:0}
+.prose p{font-size:.92rem;color:var(--text-mid);line-height:1.85;font-weight:300;margin-bottom:.7rem}
+.prose ul{list-style:none;padding:0;font-size:.9rem;color:var(--text-mid);line-height:2.1;font-weight:300;margin-bottom:1rem}
+.prose ul li{display:flex;gap:.6rem}.prose ul li::before{content:'·';color:var(--grove-light);font-weight:700;flex-shrink:0}
+.pullquote{font-family:'Lora',serif;font-style:italic;font-size:1.05rem;color:var(--grove);border-left:3px solid var(--grove-light);padding:.7rem 1.15rem;margin:1.5rem 0;background:var(--grove-pale);line-height:1.6}
+
+/* FOUNDER CARD */
+.founder-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--grove);padding:1.35rem;margin:1.75rem 0;display:flex;gap:1.1rem;align-items:flex-start}
+.founder-initials{width:44px;height:44px;flex-shrink:0;background:var(--grove);color:white;font-family:'Lora',serif;font-size:.95rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.founder-name{font-family:'Lora',serif;font-size:.95rem;font-weight:700;color:var(--bark)}
+.founder-role{font-size:.72rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
+.founder-bio{font-size:.83rem;color:var(--text-mid);line-height:1.75;font-weight:300;margin-top:.55rem}
+
+/* CONTACT BLOCK */
+.contact-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--grove);padding:1.35rem;margin:1.5rem 0}
+.contact-card p{font-size:.88rem;color:var(--text-mid);line-height:1.8;margin-bottom:.35rem;font-weight:300}
+.contact-card p:last-child{margin-bottom:0}
+.contact-lbl{font-size:.72rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.65rem;font-weight:500}
+
+/* FOOTER */
+footer{background:var(--bark);color:rgba(255,255,255,.55);padding:1.75rem 1.5rem 3rem;font-size:.78rem;margin-top:2rem}
+.footer-inner{max-width:880px;margin:0 auto;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.footer-name{font-family:'Lora',serif;font-size:.9rem;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:.25rem}
+footer a{color:rgba(255,255,255,.65)}footer a:hover{color:white}
+
+/* HIDE SKU col on mobile */
+@media(max-width:560px){.sku-col{display:none}.sku-cell{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="site-name" href="#" onclick="showTab('shop',null);return false;">Estes Avocado Company, LLC</a>
+    <div class="site-tagline">Avocado Scions &amp; Cuttings &nbsp;·&nbsp; Sacramento Region, Northern California</div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a class="active" onclick="showTab('shop',this)">Shop</a>
+    <a onclick="showTab('about',this)">About</a>
+    <a onclick="showTab('grafting',this)">Grafting Info</a>
+    <a onclick="showTab('contact',this)">Contact</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ══════════════════════════════════
+     SHOP TAB
+══════════════════════════════════ -->
+<div class="tab-panel active" id="tab-shop">
+<div class="page-layout">
+
+<div><!-- main column -->
+
+<div class="notice">
+  <p><strong>🌱 Founding season — scions coming soon.</strong> Estes Avocado Company, LLC is in its pre-sale phase. Scionwood will be available as mother trees are harvested. Sign up below and we'll email you when the sale opens.</p>
+  <p>We ship to U.S. addresses only. Scions are cut-to-order and shipped at the appropriate harvest window for each variety. California customers: all CDFA shipping regulations are followed.</p>
+</div>
+
+<div class="intro">
+  <p>We offer avocado scionwood and cuttings taken directly from our established mother trees in Northern California's Sacramento Valley. Our focus is on named, true-to-variety material from cold-tolerant and high-performing selections — varieties that work in NorCal, not just commercial Southern California operations.</p>
+  <p>Every cutting comes from a known, producing mother tree. We propagate no seedlings and carry no unlabeled material.</p>
+</div>
+
+<!-- ─── AVOCADO SCIONS ─── -->
+<div class="section-head">
+  <h2>Avocado &nbsp;<em style="font-family:'Lora',serif;font-style:italic;font-size:.9rem;font-weight:400;color:var(--text-muted);">(Persea americana)</em></h2>
+  <span class="snote">1 scion = 1 cutting ~4–6 in. with 2–3 buds</span>
+</div>
+
+<!-- LILA -->
+<div class="var-intro">
+  <strong>Lila</strong> — Our flagship mother-tree variety. Cold-hardy Mexican-race selection. Thin, glossy skin ripens to deep purple-black. Excellent creamy flavor with subtle anise notes. A consistent, reliable bearer in the Sacramento Valley. Pollination type: A. Season: late summer – fall.
+</div>
+<table class="product-table">
+  <thead><tr>
+    <th class="sku-col">SKU</th><th>Description</th>
+    <th class="rp">Price</th><th class="cp">Avail.</th><th class="cp">Qty.</th>
+  </tr></thead>
+  <tbody>
+    <tr data-price="10">
+      <td class="sku-cell">EAC-101</td>
+      <td class="desc-cell"><span class="var-name">1 × Lila scion</span><div class="var-meta">Cold hardy · Purple-black skin · Late summer–fall · Type A</div></td>
+      <td class="price-cell">$10.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+    <tr data-price="22">
+      <td class="sku-cell">EAC-102</td>
+      <td class="desc-cell"><span class="var-name">3 × Lila scions <em>(bundle)</em></span><div class="var-meta">Save $8 — good for grafting practice</div></td>
+      <td class="price-cell">$22.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- GEM -->
+<div class="var-intro">
+  <strong>GEM</strong> — Developed at UC Riverside as an improved Hass-type. Produces 2–3× more fruit per canopy area than standard Hass. Dark pebbly skin, rich buttery flesh. An increasingly important variety for premium California growers. Pollination type: A. Season: spring–summer.
+</div>
+<table class="product-table">
+  <thead><tr>
+    <th class="sku-col">SKU</th><th>Description</th>
+    <th class="rp">Price</th><th class="cp">Avail.</th><th class="cp">Qty.</th>
+  </tr></thead>
+  <tbody>
+    <tr data-price="10">
+      <td class="sku-cell">EAC-111</td>
+      <td class="desc-cell"><span class="var-name">1 × GEM scion</span><div class="var-meta">High yield · Dark pebbly skin · Spring–summer · Type A</div></td>
+      <td class="price-cell">$10.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+    <tr data-price="22">
+      <td class="sku-cell">EAC-112</td>
+      <td class="desc-cell"><span class="var-name">3 × GEM scions <em>(bundle)</em></span><div class="var-meta">Save $8</div></td>
+      <td class="price-cell">$22.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- BACON -->
+<div class="var-intro">
+  <strong>Bacon</strong> — A NorCal classic developed circa 1954. One of the best cold-hardy winter-bearing varieties available to home growers. Light, smooth flavor. Excellent Type B pollinator — pairs with Lila, GEM, and Hass-types for significantly improved fruit set. Season: November–January.
+</div>
+<table class="product-table">
+  <thead><tr>
+    <th class="sku-col">SKU</th><th>Description</th>
+    <th class="rp">Price</th><th class="cp">Avail.</th><th class="cp">Qty.</th>
+  </tr></thead>
+  <tbody>
+    <tr data-price="10">
+      <td class="sku-cell">EAC-121</td>
+      <td class="desc-cell"><span class="var-name">1 × Bacon scion</span><div class="var-meta">Cold hardy · Winter bearing · Type B pollinator · Nov–Jan</div></td>
+      <td class="price-cell">$10.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+    <tr data-price="22">
+      <td class="sku-cell">EAC-122</td>
+      <td class="desc-cell"><span class="var-name">3 × Bacon scions <em>(bundle)</em></span><div class="var-meta">Save $8</div></td>
+      <td class="price-cell">$22.</td>
+      <td class="avail-cell"><span class="b-soon">Coming soon</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm" onclick="chQty(this,-1)">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp" onclick="chQty(this,1)">+</button></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MORE COMING -->
+<div class="var-intro gold-intro">
+  <strong>Additional varieties — to be announced.</strong> Damin holds mother trees for several more NorCal-proven selections beyond those listed above. These will be posted when harvest windows are confirmed. Join the notification list below to be the first to know.
+</div>
+<table class="product-table">
+  <thead><tr>
+    <th class="sku-col">SKU</th><th>Description</th>
+    <th class="rp">Price</th><th class="cp">Avail.</th><th class="cp">Qty.</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="sku-cell">—</td>
+      <td class="desc-cell"><span class="var-name">Additional varieties <em>(TBA)</em></span><div class="var-meta">More cold-hardy NorCal selections · Check back or join the notification list</div></td>
+      <td class="price-cell">TBD</td>
+      <td class="avail-cell"><span class="b-out">TBA</span></td>
+      <td class="qty-cell"><div class="qty-wrap q-disabled"><button class="q-btn qm">−</button><input class="q-num" type="number" value="0" min="0" max="20" readonly><button class="q-btn qp">+</button></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- NOTIFY -->
+<div class="notify-block">
+  <h3>Get notified when scions are available</h3>
+  <p>We'll send one email when the sale opens. No spam, no mailing list — just a single availability alert.</p>
+  <div class="notify-row" id="nf-row">
+    <input class="nf-input" type="text" id="nf-name" placeholder="Your name">
+    <input class="nf-input" type="email" id="nf-email" placeholder="Email address" style="flex:2">
+    <button class="nf-btn" onclick="submitNotify()">Notify me</button>
+  </div>
+  <div class="notify-ok" id="nf-ok">✓ You're on the list. We'll be in touch when scions are ready.</div>
+</div>
+
+</div><!-- /main col -->
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-card">
+    <h3>What is a scion?</h3>
+    <p>A scion is a short cutting (4–6 inches, 2–3 buds) taken from a named producing tree. You graft it onto rootstock to grow a true-to-variety tree.</p>
+    <p>Grafted trees fruit in 1–3 years. Seed-grown take 8–20 years and produce unpredictable fruit.</p>
+    <p><a href="#" onclick="showTab('grafting',null);return false;">See our grafting guide →</a></p>
+  </div>
+  <div class="sidebar-card">
+    <h3>Shipping</h3>
+    <ul>
+      <li>U.S. addresses only</li>
+      <li>Ships at harvest window by variety</li>
+      <li>USPS Priority or UPS 2nd Day Air</li>
+      <li>CA CDFA compliant</li>
+      <li>Local pickup available (Sacramento area)</li>
+    </ul>
+  </div>
+  <div class="sidebar-card">
+    <h3>Varieties offered</h3>
+    <ul>
+      <li>Lila — cold-hardy, Type A</li>
+      <li>GEM — high-yield, Type A</li>
+      <li>Bacon — winter, Type B</li>
+      <li>More TBA</li>
+    </ul>
+  </div>
+  <div class="sidebar-card">
+    <h3>A + B pollination</h3>
+    <p>Planting one Type A and one Type B variety together significantly increases fruit set. <strong>Bacon (B)</strong> is an ideal partner for <strong>Lila (A)</strong> and <strong>GEM (A)</strong>.</p>
+  </div>
+</aside>
+
+</div><!-- /page-layout -->
+</div><!-- /tab-shop -->
+
+
+<!-- ══════════════════════════════════
+     ABOUT TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-about">
+<div class="prose">
+  <h2>About Estes Avocado Company, LLC</h2>
+  <p>Estes Avocado Company, LLC is a Sacramento Valley operation with a single focus: providing high-quality avocado scionwood and cuttings taken directly from established, named mother trees. We are not a general nursery. We sell one product category, and we intend to do it right.</p>
+  <p>Most avocado scionwood available in Northern California comes from Southern California commercial operations centered almost entirely on Hass for warm-winter climates. Our goal is to make available the cold-tolerant, flavorful, productive selections that actually perform in NorCal conditions — the Sacramento Valley floor, the foothills, and inland growing zones.</p>
+
+  <div class="pullquote">"The right cutting, from the right tree — that's where every good grove begins."</div>
+
+  <div class="founder-card">
+    <div class="founder-initials">DE</div>
+    <div>
+      <div class="founder-name">Damin Estes</div>
+      <div class="founder-role">Founder &amp; Grower · Sacramento Region, CA</div>
+      <p class="founder-bio">Damin established Estes Avocado Company, LLC to focus specifically on the propagation side of the avocado trade — scionwood and cuttings from named, proven mother trees. He maintains established mother trees for Lila, GEM, Bacon, and additional varieties, and is committed to clean, correctly-labeled, true-to-variety material. Every cutting is handled by the grower personally.</p>
+    </div>
+  </div>
+
+  <h2>Why scions — not trees?</h2>
+  <p>Nursery-grown trees are excellent, but they're expensive to ship, heavily regulated across state lines, and limit your rootstock choices. Scionwood is compact, ships well when properly handled, and puts you in control of which rootstock your new tree grows on — which matters enormously for NorCal soil conditions, cold tolerance, and root-rot resistance.</p>
+  <p>If you're a home grower who already has a seedling rootstock, or you're working with a local nursery on grafts, quality scionwood from a known mother tree is exactly what you need. That's what we sell.</p>
+
+  <h2>Our mother tree varieties</h2>
+  <ul>
+    <li><strong>Lila</strong> — Cold-hardy Mexican race, Type A pollinator. Purple-black thin skin, excellent flavor, consistent bearer in NorCal.</li>
+    <li><strong>GEM</strong> — UC Riverside improved Hass-type, Type A. Exceptional yield per canopy area, premium fruit quality.</li>
+    <li><strong>Bacon</strong> — NorCal classic, Type B pollinator. Winter-bearing, excellent cross-pollinator for A-type trees.</li>
+    <li><strong>Additional varieties</strong> — To be announced as harvest windows approach.</li>
+  </ul>
+</div>
+</div><!-- /tab-about -->
+
+
+<!-- ══════════════════════════════════
+     GRAFTING TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-grafting">
+<div class="prose">
+  <h2>Grafting avocados — an overview</h2>
+  <p>Avocados are grafted rather than grown from seed because seed-grown trees take 8–20 years to produce and yield unpredictable fruit. Grafted trees reproduce the exact genetics of the scion variety and typically produce fruit within 1–3 years of planting.</p>
+
+  <h2>What you'll need</h2>
+  <ul>
+    <li>A healthy <strong>rootstock</strong> seedling (6–18 months old, pencil-diameter stem ideal)</li>
+    <li>A <strong>scion cutting</strong> — fresh, with 2–3 plump, healthy buds</li>
+    <li>A sharp, sterilized <strong>grafting knife</strong> or new razor blade</li>
+    <li><strong>Grafting tape</strong> or parafilm to seal the union</li>
+    <li>Optional: grafting wax or budding rubber for additional protection</li>
+  </ul>
+
+  <h2>Common graft types for avocado</h2>
+  <p><strong>Cleft graft</strong> — Most common for home grafters. Rootstock stem is cut flat and split; scion is cut to a wedge and inserted. Works well when rootstock is thicker than the scion.</p>
+  <p><strong>Side-veneer graft</strong> — Good when scion and rootstock are similar in diameter. A long slanted cut creates maximum cambium contact. Preferred by professional nurseries.</p>
+  <p><strong>Whip-and-tongue graft</strong> — Best for matching diameters. Interlocking tongues create a strong, self-aligning union.</p>
+
+  <h2>Timing by variety</h2>
+  <p>We cut and ship scionwood at the appropriate harvest window for each variety:</p>
+  <ul>
+    <li><strong>Lila, Bacon</strong> — Dormant hardwood scions, typically late winter to early spring</li>
+    <li><strong>GEM</strong> — Greenwood cuttings available in late spring to early summer</li>
+    <li>We notify the waitlist when each window opens</li>
+  </ul>
+
+  <h2>Rootstock for NorCal conditions</h2>
+  <p>For Sacramento Valley conditions, Zutano and Duke seedlings are commonly used as cold-hardy rootstock. If you're dealing with heavy clay, poor drainage, or water salinity, clonal rootstocks like Dusa or Duke 7 may be worth considering — contact us or reach out to Subtropica Nurseries in Fallbrook for clonal rootstock availability.</p>
+
+  <h2>External resources</h2>
+  <ul>
+    <li><a href="https://gregalder.com/yardposts/how-to-graft-an-avocado-tree/" target="_blank" rel="noopener">Greg Alder — How to graft an avocado tree</a></li>
+    <li><a href="https://fruitsandgardening.blogspot.com/2020/03/cold-hardy-avocados-for-sacramento.html" target="_blank" rel="noopener">Cold-hardy avocados for the Sacramento region</a></li>
+    <li><a href="https://reallygoodplants.com/" target="_blank" rel="noopener">Really Good Plants — avocado scions (Davis, CA)</a></li>
+  </ul>
+</div>
+</div><!-- /tab-grafting -->
+
+
+<!-- ══════════════════════════════════
+     CONTACT TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-contact">
+<div class="prose">
+  <h2>Contact</h2>
+  <p>Estes Avocado Company, LLC is a small, direct-contact operation. For questions about current availability, specific varieties, bulk orders, local pickup, or anything else — reach out directly.</p>
+
+  <div class="contact-card">
+    <div class="contact-lbl">Contact information</div>
+    <p><strong>Estes Avocado Company, LLC</strong></p>
+    <p>Sacramento Region, Northern California</p>
+    <p style="margin-top:.5rem"><a href="mailto:info@estesavocado.com">info@estesavocado.com</a></p>
+  </div>
+
+  <h2>Pre-sale inquiries</h2>
+  <p>We're currently in pre-sale mode. If you have questions about a specific variety, rootstock compatibility, shipping windows to your zip code, or want to discuss a bulk order, email us before the sale opens. We're also happy to answer grafting questions.</p>
+
+  <h2>Local pickup — Sacramento area</h2>
+  <p>Sacramento Valley customers may arrange local pickup instead of shipping. Local pickup avoids shipping costs entirely and results in the freshest possible scionwood. Contact us to discuss options and timing.</p>
+
+  <h2>Notification list</h2>
+  <p>The fastest way to not miss availability is to join the notification list on the <a href="#" onclick="showTab('shop',null);return false;">Shop page</a>. We send a single email when the sale opens.</p>
+</div>
+</div><!-- /tab-contact -->
+
+</div><!-- /container -->
+
+<!-- CART BAR -->
+<div class="cart-bar">
+  <div class="cart-left">
+    <div><div class="cart-lbl">Items in cart</div><div class="cart-num" id="cc">0</div></div>
+    <div><div class="cart-lbl">Total</div><div class="cart-total" id="ct">$0.</div></div>
+  </div>
+  <button class="checkout-btn" id="co-btn" disabled onclick="doCheckout()">Place order →</button>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">Estes Avocado Company, LLC</div>
+      <div>Sacramento Region, Northern California &nbsp;·&nbsp; Avocado Scions &amp; Cuttings</div>
+    </div>
+    <div>
+      <div>© 2025 Estes Avocado Company, LLC</div>
+      <div style="margin-top:.3rem"><a href="mailto:info@estesavocado.com">info@estesavocado.com</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// TABS
+function showTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-inner a').forEach(a => a.classList.remove('active'));
+  const p = document.getElementById('tab-' + name);
+  if (p) p.classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// CART
+let total = 0, count = 0;
+function chQty(btn, d) {
+  const row = btn.closest('tr');
+  const inp = row.querySelector('.q-num');
+  const price = parseFloat(row.dataset.price) || 0;
+  const old = parseInt(inp.value) || 0;
+  const nv = Math.max(0, Math.min(20, old + d));
+  if (nv === old) return;
+  inp.value = nv;
+  count += nv - old;
+  total += (nv - old) * price;
+  document.getElementById('cc').textContent = count;
+  document.getElementById('ct').textContent = '$' + total.toFixed(0) + '.';
+  document.getElementById('co-btn').disabled = count === 0;
+}
+function doCheckout() {
+  alert('Online checkout coming soon!\n\nTo place an order now, email info@estesavocado.com with:\n• Variety name and quantity\n• Your shipping address\n\nWe will reply with an invoice. Thank you!');
+}
+
+// NOTIFY
+function submitNotify() {
+  const n = document.getElementById('nf-name').value.trim();
+  const e = document.getElementById('nf-email').value.trim();
+  if (!n || !e || !e.includes('@')) { alert('Please enter your name and a valid email.'); return; }
+  document.getElementById('nf-row').style.display = 'none';
+  document.getElementById('nf-ok').style.display = 'block';
+}
+</script>
+</body>
+</html>
