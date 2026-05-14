@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estes Avocado Company, LLC — Avocado Scions &amp; Cuttings · Placer County, CA</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥑</text></svg>">
 <style>
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -632,19 +633,30 @@ footer a{color:rgba(255,255,255,.65)}footer a:hover{color:#fff}
   <div class="ml-box">
     <h3>📬 Join the Mailing List</h3>
     <p>Get notified when new varieties are added, harvest windows open, or stock updates go live. One email per event — no spam, ever.</p>
-    <div class="ml-fields" id="ml-fields">
-      <input class="ml-input" type="text" id="ml-name" placeholder="Your name" autocomplete="name">
-      <input class="ml-input" type="email" id="ml-email" placeholder="Email address" autocomplete="email" style="flex:2">
-      <select class="ml-select" id="ml-interest">
-        <option value="">Interest (optional)</option>
-        <option>Avocado scions</option>
-        <option>Avocado seeds</option>
-        <option>Pomegranate cuttings</option>
-        <option>All of the above</option>
-        <option>General updates</option>
-      </select>
-      <button class="ml-btn" onclick="submitML()">Subscribe</button>
-    </div>
+    <form
+      name="mailing-list"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      onsubmit="submitML(event)"
+      id="ml-form"
+    >
+      <input type="hidden" name="form-name" value="mailing-list">
+      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+      <div class="ml-fields">
+        <input class="ml-input" type="text" name="name" placeholder="Your name" autocomplete="name" required>
+        <input class="ml-input" type="email" name="email" placeholder="Email address" autocomplete="email" style="flex:2" required>
+        <select class="ml-select" name="interest">
+          <option value="">Interest (optional)</option>
+          <option>Avocado scions</option>
+          <option>Avocado seeds</option>
+          <option>Pomegranate cuttings</option>
+          <option>All of the above</option>
+          <option>General updates</option>
+        </select>
+        <button class="ml-btn" type="submit">Subscribe</button>
+      </div>
+    </form>
     <div class="ml-ok" id="ml-ok">✓ You're on the list! We'll be in touch with availability updates.</div>
   </div>
 
@@ -773,17 +785,28 @@ footer a{color:rgba(255,255,255,.65)}footer a:hover{color:#fff}
     <div id="modal-form-wrap">
       <h3>Pre-Order Scions</h3>
       <p>Fill out your details below. Scions are cut fresh after your order is received. We'll follow up by email to confirm availability and shipping window.</p>
-      <div class="modal-fields">
-        <input class="modal-input" type="text" id="m-name" placeholder="Your full name" autocomplete="name">
-        <input class="modal-input" type="email" id="m-email" placeholder="Email address" autocomplete="email">
-        <input class="modal-input" type="text" id="m-zip" placeholder="Shipping ZIP code" inputmode="numeric" autocomplete="postal-code">
-        <textarea class="modal-textarea" id="m-order" placeholder="What would you like to order? (e.g. 2× Lila scion, 1× Bacon scion ×3 bundle, 1× Pomegranate cutting)"></textarea>
-        <textarea class="modal-textarea" id="m-notes" placeholder="Questions or notes (optional)" style="min-height:60px"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-submit" onclick="submitPreorder()">Submit Pre-Order</button>
-        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
-      </div>
+      <form
+        name="preorder"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        onsubmit="submitPreorder(event)"
+        id="preorder-form"
+      >
+        <input type="hidden" name="form-name" value="preorder">
+        <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="modal-fields">
+          <input class="modal-input" type="text" name="name" id="m-name" placeholder="Your full name" autocomplete="name" required>
+          <input class="modal-input" type="email" name="email" id="m-email" placeholder="Email address" autocomplete="email" required>
+          <input class="modal-input" type="text" name="zip" id="m-zip" placeholder="Shipping ZIP code" inputmode="numeric" autocomplete="postal-code">
+          <textarea class="modal-textarea" name="order" id="m-order" placeholder="What would you like to order? (e.g. 2× Lila scion, 1× Bacon seeds ×10, etc.)" required></textarea>
+          <textarea class="modal-textarea" name="notes" id="m-notes" placeholder="Questions or notes (optional)" style="min-height:60px"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-submit" type="submit">Submit Pre-Order</button>
+          <button class="modal-cancel" type="button" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
     </div>
     <div class="modal-ok" id="modal-ok">
       <h4>✅ Pre-order received!</h4>
@@ -859,7 +882,6 @@ function updateCart() {
 
 // ── MODAL ──
 function openPreorder() {
-  // Pre-fill order field from cart
   const items = Object.entries(cartItems).map(([k,v]) => v + '× ' + k).join('\n');
   const ta = document.getElementById('m-order');
   if (items && !ta.value) ta.value = items;
@@ -870,25 +892,26 @@ function openPreorder() {
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
-  // reset form
   document.getElementById('modal-form-wrap').style.display = 'block';
   document.getElementById('modal-ok').style.display = 'none';
+  document.getElementById('preorder-form').reset();
 }
 
-function submitPreorder() {
-  const name = document.getElementById('m-name').value.trim();
-  const email = document.getElementById('m-email').value.trim();
-  const order = document.getElementById('m-order').value.trim();
-  if (!name || !email || !email.includes('@')) {
-    alert('Please enter your name and email address.');
-    return;
-  }
-  if (!order) {
-    alert('Please describe what you would like to order.');
-    return;
-  }
-  document.getElementById('modal-form-wrap').style.display = 'none';
-  document.getElementById('modal-ok').style.display = 'block';
+function submitPreorder(e) {
+  e.preventDefault();
+  const form = e.target;
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(form)).toString()
+  })
+  .then(() => {
+    document.getElementById('modal-form-wrap').style.display = 'none';
+    document.getElementById('modal-ok').style.display = 'block';
+  })
+  .catch(() => {
+    alert('Something went wrong submitting your order. Please email us directly at info@estesavocado.com');
+  });
 }
 
 // close modal on overlay click
@@ -897,15 +920,21 @@ document.getElementById('modal').addEventListener('click', function(e) {
 });
 
 // ── MAILING LIST ──
-function submitML() {
-  const name = document.getElementById('ml-name').value.trim();
-  const email = document.getElementById('ml-email').value.trim();
-  if (!name || !email || !email.includes('@')) {
-    alert('Please enter your name and a valid email address.');
-    return;
-  }
-  document.getElementById('ml-fields').style.display = 'none';
-  document.getElementById('ml-ok').style.display = 'block';
+function submitML(e) {
+  e.preventDefault();
+  const form = e.target;
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(form)).toString()
+  })
+  .then(() => {
+    form.style.display = 'none';
+    document.getElementById('ml-ok').style.display = 'block';
+  })
+  .catch(() => {
+    alert('Something went wrong. Please email us at info@estesavocado.com to be added to the list.');
+  });
 }
 </script>
 </body>
