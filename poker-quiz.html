@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f0e">
+<title>Poker Quiz · Jon Estes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0e;
+    --navy: #1b2a4a;
+    --navy-dark: #111d34;
+    --gold: #c9962a;
+    --gold-light: #e8b84b;
+    --white: #f4f6fa;
+    --muted: #8a97b0;
+    --card-red: #c0392b;
+    --surface: #1a1a19;
+    --surface2: #222221;
+    --border: #2a2a28;
+    --green: #1a7a4a;
+    --green-light: #27ae60;
+    --red-err: #922b21;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: rgba(15,15,14,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); text-decoration: none; }
+  .nav-back { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+
+  /* ── Screens ── */
+  .screen { display: none; max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem; }
+  .screen.active { display: block; }
+
+  /* ── Start Screen ── */
+  .start-hero { text-align: center; margin-bottom: 2.5rem; }
+  .start-suits { font-size: 3rem; letter-spacing: 0.4em; margin-bottom: 1.5rem; animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  .start-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; margin-bottom: 0.75rem; }
+  .start-hero p { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 480px; margin: 0 auto 2rem; }
+
+  .difficulty-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .diff-btn {
+    background: var(--surface); border: 2px solid var(--border); color: var(--white);
+    padding: 0.6rem 1.4rem; border-radius: 6px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .diff-btn:hover, .diff-btn.selected { border-color: var(--gold); background: rgba(201,150,42,0.12); }
+
+  .name-input-wrap { max-width: 320px; margin: 0 auto 1.5rem; }
+  .name-input-wrap label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; }
+  .name-input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--white);
+    padding: 0.75rem 1rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    outline: none; transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: var(--gold); }
+
+  .start-btn {
+    background: var(--gold); color: var(--navy-dark); border: none;
+    padding: 0.9rem 2.5rem; border-radius: 6px; font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer; display: block; margin: 0 auto;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .start-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  /* ── Quiz Screen ── */
+  .quiz-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .q-counter { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; }
+  .q-score { font-size: 0.9rem; font-weight: 600; color: var(--gold-light); }
+
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 1.75rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* Timer */
+  .timer-ring {
+    position: relative; width: 64px; height: 64px; flex-shrink: 0;
+  }
+  .timer-ring svg { transform: rotate(-90deg); }
+  .timer-ring circle { fill: none; stroke: var(--border); stroke-width: 4; }
+  .timer-ring .progress-ring { stroke: var(--gold); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+  .timer-ring .timer-text {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--gold-light);
+  }
+
+  .quiz-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .q-prompt { font-size: 0.95rem; color: var(--muted); }
+  .q-prompt strong { color: var(--white); }
+
+  /* Cards */
+  .cards-row {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.75rem 1rem; margin-bottom: 1.75rem;
+  }
+  .playing-card {
+    width: 72px; height: 100px;
+    background: white; border-radius: 8px; border: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: flex-start;
+    padding: 7px 8px; position: relative;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+    animation: dealCard 0.3s ease both;
+  }
+  @keyframes dealCard {
+    from { opacity:0; transform: translateY(-20px) rotate(-5deg); }
+    to   { opacity:1; transform: translateY(0) rotate(0deg); }
+  }
+  .playing-card:nth-child(2) { animation-delay: 0.05s; }
+  .playing-card:nth-child(3) { animation-delay: 0.10s; }
+  .playing-card:nth-child(4) { animation-delay: 0.15s; }
+  .playing-card:nth-child(5) { animation-delay: 0.20s; }
+  .card-label { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; line-height: 1; }
+  .card-suit-top { font-size: 0.9rem; line-height: 1; margin-top: 2px; }
+  .card-center { position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size: 1.9rem; }
+  .red { color: #c0392b; }
+  .black { color: #1a1a2e; }
+
+  /* Choices */
+  .choices {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;
+  }
+  .choice-btn {
+    background: var(--surface); border: 2px solid var(--border); color: var(--white);
+    padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    transition: all 0.15s; text-align: left; position: relative;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(201,150,42,0.1); }
+  .choice-btn.correct { border-color: var(--green-light) !important; background: rgba(39,174,96,0.15) !important; color: #5ddb8e; }
+  .choice-btn.wrong   { border-color: var(--red-err) !important; background: rgba(146,43,33,0.15) !important; color: #e07060; }
+  .choice-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    margin-top: 1.25rem; border-radius: 10px; padding: 1.1rem 1.3rem;
+    font-size: 0.9rem; line-height: 1.6; display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .feedback-box.correct { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.3); color: #5ddb8e; }
+  .feedback-box.wrong   { background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.3); color: #e07060; }
+  .feedback-box strong  { display: block; font-size: 1rem; margin-bottom: 0.3rem; }
+
+  .next-btn {
+    background: var(--gold); color: var(--navy-dark); border: none;
+    padding: 0.75rem 2rem; border-radius: 6px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 1.25rem;
+    display: none; transition: background 0.2s;
+  }
+  .next-btn:hover { background: var(--gold-light); }
+
+  /* Streak */
+  .streak-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: rgba(201,150,42,0.15); border: 1px solid rgba(201,150,42,0.3);
+    border-radius: 20px; padding: 0.3rem 0.8rem;
+    font-size: 0.78rem; color: var(--gold-light); font-weight: 600;
+  }
+
+  /* ── Results Screen ── */
+  .results-hero { text-align: center; padding: 1.5rem 0 2rem; }
+  .results-suit { font-size: 4rem; margin-bottom: 0.5rem; }
+  .results-hero h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 0.5rem; }
+  .score-circle {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: conic-gradient(var(--gold) var(--pct), var(--surface2) 0);
+    margin: 1.5rem auto; display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .score-circle::before {
+    content:''; position:absolute; inset:10px; border-radius:50%; background:var(--bg);
+  }
+  .score-number { position:relative; z-index:1; font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--gold-light); }
+
+  .stat-row { display:flex; justify-content:center; gap:2rem; margin: 1rem 0 2rem; }
+  .stat { text-align:center; }
+  .stat-val { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--white); }
+  .stat-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-top:0.2rem; }
+
+  /* Review */
+  .review-list { display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; }
+  .review-item {
+    display:flex; align-items:center; gap:0.75rem;
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:0.75rem 1rem; font-size:0.88rem;
+  }
+  .review-icon { font-size:1.1rem; flex-shrink:0; }
+  .review-item.correct-item { border-left:3px solid var(--green-light); }
+  .review-item.wrong-item   { border-left:3px solid var(--red-err); }
+  .review-hand { font-weight:600; flex:1; }
+  .review-answer { font-size:0.8rem; color:var(--muted); }
+
+  /* Leaderboard */
+  .leaderboard { margin-top: 2rem; }
+  .lb-title { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.75rem; }
+  .lb-row {
+    display:flex; align-items:center; gap:0.75rem;
+    padding:0.65rem 1rem; border-radius:8px; font-size:0.9rem;
+    border-bottom:1px solid var(--border);
+  }
+  .lb-row:last-child { border-bottom:none; }
+  .lb-row.me { background:rgba(201,150,42,0.1); border-color:rgba(201,150,42,0.2); }
+  .lb-pos { width:24px; text-align:center; font-weight:700; color:var(--gold); font-size:0.85rem; }
+  .lb-name { flex:1; }
+  .lb-score { font-family:'Playfair Display',serif; font-weight:700; color:var(--gold-light); }
+  .lb-meta { font-size:0.75rem; color:var(--muted); }
+
+  .result-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:2rem; }
+  .btn-primary { background:var(--gold); color:var(--navy-dark); padding:0.75rem 2rem; border-radius:6px; font-weight:700; font-size:0.95rem; text-decoration:none; border:none; cursor:pointer; transition:background 0.2s; }
+  .btn-primary:hover { background:var(--gold-light); }
+  .btn-outline { background:transparent; color:var(--white); padding:0.75rem 2rem; border-radius:6px; font-weight:500; font-size:0.95rem; text-decoration:none; border:1px solid var(--border); cursor:pointer; }
+  .btn-outline:hover { border-color:var(--gold); }
+
+  footer { border-top:1px solid var(--border); padding:1.5rem; text-align:center; color:var(--muted); font-size:0.78rem; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://jonestes.me" class="nav-logo">JE</a>
+  <a href="poker.html" class="nav-back">← Back to Presentation</a>
+</nav>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-hero">
+    <div class="start-suits">♠ ♥ ♦ ♣</div>
+    <h1>Poker Quiz</h1>
+    <p>10 questions. Identify the hand. Race the clock. How well do you know your cards?</p>
+  </div>
+
+  <div class="name-input-wrap">
+    <label for="playerName">Your Name (for the leaderboard)</label>
+    <input id="playerName" class="name-input" type="text" placeholder="e.g. Jon E." maxlength="20" autocomplete="off">
+  </div>
+
+  <div style="text-align:center;margin-bottom:1.25rem;">
+    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Difficulty</div>
+    <div class="difficulty-row">
+      <button class="diff-btn selected" data-diff="easy" onclick="selectDiff(this,'easy')">🟢 Easy — 20s</button>
+      <button class="diff-btn" data-diff="medium" onclick="selectDiff(this,'medium')">🟡 Medium — 12s</button>
+      <button class="diff-btn" data-diff="hard" onclick="selectDiff(this,'hard')">🔴 Hard — 7s</button>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startQuiz()">Deal Me In ♠</button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="quizScreen">
+  <div class="quiz-header">
+    <div>
+      <div class="q-counter" id="qCounter">Question 1 of 10</div>
+      <div id="streakBadge" style="margin-top:0.4rem;display:none;" class="streak-badge">🔥 <span id="streakNum">0</span> streak</div>
+    </div>
+    <div class="timer-ring" id="timerRing">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="26"/>
+        <circle class="progress-ring" id="timerCircle" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-text" id="timerText">20</div>
+    </div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="qProgress" style="width:0%"></div></div>
+
+  <div class="quiz-meta">
+    <div class="q-prompt">What hand is this? <strong id="qHint"></strong></div>
+    <div class="q-score">Score: <span id="scoreDisplay">0</span></div>
+  </div>
+
+  <div class="cards-row" id="cardsRow"></div>
+
+  <div class="choices" id="choicesGrid"></div>
+
+  <div class="feedback-box" id="feedbackBox"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-hero">
+    <div class="results-suit" id="resultEmoji">🃏</div>
+    <h2 id="resultTitle">Nice hand!</h2>
+    <p id="resultSubtitle" style="color:var(--muted);font-size:0.95rem;line-height:1.7;max-width:420px;margin:0 auto 1rem;"></p>
+
+    <div class="score-circle" id="scoreCircle" style="--pct:0%">
+      <span class="score-number" id="finalScore">0/10</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val" id="statCorrect">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat"><div class="stat-val" id="statTime">0s</div><div class="stat-label">Avg Time</div></div>
+      <div class="stat"><div class="stat-val" id="statStreak">0</div><div class="stat-label">Best Streak</div></div>
+    </div>
+  </div>
+
+  <div class="leaderboard" id="leaderboardSection">
+    <div class="lb-title">🏆 Leaderboard</div>
+    <div id="lbList"></div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Your Answers</div>
+    <div class="review-list" id="reviewList"></div>
+  </div>
+
+  <div class="result-actions">
+    <button class="btn-primary" onclick="restartQuiz()">🔄 Play Again</button>
+    <a href="poker.html" class="btn-outline">📖 Review the Hands</a>
+  </div>
+</div>
+
+<footer>
+  <a href="https://jonestes.me">jonestes.me</a> · Poker Hands 101 Quiz
+</footer>
+
+<script>
+const HANDS = [
+  { name:"Royal Flush",     desc:"A-K-Q-J-10 same suit — the ultimate hand.",          cards:[{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}] },
+  { name:"Straight Flush",  desc:"Five in a row, all same suit.",                       cards:[{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}] },
+  { name:"Four of a Kind",  desc:"Four cards of the same rank.",                        cards:[{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}] },
+  { name:"Full House",      desc:"Three of a kind plus a pair.",                        cards:[{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}] },
+  { name:"Flush",           desc:"Any five cards of the same suit (not in sequence).",  cards:[{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}] },
+  { name:"Straight",        desc:"Five in a row, mixed suits.",                         cards:[{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}] },
+  { name:"Three of a Kind", desc:"Three cards of the same rank.",                       cards:[{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}] },
+  { name:"Two Pair",        desc:"Two different pairs.",                                cards:[{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}] },
+  { name:"One Pair",        desc:"Two cards of the same rank.",                         cards:[{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}] },
+  { name:"High Card",       desc:"No combination — highest card plays.",                cards:[{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}] },
+];
+
+// Extra variant hands for more variety
+const HAND_VARIANTS = {
+  "Royal Flush":     [ [{l:"A",s:"♥"},{l:"K",s:"♥"},{l:"Q",s:"♥"},{l:"J",s:"♥"},{l:"10",s:"♥"}], [{l:"A",s:"♦"},{l:"K",s:"♦"},{l:"Q",s:"♦"},{l:"J",s:"♦"},{l:"10",s:"♦"}] ],
+  "Straight Flush":  [ [{l:"6",s:"♣"},{l:"7",s:"♣"},{l:"8",s:"♣"},{l:"9",s:"♣"},{l:"10",s:"♣"}] ],
+  "Four of a Kind":  [ [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♦"}] ],
+  "Full House":      [ [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"K",s:"♠"},{l:"K",s:"♣"}] ],
+  "Flush":           [ [{l:"3",s:"♣"},{l:"6",s:"♣"},{l:"8",s:"♣"},{l:"J",s:"♣"},{l:"K",s:"♣"}] ],
+  "Straight":        [ [{l:"A",s:"♠"},{l:"2",s:"♥"},{l:"3",s:"♦"},{l:"4",s:"♣"},{l:"5",s:"♥"}] ],
+  "Three of a Kind": [ [{l:"9",s:"♣"},{l:"9",s:"♦"},{l:"9",s:"♥"},{l:"2",s:"♠"},{l:"6",s:"♦"}] ],
+  "Two Pair":        [ [{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"3",s:"♦"},{l:"3",s:"♣"},{l:"J",s:"♠"}] ],
+  "One Pair":        [ [{l:"A",s:"♠"},{l:"A",s:"♦"},{l:"8",s:"♥"},{l:"4",s:"♣"},{l:"2",s:"♦"}] ],
+  "High Card":       [ [{l:"K",s:"♠"},{l:"J",s:"♥"},{l:"8",s:"♦"},{l:"5",s:"♣"},{l:"3",s:"♥"}] ],
+};
+
+const ALL_NAMES = HANDS.map(h => h.name);
+const RED_SUITS = ["♥","♦"];
+const DIFF_TIMES = { easy:20, medium:12, hard:7 };
+
+let difficulty = 'easy';
+let timeLimit = 20;
+let playerName = '';
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let answered = false;
+let timerInterval = null;
+let timeLeft = 0;
+let totalTime = 0;
+let questionTimes = [];
+let answers = [];
+let questionStart = 0;
+
+// Leaderboard stored in sessionStorage (resets per session — no server needed)
+function getLeaderboard() {
+  try { return JSON.parse(sessionStorage.getItem('pokerLB') || '[]'); } catch { return []; }
+}
+function saveLeaderboard(lb) {
+  sessionStorage.setItem('pokerLB', JSON.stringify(lb));
+}
+
+function selectDiff(btn, diff) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  difficulty = diff;
+  timeLimit = DIFF_TIMES[diff];
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function getCards(hand) {
+  const variants = HAND_VARIANTS[hand.name] || [];
+  const pool = [hand.cards, ...variants];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function startQuiz() {
+  playerName = document.getElementById('playerName').value.trim() || 'Anonymous';
+  timeLimit = DIFF_TIMES[difficulty];
+
+  // Build 10 shuffled questions
+  questions = shuffle(HANDS).slice(0, 10).map(h => {
+    const correct = h.name;
+    const wrong = shuffle(ALL_NAMES.filter(n => n !== correct)).slice(0, 3);
+    const choices = shuffle([correct, ...wrong]);
+    return { hand: h, correct, choices, cards: getCards(h) };
+  });
+
+  currentQ = 0; score = 0; streak = 0; bestStreak = 0;
+  answers = []; questionTimes = [];
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('quizScreen').classList.add('active');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  answered = false;
+  questionStart = Date.now();
+
+  document.getElementById('qCounter').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('qProgress').style.width = `${(currentQ / questions.length) * 100}%`;
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('qHint').textContent = '';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // Streak badge
+  const sb = document.getElementById('streakBadge');
+  if (streak >= 2) { sb.style.display = 'inline-flex'; document.getElementById('streakNum').textContent = streak; }
+  else { sb.style.display = 'none'; }
+
+  // Cards
+  const cardsRow = document.getElementById('cardsRow');
+  cardsRow.innerHTML = q.cards.map(c => `
+    <div class="playing-card">
+      <div class="card-label ${RED_SUITS.includes(c.s)?'red':'black'}">${c.l}</div>
+      <div class="card-suit-top ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>
+      <div class="card-center ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>
+    </div>`).join('');
+
+  // Choices
+  const grid = document.getElementById('choicesGrid');
+  grid.innerHTML = q.choices.map(name => `
+    <button class="choice-btn" onclick="answer('${name.replace(/'/g,"\\'")}')">
+      ${name}
+    </button>`).join('');
+
+  // Timer
+  clearInterval(timerInterval);
+  timeLeft = timeLimit;
+  updateTimer(1);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimer(timeLeft / timeLimit);
+    if (timeLeft <= 0) { clearInterval(timerInterval); timeUp(); }
+  }, 1000);
+}
+
+function updateTimer(fraction) {
+  const circumference = 163.4;
+  const offset = circumference * (1 - fraction);
+  const circle = document.getElementById('timerCircle');
+  circle.style.strokeDashoffset = offset;
+  document.getElementById('timerText').textContent = Math.max(0, timeLeft);
+  if (fraction < 0.3) circle.style.stroke = '#c0392b';
+  else if (fraction < 0.6) circle.style.stroke = '#e8b84b';
+  else circle.style.stroke = 'var(--gold)';
+}
+
+function timeUp() {
+  if (answered) return;
+  answer(null);
+}
+
+function answer(chosen) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const elapsed = (Date.now() - questionStart) / 1000;
+  questionTimes.push(elapsed);
+
+  const q = questions[currentQ];
+  const isCorrect = chosen === q.correct;
+
+  if (isCorrect) {
+    score += Math.max(1, Math.round(timeLeft * 10 / timeLimit)) + (streak >= 2 ? 5 : 0);
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+  } else {
+    streak = 0;
+  }
+
+  answers.push({ hand: q.correct, chose: chosen, correct: isCorrect });
+  document.getElementById('scoreDisplay').textContent = score;
+
+  // Highlight choices
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent.trim() === q.correct) btn.classList.add('correct');
+    else if (btn.textContent.trim() === chosen && !isCorrect) btn.classList.add('wrong');
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box ' + (isCorrect ? 'correct' : 'wrong');
+  if (!chosen) {
+    fb.innerHTML = `<strong>⏰ Time's up!</strong>That was a <strong>${q.correct}</strong>. ${q.hand.desc}`;
+  } else if (isCorrect) {
+    const bonus = streak >= 2 ? ` (+${5} streak bonus!)` : '';
+    fb.innerHTML = `<strong>✓ Correct!${bonus}</strong>${q.hand.desc}`;
+  } else {
+    fb.innerHTML = `<strong>✗ Not quite.</strong>That was a <strong>${q.correct}</strong>. ${q.hand.desc}`;
+  }
+  fb.style.display = 'block';
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = currentQ < questions.length - 1 ? 'Next Question →' : 'See Results →';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) showResults();
+  else renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('quizScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.add('active');
+
+  const correct = answers.filter(a => a.correct).length;
+  const pct = Math.round((correct / questions.length) * 100);
+  const avgTime = questionTimes.length ? Math.round(questionTimes.reduce((a,b)=>a+b,0) / questionTimes.length) : 0;
+
+  document.getElementById('finalScore').textContent = `${correct}/${questions.length}`;
+  document.getElementById('scoreCircle').style.setProperty('--pct', `${pct}%`);
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statTime').textContent = avgTime + 's';
+  document.getElementById('statStreak').textContent = bestStreak;
+
+  // Title
+  let emoji, title, sub;
+  if (pct === 100) { emoji='🏆'; title='Royal Flush!'; sub='Perfect score! You\'re a poker pro.'; }
+  else if (pct >= 80) { emoji='⭐'; title='Straight Flush!'; sub='Really impressive — you know your hands.'; }
+  else if (pct >= 60) { emoji='♠'; title='Full House!'; sub='Solid work. A little more practice and you\'ll be unstoppable.'; }
+  else if (pct >= 40) { emoji='♥'; title='One Pair...'; sub='A decent start! Review the hands and try again.'; }
+  else { emoji='🃏'; title='High Card'; sub='Everyone starts somewhere. Review the slide deck and come back!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSubtitle').textContent = sub;
+
+  // Save to leaderboard
+  const lb = getLeaderboard();
+  lb.push({ name: playerName, score, correct, pct, time: Date.now() });
+  lb.sort((a,b) => b.score - a.score || b.correct - a.correct);
+  saveLeaderboard(lb.slice(0, 20));
+  renderLeaderboard(lb);
+
+  // Review
+  const list = document.getElementById('reviewList');
+  list.innerHTML = answers.map(a => `
+    <div class="review-item ${a.correct ? 'correct-item' : 'wrong-item'}">
+      <div class="review-icon">${a.correct ? '✓' : '✗'}</div>
+      <div class="review-hand">${a.hand}</div>
+      ${!a.correct ? `<div class="review-answer">You said: ${a.chose || 'Timed out'}</div>` : ''}
+    </div>`).join('');
+}
+
+function renderLeaderboard(lb) {
+  const list = document.getElementById('lbList');
+  const top = lb.slice(0, 8);
+  if (!top.length) { list.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;">No scores yet — you\'re the first!</p>'; return; }
+  list.innerHTML = top.map((entry, i) => {
+    const isMe = entry.name === playerName && i === top.findIndex(e => e.name === playerName);
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    return `<div class="lb-row ${isMe?'me':''}">
+      <div class="lb-pos">${medal || (i+1)}</div>
+      <div class="lb-name">${entry.name}${isMe?' (you)':''}</div>
+      <div class="lb-meta">${entry.correct}/10 correct</div>
+      <div class="lb-score">${entry.score} pts</div>
+    </div>`;
+  }).join('');
+}
+
+function restartQuiz() {
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+}
+</script>
+</body>
+</html>
