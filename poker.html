@@ -65,6 +65,8 @@ footer a { color: var(--gold); text-decoration: none; }
   position: fixed; inset: 0; z-index: 9999;
   background: var(--bg);
   flex-direction: row;
+  height: 100vh;
+  width: 100vw;
 }
 #fullscreenOverlay.active { display: flex; }
 
@@ -72,12 +74,14 @@ footer a { color: var(--gold); text-decoration: none; }
 #sidebar {
   width: var(--sidebar-w);
   min-width: var(--sidebar-w);
+  height: 100%;
   background: rgba(17,29,52,0.7);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   backdrop-filter: blur(8px);
+  flex-shrink: 0;
 }
 .sidebar-header {
   padding: 1.1rem 1rem 0.7rem;
@@ -183,6 +187,7 @@ footer a { color: var(--gold); text-decoration: none; }
   flex-direction: column;
   overflow: hidden;
   min-width: 0;
+  height: 100%;
 }
 
 /* Top bar in fullscreen */
@@ -212,6 +217,7 @@ footer a { color: var(--gold); text-decoration: none; }
   position: relative;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 /* Bottom nav bar */
@@ -238,7 +244,8 @@ footer a { color: var(--gold); text-decoration: none; }
 .slide-card {
   display: none;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   animation: slideIn 0.3s ease;
 }
@@ -257,72 +264,72 @@ footer a { color: var(--gold); text-decoration: none; }
 /* ── Slide header (fullscreen) ── */
 .slide-header {
   background: var(--navy-dark);
-  padding: 1rem 1.75rem;
-  display: flex; align-items: center; gap: 1rem;
+  padding: 1.2rem 2.5rem;
+  display: flex; align-items: center; gap: 1.25rem;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-.rank-badge { width: 40px; height: 40px; border-radius: 6px; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; flex-shrink:0; }
+.rank-badge { width: 52px; height: 52px; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:1.2rem; flex-shrink:0; }
 .rank-gold { background:var(--gold); color:var(--navy-dark); }
 .rank-blue { background:#2d6cb0; color:white; }
 .rank-gray { background:#3a3a38; color:var(--muted); }
 .slide-header-title { flex:1; }
-.slide-header-title h2 { font-family:'Playfair Display',serif; font-size:clamp(1.3rem,2.5vw,1.8rem); font-weight:700; }
-.slide-odds { font-size:0.8rem; color:var(--gold-light); margin-top:0.15rem; }
+.slide-header-title h2 { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,3vw,2.4rem); font-weight:700; }
+.slide-odds { font-size:0.95rem; color:var(--gold-light); margin-top:0.2rem; }
 
 /* ── Slide body (2 col) ── */
 .slide-body { display:grid; grid-template-columns:1fr 1fr; flex:1; min-height:0; }
-.slide-left { padding:1.5rem 1.75rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:0.75rem; }
-.slide-right { padding:1.5rem 1.75rem; display:flex; flex-direction:column; gap:0.75rem; }
+.slide-left { padding:2.5rem 2.5rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:1.25rem; }
+.slide-right { padding:2.5rem 2.5rem; display:flex; flex-direction:column; gap:1.25rem; justify-content:center; }
 
 /* ── Playing cards ── */
-.cards-display { display:flex; gap:10px; flex-wrap:wrap; }
-.playing-card { width:72px; height:100px; background:white; border-radius:8px; border:1px solid #ddd; display:flex; flex-direction:column; align-items:flex-start; padding:7px 8px; position:relative; box-shadow:0 3px 12px rgba(0,0,0,0.4); flex-shrink:0; }
+.cards-display { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start; }
+.playing-card { width:90px; height:126px; background:white; border-radius:10px; border:1px solid #ddd; display:flex; flex-direction:column; align-items:flex-start; padding:8px 10px; position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.45); flex-shrink:0; }
 .playing-card.card-anim { animation: dealCard 0.35s ease both; }
-.playing-card.card-anim:nth-child(2){animation-delay:0.05s}
-.playing-card.card-anim:nth-child(3){animation-delay:0.1s}
-.playing-card.card-anim:nth-child(4){animation-delay:0.15s}
-.playing-card.card-anim:nth-child(5){animation-delay:0.2s}
-@keyframes dealCard { from{opacity:0;transform:translateY(-16px) rotate(-4deg)} to{opacity:1;transform:translateY(0) rotate(0)} }
-.card-label { font-family:'Playfair Display',serif; font-weight:700; font-size:1.1rem; line-height:1; }
-.card-suit-top { font-size:0.9rem; line-height:1; margin-top:2px; }
-.card-suit-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:1.9rem; line-height:1; }
+.playing-card.card-anim:nth-child(2){animation-delay:0.06s}
+.playing-card.card-anim:nth-child(3){animation-delay:0.12s}
+.playing-card.card-anim:nth-child(4){animation-delay:0.18s}
+.playing-card.card-anim:nth-child(5){animation-delay:0.24s}
+@keyframes dealCard { from{opacity:0;transform:translateY(-20px) rotate(-5deg)} to{opacity:1;transform:translateY(0) rotate(0)} }
+.card-label { font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; line-height:1; }
+.card-suit-top { font-size:1.05rem; line-height:1; margin-top:2px; }
+.card-suit-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2.4rem; line-height:1; }
 .red { color:var(--card-red); }
 .black { color:#1a1a2e; }
 
 /* ── Text / content elements ── */
-.desc-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.3rem; }
-.desc-text { font-size:clamp(0.9rem,1.5vw,1.05rem); line-height:1.65; color:var(--white); }
-.tip-box { background:rgba(201,150,42,0.1); border:1px solid rgba(201,150,42,0.25); border-radius:8px; padding:0.85rem 1rem; font-size:0.88rem; color:#d4a84b; line-height:1.6; font-style:italic; }
+.desc-label { font-size:0.78rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); margin-bottom:0.4rem; font-weight:600; }
+.desc-text { font-size:clamp(1rem,1.8vw,1.25rem); line-height:1.7; color:var(--white); }
+.tip-box { background:rgba(201,150,42,0.1); border:1px solid rgba(201,150,42,0.25); border-radius:10px; padding:1.1rem 1.3rem; font-size:clamp(0.9rem,1.5vw,1.05rem); color:#d4a84b; line-height:1.65; font-style:italic; }
 .tip-box::before { content:"💡  "; }
 
 /* ── Ranking bar ── */
-.ranking-section { padding:0.9rem 1.75rem; border-top:1px solid var(--border); background:rgba(0,0,0,0.2); flex-shrink:0; }
-.ranking-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.5rem; }
-.ranking-bar { display:flex; gap:4px; }
-.rank-pip { flex:1; height:6px; border-radius:3px; background:var(--border); transition:background 0.3s; position:relative; }
+.ranking-section { padding:1.1rem 2.5rem; border-top:1px solid var(--border); background:rgba(0,0,0,0.2); flex-shrink:0; }
+.ranking-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.6rem; }
+.ranking-bar { display:flex; gap:5px; }
+.rank-pip { flex:1; height:8px; border-radius:4px; background:var(--border); transition:background 0.3s; position:relative; }
 .rank-pip.active { background:var(--gold); }
-.rank-pip .rank-tooltip { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); background:var(--navy-dark); color:var(--white); font-size:0.6rem; padding:3px 6px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.15s; border:1px solid var(--border); }
+.rank-pip .rank-tooltip { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:var(--navy-dark); color:var(--white); font-size:0.65rem; padding:3px 7px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.15s; border:1px solid var(--border); }
 .rank-pip:hover .rank-tooltip { opacity:1; }
-.ranking-ends { display:flex; justify-content:space-between; font-size:0.65rem; color:var(--muted); margin-top:0.3rem; }
+.ranking-ends { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--muted); margin-top:0.4rem; }
 
 /* ── Intro / basics slides ── */
-.slide-content { padding:1.5rem 2rem; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:1.25rem; }
-.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; }
-.intro-card { background:var(--surface2); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:8px; padding:1rem 1.1rem; }
-.intro-card strong { display:block; font-size:0.95rem; margin-bottom:0.35rem; }
-.intro-card p { font-size:0.82rem; color:var(--muted); line-height:1.55; }
+.slide-content { padding:2.5rem 3rem; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:1.75rem; justify-content:center; }
+.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
+.intro-card { background:var(--surface2); border:1px solid var(--border); border-left:4px solid var(--gold); border-radius:10px; padding:1.4rem 1.5rem; }
+.intro-card strong { display:block; font-size:1.05rem; margin-bottom:0.5rem; }
+.intro-card p { font-size:0.92rem; color:var(--muted); line-height:1.6; }
 
 /* ── Visual illustrations ── */
 .visual-row { display:flex; gap:1rem; align-items:flex-start; }
 .visual-diagram { flex-shrink:0; }
 
 /* ── Reference table ── */
-.ref-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
-.ref-table th { text-align:left; padding:0.5rem 0.7rem; background:var(--navy-dark); color:var(--muted); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; }
-.ref-table td { padding:0.5rem 0.7rem; border-bottom:1px solid var(--border); }
+.ref-table { width:100%; border-collapse:collapse; font-size:1rem; }
+.ref-table th { text-align:left; padding:0.75rem 1rem; background:var(--navy-dark); color:var(--muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; }
+.ref-table td { padding:0.7rem 1rem; border-bottom:1px solid var(--border); font-size:1rem; }
 .ref-table tr:nth-child(odd) td { background:rgba(255,255,255,0.02); }
-.ref-rank { color:var(--gold); font-weight:700; font-family:'Playfair Display',serif; }
+.ref-rank { color:var(--gold); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1rem; }
 .ref-rank.top3 { color:var(--gold-light); }
 
 /* ── Texas Hold'em ── */
@@ -331,26 +338,45 @@ footer a { color: var(--gold); text-decoration: none; }
   border-radius: 120px;
   border: 8px solid #5c3a1e;
   box-shadow: 0 0 0 4px #3a2010, inset 0 2px 20px rgba(0,0,0,0.4);
-  padding: 1.5rem 2.5rem;
+  padding: 1.75rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  max-width: 520px;
+  gap: 0.85rem;
+  max-width: 600px;
   margin: 0 auto;
 }
-.holdem-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; text-align:center; }
-.holdem-community { display:flex; gap:8px; justify-content:center; }
+.holdem-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; text-align:center; }
+.holdem-community { display:flex; gap:10px; justify-content:center; }
 .holdem-divider { width:60%; height:1px; background:rgba(255,255,255,0.15); }
-.holdem-hole { display:flex; gap:8px; justify-content:center; }
-.holdem-player { font-size:0.7rem; color:rgba(255,255,255,0.5); text-align:center; margin-top:0.2rem; }
+.holdem-hole { display:flex; gap:10px; justify-content:center; }
+.holdem-player { font-size:0.8rem; color:rgba(255,255,255,0.5); text-align:center; margin-top:0.2rem; }
 
 /* ── Quiz CTA ── */
-.quiz-cta-inner { padding:2rem; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center; }
-.quiz-cta-inner h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:0.75rem; }
-.quiz-cta-box { background:linear-gradient(135deg,var(--navy-dark),#0d1628); border:1px solid rgba(201,150,42,0.3); border-radius:12px; padding:2rem; margin-top:1rem; max-width:500px; }
-.quiz-cta-box p { color:var(--muted); font-size:0.95rem; line-height:1.7; margin:0.75rem 0 1.5rem; }
-.suit-row { font-size:2rem; letter-spacing:0.35em; margin-bottom:1rem; }
+.quiz-cta-inner { padding:3rem; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center; }
+.quiz-cta-inner h2 { font-family:'Playfair Display',serif; font-size:2.6rem; margin-bottom:0.75rem; }
+.quiz-cta-box { background:linear-gradient(135deg,var(--navy-dark),#0d1628); border:1px solid rgba(201,150,42,0.3); border-radius:14px; padding:2.5rem; margin-top:1rem; max-width:560px; }
+.quiz-cta-box p { color:var(--muted); font-size:1.05rem; line-height:1.75; margin:0.75rem 0 1.75rem; }
+.suit-row { font-size:2.5rem; letter-spacing:0.4em; margin-bottom:1rem; }
+
+/* ── Speaker notes ── */
+#speakerNotes {
+  display: none;
+  position: absolute;
+  bottom: 56px; left: 0; right: 0;
+  background: rgba(10,16,32,0.97);
+  border-top: 2px solid var(--gold);
+  padding: 1rem 2.5rem;
+  font-size: 0.92rem;
+  color: #d4a84b;
+  line-height: 1.65;
+  font-style: italic;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+#speakerNotes::before { content: "🎤  Speaker: "; font-weight: 700; font-style: normal; color: var(--gold); }
+#speakerNotes.visible { display: block; }
+#slideViewport { position: relative; }
 </style>
 </head>
 <body>
@@ -400,6 +426,7 @@ footer a { color: var(--gold); text-decoration: none; }
       <span class="fs-counter" id="fsCounter">1 / 16</span>
       <div class="fs-progress"><div class="fs-progress-fill" id="fsProgressFill" style="width:6%"></div></div>
       <div class="fs-actions">
+        <button class="fs-btn" id="notesBtn" onclick="toggleNotes()">📝 Notes</button>
         <button class="fs-btn" onclick="toggleBrowserFS()">⛶ Full Screen</button>
         <a href="poker-quiz.html" class="fs-btn gold" style="text-decoration:none;">🎯 Quiz</a>
         <button class="fs-btn" onclick="exitSlideshow()">✕ Exit</button>
@@ -407,6 +434,7 @@ footer a { color: var(--gold); text-decoration: none; }
     </div>
 
     <div id="slideViewport">
+      <div id="speakerNotes"></div>
       <!-- slides injected by JS -->
     </div>
 
@@ -423,23 +451,23 @@ footer a { color: var(--gold); text-decoration: none; }
    DATA
 ═══════════════════════════════════════ */
 const HANDS = [
-  { rank:1,  name:"Royal Flush",     odds:"1 in 649,740", desc:"The absolute best hand in poker — an Ace-high straight, all five cards in the same suit.", tip:"If you get this, try not to look too excited. Most players never see one in their lifetime.",    cards:[{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}] },
-  { rank:2,  name:"Straight Flush",  odds:"1 in 72,193",  desc:"Five consecutive cards, all in the same suit. Any straight flush except Ace-high.",        tip:"The Ace-high version is the Royal Flush. Everything else (like 5-6-7-8-9 of hearts) is a Straight Flush.", cards:[{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}] },
-  { rank:3,  name:"Four of a Kind",  odds:"1 in 4,165",   desc:"Four cards of the same rank — all four suits — plus any fifth card.",                       tip:"Also called 'Quads.' Extremely hard to beat. Only a Straight Flush or Royal Flush wins.",      cards:[{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}] },
-  { rank:4,  name:"Full House",      odds:"1 in 694",     desc:"Three of a kind plus a pair. Example: three Jacks and two 9s.",                             tip:"Read as 'Jacks full of Nines.' If two players have a Full House, the higher three-of-a-kind wins.", cards:[{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}] },
-  { rank:5,  name:"Flush",           odds:"1 in 509",     desc:"Any five cards of the same suit — they don't have to be in sequence.",                      tip:"The actual ranks only matter for breaking ties. Ace-high flush beats King-high flush.",          cards:[{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}] },
-  { rank:6,  name:"Straight",        odds:"1 in 255",     desc:"Five consecutive cards of mixed suits. Example: 4-5-6-7-8 in any combination of suits.",    tip:"Ace can be high (A-K-Q-J-10) or low (A-2-3-4-5). You can't 'wrap around' like Q-K-A-2-3.",    cards:[{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}] },
-  { rank:7,  name:"Three of a Kind", odds:"1 in 47",      desc:"Three cards of the same rank, plus two unrelated cards.",                                    tip:"Called 'Trips' when you pair a community card, 'A Set' when you use both hole cards. Same hand, different names.", cards:[{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}] },
-  { rank:8,  name:"Two Pair",        odds:"1 in 21",      desc:"Two different pairs, plus any fifth card. Example: two Aces and two 5s.",                   tip:"The highest pair decides the winner. If that ties too, the second pair. Then the fifth card (the 'kicker').", cards:[{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}] },
-  { rank:9,  name:"One Pair",        odds:"1 in 2.4",     desc:"Two cards of the same rank, plus three unrelated cards.",                                    tip:"The most common made hand. Higher pair wins ties. If pairs match, the highest unmatched card (kicker) wins.", cards:[{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}] },
-  { rank:10, name:"High Card",       odds:"~1 in 1",      desc:"No combination at all — your highest card plays.",                                            tip:"The most common outcome. If everyone has High Card, the player with the highest individual card wins.",        cards:[{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}] },
+  { rank:1,  name:"Royal Flush",     odds:"1 in 649,740", notes:"Ask the room: 'Has anyone ever seen one of these in real life?' Almost nobody has. It's essentially a myth — which is what makes it legendary.", desc:"The absolute best hand in poker — an Ace-high straight, all five cards in the same suit.", tip:"If you get this, try not to look too excited. Most players never see one in their lifetime.",    cards:[{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}] },
+  { rank:2,  name:"Straight Flush",  odds:"1 in 72,193",  notes:"Point out: same as a straight, same as a flush — just both at once. The combo makes it rare. Good analogy: a procedure that hits every checkpoint perfectly.", desc:"Five consecutive cards, all in the same suit. Any straight flush except Ace-high.",        tip:"The Ace-high version is the Royal Flush. Everything else (like 5-6-7-8-9 of hearts) is a Straight Flush.", cards:[{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}] },
+  { rank:3,  name:"Four of a Kind",  odds:"1 in 4,165",   notes:"Great moment to check understanding: 'What's the one thing that could beat this?' (Only Straight Flush or Royal Flush.) Reinforces the ranking hierarchy.", desc:"Four cards of the same rank — all four suits — plus any fifth card.",                       tip:"Also called 'Quads.' Extremely hard to beat. Only a Straight Flush or Royal Flush wins.",      cards:[{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}] },
+  { rank:4,  name:"Full House",      odds:"1 in 694",     notes:"'Three of a kind PLUS a pair' is the simplest way to remember it. The three-of-a-kind part determines who wins if two players both have Full Houses.", desc:"Three of a kind plus a pair. Example: three Jacks and two 9s.",                             tip:"Read as 'Jacks full of Nines.' If two players have a Full House, the higher three-of-a-kind wins.", cards:[{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}] },
+  { rank:5,  name:"Flush",           odds:"1 in 509",     notes:"Common confusion: people think a Flush beats a Full House. It doesn't — Full House is higher. A good thing to emphasize here.", desc:"Any five cards of the same suit — they don't have to be in sequence.",                      tip:"The actual ranks only matter for breaking ties. Ace-high flush beats King-high flush.",          cards:[{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}] },
+  { rank:6,  name:"Straight",        odds:"1 in 255",     notes:"The Ace rule trips people up. Mention: A-2-3-4-5 is called 'the wheel' — the lowest straight. A-K-Q-J-10 is the highest. You can't go Q-K-A-2-3.", desc:"Five consecutive cards of mixed suits. Example: 4-5-6-7-8 in any combination of suits.",    tip:"Ace can be high (A-K-Q-J-10) or low (A-2-3-4-5). You can't 'wrap around' like Q-K-A-2-3.",    cards:[{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}] },
+  { rank:7,  name:"Three of a Kind", odds:"1 in 47",      notes:"'Trips' vs 'Set' is a fun distinction for engaged learners. Not essential but interesting — it tells other players how likely more of that rank is in the deck.", desc:"Three cards of the same rank, plus two unrelated cards.",                                    tip:"Called 'Trips' when you pair a community card, 'A Set' when you use both hole cards. Same hand, different names.", cards:[{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}] },
+  { rank:8,  name:"Two Pair",        odds:"1 in 21",      notes:"The 'kicker' concept is worth mentioning — if both the pairs match, the 5th card (kicker) decides. This is the first hand where that tiebreaker matters a lot.", desc:"Two different pairs, plus any fifth card. Example: two Aces and two 5s.",                   tip:"The highest pair decides the winner. If that ties too, the second pair. Then the fifth card (the 'kicker').", cards:[{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}] },
+  { rank:9,  name:"One Pair",        odds:"1 in 2.4",     notes:"This is what most people end up with in a typical hand. Reinforce: one pair of twos still BEATS a high card hand, no matter how high the high card is.", desc:"Two cards of the same rank, plus three unrelated cards.",                                    tip:"The most common made hand. Higher pair wins ties. If pairs match, the highest unmatched card (kicker) wins.", cards:[{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}] },
+  { rank:10, name:"High Card",       odds:"~1 in 1",      notes:"A good reality check here: in most rounds, many players at the table end up with just High Card. Poker is often about bluffing — making others think you have more.", desc:"No combination at all — your highest card plays.",                                            tip:"The most common outcome. If everyone has High Card, the player with the highest individual card wins.",        cards:[{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}] },
 ];
 const RED_SUITS = ["♥","♦"];
 const HAND_NAMES_SHORT = ["Royal Flush","Str. Flush","4 of a Kind","Full House","Flush","Straight","3 of a Kind","Two Pair","One Pair","High Card"];
 const REF_WHAT = ["A-K-Q-J-10 same suit","5 in a row, same suit","Four matching ranks","Three-of-a-kind + Pair","Any 5 same suit","5 in a row, mixed suits","Three matching ranks","Two different pairs","Two matching ranks","No combination"];
 
-// Slide numbering: 0=title,1=why,2=basics,3–12=hands,13=holdem,14=ref,15=quiz
-const TOTAL_SLIDES = 16;
+// Slide numbering: 0=title,1=why,2=basics,3–12=hands,13=holdem,14=audience challenge,15=ref,16=tie-in,17=quiz
+const TOTAL_SLIDES = 18;
 const FIRST_HAND_SLIDE = 3;
 let currentSlide = 0;
 const revealState = {};
@@ -573,57 +601,96 @@ function buildAllSlides(){
     vp.appendChild(div);
   });
 
-  // SLIDE 13: Texas Hold'em — community + hole cards
+  // SLIDE 13: Texas Hold'em
   vp.innerHTML += `
-  <div class="slide-card" data-slide="13">
+  <div class="slide-card" data-slide="13" data-notes="Walk through the diagram slowly. Ask: 'Given these community cards and hole cards, what's the best 5-card hand?' Answer: Full House — Kings full of Sevens. The audience may surprise you!">
     <div class="slide-header">
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">♠♥</div>
       <div class="slide-header-title"><h2>How Texas Hold'em Works <span class="reveal-hint" id="hint-13"></span></h2></div>
     </div>
     <div class="slide-content" style="align-items:center;">
-      <p data-reveal style="color:var(--muted);font-size:0.95rem;line-height:1.75;max-width:620px;text-align:center;">
+      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:680px;text-align:center;">
         In Texas Hold'em — the most popular poker variant — every player gets <strong style="color:var(--white);">2 private cards</strong> (hole cards) and shares <strong style="color:var(--white);">5 community cards</strong> on the table. You build the best 5-card hand from any combination of your 7 cards.
       </p>
       <div data-reveal class="holdem-table">
-        <div class="holdem-label">Community Cards (shared by everyone)</div>
+        <div class="holdem-label">Community Cards — shared by everyone at the table</div>
         <div class="holdem-community">
           ${[{l:"K",s:"♦"},{l:"7",s:"♥"},{l:"7",s:"♣"},{l:"2",s:"♠"},{l:"J",s:"♦"}].map(c=>card(c)).join('')}
         </div>
-        <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-align:center;">The Flop (3) · The Turn (1) · The River (1)</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);text-align:center;">The Flop (3 cards) · The Turn (1) · The River (1)</div>
         <div class="holdem-divider"></div>
-        <div class="holdem-label">Your Hole Cards (private — only you see these)</div>
+        <div class="holdem-label">Your Hole Cards — private, only you see these</div>
         <div class="holdem-hole">
           ${[{l:"K",s:"♥"},{l:"K",s:"♣"}].map(c=>card(c)).join('')}
         </div>
-        <div class="holdem-player">Your hand = Full House: Kings full of Sevens 🏆</div>
+        <div class="holdem-player">Your best hand = Full House: Kings full of Sevens 🏆</div>
       </div>
-      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;max-width:620px;width:100%;">
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.9rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">2</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Hole Cards<br><span style="font-size:0.65rem;">Private. Only yours.</span></div>
+      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;max-width:680px;width:100%;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">2</div>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Hole Cards<br><span style="font-size:0.75rem;">Private. Only yours.</span></div>
         </div>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.9rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Community Cards<br><span style="font-size:0.65rem;">Everyone shares these.</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Community Cards<br><span style="font-size:0.75rem;">Everyone shares these.</span></div>
         </div>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.9rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Best Hand<br><span style="font-size:0.65rem;">Any 5 of your 7 total.</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Best Final Hand<br><span style="font-size:0.75rem;">Any 5 of your 7 cards.</span></div>
         </div>
       </div>
-      <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:8px;padding:0.85rem 1.1rem;font-size:0.87rem;color:#d4a84b;line-height:1.6;max-width:620px;width:100%;font-style:italic;">
-        💡 This is why hand-reading is a skill — you're always working with partial information. Your opponents share those 5 community cards too, but they have different hole cards.
+      <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.3rem;font-size:0.95rem;color:#d4a84b;line-height:1.65;max-width:680px;width:100%;font-style:italic;">
+        💡 This is why reading hands is a skill — you're always working with partial information. Your opponents see the same community cards but have different hole cards.
       </div>
     </div>
   </div>`;
 
-  // SLIDE 14: Quick Reference (rows reveal one by one)
+  // SLIDE 14: Live Audience Challenge
+  const challengeHands = [
+    { cards:[{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"K",s:"♠"},{l:"K",s:"♥"}], answer:"Full House", hint:"Three of one rank, two of another" },
+    { cards:[{l:"10",s:"♠"},{l:"J",s:"♠"},{l:"Q",s:"♠"},{l:"K",s:"♠"},{l:"A",s:"♠"}], answer:"Royal Flush", hint:"The best hand in poker" },
+    { cards:[{l:"4",s:"♥"},{l:"7",s:"♣"},{l:"Q",s:"♦"},{l:"2",s:"♠"},{l:"9",s:"♥"}], answer:"High Card", hint:"No matching cards, no sequence, no suit pattern" },
+    { cards:[{l:"6",s:"♣"},{l:"6",s:"♦"},{l:"8",s:"♠"},{l:"8",s:"♥"},{l:"J",s:"♦"}], answer:"Two Pair", hint:"Two different pairs" },
+    { cards:[{l:"3",s:"♦"},{l:"5",s:"♦"},{l:"7",s:"♦"},{l:"9",s:"♦"},{l:"J",s:"♦"}], answer:"Flush", hint:"All five cards share the same suit" },
+  ];
+  const challengeCardsHTML = challengeHands.map((ch, i) =>
+    `<div class="challenge-hand" id="ch-${i}" style="display:${i===0?'block':'none'}">
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+        ${ch.cards.map(c=>card(c,true)).join('')}
+      </div>
+      <div id="ch-answer-${i}" style="display:none;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);margin-bottom:0.5rem;">${ch.answer}</div>
+        <div style="font-size:1rem;color:var(--muted);font-style:italic;">${ch.hint}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="14" data-notes="Show each hand, give the room 5–10 seconds to discuss quietly, then click to reveal. Keep energy up — celebrate right answers! This is the most interactive part.">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">🎯</div>
+      <div class="slide-header-title"><h2>Live Challenge — What's the Hand?</h2></div>
+    </div>
+    <div class="slide-content" style="align-items:center;justify-content:center;gap:2rem;">
+      <p style="color:var(--muted);font-size:1rem;text-align:center;max-width:560px;">Look at the cards below. What hand is it? Discuss with the person next to you — then we'll reveal!</p>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:2.5rem 3rem;max-width:600px;width:100%;text-align:center;">
+        ${challengeCardsHTML}
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
+          <button onclick="revealChallenge()" class="nav-btn primary" id="revealBtn" style="font-size:1rem;padding:0.65rem 1.75rem;">👁 Reveal Answer</button>
+          <button onclick="nextChallenge()" class="nav-btn" id="nextChallengeBtn" style="font-size:1rem;padding:0.65rem 1.75rem;display:none;">Next Hand →</button>
+        </div>
+      </div>
+      <div style="color:var(--muted);font-size:0.8rem;" id="challengeCounter">Hand 1 of ${challengeHands.length}</div>
+    </div>
+  </div>`;
+
+  // SLIDE 15: Quick Reference
   const refRows = HANDS.map((h,i) => `<tr data-reveal><td><span class="ref-rank ${h.rank<=3?'top3':''}">${h.rank}</span></td><td style="font-weight:500">${h.name}</td><td style="color:var(--muted)">${REF_WHAT[i]}</td><td style="color:var(--muted)">${h.odds}</td></tr>`).join('');
   vp.innerHTML += `
-  <div class="slide-card" data-slide="14">
+  <div class="slide-card" data-slide="15" data-notes="Each click reveals one row. Go through them in order — this is the 'full picture' moment. Ask if anyone has questions about the order or any specific hand.">
     <div class="slide-header">
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">REF</div>
-      <div class="slide-header-title"><h2>Quick Reference — All 10 Hands <span class="reveal-hint" id="hint-14"></span></h2></div>
+      <div class="slide-header-title"><h2>Quick Reference — All 10 Hands <span class="reveal-hint" id="hint-15"></span></h2></div>
     </div>
     <div class="slide-content">
       <table class="ref-table">
@@ -633,15 +700,49 @@ function buildAllSlides(){
     </div>
   </div>`;
 
-  // SLIDE 15: Quiz CTA
+  // SLIDE 16: Work Tie-In
   vp.innerHTML += `
-  <div class="slide-card" data-slide="15">
+  <div class="slide-card" data-slide="16" data-notes="This is your 'so what?' slide. Don't rush it — let the connections land. Ask the team: 'Which of these feels most relevant to your day-to-day work?'">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">💡</div>
+      <div class="slide-header-title"><h2>Poker Thinking in Our Work <span class="reveal-hint" id="hint-16"></span></h2></div>
+    </div>
+    <div class="slide-content">
+      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:760px;">The same mental moves that make a great poker player also make a great medical device trainer. Here's how they map.</p>
+      <div style="display:flex;flex-direction:column;gap:0.85rem;">
+        <div data-reveal style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">♠ Reading a hand quickly under pressure</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">→</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Scanning a procedure or audit doc for critical compliance points</div>
+        </div>
+        <div data-reveal style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">♥ Knowing when to fold — cut your losses</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">→</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Recognizing when a training approach isn't landing and pivoting in real time</div>
+        </div>
+        <div data-reveal style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">♦ Calculating odds with incomplete info</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">→</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Weighing training investment vs. performance outcomes before recommending a program change</div>
+        </div>
+        <div data-reveal style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">♣ Reading your opponents' reactions</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">→</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Gauging learner comprehension and engagement in real time — adjusting pacing, depth, and examples on the fly</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 17: Quiz CTA
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="17" data-notes="Hand off to the quiz now. If presenting live, you can pull up poker-quiz.html on everyone's devices and run the leaderboard together. The team mode makes it really fun.">
     <div class="quiz-cta-inner">
       <div class="suit-row">♠ ♥ ♦ ♣</div>
       <h2>Ready to Test Yourself?</h2>
       <div class="quiz-cta-box">
-        <p>Head to the interactive quiz — identify each hand, race the clock, and see who tops the leaderboard. Good luck! 🃏</p>
-        <a href="poker-quiz.html" class="btn-primary" style="display:inline-block;font-size:1rem;padding:0.9rem 2.5rem;">🎯 Take the Quiz</a>
+        <p>Head to the interactive quiz — identify each hand, race the clock, and see who tops the leaderboard. The team leaderboard tracks everyone's score in real time. Good luck! 🃏</p>
+        <a href="poker-quiz.html" class="btn-primary" style="display:inline-block;font-size:1.1rem;padding:1rem 2.75rem;">🎯 Take the Quiz</a>
       </div>
     </div>
   </div>`;
@@ -681,6 +782,51 @@ function updateSidebar(slideNum){
 }
 
 /* ═══════════════════════════════════════
+   AUDIENCE CHALLENGE SLIDE
+═══════════════════════════════════════ */
+let challengeIdx = 0;
+const CHALLENGE_COUNT = 5;
+
+function revealChallenge(){
+  document.getElementById(`ch-answer-${challengeIdx}`).style.display='block';
+  document.getElementById('revealBtn').style.display='none';
+  document.getElementById('nextChallengeBtn').style.display = challengeIdx < CHALLENGE_COUNT-1 ? 'inline-flex' : 'none';
+}
+
+function nextChallenge(){
+  document.getElementById(`ch-${challengeIdx}`).style.display='none';
+  challengeIdx++;
+  if(challengeIdx < CHALLENGE_COUNT){
+    document.getElementById(`ch-${challengeIdx}`).style.display='block';
+    document.getElementById('revealBtn').style.display='inline-flex';
+    document.getElementById('nextChallengeBtn').style.display='none';
+    document.getElementById('challengeCounter').textContent=`Hand ${challengeIdx+1} of ${CHALLENGE_COUNT}`;
+  }
+}
+
+/* ═══════════════════════════════════════
+   SPEAKER NOTES
+═══════════════════════════════════════ */
+let notesVisible = false;
+function toggleNotes(){
+  notesVisible = !notesVisible;
+  const panel = document.getElementById('speakerNotes');
+  const btn = document.getElementById('notesBtn');
+  panel.classList.toggle('visible', notesVisible);
+  btn.style.borderColor = notesVisible ? 'var(--gold)' : '';
+  btn.style.color = notesVisible ? 'var(--gold-light)' : '';
+}
+function updateNotes(slideNum){
+  const slideEl = document.querySelector(`.slide-card[data-slide="${slideNum}"]`);
+  const notes = slideEl ? slideEl.dataset.notes : '';
+  document.getElementById('speakerNotes').dataset.text = notes || '';
+  const panel = document.getElementById('speakerNotes');
+  // replace text node after ::before
+  panel.textContent = notes || '';
+  if(notes) panel.dataset.notes = notes;
+}
+
+/* ═══════════════════════════════════════
    TOC (landing page)
 ═══════════════════════════════════════ */
 function buildTOC(){
@@ -688,7 +834,8 @@ function buildTOC(){
   const items = [
     {label:"Title",slide:0},{label:"Why Poker?",slide:1},{label:"The Basics",slide:2},
     ...HANDS.map(h=>({label:`#${h.rank} ${h.name}`,slide:h.rank+2})),
-    {label:"Texas Hold'em",slide:13},{label:"Quick Reference",slide:14},{label:"Quiz Time!",slide:15}
+    {label:"Texas Hold'em",slide:13},{label:"Live Challenge",slide:14},
+    {label:"Quick Reference",slide:15},{label:"Work Tie-In",slide:16},{label:"Quiz Time!",slide:17}
   ];
   items.forEach(item => {
     const div = document.createElement('div');
@@ -772,7 +919,10 @@ function goToSlide(n){
   updateNav();
   updateBuildIndicator();
   updateSidebar(n);
-  // scroll sidebar current item into view
+  updateNotes(n);
+  // reset challenge slide state when navigating back to it
+  if(n===14){ challengeIdx=0; document.querySelectorAll('.challenge-hand').forEach((el,i)=>el.style.display=i===0?'block':'none'); const rb=document.getElementById('revealBtn'); if(rb){rb.style.display='inline-flex';} const nb=document.getElementById('nextChallengeBtn'); if(nb){nb.style.display='none';} const cc=document.getElementById('challengeCounter'); if(cc){cc.textContent=`Hand 1 of ${CHALLENGE_COUNT}`;} }
+  // scroll sidebar
   const curr = document.querySelector('#sidebarList .sidebar-hand.current');
   if(curr) curr.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
