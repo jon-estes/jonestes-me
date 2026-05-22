@@ -246,7 +246,7 @@ footer a { color: var(--gold); text-decoration: none; }
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
   animation: slideIn 0.3s ease;
 }
 .slide-card.active { display: flex; }
@@ -278,9 +278,11 @@ footer a { color: var(--gold); text-decoration: none; }
 .slide-odds { font-size:0.95rem; color:var(--gold-light); margin-top:0.2rem; }
 
 /* ── Slide body (2 col) ── */
-.slide-body { display:grid; grid-template-columns:1fr 1fr; flex:1; min-height:0; }
-.slide-left { padding:2.5rem 2.5rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:1.25rem; }
-.slide-right { padding:2.5rem 2.5rem; display:flex; flex-direction:column; gap:1.25rem; justify-content:center; }
+.slide-body { display:grid; grid-template-columns:1fr 1fr; flex:1; min-height:0; overflow:hidden; }
+.slide-left { padding:2.5rem 2.5rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:1.25rem; overflow-y:auto; min-height:0; }
+.slide-right { padding:2.5rem 2.5rem; display:flex; flex-direction:column; gap:1.25rem; justify-content:center; overflow-y:auto; min-height:0; }
+.slide-left::-webkit-scrollbar, .slide-right::-webkit-scrollbar { width:3px; }
+.slide-left::-webkit-scrollbar-thumb, .slide-right::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
 /* ── Playing cards ── */
 .cards-display { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start; }
@@ -314,7 +316,9 @@ footer a { color: var(--gold); text-decoration: none; }
 .ranking-ends { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--muted); margin-top:0.4rem; }
 
 /* ── Intro / basics slides ── */
-.slide-content { padding:2.5rem 3rem; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:1.75rem; justify-content:center; }
+.slide-content { padding:2.5rem 3rem; flex:1; overflow-y:auto; min-height:0; display:flex; flex-direction:column; gap:1.75rem; justify-content:center; }
+.slide-content::-webkit-scrollbar { width: 4px; }
+.slide-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 .intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
 .intro-card { background:var(--surface2); border:1px solid var(--border); border-left:4px solid var(--gold); border-radius:10px; padding:1.4rem 1.5rem; }
 .intro-card strong { display:block; font-size:1.05rem; margin-bottom:0.5rem; }
@@ -353,9 +357,10 @@ footer a { color: var(--gold); text-decoration: none; }
 .holdem-player { font-size:0.8rem; color:rgba(255,255,255,0.5); text-align:center; margin-top:0.2rem; }
 
 /* ── Quiz CTA ── */
-.quiz-cta-inner { padding:3rem; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center; }
+.quiz-cta-inner { padding:2.5rem 3rem; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; min-height:0; overflow-y:auto; text-align:center; }
+.quiz-cta-inner::-webkit-scrollbar { width:4px; }
 .quiz-cta-inner h2 { font-family:'Playfair Display',serif; font-size:2.6rem; margin-bottom:0.75rem; }
-.quiz-cta-box { background:linear-gradient(135deg,var(--navy-dark),#0d1628); border:1px solid rgba(201,150,42,0.3); border-radius:14px; padding:2.5rem; margin-top:1rem; max-width:560px; }
+.quiz-cta-box { background:linear-gradient(135deg,var(--navy-dark),#0d1628); border:1px solid rgba(201,150,42,0.3); border-radius:14px; padding:2.5rem; margin-top:1rem; max-width:560px; width:100%; }
 .quiz-cta-box p { color:var(--muted); font-size:1.05rem; line-height:1.75; margin:0.75rem 0 1.75rem; }
 .suit-row { font-size:2.5rem; letter-spacing:0.4em; margin-bottom:1rem; }
 
@@ -486,14 +491,59 @@ function buildAllSlides(){
   // SLIDE 0: Title
   vp.innerHTML += `
   <div class="slide-card" data-slide="0">
-    <div style="flex:1;background:linear-gradient(135deg,#111d34 0%,#0d1628 60%,#0a1020 100%);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:3rem 3rem 2.5rem;position:relative;overflow:hidden;">
-      <div style="position:absolute;right:-2rem;top:-3rem;font-size:22rem;color:rgba(27,42,74,0.5);line-height:1;user-select:none;pointer-events:none;">♠</div>
-      <div data-reveal style="font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Medical Device Training Team · May 2026</div>
-      <h2 data-reveal style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.05;margin-bottom:0.75rem;">Poker Hands 101</h2>
-      <p data-reveal style="color:var(--muted);font-size:1.05rem;max-width:520px;line-height:1.7;margin-bottom:1.5rem;">A fun &amp; fast guide to the 10 winning hands — and what they say about how we think.</p>
-      <div data-reveal style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-        <span style="background:var(--gold);padding:0.4rem 1rem;border-radius:4px;color:var(--navy-dark);font-weight:700;font-size:0.85rem;">25 min + Q&amp;A</span>
-        <span style="background:var(--surface2);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:4px;color:var(--muted);font-size:0.85rem;">♠ ♥ ♦ ♣</span>
+    <div style="flex:1;min-height:0;background:linear-gradient(135deg,#111d34 0%,#0d1628 60%,#0a1020 100%);display:flex;align-items:stretch;position:relative;overflow:hidden;">
+      <!-- Left: text -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:3rem 3rem 2.5rem;position:relative;z-index:2;">
+        <div data-reveal style="font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Medical Device Training Team · May 2026</div>
+        <h2 data-reveal style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.05;margin-bottom:0.75rem;">Poker Hands 101</h2>
+        <p data-reveal style="color:var(--muted);font-size:1.05rem;max-width:480px;line-height:1.7;margin-bottom:1.5rem;">A fun &amp; fast guide to the 10 winning hands — and what they say about how we think.</p>
+        <div data-reveal style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <span style="background:var(--gold);padding:0.4rem 1rem;border-radius:4px;color:var(--navy-dark);font-weight:700;font-size:0.85rem;">25 min + Q&amp;A</span>
+          <span style="background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:4px;color:var(--muted);font-size:0.85rem;">♠ ♥ ♦ ♣</span>
+        </div>
+      </div>
+      <!-- Right: illustrated fan of cards SVG -->
+      <div style="width:420px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:2;">
+        <svg viewBox="0 0 340 320" width="340" height="320" xmlns="http://www.w3.org/2000/svg">
+          <!-- Card fan: 5 cards fanned out -->
+          <!-- Card 5 (back, far right) -->
+          <g transform="rotate(28,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="#1b2a4a" stroke="#c9962a" stroke-width="1.5"/>
+            <rect x="101" y="66" width="78" height="114" rx="7" fill="none" stroke="rgba(201,150,42,0.3)" stroke-width="1"/>
+            <text x="140" y="138" font-family="serif" font-size="32" fill="rgba(201,150,42,0.4)" text-anchor="middle">♠</text>
+          </g>
+          <!-- Card 4 -->
+          <g transform="rotate(14,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#c0392b">K</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#c0392b">♥</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#c0392b" text-anchor="middle">♥</text>
+          </g>
+          <!-- Card 3 (center) -->
+          <g transform="rotate(0,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5" filter="url(#shadow)"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#1a1a2e">A</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#1a1a2e">♠</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="42" fill="#1a1a2e" text-anchor="middle">♠</text>
+          </g>
+          <!-- Card 2 -->
+          <g transform="rotate(-14,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#c0392b">Q</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#c0392b">♦</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#c0392b" text-anchor="middle">♦</text>
+          </g>
+          <!-- Card 1 (far left) -->
+          <g transform="rotate(-28,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#1a1a2e">J</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#1a1a2e">♣</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#1a1a2e" text-anchor="middle">♣</text>
+          </g>
+          <defs>
+            <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/></filter>
+          </defs>
+        </svg>
       </div>
     </div>
   </div>`;
@@ -505,24 +555,48 @@ function buildAllSlides(){
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">WHY</div>
       <div class="slide-header-title"><h2>Why Poker? <span class="reveal-hint" id="hint-1"></span></h2></div>
     </div>
-    <div class="slide-content">
-      <p data-reveal style="color:var(--muted);font-size:0.95rem;line-height:1.75;max-width:680px;">Poker isn't just a card game — the skills it exercises map directly onto what we do every day as a training team for a medical device company.</p>
-      <div class="intro-grid">
-        <div data-reveal class="intro-card">
-          <strong>🧠 Pattern Recognition</strong>
-          <p>Identifying hands trains the same rapid-classification skills we use during compliance reviews and documentation audits.</p>
-        </div>
-        <div data-reveal class="intro-card">
-          <strong>⚡ Decision Under Pressure</strong>
-          <p>In poker — like in a device training environment — you evaluate incomplete information quickly and commit to a decision.</p>
-        </div>
-        <div data-reveal class="intro-card">
-          <strong>🎯 Rules &amp; Hierarchy</strong>
-          <p>Hands follow a strict hierarchy with no ambiguity. Mastering rule-based logic is exactly what our training programs teach.</p>
-        </div>
-        <div data-reveal class="intro-card">
-          <strong>🤝 Shared Language</strong>
-          <p>A few minutes of shared learning builds team vocabulary and camaraderie — exactly what this session is designed to do.</p>
+    <div class="slide-content" style="flex-direction:row;align-items:center;gap:2.5rem;padding:2rem 2.5rem;">
+      <!-- Left: SVG illustration -->
+      <div style="flex-shrink:0;width:200px;">
+        <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Poker chips stack -->
+          <ellipse cx="100" cy="170" rx="55" ry="12" fill="rgba(0,0,0,0.3)"/>
+          <!-- Chip 3 (bottom) -->
+          <ellipse cx="100" cy="155" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
+          <ellipse cx="100" cy="152" rx="48" ry="11" fill="#2d6cb0" stroke="#1a4a80" stroke-width="1.5"/>
+          <ellipse cx="100" cy="149" rx="38" ry="8" fill="#1a3a60" stroke="none"/>
+          <!-- Chip 2 -->
+          <ellipse cx="100" cy="135" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
+          <ellipse cx="100" cy="132" rx="48" ry="11" fill="#c0392b" stroke="#8b1a10" stroke-width="1.5"/>
+          <ellipse cx="100" cy="129" rx="38" ry="8" fill="#8b1a10" stroke="none"/>
+          <!-- Chip 1 (top) -->
+          <ellipse cx="100" cy="118" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
+          <ellipse cx="100" cy="115" rx="48" ry="11" fill="#c9962a" stroke="#8a6010" stroke-width="1.5"/>
+          <ellipse cx="100" cy="112" rx="38" ry="8" fill="#8a6010" stroke="none"/>
+          <text x="100" y="117" font-family="serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">★</text>
+          <!-- Cards leaning -->
+          <g transform="rotate(-15,70,80)">
+            <rect x="30" y="30" width="64" height="88" rx="7" fill="white" stroke="#ddd" stroke-width="1"/>
+            <text x="40" y="52" font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#c0392b">A</text>
+            <text x="40" y="66" font-family="Georgia,serif" font-size="11" fill="#c0392b">♥</text>
+            <text x="62" y="100" font-family="Georgia,serif" font-size="28" fill="#c0392b" text-anchor="middle">♥</text>
+          </g>
+          <g transform="rotate(10,130,80)">
+            <rect x="96" y="25" width="64" height="88" rx="7" fill="white" stroke="#ddd" stroke-width="1"/>
+            <text x="106" y="47" font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#1a1a2e">K</text>
+            <text x="106" y="61" font-family="Georgia,serif" font-size="11" fill="#1a1a2e">♠</text>
+            <text x="128" y="95" font-family="Georgia,serif" font-size="28" fill="#1a1a2e" text-anchor="middle">♠</text>
+          </g>
+        </svg>
+      </div>
+      <!-- Right: content -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:1.1rem;">
+        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;">Poker isn't just a card game — the skills it exercises map directly onto what we do every day as a training team for a medical device company.</p>
+        <div class="intro-grid">
+          <div data-reveal class="intro-card"><strong>🧠 Pattern Recognition</strong><p>Identifying hands trains the same rapid-classification skills we use during compliance reviews and audits.</p></div>
+          <div data-reveal class="intro-card"><strong>⚡ Decision Under Pressure</strong><p>In poker — like in a device training environment — you evaluate incomplete information quickly and commit.</p></div>
+          <div data-reveal class="intro-card"><strong>🎯 Rules &amp; Hierarchy</strong><p>Hands follow a strict, unambiguous hierarchy. Mastering rule-based logic is exactly what our programs teach.</p></div>
+          <div data-reveal class="intro-card"><strong>🤝 Shared Language</strong><p>A few minutes of shared learning builds team vocabulary and camaraderie across the whole group.</p></div>
         </div>
       </div>
     </div>
@@ -543,7 +617,7 @@ function buildAllSlides(){
           <div style="font-size:0.65rem;color:var(--border);margin-top:0.2rem;">4 suits × 13 ranks</div>
         </div>
         <div data-reveal style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem 0.5rem;">
-          <div style="font-size:1.8rem;margin-bottom:0.15rem;">♠ ♥ ♦ ♣</div>
+          <div style="font-size:1.6rem;margin-bottom:0.15rem;letter-spacing:0.1em;"><span style="color:var(--white);">♠</span><span style="color:#c0392b;">♥</span><span style="color:#c0392b;">♦</span><span style="color:var(--white);">♣</span></div>
           <div style="font-size:0.75rem;color:var(--muted);">4 Suits</div>
           <div style="font-size:0.65rem;color:var(--muted);margin-top:0.2rem;">Spades · Hearts · Diamonds · Clubs</div>
         </div>
@@ -688,9 +762,21 @@ function buildAllSlides(){
   const refRows = HANDS.map((h,i) => `<tr data-reveal><td><span class="ref-rank ${h.rank<=3?'top3':''}">${h.rank}</span></td><td style="font-weight:500">${h.name}</td><td style="color:var(--muted)">${REF_WHAT[i]}</td><td style="color:var(--muted)">${h.odds}</td></tr>`).join('');
   vp.innerHTML += `
   <div class="slide-card" data-slide="15" data-notes="Each click reveals one row. Go through them in order — this is the 'full picture' moment. Ask if anyone has questions about the order or any specific hand.">
-    <div class="slide-header">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">REF</div>
       <div class="slide-header-title"><h2>Quick Reference — All 10 Hands <span class="reveal-hint" id="hint-15"></span></h2></div>
+      <!-- mini podium SVG -->
+      <svg viewBox="0 0 120 48" width="120" height="48" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.7">
+        <rect x="0"  y="28" width="36" height="20" rx="3" fill="#2d6cb0"/>
+        <text x="18" y="22" font-family="serif" font-size="10" fill="#e8b84b" text-anchor="middle" font-weight="bold">#3</text>
+        <rect x="40" y="10" width="40" height="38" rx="3" fill="#c9962a"/>
+        <text x="60" y="6"  font-family="serif" font-size="10" fill="white"   text-anchor="middle" font-weight="bold">#1</text>
+        <rect x="84" y="20" width="36" height="28" rx="3" fill="#3a3a38"/>
+        <text x="102" y="14" font-family="serif" font-size="10" fill="#8a97b0" text-anchor="middle" font-weight="bold">#2</text>
+        <text x="18" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">3rd</text>
+        <text x="60" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">1st</text>
+        <text x="102" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">2nd</text>
+      </svg>
     </div>
     <div class="slide-content">
       <table class="ref-table">
@@ -703,9 +789,18 @@ function buildAllSlides(){
   // SLIDE 16: Work Tie-In
   vp.innerHTML += `
   <div class="slide-card" data-slide="16" data-notes="This is your 'so what?' slide. Don't rush it — let the connections land. Ask the team: 'Which of these feels most relevant to your day-to-day work?'">
-    <div class="slide-header">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">💡</div>
       <div class="slide-header-title"><h2>Poker Thinking in Our Work <span class="reveal-hint" id="hint-16"></span></h2></div>
+      <!-- suits + arrows graphic -->
+      <svg viewBox="0 0 160 44" width="160" height="44" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.8">
+        <text x="10"  y="30" font-size="22" fill="white" font-family="serif">♠</text>
+        <text x="35"  y="30" font-size="22" fill="#c0392b" font-family="serif">♥</text>
+        <text x="60"  y="30" font-size="22" fill="#c0392b" font-family="serif">♦</text>
+        <text x="85"  y="30" font-size="22" fill="white"   font-family="serif">♣</text>
+        <text x="116" y="30" font-size="18" fill="#c9962a" font-family="sans-serif">→</text>
+        <text x="136" y="30" font-size="16" fill="#c9962a" font-family="sans-serif">🏥</text>
+      </svg>
     </div>
     <div class="slide-content">
       <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:760px;">The same mental moves that make a great poker player also make a great medical device trainer. Here's how they map.</p>
