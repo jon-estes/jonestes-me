@@ -316,7 +316,7 @@ footer a { color: var(--gold); text-decoration: none; }
 .ranking-ends { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--muted); margin-top:0.4rem; }
 
 /* ── Intro / basics slides ── */
-.slide-content { padding:2.5rem 3rem; flex:1; overflow-y:auto; min-height:0; display:flex; flex-direction:column; gap:1.75rem; justify-content:center; }
+.slide-content { padding:2rem 2.5rem; flex:1; overflow-y:auto; min-height:0; display:flex; flex-direction:column; gap:1.4rem; }
 .slide-content::-webkit-scrollbar { width: 4px; }
 .slide-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 .intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
@@ -342,12 +342,12 @@ footer a { color: var(--gold); text-decoration: none; }
   border-radius: 120px;
   border: 8px solid #5c3a1e;
   box-shadow: 0 0 0 4px #3a2010, inset 0 2px 20px rgba(0,0,0,0.4);
-  padding: 1.75rem 3rem;
+  padding: 1.1rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
-  max-width: 600px;
+  gap: 0.6rem;
+  max-width: 580px;
   margin: 0 auto;
 }
 .holdem-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; text-align:center; }
@@ -472,7 +472,7 @@ const HAND_NAMES_SHORT = ["Royal Flush","Str. Flush","4 of a Kind","Full House",
 const REF_WHAT = ["A-K-Q-J-10 same suit","5 in a row, same suit","Four matching ranks","Three-of-a-kind + Pair","Any 5 same suit","5 in a row, mixed suits","Three matching ranks","Two different pairs","Two matching ranks","No combination"];
 
 // Slide numbering: 0=title,1=why,2=basics,3–12=hands,13=holdem,14=audience challenge,15=ref,16=tie-in,17=quiz
-const TOTAL_SLIDES = 18;
+const TOTAL_SLIDES = 19;
 const FIRST_HAND_SLIDE = 3;
 let currentSlide = 0;
 const revealState = {};
@@ -682,8 +682,8 @@ function buildAllSlides(){
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">♠♥</div>
       <div class="slide-header-title"><h2>How Texas Hold'em Works <span class="reveal-hint" id="hint-13"></span></h2></div>
     </div>
-    <div class="slide-content" style="align-items:center;">
-      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:680px;text-align:center;">
+    <div class="slide-content" style="align-items:center;padding:1.5rem 2.5rem;gap:1rem;">
+      <p data-reveal style="color:var(--muted);font-size:0.95rem;line-height:1.7;max-width:680px;text-align:center;">
         In Texas Hold'em — the most popular poker variant — every player gets <strong style="color:var(--white);">2 private cards</strong> (hole cards) and shares <strong style="color:var(--white);">5 community cards</strong> on the table. You build the best 5-card hand from any combination of your 7 cards.
       </p>
       <div data-reveal class="holdem-table">
@@ -699,21 +699,21 @@ function buildAllSlides(){
         </div>
         <div class="holdem-player">Your best hand = Full House: Kings full of Sevens 🏆</div>
       </div>
-      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;max-width:680px;width:100%;">
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">2</div>
-          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Hole Cards<br><span style="font-size:0.75rem;">Private. Only yours.</span></div>
+      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;max-width:680px;width:100%;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">2</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Hole Cards<br><span style="font-size:0.7rem;">Private. Only yours.</span></div>
         </div>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">5</div>
-          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Community Cards<br><span style="font-size:0.75rem;">Everyone shares these.</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Community Cards<br><span style="font-size:0.7rem;">Everyone shares these.</span></div>
         </div>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);">5</div>
-          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Best Final Hand<br><span style="font-size:0.75rem;">Any 5 of your 7 cards.</span></div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Best Final Hand<br><span style="font-size:0.7rem;">Any 5 of your 7 cards.</span></div>
         </div>
       </div>
-      <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.3rem;font-size:0.95rem;color:#d4a84b;line-height:1.65;max-width:680px;width:100%;font-style:italic;">
+      <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:0.75rem 1rem;font-size:0.88rem;color:#d4a84b;line-height:1.6;max-width:680px;width:100%;font-style:italic;">
         💡 This is why reading hands is a skill — you're always working with partial information. Your opponents see the same community cards but have different hole cards.
       </div>
     </div>
@@ -745,9 +745,9 @@ function buildAllSlides(){
       <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">🎯</div>
       <div class="slide-header-title"><h2>Live Challenge — What's the Hand?</h2></div>
     </div>
-    <div class="slide-content" style="align-items:center;justify-content:center;gap:2rem;">
+    <div class="slide-content" style="align-items:center;gap:1.25rem;padding:1.5rem 2.5rem;">
       <p style="color:var(--muted);font-size:1rem;text-align:center;max-width:560px;">Look at the cards below. What hand is it? Discuss with the person next to you — then we'll reveal!</p>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:2.5rem 3rem;max-width:600px;width:100%;text-align:center;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.5rem 2rem;max-width:600px;width:100%;text-align:center;">
         ${challengeCardsHTML}
         <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
           <button onclick="revealChallenge()" class="nav-btn primary" id="revealBtn" style="font-size:1rem;padding:0.65rem 1.75rem;">👁 Reveal Answer</button>
@@ -829,9 +829,51 @@ function buildAllSlides(){
     </div>
   </div>`;
 
-  // SLIDE 17: Quiz CTA
+  // SLIDE 17: Risk & Calibration tie-in
   vp.innerHTML += `
-  <div class="slide-card" data-slide="17" data-notes="Hand off to the quiz now. If presenting live, you can pull up poker-quiz.html on everyone's devices and run the leaderboard together. The team mode makes it really fun.">
+  <div class="slide-card" data-slide="17" data-notes="This one usually sparks good discussion. The 'risk calibration' concept resonates with medical device folks — ask: when have you had to make a call with incomplete info at work?">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">🎲</div>
+      <div class="slide-header-title"><h2>Risk, Uncertainty &amp; Good Judgment <span class="reveal-hint" id="hint-17"></span></h2></div>
+      <svg viewBox="0 0 140 44" width="140" height="44" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.75">
+        <!-- dice -->
+        <rect x="4"   y="8"  width="30" height="30" rx="5" fill="#1b2a4a" stroke="#c9962a" stroke-width="1.5"/>
+        <circle cx="13" cy="17" r="3" fill="#c9962a"/><circle cx="25" cy="17" r="3" fill="#c9962a"/>
+        <circle cx="13" cy="29" r="3" fill="#c9962a"/><circle cx="25" cy="29" r="3" fill="#c9962a"/>
+        <rect x="42"  y="8"  width="30" height="30" rx="5" fill="#1b2a4a" stroke="#2d6cb0" stroke-width="1.5"/>
+        <circle cx="57" cy="23" r="3" fill="#2d6cb0"/>
+        <circle cx="48" cy="14" r="3" fill="#2d6cb0"/><circle cx="66" cy="32" r="3" fill="#2d6cb0"/>
+        <text x="85" y="28" font-family="sans-serif" font-size="18" fill="#c9962a">→</text>
+        <text x="108" y="28" font-family="serif" font-size="20" fill="#c0392b">♥</text>
+        <text x="124" y="28" font-family="serif" font-size="20" fill="#1b2a4a" stroke="white" stroke-width="0.3">♠</text>
+      </svg>
+    </div>
+    <div class="slide-content">
+      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:780px;">Poker is fundamentally a game of <strong style="color:var(--white);">incomplete information</strong> — you never know your opponent's cards. Great players don't wait for certainty. They make calibrated decisions based on the best available evidence. Sound familiar?</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div data-reveal style="background:rgba(201,150,42,0.08);border:1px solid rgba(201,150,42,0.2);border-left:4px solid var(--gold);border-radius:10px;padding:1.25rem 1.4rem;">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">🃏 In Poker</div>
+          <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;">You see 5 community cards and 2 of your own. The other 45 cards — and your opponent's 2 hole cards — are hidden. You bet based on <em>probability</em>, not certainty.</p>
+        </div>
+        <div data-reveal style="background:rgba(45,108,176,0.1);border:1px solid rgba(45,108,176,0.25);border-left:4px solid #2d6cb0;border-radius:10px;padding:1.25rem 1.4rem;">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">🏥 In Medical Device Training</div>
+          <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;">You design training based on known compliance gaps, user feedback, and incident reports. You never have the full picture — but you still have to make the best decision with what you have.</p>
+        </div>
+        <div data-reveal style="background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);border-left:4px solid #c0392b;border-radius:10px;padding:1.25rem 1.4rem;">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">🤔 The Bluff</div>
+          <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;">Sometimes in poker you represent a stronger hand than you have — a calculated risk. In training, we "bluff" too: projecting confidence in a new module before you've seen the data, to drive adoption.</p>
+        </div>
+        <div data-reveal style="background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);border-left:4px solid #27ae60;border-radius:10px;padding:1.25rem 1.4rem;">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">📊 The Fold</div>
+          <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;">Great poker players fold 70–80% of hands. Knowing when to <em>not</em> pursue something — to cut a failing training initiative, retire an outdated module — is just as valuable as knowing when to push forward.</p>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 18: Quiz CTA
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="18" data-notes="Hand off to the quiz now. If presenting live, you can pull up poker-quiz.html on everyone's devices and run the leaderboard together. The team mode makes it really fun.">
     <div class="quiz-cta-inner">
       <div class="suit-row">♠ ♥ ♦ ♣</div>
       <h2>Ready to Test Yourself?</h2>
@@ -930,7 +972,7 @@ function buildTOC(){
     {label:"Title",slide:0},{label:"Why Poker?",slide:1},{label:"The Basics",slide:2},
     ...HANDS.map(h=>({label:`#${h.rank} ${h.name}`,slide:h.rank+2})),
     {label:"Texas Hold'em",slide:13},{label:"Live Challenge",slide:14},
-    {label:"Quick Reference",slide:15},{label:"Work Tie-In",slide:16},{label:"Quiz Time!",slide:17}
+    {label:"Quick Reference",slide:15},{label:"Work Tie-In",slide:16},{label:"Risk & Judgment",slide:17},{label:"Quiz Time!",slide:18}
   ];
   items.forEach(item => {
     const div = document.createElement('div');
