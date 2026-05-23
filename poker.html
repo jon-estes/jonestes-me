@@ -425,7 +425,7 @@ footer a { color: var(--gold); text-decoration: none; }
 </footer>
 
 <!-- ══════════════ FULLSCREEN OVERLAY ══════════════ -->
-<div id="fullscreenOverlay">
+<div id="fullscreenOverlay" tabindex="0" style="outline:none;">
 
   <!-- Sidebar -->
   <div id="sidebar">
@@ -1273,6 +1273,7 @@ function startSlideshow(){
   document.querySelector('footer').style.display='none';
   document.querySelector('nav').style.display='none';
   document.getElementById('fullscreenOverlay').classList.add('active');
+  document.getElementById('fullscreenOverlay').focus();
   goToSlide(0);
 }
 
@@ -1293,13 +1294,18 @@ function toggleBrowserFS(){
   }
 }
 
-// Keyboard
+// Keyboard — covers arrow keys, PageDown/Up (most clickers), Enter, and spacebar
 document.addEventListener('keydown', e => {
   if(!document.getElementById('fullscreenOverlay').classList.contains('active')) return;
-  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();nextAction();}
-  if(e.key==='ArrowLeft' ||e.key==='ArrowUp'){e.preventDefault();prevAction();}
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'||e.key==='Enter'){e.preventDefault();nextAction();}
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();prevAction();}
   if(e.key==='Escape') exitSlideshow();
   if(e.key==='f'||e.key==='F') toggleBrowserFS();
+});
+
+// Auto-focus the overlay whenever the slideshow is active so clicker events always register
+document.getElementById('fullscreenOverlay').addEventListener('click', () => {
+  document.getElementById('fullscreenOverlay').focus();
 });
 
 // Init
