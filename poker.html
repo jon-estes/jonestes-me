@@ -595,14 +595,29 @@ function card(c,anim=false){return `<div class="playing-card${anim?' card-anim':
 function rbClass(r){return r<=3?"rank-gold":r<=6?"rank-blue":"rank-gray";}
 function rankBar(active){return HAND_NAMES_SHORT.map((n,i)=>`<div class="rank-pip ${i===active-1?'active':''}"><span class="rank-tooltip">#${i+1} ${n}</span></div>`).join('');}
 
+// activeExample[slideNum] = current example index
+const activeExample = {};
+
 function showExample(sn, ei) {
-  // Deactivate all panels and tabs for this slide
+  activeExample[sn] = ei;
   document.querySelectorAll(`[id^="ex-${sn}-"]`).forEach(p => p.classList.remove('active'));
   document.querySelectorAll(`[id^="tab-${sn}-"]`).forEach(t => t.classList.remove('active'));
   const panel = document.getElementById(`ex-${sn}-${ei}`);
   const tab   = document.getElementById(`tab-${sn}-${ei}`);
-  if(panel) { panel.classList.add('active'); panel.querySelectorAll('.card-anim').forEach(c => { c.style.animation='none'; void c.offsetWidth; c.style.animation=''; }); }
-  if(tab)   tab.classList.add('active');
+  if(panel) {
+    panel.classList.add('active');
+    panel.querySelectorAll('.card-anim').forEach(card => {
+      card.style.animation='none'; void card.offsetWidth; card.style.animation='';
+    });
+  }
+  if(tab) tab.classList.add('active');
+}
+
+function exampleCount(sn) {
+  // count how many ex-panels exist for this slide
+  let i = 0;
+  while(document.getElementById(`ex-${sn}-${i}`)) i++;
+  return i;
 }
 /* ═══════════════════════════════════════
    BUILD SLIDES
@@ -704,12 +719,12 @@ function buildAllSlides(){
       </div>
       <!-- Right: 3 clean points -->
       <div style="flex:1;display:flex;flex-direction:column;gap:1rem;">
-        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.7;">We work with <strong style="color:var(--white);">new employees</strong> and <strong style="color:var(--white);">training records</strong> every day. Poker turns out to be a great mirror for that work.</p>
+        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.7;">We train <strong style="color:var(--white);">new employees</strong> every day.</p>
         <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:1rem 1.25rem;">
           <div style="font-size:1.6rem;flex-shrink:0;">&#x1F0CF;</div>
           <div>
             <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">10 hands to learn</div>
-            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Just like onboarding SOPs &#x2014; fixed rules, clear hierarchy. Learn them once, use them forever.</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Just like MQIs and WIs &#x2014; fixed rules, clear hierarchy. Learn them once, use them forever.</div>
           </div>
         </div>
         <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid #2d6cb0;border-radius:10px;padding:1rem 1.25rem;">
@@ -1015,7 +1030,7 @@ function buildAllSlides(){
           <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
           <div data-reveal style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;color:var(--white);">
             <div style="font-weight:700;margin-bottom:0.35rem;">&#x1F3E5; Projecting confidence early</div>
-            <div style="font-size:0.88rem;color:var(--muted);">Rolling out a new module with conviction before the data is in — because buy-in requires momentum, not just evidence.</div>
+            <div style="font-size:0.88rem;color:var(--muted);">Championing a new training initiative to leadership — sometimes you have to sell the vision before you have every answer.</div>
           </div>
         </div>
 
@@ -1091,7 +1106,7 @@ function buildSidebar(){
     const miniCards = document.createElement('div');
     miniCards.className = 'sidebar-mini-cards';
     miniCards.id = `sb-cards-${h.rank}`;
-    miniCards.innerHTML = h.cards.map(c => `<div class="mini-card ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>`).join('');
+    miniCards.innerHTML = h.examples[0].map(c => `<div class="mini-card ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>`).join('');
     list.appendChild(miniCards);
   });
 }
@@ -1216,6 +1231,13 @@ function updateBuildIndicator(){
   const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
   const els = getRevealEls(slideEl);
   const ind = document.getElementById('buildIndicator');
+  const isHandSlide = currentSlide >= FIRST_HAND_SLIDE && currentSlide < FIRST_HAND_SLIDE + 10;
+  if(isHandSlide && (revealState[currentSlide]||0) === 0){
+    const cur = (activeExample[currentSlide]||0) + 1;
+    const total = exampleCount(currentSlide);
+    if(cur < total){ ind.textContent = `Example ${cur} of ${total} — click to see more`; return; }
+    if(cur === total && els.length){ ind.textContent = `Example ${cur} of ${total} — click to reveal details`; return; }
+  }
   if(!els.length){ ind.textContent=''; return; }
   const rev = revealState[currentSlide]||0;
   ind.textContent = rev < els.length ? `${rev} / ${els.length} revealed` : 'Slide complete ✓';
@@ -1226,6 +1248,17 @@ function updateBuildIndicator(){
 ═══════════════════════════════════════ */
 function nextAction(){
   const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
+  // On hand slides (3-12): cycle through examples before doing reveals
+  const isHandSlide = currentSlide >= FIRST_HAND_SLIDE && currentSlide < FIRST_HAND_SLIDE + 10;
+  if(isHandSlide && (revealState[currentSlide]||0) === 0){
+    const cur = activeExample[currentSlide] || 0;
+    const total = exampleCount(currentSlide);
+    if(cur < total - 1){
+      showExample(currentSlide, cur + 1);
+      updateBuildIndicator();
+      return;
+    }
+  }
   if(revealNext(slideEl)){ updateBuildIndicator(); return; }
   if(currentSlide < TOTAL_SLIDES-1) goToSlide(currentSlide+1);
 }
@@ -1242,6 +1275,9 @@ function goToSlide(n){
   if(!target) return;
   currentSlide = n;
   target.classList.add('active');
+  // Reset example to first on new slide
+  if(activeExample[n] === undefined) activeExample[n] = 0;
+  showExample(n, 0);
   initSlide(target);
   updateNav();
   updateBuildIndicator();
