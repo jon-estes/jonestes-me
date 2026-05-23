@@ -325,21 +325,19 @@ footer a { color: var(--gold); text-decoration: none; }
 .intro-card strong { display:block; font-size:1.05rem; margin-bottom:0.5rem; }
 .intro-card p { font-size:0.92rem; color:var(--muted); line-height:1.6; }
 
-/* ── Example tabs on hand slides ── */
-.ex-tabs { display:flex; gap:5px; }
-.ex-tab {
-  width:28px; height:28px; border-radius:6px;
-  background:var(--surface2); border:1px solid var(--border);
-  color:var(--muted); font-size:0.78rem; font-weight:600;
-  cursor:pointer; transition:all 0.15s;
-  font-family:'DM Sans',sans-serif;
-  display:flex; align-items:center; justify-content:center;
-}
-.ex-tab:hover { border-color:var(--gold); color:var(--white); }
-.ex-tab.active { background:var(--gold); border-color:var(--gold); color:var(--navy-dark); }
-.ex-panels { position:relative; }
-.ex-panel { display:none; }
-.ex-panel.active { display:flex; gap:10px; flex-wrap:wrap; }
+/* ── Stacked examples on hand slides ── */
+.stacked-examples { display:flex; flex-direction:column; gap:1.1rem; overflow-y:auto; flex:1; min-height:0; }
+.stacked-examples::-webkit-scrollbar { width:3px; }
+.stacked-examples::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.example-row { display:flex; flex-direction:column; gap:0.4rem; }
+.example-row-label { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); font-weight:600; }
+.example-row-cards { display:flex; gap:8px; flex-wrap:wrap; }
+/* When an example-row is revealed, re-trigger deal animation on its cards */
+.example-row.revealed .playing-card { animation: dealCard 0.35s ease both; }
+.example-row.revealed .playing-card:nth-child(2){animation-delay:0.06s}
+.example-row.revealed .playing-card:nth-child(3){animation-delay:0.12s}
+.example-row.revealed .playing-card:nth-child(4){animation-delay:0.18s}
+.example-row.revealed .playing-card:nth-child(5){animation-delay:0.24s}
 
 /* ── Reference table ── */
 .ref-table { width:100%; border-collapse:collapse; font-size:1rem; }
@@ -595,30 +593,7 @@ function card(c,anim=false){return `<div class="playing-card${anim?' card-anim':
 function rbClass(r){return r<=3?"rank-gold":r<=6?"rank-blue":"rank-gray";}
 function rankBar(active){return HAND_NAMES_SHORT.map((n,i)=>`<div class="rank-pip ${i===active-1?'active':''}"><span class="rank-tooltip">#${i+1} ${n}</span></div>`).join('');}
 
-// activeExample[slideNum] = current example index
-const activeExample = {};
-
-function showExample(sn, ei) {
-  activeExample[sn] = ei;
-  document.querySelectorAll(`[id^="ex-${sn}-"]`).forEach(p => p.classList.remove('active'));
-  document.querySelectorAll(`[id^="tab-${sn}-"]`).forEach(t => t.classList.remove('active'));
-  const panel = document.getElementById(`ex-${sn}-${ei}`);
-  const tab   = document.getElementById(`tab-${sn}-${ei}`);
-  if(panel) {
-    panel.classList.add('active');
-    panel.querySelectorAll('.card-anim').forEach(card => {
-      card.style.animation='none'; void card.offsetWidth; card.style.animation='';
-    });
-  }
-  if(tab) tab.classList.add('active');
-}
-
-function exampleCount(sn) {
-  // count how many ex-panels exist for this slide
-  let i = 0;
-  while(document.getElementById(`ex-${sn}-${i}`)) i++;
-  return i;
-}
+// (example cycling removed — examples now stack via data-reveal)
 /* ═══════════════════════════════════════
    BUILD SLIDES
 ═══════════════════════════════════════ */
@@ -792,13 +767,10 @@ function buildAllSlides(){
     const div = document.createElement('div');
     div.className = 'slide-card';
     div.setAttribute('data-slide', sn);
-    // Build example tabs
-    const tabBtns = h.examples.map((ex,ei) =>
-      `<button class="ex-tab ${ei===0?'active':''}" onclick="showExample(${sn},${ei})" id="tab-${sn}-${ei}">${ei+1}</button>`
-    ).join('');
-    const exPanels = h.examples.map((ex,ei) =>
-      `<div class="ex-panel ${ei===0?'active':''}" id="ex-${sn}-${ei}">${ex.map(c=>card(c,true)).join('')}</div>`
-    ).join('');
+    // Example 1 is always visible. Examples 2 and 3 are data-reveal.
+    const ex1 = h.examples[0].map(c=>card(c,true)).join('');
+    const ex2 = h.examples[1].map(c=>card(c,true)).join('');
+    const ex3 = h.examples[2].map(c=>card(c,true)).join('');
     div.innerHTML = `
       <div class="slide-header">
         <div class="rank-badge ${rbClass(h.rank)}">#${h.rank}</div>
@@ -807,18 +779,27 @@ function buildAllSlides(){
           <div class="slide-odds">Odds: ${h.odds}</div>
         </div>
       </div>
-      <div class="slide-body" style="flex:1;min-height:0;">
-        <div class="slide-left">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-            <div class="desc-label" style="margin-bottom:0;">The Hand</div>
-            <div class="ex-tabs">${tabBtns}</div>
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="slide-body" style="flex:none;">
+          <div class="slide-left" style="overflow:visible;">
+            <div class="desc-label" style="margin-bottom:0.5rem;">Example 1</div>
+            <div class="example-row-cards">${ex1}</div>
           </div>
-          <div class="ex-panels">${exPanels}</div>
+          <div class="slide-right">
+            <div data-reveal class="desc-label">What it is</div>
+            <div data-reveal class="desc-text">${h.desc}</div>
+            <div data-reveal class="tip-box">${h.tip}</div>
+          </div>
         </div>
-        <div class="slide-right">
-          <div data-reveal class="desc-label">What it is</div>
-          <div data-reveal class="desc-text">${h.desc}</div>
-          <div data-reveal class="tip-box">${h.tip}</div>
+        <div style="padding:0 0 0 0;overflow-y:auto;flex:1;min-height:0;">
+          <div data-reveal class="example-row" style="padding:0.75rem 2.5rem 0.5rem;border-top:1px solid var(--border);">
+            <div class="example-row-label">Example 2</div>
+            <div class="example-row-cards">${ex2}</div>
+          </div>
+          <div data-reveal class="example-row" style="padding:0.75rem 2.5rem 0.5rem;border-top:1px solid var(--border);">
+            <div class="example-row-label">Example 3</div>
+            <div class="example-row-cards">${ex3}</div>
+          </div>
         </div>
       </div>
       <div data-reveal class="ranking-section">
@@ -1231,13 +1212,6 @@ function updateBuildIndicator(){
   const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
   const els = getRevealEls(slideEl);
   const ind = document.getElementById('buildIndicator');
-  const isHandSlide = currentSlide >= FIRST_HAND_SLIDE && currentSlide < FIRST_HAND_SLIDE + 10;
-  if(isHandSlide && (revealState[currentSlide]||0) === 0){
-    const cur = (activeExample[currentSlide]||0) + 1;
-    const total = exampleCount(currentSlide);
-    if(cur < total){ ind.textContent = `Example ${cur} of ${total} — click to see more`; return; }
-    if(cur === total && els.length){ ind.textContent = `Example ${cur} of ${total} — click to reveal details`; return; }
-  }
   if(!els.length){ ind.textContent=''; return; }
   const rev = revealState[currentSlide]||0;
   ind.textContent = rev < els.length ? `${rev} / ${els.length} revealed` : 'Slide complete ✓';
@@ -1248,17 +1222,6 @@ function updateBuildIndicator(){
 ═══════════════════════════════════════ */
 function nextAction(){
   const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
-  // On hand slides (3-12): cycle through examples before doing reveals
-  const isHandSlide = currentSlide >= FIRST_HAND_SLIDE && currentSlide < FIRST_HAND_SLIDE + 10;
-  if(isHandSlide && (revealState[currentSlide]||0) === 0){
-    const cur = activeExample[currentSlide] || 0;
-    const total = exampleCount(currentSlide);
-    if(cur < total - 1){
-      showExample(currentSlide, cur + 1);
-      updateBuildIndicator();
-      return;
-    }
-  }
   if(revealNext(slideEl)){ updateBuildIndicator(); return; }
   if(currentSlide < TOTAL_SLIDES-1) goToSlide(currentSlide+1);
 }
@@ -1275,9 +1238,6 @@ function goToSlide(n){
   if(!target) return;
   currentSlide = n;
   target.classList.add('active');
-  // Reset example to first on new slide
-  if(activeExample[n] === undefined) activeExample[n] = 0;
-  showExample(n, 0);
   initSlide(target);
   updateNav();
   updateBuildIndicator();
