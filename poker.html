@@ -325,9 +325,21 @@ footer a { color: var(--gold); text-decoration: none; }
 .intro-card strong { display:block; font-size:1.05rem; margin-bottom:0.5rem; }
 .intro-card p { font-size:0.92rem; color:var(--muted); line-height:1.6; }
 
-/* ── Visual illustrations ── */
-.visual-row { display:flex; gap:1rem; align-items:flex-start; }
-.visual-diagram { flex-shrink:0; }
+/* ── Example tabs on hand slides ── */
+.ex-tabs { display:flex; gap:5px; }
+.ex-tab {
+  width:28px; height:28px; border-radius:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--muted); font-size:0.78rem; font-weight:600;
+  cursor:pointer; transition:all 0.15s;
+  font-family:'DM Sans',sans-serif;
+  display:flex; align-items:center; justify-content:center;
+}
+.ex-tab:hover { border-color:var(--gold); color:var(--white); }
+.ex-tab.active { background:var(--gold); border-color:var(--gold); color:var(--navy-dark); }
+.ex-panels { position:relative; }
+.ex-panel { display:none; }
+.ex-panel.active { display:flex; gap:10px; flex-wrap:wrap; }
 
 /* ── Reference table ── */
 .ref-table { width:100%; border-collapse:collapse; font-size:1rem; }
@@ -457,16 +469,116 @@ footer a { color: var(--gold); text-decoration: none; }
    DATA
 ═══════════════════════════════════════ */
 const HANDS = [
-  { rank:1,  name:"Royal Flush",     odds:"1 in 649,740", notes:"Ask the room: 'Has anyone ever seen one of these in real life?' Almost nobody has. It's essentially a myth — which is what makes it legendary.", desc:"The absolute best hand in poker — an Ace-high straight, all five cards in the same suit.", tip:"If you get this, try not to look too excited. Most players never see one in their lifetime.",    cards:[{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}] },
-  { rank:2,  name:"Straight Flush",  odds:"1 in 72,193",  notes:"Point out: same as a straight, same as a flush — just both at once. The combo makes it rare. Good analogy: a procedure that hits every checkpoint perfectly.", desc:"Five consecutive cards, all in the same suit. Any straight flush except Ace-high.",        tip:"The Ace-high version is the Royal Flush. Everything else (like 5-6-7-8-9 of hearts) is a Straight Flush.", cards:[{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}] },
-  { rank:3,  name:"Four of a Kind",  odds:"1 in 4,165",   notes:"Great moment to check understanding: 'What's the one thing that could beat this?' (Only Straight Flush or Royal Flush.) Reinforces the ranking hierarchy.", desc:"Four cards of the same rank — all four suits — plus any fifth card.",                       tip:"Also called 'Quads.' Extremely hard to beat. Only a Straight Flush or Royal Flush wins.",      cards:[{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}] },
-  { rank:4,  name:"Full House",      odds:"1 in 694",     notes:"'Three of a kind PLUS a pair' is the simplest way to remember it. The three-of-a-kind part determines who wins if two players both have Full Houses.", desc:"Three of a kind plus a pair. Example: three Jacks and two 9s.",                             tip:"Read as 'Jacks full of Nines.' If two players have a Full House, the higher three-of-a-kind wins.", cards:[{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}] },
-  { rank:5,  name:"Flush",           odds:"1 in 509",     notes:"Common confusion: people think a Flush beats a Full House. It doesn't — Full House is higher. A good thing to emphasize here.", desc:"Any five cards of the same suit — they don't have to be in sequence.",                      tip:"The actual ranks only matter for breaking ties. Ace-high flush beats King-high flush.",          cards:[{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}] },
-  { rank:6,  name:"Straight",        odds:"1 in 255",     notes:"The Ace rule trips people up. Mention: A-2-3-4-5 is called 'the wheel' — the lowest straight. A-K-Q-J-10 is the highest. You can't go Q-K-A-2-3.", desc:"Five consecutive cards of mixed suits. Example: 4-5-6-7-8 in any combination of suits.",    tip:"Ace can be high (A-K-Q-J-10) or low (A-2-3-4-5). You can't 'wrap around' like Q-K-A-2-3.",    cards:[{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}] },
-  { rank:7,  name:"Three of a Kind", odds:"1 in 47",      notes:"'Trips' vs 'Set' is a fun distinction for engaged learners. Not essential but interesting — it tells other players how likely more of that rank is in the deck.", desc:"Three cards of the same rank, plus two unrelated cards.",                                    tip:"Called 'Trips' when you pair a community card, 'A Set' when you use both hole cards. Same hand, different names.", cards:[{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}] },
-  { rank:8,  name:"Two Pair",        odds:"1 in 21",      notes:"The 'kicker' concept is worth mentioning — if both the pairs match, the 5th card (kicker) decides. This is the first hand where that tiebreaker matters a lot.", desc:"Two different pairs, plus any fifth card. Example: two Aces and two 5s.",                   tip:"The highest pair decides the winner. If that ties too, the second pair. Then the fifth card (the 'kicker').", cards:[{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}] },
-  { rank:9,  name:"One Pair",        odds:"1 in 2.4",     notes:"This is what most people end up with in a typical hand. Reinforce: one pair of twos still BEATS a high card hand, no matter how high the high card is.", desc:"Two cards of the same rank, plus three unrelated cards.",                                    tip:"The most common made hand. Higher pair wins ties. If pairs match, the highest unmatched card (kicker) wins.", cards:[{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}] },
-  { rank:10, name:"High Card",       odds:"~1 in 1",      notes:"A good reality check here: in most rounds, many players at the table end up with just High Card. Poker is often about bluffing — making others think you have more.", desc:"No combination at all — your highest card plays.",                                            tip:"The most common outcome. If everyone has High Card, the player with the highest individual card wins.",        cards:[{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}] },
+  { rank:1,  name:"Royal Flush",
+    odds:"1 in 649,740",
+    notes:"Ask the room: 'Has anyone ever seen one of these in real life?' Almost nobody has. It's essentially a myth — which is what makes it legendary.",
+    desc:`The absolute best hand in poker — <em style="color:var(--gold);font-style:normal;font-weight:700;">Ace-high straight</em>, all <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> cards the same suit.`,
+    tip:"If you get this, try not to look too excited. Most players never see one in their lifetime.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}],
+      [{l:"A",s:"♥"},{l:"K",s:"♥"},{l:"Q",s:"♥"},{l:"J",s:"♥"},{l:"10",s:"♥"}],
+      [{l:"A",s:"♦"},{l:"K",s:"♦"},{l:"Q",s:"♦"},{l:"J",s:"♦"},{l:"10",s:"♦"}],
+      [{l:"A",s:"♣"},{l:"K",s:"♣"},{l:"Q",s:"♣"},{l:"J",s:"♣"},{l:"10",s:"♣"}],
+    ]},
+  { rank:2,  name:"Straight Flush",
+    odds:"1 in 72,193",
+    notes:"Point out: same as a straight, same as a flush — just both at once. Good analogy: a procedure that hits every checkpoint perfectly.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> consecutive cards, all the same suit. Any straight flush except Ace-high.`,
+    tip:"The Ace-high version is the Royal Flush. Everything else — like 5-6-7-8-9 of hearts — is a Straight Flush.",
+    examples:[
+      [{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}],
+      [{l:"6",s:"♣"},{l:"7",s:"♣"},{l:"8",s:"♣"},{l:"9",s:"♣"},{l:"10",s:"♣"}],
+      [{l:"2",s:"♦"},{l:"3",s:"♦"},{l:"4",s:"♦"},{l:"5",s:"♦"},{l:"6",s:"♦"}],
+      [{l:"J",s:"♠"},{l:"10",s:"♠"},{l:"9",s:"♠"},{l:"8",s:"♠"},{l:"7",s:"♠"}],
+    ]},
+  { rank:3,  name:"Four of a Kind",
+    odds:"1 in 4,165",
+    notes:"Great moment to check understanding: 'What's the one thing that could beat this?' (Only Straight Flush or Royal Flush.) Reinforces the hierarchy.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">4</em> cards of the same rank — all <em style="color:var(--gold);font-style:normal;font-weight:700;">4</em> suits — plus any <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> fifth card.`,
+    tip:"Also called 'Quads.' Extremely hard to beat. Only a Straight Flush or Royal Flush wins.",
+    examples:[
+      [{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♦"}],
+      [{l:"9",s:"♠"},{l:"9",s:"♥"},{l:"9",s:"♦"},{l:"9",s:"♣"},{l:"Q",s:"♥"}],
+      [{l:"5",s:"♠"},{l:"5",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♣"}],
+    ]},
+  { rank:4,  name:"Full House",
+    odds:"1 in 694",
+    notes:"'Three of a kind PLUS a pair' is the simplest way to remember it. The three-of-a-kind part determines who wins if two players both have Full Houses.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> cards of one rank + <em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> of another. Example: three Jacks and two <em style="color:var(--gold);font-style:normal;font-weight:700;">9</em>s.`,
+    tip:"Read as 'Jacks full of Nines.' If two players have a Full House, the higher three-of-a-kind wins.",
+    examples:[
+      [{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"K",s:"♠"},{l:"K",s:"♣"}],
+      [{l:"7",s:"♣"},{l:"7",s:"♦"},{l:"7",s:"♥"},{l:"4",s:"♠"},{l:"4",s:"♦"}],
+      [{l:"Q",s:"♠"},{l:"Q",s:"♦"},{l:"Q",s:"♣"},{l:"2",s:"♥"},{l:"2",s:"♠"}],
+    ]},
+  { rank:5,  name:"Flush",
+    odds:"1 in 509",
+    notes:"Common confusion: people think a Flush beats a Full House. It doesn't — Full House is higher. Emphasize this.",
+    desc:`Any <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> cards of the same suit — they don't need to be in sequence.`,
+    tip:"The actual ranks only matter for breaking ties. Ace-high flush beats King-high flush.",
+    examples:[
+      [{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}],
+      [{l:"K",s:"♥"},{l:"J",s:"♥"},{l:"8",s:"♥"},{l:"6",s:"♥"},{l:"3",s:"♥"}],
+      [{l:"Q",s:"♣"},{l:"9",s:"♣"},{l:"7",s:"♣"},{l:"5",s:"♣"},{l:"2",s:"♣"}],
+      [{l:"A",s:"♠"},{l:"8",s:"♠"},{l:"6",s:"♠"},{l:"4",s:"♠"},{l:"3",s:"♠"}],
+    ]},
+  { rank:6,  name:"Straight",
+    odds:"1 in 255",
+    notes:"The Ace rule trips people up. A-2-3-4-5 is 'the wheel' — the lowest straight. A-K-Q-J-10 is the highest. You can't wrap around like Q-K-A-2-3.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> consecutive cards of mixed suits. Example: <em style="color:var(--gold);font-style:normal;font-weight:700;">4-5-6-7-8</em>.`,
+    tip:"Ace can be high (A-K-Q-J-10) or low (A-2-3-4-5). You can't 'wrap around' like Q-K-A-2-3.",
+    examples:[
+      [{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}],
+      [{l:"A",s:"♦"},{l:"2",s:"♣"},{l:"3",s:"♥"},{l:"4",s:"♠"},{l:"5",s:"♦"}],
+      [{l:"J",s:"♣"},{l:"10",s:"♦"},{l:"9",s:"♥"},{l:"8",s:"♠"},{l:"7",s:"♣"}],
+      [{l:"K",s:"♥"},{l:"Q",s:"♠"},{l:"J",s:"♦"},{l:"10",s:"♣"},{l:"9",s:"♥"}],
+    ]},
+  { rank:7,  name:"Three of a Kind",
+    odds:"1 in 47",
+    notes:"'Trips' vs 'Set' is a fun distinction. Not essential but interesting — it tells other players how likely more of that rank is in the deck.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> cards of the same rank, plus <em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> unrelated cards.`,
+    tip:"Called 'Trips' when you pair a community card, 'A Set' when you use both hole cards. Same hand, different names.",
+    examples:[
+      [{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♥"},{l:"2",s:"♦"}],
+      [{l:"6",s:"♥"},{l:"6",s:"♠"},{l:"6",s:"♦"},{l:"K",s:"♣"},{l:"J",s:"♥"}],
+      [{l:"10",s:"♣"},{l:"10",s:"♦"},{l:"10",s:"♥"},{l:"5",s:"♠"},{l:"3",s:"♣"}],
+    ]},
+  { rank:8,  name:"Two Pair",
+    odds:"1 in 21",
+    notes:"The 'kicker' concept is worth mentioning — if both pairs match, the 5th card (kicker) decides. This is the first hand where that tiebreaker matters a lot.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> different pairs, plus any <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> fifth card. Example: two Aces and two <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em>s.`,
+    tip:"The highest pair decides the winner. If that ties, the second pair. Then the 5th card — the 'kicker'.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}],
+      [{l:"K",s:"♣"},{l:"K",s:"♦"},{l:"J",s:"♠"},{l:"J",s:"♥"},{l:"9",s:"♦"}],
+      [{l:"9",s:"♠"},{l:"9",s:"♣"},{l:"3",s:"♥"},{l:"3",s:"♦"},{l:"Q",s:"♠"}],
+      [{l:"8",s:"♦"},{l:"8",s:"♣"},{l:"4",s:"♠"},{l:"4",s:"♥"},{l:"A",s:"♦"}],
+    ]},
+  { rank:9,  name:"One Pair",
+    odds:"1 in 2.4",
+    notes:"This is what most people end up with. Reinforce: one pair of twos still BEATS a high card hand, no matter how high the high card is.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> cards of the same rank, plus <em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> unrelated cards.`,
+    tip:"The most common made hand. Higher pair wins ties. If pairs match, the highest unmatched card (kicker) wins.",
+    examples:[
+      [{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♣"},{l:"8",s:"♦"},{l:"5",s:"♥"},{l:"3",s:"♠"}],
+      [{l:"J",s:"♥"},{l:"J",s:"♦"},{l:"Q",s:"♠"},{l:"4",s:"♣"},{l:"2",s:"♦"}],
+      [{l:"3",s:"♣"},{l:"3",s:"♦"},{l:"K",s:"♥"},{l:"10",s:"♠"},{l:"6",s:"♣"}],
+    ]},
+  { rank:10, name:"High Card",
+    odds:"~1 in 1",
+    notes:"A good reality check: in most rounds, many players end up with just High Card. Poker is often about bluffing — making others think you have more.",
+    desc:`No combination — your highest single card plays. Whoever has the highest <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> card wins.`,
+    tip:"The most common outcome. If everyone has High Card, the player with the highest individual card wins.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}],
+      [{l:"K",s:"♥"},{l:"10",s:"♣"},{l:"7",s:"♦"},{l:"5",s:"♠"},{l:"3",s:"♥"}],
+      [{l:"Q",s:"♦"},{l:"9",s:"♠"},{l:"8",s:"♣"},{l:"4",s:"♥"},{l:"2",s:"♠"}],
+      [{l:"A",s:"♣"},{l:"8",s:"♦"},{l:"6",s:"♥"},{l:"4",s:"♦"},{l:"2",s:"♣"}],
+    ]},
 ];
 const RED_SUITS = ["♥","♦"];
 const HAND_NAMES_SHORT = ["Royal Flush","Str. Flush","4 of a Kind","Full House","Flush","Straight","3 of a Kind","Two Pair","One Pair","High Card"];
@@ -483,6 +595,15 @@ function card(c,anim=false){return `<div class="playing-card${anim?' card-anim':
 function rbClass(r){return r<=3?"rank-gold":r<=6?"rank-blue":"rank-gray";}
 function rankBar(active){return HAND_NAMES_SHORT.map((n,i)=>`<div class="rank-pip ${i===active-1?'active':''}"><span class="rank-tooltip">#${i+1} ${n}</span></div>`).join('');}
 
+function showExample(sn, ei) {
+  // Deactivate all panels and tabs for this slide
+  document.querySelectorAll(`[id^="ex-${sn}-"]`).forEach(p => p.classList.remove('active'));
+  document.querySelectorAll(`[id^="tab-${sn}-"]`).forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById(`ex-${sn}-${ei}`);
+  const tab   = document.getElementById(`tab-${sn}-${ei}`);
+  if(panel) { panel.classList.add('active'); panel.querySelectorAll('.card-anim').forEach(c => { c.style.animation='none'; void c.offsetWidth; c.style.animation=''; }); }
+  if(tab)   tab.classList.add('active');
+}
 /* ═══════════════════════════════════════
    BUILD SLIDES
 ═══════════════════════════════════════ */
@@ -557,51 +678,58 @@ function buildAllSlides(){
       <div class="slide-header-title"><h2>Why Poker? <span class="reveal-hint" id="hint-1"></span></h2></div>
     </div>
     <div class="slide-content" style="flex-direction:row;align-items:center;gap:2.5rem;padding:2rem 2.5rem;">
-      <!-- Left: SVG illustration -->
-      <div style="flex-shrink:0;width:200px;">
-        <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-          <!-- Poker chips stack -->
-          <ellipse cx="100" cy="170" rx="55" ry="12" fill="rgba(0,0,0,0.3)"/>
-          <!-- Chip 3 (bottom) -->
-          <ellipse cx="100" cy="155" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
-          <ellipse cx="100" cy="152" rx="48" ry="11" fill="#2d6cb0" stroke="#1a4a80" stroke-width="1.5"/>
-          <ellipse cx="100" cy="149" rx="38" ry="8" fill="#1a3a60" stroke="none"/>
-          <!-- Chip 2 -->
-          <ellipse cx="100" cy="135" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
-          <ellipse cx="100" cy="132" rx="48" ry="11" fill="#c0392b" stroke="#8b1a10" stroke-width="1.5"/>
-          <ellipse cx="100" cy="129" rx="38" ry="8" fill="#8b1a10" stroke="none"/>
-          <!-- Chip 1 (top) -->
-          <ellipse cx="100" cy="118" rx="48" ry="11" fill="#1b2a4a" stroke="#c9962a" stroke-width="2"/>
-          <ellipse cx="100" cy="115" rx="48" ry="11" fill="#c9962a" stroke="#8a6010" stroke-width="1.5"/>
-          <ellipse cx="100" cy="112" rx="38" ry="8" fill="#8a6010" stroke="none"/>
-          <text x="100" y="117" font-family="serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">★</text>
-          <!-- Cards leaning -->
-          <g transform="rotate(-15,70,80)">
-            <rect x="30" y="30" width="64" height="88" rx="7" fill="white" stroke="#ddd" stroke-width="1"/>
-            <text x="40" y="52" font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#c0392b">A</text>
-            <text x="40" y="66" font-family="Georgia,serif" font-size="11" fill="#c0392b">♥</text>
-            <text x="62" y="100" font-family="Georgia,serif" font-size="28" fill="#c0392b" text-anchor="middle">♥</text>
+      <!-- Left: training record + card illustration -->
+      <div style="flex-shrink:0;width:180px;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 180 210" width="180" height="210" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="10" width="105" height="140" rx="8" fill="#1b2a4a" stroke="#c9962a" stroke-width="1.5"/>
+          <rect x="28" y="26" width="65" height="7" rx="3" fill="#c9962a" opacity="0.9"/>
+          <rect x="28" y="42" width="80" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="53" width="72" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="64" width="78" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="79" width="45" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <rect x="28" y="90" width="58" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <rect x="28" y="101" width="50" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <circle cx="98" cy="108" r="14" fill="#27ae60"/>
+          <text x="98" y="114" font-family="sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">&#x2713;</text>
+          <rect x="85" y="133" width="80" height="24" rx="5" fill="#c9962a"/>
+          <text x="125" y="149" font-family="sans-serif" font-size="9" font-weight="bold" fill="#111d34" text-anchor="middle">NEW EMPLOYEE</text>
+          <g transform="rotate(18,145,90)">
+            <rect x="115" y="55" width="52" height="74" rx="6" fill="white" stroke="#ddd" stroke-width="1" filter="url(#sh2)"/>
+            <text x="122" y="75" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#c0392b">A</text>
+            <text x="122" y="88" font-family="Georgia,serif" font-size="10" fill="#c0392b">&#x2665;</text>
+            <text x="141" y="110" font-family="Georgia,serif" font-size="24" fill="#c0392b" text-anchor="middle">&#x2665;</text>
           </g>
-          <g transform="rotate(10,130,80)">
-            <rect x="96" y="25" width="64" height="88" rx="7" fill="white" stroke="#ddd" stroke-width="1"/>
-            <text x="106" y="47" font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#1a1a2e">K</text>
-            <text x="106" y="61" font-family="Georgia,serif" font-size="11" fill="#1a1a2e">♠</text>
-            <text x="128" y="95" font-family="Georgia,serif" font-size="28" fill="#1a1a2e" text-anchor="middle">♠</text>
-          </g>
+          <defs><filter id="sh2"><feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/></filter></defs>
         </svg>
       </div>
-      <!-- Right: content -->
-      <div style="flex:1;display:flex;flex-direction:column;gap:1.1rem;">
-        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;">Poker isn't just a card game — the skills it exercises map directly onto what we do every day as a training team for a medical device company.</p>
-        <div class="intro-grid">
-          <div data-reveal class="intro-card"><strong>🧠 Pattern Recognition</strong><p>Identifying hands trains the same rapid-classification skills we use during compliance reviews and audits.</p></div>
-          <div data-reveal class="intro-card"><strong>⚡ Decision Under Pressure</strong><p>In poker — like in a device training environment — you evaluate incomplete information quickly and commit.</p></div>
-          <div data-reveal class="intro-card"><strong>🎯 Rules &amp; Hierarchy</strong><p>Hands follow a strict, unambiguous hierarchy. Mastering rule-based logic is exactly what our programs teach.</p></div>
-          <div data-reveal class="intro-card"><strong>🤝 Shared Language</strong><p>A few minutes of shared learning builds team vocabulary and camaraderie across the whole group.</p></div>
+      <!-- Right: 3 clean points -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:1rem;">
+        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.7;">We work with <strong style="color:var(--white);">new employees</strong> and <strong style="color:var(--white);">training records</strong> every day. Poker turns out to be a great mirror for that work.</p>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F0CF;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">10 hands to learn</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Just like onboarding SOPs &#x2014; fixed rules, clear hierarchy. Learn them once, use them forever.</div>
+          </div>
+        </div>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid #2d6cb0;border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F4CB;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">Pattern recognition</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Reading a hand fast = scanning a training record for a gap. Same skill, different table.</div>
+          </div>
+        </div>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid #27ae60;border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F91D;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">A shared experience</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Learning something new together is exactly what we help new hires do every single day.</div>
+          </div>
         </div>
       </div>
     </div>
   </div>`;
+
 
   // SLIDE 2: The Basics
   vp.innerHTML += `
@@ -649,6 +777,13 @@ function buildAllSlides(){
     const div = document.createElement('div');
     div.className = 'slide-card';
     div.setAttribute('data-slide', sn);
+    // Build example tabs
+    const tabBtns = h.examples.map((ex,ei) =>
+      `<button class="ex-tab ${ei===0?'active':''}" onclick="showExample(${sn},${ei})" id="tab-${sn}-${ei}">${ei+1}</button>`
+    ).join('');
+    const exPanels = h.examples.map((ex,ei) =>
+      `<div class="ex-panel ${ei===0?'active':''}" id="ex-${sn}-${ei}">${ex.map(c=>card(c,true)).join('')}</div>`
+    ).join('');
     div.innerHTML = `
       <div class="slide-header">
         <div class="rank-badge ${rbClass(h.rank)}">#${h.rank}</div>
@@ -659,8 +794,11 @@ function buildAllSlides(){
       </div>
       <div class="slide-body" style="flex:1;min-height:0;">
         <div class="slide-left">
-          <div class="desc-label">The Hand</div>
-          <div class="cards-display">${h.cards.map(c=>card(c,true)).join('')}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <div class="desc-label" style="margin-bottom:0;">The Hand</div>
+            <div class="ex-tabs">${tabBtns}</div>
+          </div>
+          <div class="ex-panels">${exPanels}</div>
         </div>
         <div class="slide-right">
           <div data-reveal class="desc-label">What it is</div>
@@ -810,7 +948,7 @@ function buildAllSlides(){
         <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
           <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">&#x2660; Reading a hand quickly under pressure</div>
           <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
-          <div data-reveal style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Scanning a procedure or audit doc for critical compliance points</div>
+          <div data-reveal style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:var(--white);">Scanning a training record or controlled document for critical compliance points</div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
