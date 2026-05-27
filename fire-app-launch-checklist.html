@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRE Calculator — App Launch Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --card: #1a2234;
+    --card2: #1e293b;
+    --border: #2a3a52;
+    --border2: #334155;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --dim: #475569;
+    --accent: #10b981;
+    --accent-bg: #052e1c;
+    --accent-text: #6ee7b7;
+    --blue: #3b82f6;
+    --blue-bg: #0c1f40;
+    --blue-text: #93c5fd;
+    --amber: #f59e0b;
+    --amber-bg: #2d1a00;
+    --amber-text: #fcd34d;
+    --red: #ef4444;
+    --red-bg: #2d0a0a;
+    --red-text: #fca5a5;
+    --purple: #a78bfa;
+    --purple-bg: #1e1040;
+    --purple-text: #c4b5fd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .logo {
+    width: 38px; height: 38px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .header-title { font-size: 18px; font-weight: 700; }
+  .header-sub { font-size: 13px; color: var(--muted); }
+  .progress-wrap { }
+  .progress-meta {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-meta strong { color: var(--accent); }
+  .progress-track {
+    height: 5px; background: var(--card2);
+    border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* ── Main content ── */
+  .content { padding: 20px 16px 100px; max-width: 680px; margin: 0 auto; }
+
+  /* ── Phase ── */
+  .phase { margin-bottom: 28px; }
+  .phase-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .phase-num.blue   { background: var(--blue-bg);   color: var(--blue-text); }
+  .phase-num.amber  { background: var(--amber-bg);  color: var(--amber-text); }
+  .phase-num.red    { background: var(--red-bg);    color: var(--red-text); }
+  .phase-num.green  { background: var(--accent-bg); color: var(--accent-text); }
+  .phase-num.purple { background: var(--purple-bg); color: var(--purple-text); }
+
+  .phase-info { flex: 1; }
+  .phase-title { font-size: 15px; font-weight: 700; }
+  .phase-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .phase-count { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+
+  /* ── Cost badges ── */
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 20px;
+    margin-left: 6px; vertical-align: middle;
+  }
+  .badge-free   { background: var(--accent-bg); color: var(--accent-text); }
+  .badge-paid   { background: var(--amber-bg);  color: var(--amber-text); }
+  .badge-req    { background: var(--red-bg);    color: var(--red-text); }
+
+  /* ── Step ── */
+  .step {
+    display: flex; gap: 12px;
+    padding: 13px 14px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: opacity 0.15s, background 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .step:active { background: var(--card2); }
+  .step.done {
+    opacity: 0.45;
+    background: var(--surface);
+  }
+  .step.done .step-title { text-decoration: line-through; }
+
+  .checkbox {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border2);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+    background: var(--surface);
+    transition: all 0.15s;
+  }
+  .step.done .checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .checkmark {
+    display: none;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .step.done .checkmark { display: block; }
+
+  .step-body { flex: 1; min-width: 0; }
+  .step-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--text); margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .step-detail {
+    font-size: 12px; color: var(--muted);
+    line-height: 1.65;
+  }
+  .step-detail a { color: var(--blue-text); text-decoration: none; }
+  .step-detail a:hover { text-decoration: underline; }
+  .step-detail code {
+    background: var(--card2);
+    color: var(--accent-text);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+  .step-detail ul {
+    margin-top: 5px; padding-left: 16px;
+  }
+  .step-detail ul li { margin-bottom: 3px; }
+  .step-detail strong { color: var(--text); font-weight: 600; }
+
+  /* ── Expand/collapse detail ── */
+  .step-summary { cursor: pointer; }
+  .detail-toggle {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--blue-text);
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .detail-body {
+    display: none;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border);
+  }
+  .detail-body.open { display: block; }
+
+  /* ── Section dividers ── */
+  .section-label {
+    font-size: 10px; font-weight: 700;
+    color: var(--dim); text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 16px 0 8px;
+    padding-left: 2px;
+  }
+
+  /* ── Float help button ── */
+  .fab {
+    position: fixed; bottom: 24px; right: 16px; left: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none; border-radius: 14px;
+    padding: 15px 20px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 4px 24px rgba(16,185,129,0.35);
+    text-align: center;
+  }
+  .fab:active { opacity: 0.85; transform: scale(0.98); }
+
+  /* ── Completion banner ── */
+  .congrats {
+    display: none;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .congrats.show { display: block; }
+  .congrats-emoji { font-size: 36px; margin-bottom: 8px; }
+  .congrats-title { font-size: 20px; font-weight: 800; color: var(--accent-text); margin-bottom: 6px; }
+  .congrats-text { font-size: 14px; color: var(--muted); }
+
+  /* ── Filter tabs ── */
+  .filter-row {
+    display: flex; gap: 6px; overflow-x: auto;
+    margin-bottom: 20px;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">🔥</div>
+    <div>
+      <div class="header-title">Launch Checklist</div>
+      <div class="header-sub">FIRE Calculator — App Store &amp; Google Play</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 of 42 steps completed</span>
+      <strong id="prog-pct">0%</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="congrats" id="congrats-banner">
+    <div class="congrats-emoji">🚀</div>
+    <div class="congrats-title">You're live!</div>
+    <div class="congrats-text">Your app is on the App Store and Google Play. Time to post to r/financialindependence and watch the downloads roll in.</div>
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterPhase('all', this)">All (42)</button>
+    <button class="filter-btn" onclick="filterPhase('todo', this)">To do</button>
+    <button class="filter-btn" onclick="filterPhase('done', this)">Done</button>
+    <button class="filter-btn" onclick="filterPhase('phase-1', this)">1 · Icon</button>
+    <button class="filter-btn" onclick="filterPhase('phase-2', this)">2 · Screenshots</button>
+    <button class="filter-btn" onclick="filterPhase('phase-3', this)">3 · Privacy</button>
+    <button class="filter-btn" onclick="filterPhase('phase-4', this)">4 · Apple</button>
+    <button class="filter-btn" onclick="filterPhase('phase-5', this)">5 · Build iOS</button>
+    <button class="filter-btn" onclick="filterPhase('phase-6', this)">6 · Android</button>
+    <button class="filter-btn" onclick="filterPhase('phase-7', this)">7 · Launch</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 1 — APP ICON
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-1">
+    <div class="phase-header">
+      <div class="phase-num blue">1</div>
+      <div class="phase-info">
+        <div class="phase-title">App icon <span class="badge badge-free">Free</span></div>
+        <div class="phase-meta">~30 minutes · Use Figma (free)</div>
+      </div>
+      <div class="phase-count" id="count-phase-1"></div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a free Figma account</div>
+        <div class="step-detail">Go to <a href="https://figma.com" target="_blank">figma.com</a> → click "Get started for free" → sign up with Google or email. You do NOT need the paid plan — the free tier is enough for this entire step.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a new file → make a 1024×1024 frame</div>
+        <div class="step-detail">In Figma: click "+ New design file" → press <code>F</code> on your keyboard to open the Frame tool → click anywhere on the canvas → in the right panel, set Width: <code>1024</code>, Height: <code>1024</code> → press Enter. This is your icon canvas.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Import the app-icon.svg file I gave you</div>
+        <div class="step-detail">Find the <code>app-icon.svg</code> in your downloaded zip (inside the <code>icon/</code> folder). In Figma: drag the SVG file directly onto the 1024×1024 frame. It will appear on the canvas. Click it, then in the right panel set W: <code>1024</code> H: <code>1024</code> to make it fill exactly. The icon shows dark navy background, exponential green/blue bars, and a gold trend line.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Export as PNG — no alpha, no rounded corners</div>
+        <div class="step-detail">Click the <strong>frame</strong> (not the icon inside it) in the left panel → scroll to the bottom of the right panel → click "+" next to "Export" → set format to <code>PNG</code>, scale to <code>1x</code> → click "Export Frame". <strong>Do NOT add rounded corners yourself</strong> — Apple rounds them automatically. If you round them yourself, Apple rejects the icon.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Make the 512×512 Android version</div>
+        <div class="step-detail">In Figma: right-click the frame → Duplicate → select the new frame → in right panel set W: <code>512</code> H: <code>512</code>. Export it as PNG. This is for the Google Play store listing. Also note: for the Android adaptive icon inside the app itself, the logo should be centered within the inner 66% of the canvas (the "safe zone"). Google crops the outer edges on some devices.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-1" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Make a 1024×500 feature graphic for Google Play</div>
+        <div class="step-detail">In Figma: create a new frame W: <code>1024</code> H: <code>500</code>. Add your app name "FIRE Calculator" in big text on the left, your tagline "Real historical returns for VTSAX, FZROX &amp; 12 more FIRE funds" in smaller text below, and the app icon on the right. Dark navy background. Export as PNG. Google Play requires this banner — Apple does not.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 2 — SCREENSHOTS
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-2">
+    <div class="phase-header">
+      <div class="phase-num blue">2</div>
+      <div class="phase-info">
+        <div class="phase-title">Screenshots <span class="badge badge-free">Free</span></div>
+        <div class="phase-meta">~1 hour · Use Chrome browser</div>
+      </div>
+      <div class="phase-count" id="count-phase-2"></div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Download Google Chrome if you don't have it</div>
+        <div class="step-detail">Go to <a href="https://google.com/chrome" target="_blank">google.com/chrome</a> → download and install. You need Chrome specifically for its DevTools screenshot capture — Safari and Firefox don't have the same exact-pixel capture feature.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Open the first screenshot HTML file in Chrome</div>
+        <div class="step-detail">Find the downloaded zip → open the <code>screenshots/</code> folder → right-click <code>screenshot-1-calculator.html</code> → "Open with" → Google Chrome. You'll see a full-page design appear.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Open Chrome DevTools and set exact pixel dimensions</div>
+        <div class="step-detail">Press <code>F12</code> (Windows) or <code>Cmd+Option+I</code> (Mac) to open DevTools → click the phone/tablet icon in the top-left of the DevTools panel (it looks like a phone next to a tablet) → at the top of the screen you'll see dimension boxes → set the first box to <code>1290</code> and the second to <code>2796</code> → press Enter. This is the exact iPhone 15 Pro size Apple requires.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Capture the screenshot at full resolution</div>
+        <div class="step-detail">Make sure zoom is set to <code>100%</code> in the DevTools bar → press <code>Cmd+Shift+P</code> (Mac) or <code>Ctrl+Shift+P</code> (Windows) → a command menu appears → start typing "screenshot" → click "Capture full size screenshot". Chrome automatically saves a PNG to your Downloads folder. Rename it <code>01-calculator.png</code>.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Repeat for all 5 screenshot files</div>
+        <div class="step-detail">Open each HTML file and repeat the DevTools capture:
+          <ul>
+            <li><code>screenshot-1-calculator.html</code> → save as <code>01-calculator.png</code></li>
+            <li><code>screenshot-2-historical.html</code> → save as <code>02-historical-simulator.png</code></li>
+            <li><code>screenshot-3-scenarios.html</code> → save as <code>03-scenarios.png</code></li>
+            <li><code>screenshot-4-funds.html</code> → save as <code>04-fund-library.png</code></li>
+            <li><code>screenshot-5-trust.html</code> → save as <code>05-privacy-free.png</code></li>
+          </ul>
+        Keep the DevTools panel open — you only need to set the dimensions once per session.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-2" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Decide: do you want iPad screenshots too?</div>
+        <div class="step-detail">If your <code>app.json</code> has <code>"supportsTablet": true</code>, Apple REQUIRES iPad screenshots (2048×2732). Your two options: (A) set <code>"supportsTablet": false</code> in app.json to skip this requirement, or (B) recapture all 5 screenshots in DevTools at 2048×2732. Most first-time apps choose option A to save time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 3 — PRIVACY POLICY
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-3">
+    <div class="phase-header">
+      <div class="phase-num amber">3</div>
+      <div class="phase-info">
+        <div class="phase-title">Privacy policy hosting <span class="badge badge-free">Free</span></div>
+        <div class="phase-meta">~15 minutes · GitHub Pages · Do this FIRST</div>
+      </div>
+      <div class="phase-count" id="count-phase-3"></div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a free GitHub account</div>
+        <div class="step-detail">Go to <a href="https://github.com" target="_blank">github.com</a> → click "Sign up" → enter your email, create a password, choose a username → verify your email. The free plan is all you need. Your username will appear in your privacy policy URL, so pick something reasonable (e.g. your name or "firecalcapp").</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a new public repository called "fire-calculator"</div>
+        <div class="step-detail">On GitHub: click the "+" icon in the top-right → "New repository" → Repository name: <code>fire-calculator</code> → set to <strong>Public</strong> (required for GitHub Pages) → check "Add a README file" → click "Create repository". You'll land on your new empty repo page.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Update your email in the privacy policy file first</div>
+        <div class="step-detail">Before uploading: open <code>privacy-policy.html</code> in any text editor (Notepad on Windows, TextEdit on Mac) → find the text <code>privacy@yourapp.com</code> → replace it with your real email address → find <code>yourusername</code> in the GitHub link → replace with your actual GitHub username → save the file.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Upload privacy-policy.html to your GitHub repo</div>
+        <div class="step-detail">In your GitHub repo: click "Add file" → "Upload files" → drag your <code>privacy-policy.html</code> file into the upload box → scroll down → click "Commit changes". Wait a few seconds for it to appear in the file list.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Enable GitHub Pages to get your live URL</div>
+        <div class="step-detail">In your repo → click "Settings" (top tab) → in the left sidebar scroll down to "Pages" → under "Source" select "Deploy from a branch" → Branch: <code>main</code> → Folder: <code>/ (root)</code> → click Save. Wait 2–3 minutes. Refresh the Settings → Pages page. You'll see a green box saying "Your site is live at <code>https://YOURUSERNAME.github.io/fire-calculator/</code>". Your privacy policy URL is: <code>https://YOURUSERNAME.github.io/fire-calculator/privacy-policy.html</code>. <strong>Copy and save this URL — you'll paste it into both app stores.</strong></div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-3" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Verify the URL works in your browser</div>
+        <div class="step-detail">Open a browser → paste your privacy policy URL → press Enter. You should see the dark-themed privacy policy page load correctly. If you see a 404 error, wait another 3 minutes and try again — GitHub Pages can take up to 10 minutes the first time. If it still fails, go back to Settings → Pages and make sure it shows "Your site is published."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 4 — APPLE DEVELOPER ACCOUNT
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-4">
+    <div class="phase-header">
+      <div class="phase-num red">4</div>
+      <div class="phase-info">
+        <div class="phase-title">Apple Developer account <span class="badge badge-req">$99/year</span></div>
+        <div class="phase-meta">Allow up to 48 hours for approval · Required for iOS</div>
+      </div>
+      <div class="phase-count" id="count-phase-4"></div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Enroll in the Apple Developer Program</div>
+        <div class="step-detail">Go to <a href="https://developer.apple.com/programs/enroll/" target="_blank">developer.apple.com/programs/enroll</a> → click "Start Your Enrollment" → sign in with your Apple ID (the one linked to your iPhone) → choose <strong>Individual</strong> (NOT Organization, unless you have an LLC) → fill in your legal name and address → pay $99 USD → submit. Apple emails you within 24–48 hours with approval. You cannot proceed with iOS submission until approved.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Note your Apple Team ID for later</div>
+        <div class="step-detail">Once approved: go to <a href="https://developer.apple.com/account" target="_blank">developer.apple.com/account</a> → under "Membership Details" you'll see your <strong>Team ID</strong> — it looks like <code>A1B2C3D4E5</code>. Copy it and save it somewhere. You'll need it in your <code>eas.json</code> file later.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create your app in App Store Connect</div>
+        <div class="step-detail">Go to <a href="https://appstoreconnect.apple.com" target="_blank">appstoreconnect.apple.com</a> → "My Apps" → click the "+" button → "New App" → fill in:
+          <ul>
+            <li>Platforms: iOS</li>
+            <li>Name: <code>FIRE Calculator: Index Funds</code></li>
+            <li>Primary Language: English (U.S.)</li>
+            <li>Bundle ID: click "Register a new Bundle ID" → go to developer.apple.com → Identifiers → "+" → App IDs → App → continue → Description: FIRE Calculator → Bundle ID (Explicit): <code>com.YOURNAME.firecalculator</code> → Register. Then come back and select it.</li>
+            <li>SKU: any unique string, e.g. <code>firecalc2025</code></li>
+          </ul>
+          Click Create.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Fill in the App Store listing text</div>
+        <div class="step-detail">In App Store Connect → your app → "App Store" tab → "1.0 Prepare for Submission" → fill in:
+          <ul>
+            <li><strong>Name:</strong> FIRE Calculator: Index Funds</li>
+            <li><strong>Subtitle:</strong> Historical Returns Simulator</li>
+            <li><strong>Description:</strong> open <code>store-copy-and-launch.md</code> → copy everything under "Description (4,000 chars max)" → paste it</li>
+            <li><strong>Keywords:</strong> copy the keyword string from the doc (100 chars max)</li>
+            <li><strong>Support URL:</strong> your GitHub Pages main URL</li>
+            <li><strong>Privacy Policy URL:</strong> your full privacy-policy.html URL</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Upload your 5 screenshots</div>
+        <div class="step-detail">In the same "1.0 Prepare for Submission" page → scroll to "App Previews and Screenshots" → click "6.7-inch Display" → drag your 5 PNG files in one at a time in order (01 through 05). Apple displays them in the order you upload. After uploading, you can drag to reorder. The 6.7" slot covers iPhone 15 Pro Max — this is the only required size.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Upload your app icon (1024×1024 PNG)</div>
+        <div class="step-detail">In App Store Connect → "App Information" (left sidebar) → scroll to "App Store Icon" → upload your 1024×1024 PNG. <strong>Common rejection reasons:</strong> has an alpha (transparency) channel, has rounded corners, file is not exactly 1024×1024. If rejected, open the PNG in Preview (Mac) → File → Export → uncheck "Alpha" → save and re-upload.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-4" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Set age rating, pricing, and category</div>
+        <div class="step-detail">Still in App Store Connect:
+          <ul>
+            <li><strong>Age Rating:</strong> click "Edit" next to Content Rating → answer every question with "None" or "No" (no violent content, no adult content, no gambling, etc.) → submit → it rates automatically as 4+</li>
+            <li><strong>Pricing:</strong> click "Pricing and Availability" in left sidebar → Price: Free → Available in all territories (or choose specific ones)</li>
+            <li><strong>Category:</strong> click "App Information" → Primary Category: Finance → Secondary Category: Utilities</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 5 — BUILD & SUBMIT iOS
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-5">
+    <div class="phase-header">
+      <div class="phase-num green">5</div>
+      <div class="phase-info">
+        <div class="phase-title">Build &amp; submit iOS <span class="badge badge-free">Free with EAS</span></div>
+        <div class="phase-meta">~45 min first time · Builds in the cloud</div>
+      </div>
+      <div class="phase-count" id="count-phase-5"></div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Install Node.js on your computer</div>
+        <div class="step-detail">Go to <a href="https://nodejs.org" target="_blank">nodejs.org</a> → download the "LTS" version (the left button) → run the installer → click through all the defaults → finish. To verify it worked: open Terminal (Mac: search "Terminal" in Spotlight; Windows: search "Command Prompt") → type <code>node --version</code> → press Enter → you should see something like <code>v20.11.0</code>.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Install EAS CLI globally</div>
+        <div class="step-detail">In Terminal, type exactly: <code>npm install -g eas-cli</code> → press Enter → wait for it to finish (1–2 minutes). Then verify: <code>eas --version</code> → should show a version number. If you see "permission denied" on Mac, type <code>sudo npm install -g eas-cli</code> instead and enter your Mac password when asked.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a free Expo account and log in</div>
+        <div class="step-detail">Go to <a href="https://expo.dev" target="_blank">expo.dev</a> → "Sign Up" → create a free account. Then in Terminal: <code>eas login</code> → enter your Expo email and password → you'll see "Logged in as yourusername".</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Unzip the app and navigate to it in Terminal</div>
+        <div class="step-detail">Unzip the <code>fire-calculator-app.zip</code> file you downloaded. In Terminal:
+          <ul>
+            <li>Mac: <code>cd ~/Downloads/fire-calculator</code></li>
+            <li>Windows: <code>cd %USERPROFILE%\Downloads\fire-calculator</code></li>
+          </ul>
+          Press Enter. Your Terminal prompt should now show you're inside the fire-calculator folder. Type <code>ls</code> (Mac) or <code>dir</code> (Windows) to confirm you see files like <code>app.json</code> and <code>package.json</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Update app.json with your real bundle ID</div>
+        <div class="step-detail">Open <code>app.json</code> in a text editor. Find every occurrence of <code>com.yourcompany.firecalculator</code> and replace it with your actual bundle ID (e.g. <code>com.jane.firecalculator</code> — must match exactly what you registered in Apple Developer portal). Also replace <code>YOUR_EAS_PROJECT_ID</code> with blank for now — EAS will fill it. Save the file.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Run npm install to download all dependencies</div>
+        <div class="step-detail">In Terminal (make sure you're in the fire-calculator folder): <code>npm install</code> → press Enter → wait 2–4 minutes while it downloads all the packages. You'll see a lot of text scroll by — that's normal. It's done when you see your cursor return. You'll see a new <code>node_modules</code> folder appear.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Run eas init to link your project to Expo</div>
+        <div class="step-detail">In Terminal: <code>eas init</code> → press Enter. EAS asks "Would you like to create a project?" → Yes. It creates a project at expo.dev and automatically adds your project ID to <code>app.json</code>. You'll see "Created project @yourusername/fire-calculator". This only needs to be done once.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Build the iOS app in the cloud</div>
+        <div class="step-detail">In Terminal: <code>eas build --platform ios --profile production</code> → press Enter. EAS asks:
+          <ul>
+            <li>"Do you want to log in to your Apple account?" → Yes → enter your Apple ID email and password</li>
+            <li>"Generate a new Apple Distribution Certificate?" → Yes</li>
+            <li>"Generate a new Apple Provisioning Profile?" → Yes</li>
+          </ul>
+          EAS handles all the certificate stuff automatically. The build then runs in Expo's cloud servers. It takes 30–45 minutes. You don't need to keep Terminal open — you'll get an email when it's done. You can also track it at <a href="https://expo.dev" target="_blank">expo.dev</a> → your project → Builds.
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Submit the build to App Store Connect</div>
+        <div class="step-detail">After the build email arrives: in Terminal run <code>eas submit --platform ios</code> → it asks for your Apple ID again → enter it. EAS automatically uploads the .ipa file to App Store Connect. When done, go to <a href="https://appstoreconnect.apple.com" target="_blank">appstoreconnect.apple.com</a> → your app → TestFlight tab. The build will appear there within 15 minutes (Apple processes it).</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-5" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Attach the build and submit for App Review</div>
+        <div class="step-detail">In App Store Connect → your app → "1.0 Prepare for Submission" → scroll down to the "Build" section → click the "+" button → select the build that just uploaded → scroll back to the top of the page → make sure everything is filled in (no yellow warnings) → click the blue "Submit for Review" button. Apple sends an email with the result in 1–3 days. Most finance apps are approved on the first review.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 6 — GOOGLE PLAY
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-6">
+    <div class="phase-header">
+      <div class="phase-num green">6</div>
+      <div class="phase-info">
+        <div class="phase-title">Google Play <span class="badge badge-paid">$25 one-time</span></div>
+        <div class="phase-meta">Approved same day · No Mac needed</div>
+      </div>
+      <div class="phase-count" id="count-phase-6"></div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a Google Play Developer account</div>
+        <div class="step-detail">Go to <a href="https://play.google.com/console/signup" target="_blank">play.google.com/console/signup</a> → sign in with your Google account → accept the terms → pay the one-time $25 USD fee with any credit card → your account is active immediately. No waiting period unlike Apple.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Create a new app in Play Console</div>
+        <div class="step-detail">In <a href="https://play.google.com/console" target="_blank">play.google.com/console</a> → click "Create app" (top right) → fill in:
+          <ul>
+            <li>App name: <code>FIRE Calculator: Index Fund Simulator</code></li>
+            <li>Default language: English (United States)</li>
+            <li>App or game: App</li>
+            <li>Free or paid: Free</li>
+            <li>Check both "Declarations" checkboxes</li>
+          </ul>
+          Click "Create app".
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Fill in the main store listing</div>
+        <div class="step-detail">In Play Console → left sidebar → "Store presence" → "Main store listing" → fill in:
+          <ul>
+            <li><strong>Short description</strong> (80 chars): copy from <code>store-copy-and-launch.md</code></li>
+            <li><strong>Full description</strong>: copy the full description from the doc</li>
+            <li><strong>Screenshots</strong>: upload your 5 PNGs under "Phone screenshots"</li>
+            <li><strong>Feature graphic</strong>: upload your 1024×500 Figma export</li>
+            <li><strong>App icon</strong>: upload the 512×512 PNG</li>
+          </ul>
+          Click "Save" at the top right.
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Add your privacy policy URL</div>
+        <div class="step-detail">Play Console → left sidebar → "Policy" → "App content" → "Privacy policy" → click "Start" → paste your full GitHub Pages privacy policy URL → click "Save". Without this, you cannot publish to the store. This is the same URL you used for Apple.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Complete the content rating questionnaire</div>
+        <div class="step-detail">Play Console → "Policy" → "App content" → "Content rating" → click "Start questionnaire" → Category: select <strong>Finance</strong> → answer all questions (select "No" or "Does not apply" for everything — this is a calculator, no violence, adult content, gambling, etc.) → click "Submit". Your rating will be "Everyone" (E). This takes about 3 minutes.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Fill in the remaining required sections</div>
+        <div class="step-detail">Play Console → "App content" has several more required sections. Check each one:
+          <ul>
+            <li><strong>Target audience:</strong> select 18+ only</li>
+            <li><strong>News apps:</strong> No, this is not a news app</li>
+            <li><strong>COVID-19 contact tracing:</strong> No</li>
+            <li><strong>Data safety:</strong> click through → no data collected from users → no data shared → Save</li>
+          </ul>
+          When all sections show green checkmarks, you're ready to publish.
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Build the Android app and submit it</div>
+        <div class="step-detail">In Terminal (inside the fire-calculator folder): <code>eas build --platform android --profile production</code> → press Enter. This builds an AAB (Android App Bundle) in Expo's cloud. Takes 15–25 minutes. When done, run: <code>eas submit --platform android</code> → EAS will ask you to link your Google Play account and uploads the AAB automatically. Alternatively, download the .aab file from expo.dev and upload it manually in Play Console → "Production" → "Create new release" → upload the .aab.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-6" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Roll out to production</div>
+        <div class="step-detail">In Play Console → left sidebar → "Production" → you'll see your release → click "Review release" → Google checks for obvious errors → if all green, click "Start rollout to production" → in the popup click "Rollout" to confirm. Google reviews typically take a few hours to 1 business day. You'll get an email when it's live on the Play Store.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PHASE 7 — LAUNCH DAY
+  ═══════════════════════════════════════════════ -->
+  <div class="phase" data-phase="phase-7">
+    <div class="phase-header">
+      <div class="phase-num purple">7</div>
+      <div class="phase-info">
+        <div class="phase-title">Launch day marketing <span class="badge badge-free">Free</span></div>
+        <div class="phase-meta">Do all of these on the same day both stores approve</div>
+      </div>
+      <div class="phase-count" id="count-phase-7"></div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Post to r/financialindependence — your #1 priority</div>
+        <div class="step-detail">Open <code>store-copy-and-launch.md</code> → find the "REDDIT LAUNCH POST" section → copy the entire post. Go to <a href="https://reddit.com/r/financialindependence" target="_blank">reddit.com/r/financialindependence</a> → click "Create Post" → paste the post → add both your App Store and Google Play links where marked → post. <strong>Best time:</strong> Tuesday or Wednesday, 8–10am Eastern Time. Do NOT post on weekends. Respond to every single comment in the first 2 hours — engagement keeps the post visible.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Post to r/personalfinance</div>
+        <div class="step-detail">Adapt the Reddit post slightly: lead with the compound interest calculator feature (not the historical simulator, which is more FIRE-specific). Title suggestion: "I built a free compound interest calculator with inflation and tax modeling — and a historical simulator showing real S&amp;P 500 returns since 1993. No ads, no subscription." Check <a href="https://reddit.com/r/personalfinance" target="_blank">r/personalfinance</a> rules first — they allow tool posts if you're transparent about being the developer.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Post to r/investing</div>
+        <div class="step-detail">For r/investing, lead with the ETF comparison angle. Title suggestion: "Built a free app to see what $500/month into QQQ, VTSAX, or FZROX would actually be worth today — real annual returns, real crashes included." Different angle, same app — each subreddit audience cares about different features.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Launch on Product Hunt</div>
+        <div class="step-detail">Go to <a href="https://producthunt.com" target="_blank">producthunt.com</a> → "Submit a product" → use the Product Hunt section from your store-copy doc. <strong>Important timing:</strong> Product Hunt launches reset at 12:01am Pacific Time. Submit the night before and schedule it. On launch morning, message 5–10 friends and ask them to upvote it first thing. Early upvotes in the first 2 hours determine if you make the "top 5 of the day" list, which drives exponential traffic.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Email 3 personal finance bloggers</div>
+        <div class="step-detail">Use the outreach email template from your store-copy doc. Good targets with large FIRE audiences:
+          <ul>
+            <li><strong>Physician on FIRE</strong> (physicianonfire.com) — huge FIRE community</li>
+            <li><strong>Mad Fientist</strong> (madfientist.com) — FIRE-focused, loves tools</li>
+            <li><strong>The College Investor</strong> (thecollegeinvestor.com) — reviews apps</li>
+            <li><strong>Afford Anything</strong> (affordanything.com) — Paula Pant, FIRE podcast</li>
+          </ul>
+          One genuine mention from any of these can drive 500–2,000 downloads. Keep the email short — 5 sentences max. Use the template from the doc.
+        </div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Get your first 10 reviews (critical for rankings)</div>
+        <div class="step-detail">App Store ranking algorithms heavily favor apps with early reviews. Text 10 people you know — friends, family, anyone with a smartphone — and ask them to download the app and leave an honest review. Send them the direct link. Say exactly: "Can you download this app and leave a quick review? Even just 3–5 stars helps a lot." Do this within the first 48 hours of going live.</div>
+      </div>
+    </div>
+
+    <div class="step" data-phase="phase-7" onclick="toggle(this)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-title">Plan your v1.1 update based on feedback</div>
+        <div class="step-detail">Watch comments on Reddit and reviews in both stores carefully. The most common feature requests from FIRE calculator users are: (1) SWR / withdrawal mode — "how long will my money last?", (2) FIRE number calculator — "how much do I need to retire?", (3) Monte Carlo simulation — random return sequences. Plan your first update around whichever gets requested most. Updates keep you in the "Recently Updated" section of both stores.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'fire-checklist-v1';
+
+  function saveState() {
+    const done = [];
+    document.querySelectorAll('.step').forEach((el, i) => {
+      if (el.classList.contains('done')) done.push(i);
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(done));
+  }
+
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const steps = document.querySelectorAll('.step');
+      saved.forEach(i => {
+        if (steps[i]) steps[i].classList.add('done');
+      });
+    } catch(e) {}
+  }
+
+  function toggle(el) {
+    el.classList.toggle('done');
+    updateProgress();
+    saveState();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.step');
+    const done = document.querySelectorAll('.step.done');
+    const pct = Math.round(done.length / all.length * 100);
+
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = done.length + ' of ' + all.length + ' steps completed';
+    document.getElementById('prog-pct').textContent = pct + '%';
+
+    // Update per-phase counts
+    ['phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'].forEach(phase => {
+      const phaseAll = document.querySelectorAll('.step[data-phase="' + phase + '"]');
+      const phaseDone = document.querySelectorAll('.step[data-phase="' + phase + '"].done');
+      const el = document.getElementById('count-' + phase);
+      if (el) el.textContent = phaseDone.length + '/' + phaseAll.length;
+    });
+
+    // Show congrats
+    if (pct === 100) {
+      document.getElementById('congrats-banner').classList.add('show');
+      document.getElementById('congrats-banner').scrollIntoView({behavior:'smooth'});
+    } else {
+      document.getElementById('congrats-banner').classList.remove('show');
+    }
+  }
+
+  function filterPhase(filter, btn) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const phases = document.querySelectorAll('.phase');
+    const steps = document.querySelectorAll('.step');
+
+    if (filter === 'all') {
+      phases.forEach(p => p.style.display = '');
+      steps.forEach(s => s.style.display = '');
+    } else if (filter === 'done') {
+      phases.forEach(p => p.style.display = '');
+      steps.forEach(s => {
+        s.style.display = s.classList.contains('done') ? '' : 'none';
+      });
+    } else if (filter === 'todo') {
+      phases.forEach(p => p.style.display = '');
+      steps.forEach(s => {
+        s.style.display = s.classList.contains('done') ? 'none' : '';
+      });
+    } else {
+      // Show only matching phase
+      phases.forEach(p => {
+        p.style.display = p.dataset.phase === filter ? '' : 'none';
+      });
+      steps.forEach(s => s.style.display = '');
+    }
+  }
+
+  loadState();
+  updateProgress();
+</script>
+
+</body>
+</html>

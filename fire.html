@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jon Estes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f0e">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRE Calculator · Jon Estes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:       #0f0f0e;
+  --surface:  #1a1a18;
+  --card:     #222220;
+  --card2:    #2a2a28;
+  --border:   #333331;
+  --border2:  #3d3d3b;
+  --text:     #f0efe8;
+  --muted:    #888880;
+  --dim:      #555550;
+  --accent:   #10b981;
+  --accent2:  #059669;
+  --accentbg: #052e1c;
+  --accentt:  #6ee7b7;
+  --blue:     #3b82f6;
+  --bluebg:   #0c1f40;
+  --bluet:    #93c5fd;
+  --amber:    #f59e0b;
+  --amberbg:  #2d1a00;
+  --ambert:   #fcd34d;
+  --red:      #ef4444;
+  --redbg:    #2d0a0a;
+  --redt:     #fca5a5;
+  --radius:   10px;
+  --font:     'DM Sans', system-ui, sans-serif;
+  --mono:     'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Nav ── */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(15,15,14,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--text); color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; letter-spacing: -0.5px;
+}
+.nav-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.nav-back {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, color 0.15s;
+}
+.nav-back:hover { border-color: var(--border2); color: var(--text); }
+
+/* ── Page header ── */
+.page-header {
+  padding: 48px 24px 32px;
+  max-width: 780px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb {
+  font-size: 12px; color: var(--dim);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 6px;
+}
+.breadcrumb a { color: var(--dim); text-decoration: none; }
+.breadcrumb a:hover { color: var(--muted); }
+h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700; letter-spacing: -0.5px;
+  color: var(--text); line-height: 1.1;
+  margin-bottom: 10px;
+}
+h1 em { font-style: italic; font-weight: 300; color: var(--muted); }
+.page-sub {
+  font-size: 14px; color: var(--muted); line-height: 1.6;
+  max-width: 520px;
+}
+
+/* ── Tabs ── */
+.tabs-wrap {
+  max-width: 780px; margin: 0 auto;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 0; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tabs-wrap::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 14px 18px;
+  font-size: 13px; font-weight: 500;
+  color: var(--muted); background: none; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: color 0.15s;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+/* ── Main layout ── */
+main { max-width: 780px; margin: 0 auto; padding: 28px 24px 80px; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Section label ── */
+.slabel {
+  font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  color: var(--dim); text-transform: uppercase;
+  margin: 24px 0 10px;
+}
+.slabel:first-child { margin-top: 0; }
+
+/* ── Input grid ── */
+.igrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+.igrid3 { grid-template-columns: 1fr 1fr 1fr; }
+@media(max-width: 480px) { .igrid { grid-template-columns: 1fr 1fr; } .igrid3 { grid-template-columns: 1fr 1fr 1fr; } }
+
+.igroup { display: flex; flex-direction: column; gap: 5px; }
+.igroup label { font-size: 11px; color: var(--muted); }
+.ifield {
+  position: relative;
+  display: flex; align-items: center;
+}
+.ifield input {
+  width: 100%; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-family: var(--mono); font-size: 14px; font-weight: 500;
+  padding: 9px 12px; outline: none;
+  transition: border-color 0.15s;
+}
+.ifield input:focus { border-color: var(--accent); }
+.ifield.pfx input { padding-left: 22px; }
+.ifield.sfx input { padding-right: 24px; }
+.ifield .pre, .ifield .suf {
+  position: absolute; font-size: 13px; color: var(--dim);
+  pointer-events: none; font-family: var(--mono);
+}
+.ifield .pre { left: 9px; }
+.ifield .suf { right: 9px; }
+
+/* ── Slider ── */
+.slider-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px; margin-top: 16px;
+}
+.slider-row span { font-size: 12px; color: var(--muted); }
+.slider-row strong { font-size: 13px; font-weight: 600; color: var(--text); }
+input[type=range] {
+  width: 100%; height: 4px;
+  background: var(--card2); border-radius: 2px;
+  outline: none; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  margin-bottom: 20px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+  cursor: pointer; border: none;
+}
+
+/* ── Stat cards ── */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0; }
+@media(max-width: 520px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+  text-align: center;
+}
+.stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.stat-val { font-size: 18px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+.stat-val.green { color: var(--accent); }
+.stat-val.blue  { color: var(--blue);   }
+.stat-val.muted { color: var(--muted);  }
+.stat-val.amber { color: var(--amber);  }
+
+/* ── Chart ── */
+.chart-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 16px; overflow: hidden;
+}
+.chart-legend {
+  display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.chart-bars {
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 140px; padding-top: 8px;
+}
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.bar-stack { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; height: 120px; position: relative; }
+.bar-seg { width: 100%; transition: height 0.3s ease; }
+.bar-seg.top { border-radius: 2px 2px 0 0; }
+.bar-lbl { font-size: 8px; color: var(--dim); margin-top: 4px; text-align: center; white-space: nowrap; }
+
+/* ── Milestone ── */
+.milestone {
+  background: var(--accentbg); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 14px; margin-top: 12px;
+  font-size: 13px; color: var(--accentt); line-height: 1.5;
+}
+
+/* ── Fund chips ── */
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.chip {
+  padding: 4px 11px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--card); color: var(--muted);
+  transition: all 0.12s;
+}
+.chip:hover { border-color: var(--border2); color: var(--text); }
+.chip.fire { background: var(--accentbg); border-color: var(--accent2); color: var(--accentt); }
+.chip.sel  { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip.fire.sel { background: var(--accent2); }
+
+/* ── Fund info card ── */
+.fund-info {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 12px 14px; margin-bottom: 14px;
+}
+.fund-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; flex-wrap: wrap; }
+.fund-ticker { font-size: 18px; font-weight: 800; font-family: var(--mono); }
+.fund-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+  background: var(--accentbg); color: var(--accentt);
+}
+.fund-er { font-size: 11px; color: var(--dim); margin-left: auto; font-family: var(--mono); }
+.fund-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.fund-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.fund-meta { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+/* ── Table ── */
+.tbl-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; margin-top: 16px;
+  overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left; padding: 8px 12px;
+  font-size: 10px; font-weight: 600; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border); background: var(--card2);
+}
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--card2); }
+.td-right { text-align: right; font-family: var(--mono); font-size: 12px; }
+.badge-up { background: var(--accentbg); color: var(--accentt); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600; font-family: var(--mono); }
+.badge-dn { background: var(--redbg); color: var(--redt); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600; font-family: var(--mono); }
+.txt-green { color: var(--accent) !important; font-family: var(--mono); }
+.txt-red   { color: var(--red)    !important; font-family: var(--mono); }
+.txt-blue  { color: var(--blue)   !important; font-family: var(--mono); font-weight: 700; }
+
+/* ── Scenario cards ── */
+.scen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+@media(max-width: 480px) { .scen-grid { grid-template-columns: 1fr; } }
+.scen-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px;
+}
+.scen-rate { font-size: 11px; font-weight: 700; margin-bottom: 5px; font-family: var(--mono); }
+.scen-val  { font-size: 20px; font-weight: 800; font-family: var(--mono); color: var(--text); margin-bottom: 3px; }
+.scen-gain { font-size: 11px; margin-bottom: 2px; font-family: var(--mono); }
+.scen-sub  { font-size: 10px; color: var(--dim); }
+
+/* ── Callout ── */
+.callout {
+  background: var(--card); border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 14px; margin-top: 14px;
+  font-size: 13px; color: var(--muted); line-height: 1.5;
+}
+.callout strong { color: var(--text); }
+
+/* ── Toggle row (settings) ── */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 14px; }
+.toggle-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.toggle-right { display: flex; align-items: center; gap: 10px; }
+.toggle-input { width: 72px; }
+.switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.sw {
+  position: absolute; cursor: pointer; inset: 0;
+  background: var(--border2); border-radius: 20px; transition: 0.2s;
+}
+.sw::before {
+  content: ''; position: absolute;
+  width: 14px; height: 14px; left: 3px; bottom: 3px;
+  background: white; border-radius: 50%; transition: 0.2s;
+}
+input:checked + .sw { background: var(--accent); }
+input:checked + .sw::before { transform: translateX(16px); }
+
+/* ── Settings section ── */
+.settings-section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0 16px; margin-bottom: 14px;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center; padding: 32px 24px;
+  font-size: 12px; color: var(--dim);
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--dim); text-decoration: none; }
+footer a:hover { color: var(--muted); }
+
+/* ── Divider ── */
+hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a class="nav-brand" href="/">
+    <div class="nav-mark">JE</div>
+    <span class="nav-title">Jon Estes</span>
+  </a>
+  <a class="nav-back" href="/">← Dashboard</a>
+</nav>
+
+<!-- ── Header ── -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">jonestes.me</a> <span>·</span> Finance
+  </div>
+  <h1>🔥 FIRE Calculator <em>— index funds</em></h1>
+  <p class="page-sub">Real historical returns for VTSAX, FZROX, SCHD &amp; 12 more. Compound interest with inflation, tax, and contribution growth modeling.</p>
+</div>
+
+<!-- ── Tabs ── -->
+<div class="tabs-wrap">
+  <button class="tab active" onclick="switchTab('calc', this)">Calculator</button>
+  <button class="tab" onclick="switchTab('history', this)">Historical simulator</button>
+  <button class="tab" onclick="switchTab('scenarios', this)">Scenarios</button>
+  <button class="tab" onclick="switchTab('settings', this)">Settings</button>
+</div>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- ════ CALCULATOR ════ -->
+  <div id="tab-calc" class="tab-panel active">
+
+    <div class="slabel">Inputs</div>
+    <div class="igrid">
+      <div class="igroup">
+        <label>Initial deposit</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="principal" value="10000" min="0" oninput="updateCalc()">
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Monthly contribution</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="monthly" value="500" min="0" oninput="updateCalc()">
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Annual rate</label>
+        <div class="ifield sfx">
+          <input type="number" id="rate" value="7" min="0" max="100" step="0.1" oninput="updateCalc()">
+          <span class="suf">%</span>
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Inflation rate</label>
+        <div class="ifield sfx">
+          <input type="number" id="inflation" value="3" min="0" max="20" step="0.1" oninput="updateCalc()">
+          <span class="suf">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <span>Time period</span>
+      <strong id="years-lbl">20 years</strong>
+    </div>
+    <input type="range" id="years" min="1" max="50" value="20" oninput="updateCalc()">
+
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">Final balance</div><div class="stat-val blue" id="s-total">—</div></div>
+      <div class="stat"><div class="stat-lbl">Deposited</div><div class="stat-val" id="s-dep">—</div></div>
+      <div class="stat"><div class="stat-lbl">Interest earned</div><div class="stat-val green" id="s-int">—</div></div>
+      <div class="stat"><div class="stat-lbl">Real value</div><div class="stat-val muted" id="s-real">—</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#2a2a28"></div>Deposited</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Interest</div>
+        <div class="legend-item" id="legend-real"><div class="legend-dot" style="background:#10b981"></div>Real value</div>
+      </div>
+      <div class="chart-bars" id="calc-chart"></div>
+    </div>
+
+    <div id="milestone" class="milestone" style="display:none"></div>
+  </div>
+
+  <!-- ════ HISTORICAL ════ -->
+  <div id="tab-history" class="tab-panel">
+
+    <div class="slabel">Fidelity <span style="color:var(--accentt);margin-left:4px;">· r/FIRE favorites</span></div>
+    <div class="chips" id="chips-fidelity"></div>
+    <div class="slabel">Vanguard</div>
+    <div class="chips" id="chips-vanguard"></div>
+    <div class="slabel">Schwab &amp; others</div>
+    <div class="chips" id="chips-other"></div>
+
+    <div class="fund-info" id="fund-info"></div>
+
+    <div class="igrid igrid3">
+      <div class="igroup">
+        <label>Start year</label>
+        <input type="number" id="h-year" value="2004" min="1950" max="2023"
+          style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:14px;padding:9px 12px;width:100%;outline:none;"
+          oninput="updateHistory()">
+      </div>
+      <div class="igroup">
+        <label>Lump sum</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="h-lump" value="10000" min="0" oninput="updateHistory()">
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Monthly</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="h-monthly" value="500" min="0" oninput="updateHistory()">
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:16px;">
+      <div class="stat"><div class="stat-lbl">Final value</div><div class="stat-val blue" id="h-final">—</div></div>
+      <div class="stat"><div class="stat-lbl">Total invested</div><div class="stat-val" id="h-invested">—</div></div>
+      <div class="stat"><div class="stat-lbl">Total gain</div><div class="stat-val green" id="h-gain">—</div></div>
+      <div class="stat"><div class="stat-lbl">Avg annual</div><div class="stat-val" id="h-avg">—</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#2a2a28"></div>Invested</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Gains</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Down years</div>
+      </div>
+      <div class="chart-bars" id="hist-chart"></div>
+    </div>
+
+    <div class="tbl-wrap" id="hist-table-wrap">
+      <table>
+        <thead><tr>
+          <th>Year</th><th>Return</th>
+          <th class="td-right">Portfolio value</th>
+          <th class="td-right">Total invested</th>
+          <th class="td-right">Gain / loss</th>
+        </tr></thead>
+        <tbody id="hist-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════ SCENARIOS ════ -->
+  <div id="tab-scenarios" class="tab-panel">
+
+    <div class="slabel">Shared inputs</div>
+    <div class="igrid">
+      <div class="igroup">
+        <label>Initial deposit</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="s-principal" value="10000" oninput="updateScen()">
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Monthly contribution</label>
+        <div class="ifield pfx">
+          <span class="pre">$</span>
+          <input type="number" id="s-monthly" value="500" oninput="updateScen()">
+        </div>
+      </div>
+    </div>
+    <div class="slider-row">
+      <span>Time period</span>
+      <strong id="s-years-lbl">20 years</strong>
+    </div>
+    <input type="range" id="s-years" min="1" max="50" value="20" oninput="updateScen()">
+
+    <div class="slabel">Scenario rates</div>
+    <div class="igrid igrid3">
+      <div class="igroup">
+        <label>Conservative</label>
+        <div class="ifield sfx">
+          <input type="number" id="sr1" value="4" step="0.5" oninput="updateScen()">
+          <span class="suf">%</span>
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Moderate</label>
+        <div class="ifield sfx">
+          <input type="number" id="sr2" value="7" step="0.5" oninput="updateScen()">
+          <span class="suf">%</span>
+        </div>
+      </div>
+      <div class="igroup">
+        <label>Aggressive</label>
+        <div class="ifield sfx">
+          <input type="number" id="sr3" value="10" step="0.5" oninput="updateScen()">
+          <span class="suf">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scen-grid" id="scen-cards"></div>
+
+    <div class="chart-wrap">
+      <div class="chart-legend" id="scen-legend"></div>
+      <div class="chart-bars" id="scen-chart"></div>
+    </div>
+
+    <div class="callout" id="scen-callout"></div>
+  </div>
+
+  <!-- ════ SETTINGS ════ -->
+  <div id="tab-settings" class="tab-panel">
+
+    <div class="slabel">Calculator options</div>
+    <div class="settings-section">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Inflation adjustment</div>
+          <div class="toggle-sub">Shows real purchasing power in calculator tab</div>
+        </div>
+        <div class="toggle-right">
+          <div class="ifield sfx toggle-input">
+            <input type="number" id="set-inflation" value="3" step="0.1" oninput="updateCalc()">
+            <span class="suf">%</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="tog-inflation" checked onchange="updateCalc()"><span class="sw"></span></label>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Tax on gains</div>
+          <div class="toggle-sub">Deducts tax from interest earned each year</div>
+        </div>
+        <div class="toggle-right">
+          <div class="ifield sfx toggle-input">
+            <input type="number" id="set-tax" value="25" step="1" oninput="updateCalc()">
+            <span class="suf">%</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="tog-tax" onchange="updateCalc()"><span class="sw"></span></label>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Annual contribution growth</div>
+          <div class="toggle-sub">Raise monthly contribution each year (salary growth)</div>
+        </div>
+        <div class="toggle-right">
+          <div class="ifield sfx toggle-input">
+            <input type="number" id="set-growth" value="2" step="0.5" oninput="updateCalc()">
+            <span class="suf">%</span>
+          </div>
+          <label class="switch"><input type="checkbox" id="tog-growth" onchange="updateCalc()"><span class="sw"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="slabel">About</div>
+    <div class="settings-section">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Data sources</div>
+          <div class="toggle-sub">Real annual returns sourced from fund records with dividends reinvested. Inception dates from Morningstar. Community picks from r/financialindependence.</div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Disclaimer</div>
+          <div class="toggle-sub">For educational purposes only. Past performance does not guarantee future results. Not financial advice.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <a href="/">jonestes.me</a> · FIRE Calculator · real historical returns · not financial advice
+</footer>
+
+<script>
+// ── Fund data ────────────────────────────────────────────────────────────────
+const FUNDS = {
+  FZROX:{name:'Fidelity ZERO Total Market',broker:'fidelity',fire:true,er:0.0,inception:2018,desc:'0% expense ratio. Entire US stock market (~2,800 stocks). The r/financialindependence darling — zero fees, maximum diversification. Pairs with FZILX for a zero-cost two-fund portfolio.',returns:{2018:-5.2,2019:30.8,2020:21.1,2021:25.7,2022:-19.6,2023:26.1,2024:23.8}},
+  FSKAX:{name:'Fidelity Total Market Index',broker:'fidelity',fire:true,er:0.015,inception:2011,desc:'0.015% ER. ~4,000 US stocks. No minimum investment. Fidelity\'s most diversified fund, tracking the Dow Jones Total Stock Market Index.',returns:{2011:1.1,2012:16.4,2013:33.5,2014:12.6,2015:0.4,2016:12.7,2017:21.2,2018:-5.2,2019:30.7,2020:21.0,2021:25.7,2022:-19.5,2023:26.1,2024:23.7}},
+  FXAIX:{name:'Fidelity 500 Index Fund',broker:'fidelity',fire:true,er:0.015,inception:2011,desc:'0.015% ER. Tracks the S&P 500. Fidelity\'s answer to VOO — same index, near-zero cost, no minimums.',returns:{2011:-5.95,2012:16.0,2013:32.4,2014:14.8,2015:2.4,2016:12.5,2017:22.0,2018:-3.8,2019:31.6,2020:18.4,2021:28.7,2022:-18.1,2023:26.3,2024:25.0}},
+  FZILX:{name:'Fidelity ZERO International',broker:'fidelity',fire:true,er:0.0,inception:2018,desc:'0% ER. Developed + emerging markets outside the US. Zero-cost partner to FZROX — together they give you the entire world at 0% fees.',returns:{2018:-14.6,2019:21.8,2020:11.2,2021:8.2,2022:-16.1,2023:15.6,2024:4.8}},
+  VTSAX:{name:'Vanguard Total Stock Market Admiral',broker:'vanguard',fire:true,er:0.04,inception:2000,desc:'"VTSAX and chill." The original FIRE fund. ~3,700 US stocks, $3K minimum. The most-recommended fund in r/financialindependence history.',returns:{2000:-2.55,2001:-10.9,2002:-21.0,2003:31.4,2004:13.4,2005:6.1,2006:15.6,2007:5.6,2008:-37.0,2009:28.8,2010:17.3,2011:1.1,2012:16.4,2013:33.5,2014:12.6,2015:0.4,2016:12.7,2017:21.2,2018:-5.2,2019:30.8,2020:21.0,2021:25.7,2022:-19.5,2023:26.0,2024:23.7}},
+  VOO:  {name:'Vanguard S&P 500 ETF',broker:'vanguard',fire:false,er:0.03,inception:2010,desc:'0.03% ER. Tracks the S&P 500. Warren Buffett\'s recommended fund for most investors. ETF version of VFIAX, no minimum.',returns:{2010:14.8,2011:1.9,2012:16.0,2013:32.4,2014:13.6,2015:1.3,2016:12.2,2017:21.8,2018:-4.5,2019:31.4,2020:18.3,2021:28.8,2022:-18.2,2023:26.3,2024:25.0}},
+  VT:   {name:'Vanguard Total World Stock ETF',broker:'vanguard',fire:true,er:0.07,inception:2008,desc:'0.07% ER. Every publicly traded company on Earth in one ticker. The ultimate one-fund portfolio.',returns:{2008:-43.8,2009:36.0,2010:13.0,2011:-7.5,2012:17.2,2013:23.8,2014:-1.8,2015:-1.8,2016:9.4,2017:27.7,2018:-9.8,2019:27.3,2020:16.6,2021:18.3,2022:-18.0,2023:22.0,2024:16.5}},
+  VXUS: {name:'Vanguard Total International ETF',broker:'vanguard',fire:true,er:0.07,inception:2011,desc:'0.07% ER. Every non-US publicly traded company on Earth. Classic FIRE companion to VTI for global diversification.',returns:{2011:-14.8,2012:17.7,2013:15.5,2014:-4.0,2015:-4.0,2016:4.7,2017:27.8,2018:-14.4,2019:21.9,2020:11.2,2021:9.0,2022:-16.1,2023:15.9,2024:5.1}},
+  BND:  {name:'Vanguard Total Bond Market ETF',broker:'vanguard',fire:false,er:0.03,inception:2007,desc:'0.03% ER. Entire US investment-grade bond market. The stabilizing "B" in the classic 3-fund portfolio.',returns:{2007:6.9,2008:7.7,2009:5.9,2010:6.5,2011:7.8,2012:4.2,2013:-2.0,2014:6.0,2015:0.5,2016:2.6,2017:3.5,2018:0.0,2019:8.7,2020:7.5,2021:-1.5,2022:-13.0,2023:5.5,2024:1.4}},
+  VGT:  {name:'Vanguard Information Technology ETF',broker:'vanguard',fire:false,er:0.09,inception:2004,desc:'0.09% ER. Pure US tech sector — Apple, Microsoft, Nvidia, Broadcom. Extraordinary returns, high concentration risk.',returns:{2004:4.4,2005:3.2,2006:11.1,2007:18.6,2008:-43.8,2009:64.0,2010:11.7,2011:4.5,2012:15.2,2013:28.8,2014:20.1,2015:4.3,2016:14.0,2017:38.8,2018:-1.6,2019:50.3,2020:48.0,2021:30.5,2022:-29.7,2023:52.7,2024:29.3}},
+  SCHB: {name:'Schwab U.S. Broad Market ETF',broker:'other',fire:true,er:0.03,inception:2009,desc:'0.03% ER. Schwab\'s VTI equivalent — entire US stock market in one ETF. Hugely popular in r/financialindependence.',returns:{2009:31.0,2010:17.4,2011:1.1,2012:16.4,2013:33.5,2014:12.5,2015:0.3,2016:12.6,2017:21.1,2018:-5.3,2019:30.6,2020:21.0,2021:25.6,2022:-19.6,2023:25.9,2024:23.6}},
+  SCHD: {name:'Schwab U.S. Dividend Equity ETF',broker:'other',fire:false,er:0.06,inception:2011,desc:'0.06% ER. High-quality US dividend payers. Steady growing dividends to fund living expenses without selling shares.',returns:{2011:8.0,2012:13.5,2013:30.4,2014:11.8,2015:-2.5,2016:17.0,2017:20.9,2018:-5.4,2019:27.0,2020:10.4,2021:29.9,2022:-3.3,2023:4.5,2024:11.7}},
+  SPY:  {name:'SPDR S&P 500 ETF Trust',broker:'other',fire:false,er:0.09,inception:1993,desc:'0.09% ER. The original S&P 500 ETF and most traded fund in the world. Data back to 1993.',returns:{1993:10.1,1994:1.3,1995:37.6,1996:23.0,1997:33.4,1998:28.6,1999:21.0,2000:-9.1,2001:-11.9,2002:-22.1,2003:28.7,2004:10.9,2005:4.9,2006:15.8,2007:5.5,2008:-37.0,2009:26.5,2010:15.1,2011:2.1,2012:16.0,2013:32.4,2014:13.7,2015:1.4,2016:12.0,2017:21.8,2018:-4.4,2019:31.5,2020:18.4,2021:28.7,2022:-18.2,2023:26.3,2024:25.0}},
+  QQQ:  {name:'Invesco Nasdaq-100 ETF',broker:'other',fire:false,er:0.2,inception:1999,desc:'0.20% ER. Top 100 non-financial Nasdaq stocks — massive tech weighting. Extraordinary returns, terrifying drawdowns (−83% in dot-com crash).',returns:{1999:102.4,2000:-36.8,2001:-32.7,2002:-37.6,2003:49.1,2004:10.5,2005:1.5,2006:6.9,2007:19.1,2008:-41.7,2009:54.7,2010:19.7,2011:3.0,2012:18.1,2013:36.6,2014:19.2,2015:9.5,2016:7.1,2017:32.7,2018:-0.1,2019:39.0,2020:48.6,2021:27.3,2022:-32.6,2023:54.9,2024:25.6}},
+};
+const GROUPS = {
+  fidelity:['FZROX','FSKAX','FXAIX','FZILX'],
+  vanguard:['VTSAX','VOO','VT','VXUS','BND','VGT'],
+  other:['SCHB','SCHD','SPY','QQQ'],
+};
+let selFund = 'FZROX';
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const fmt = n => {
+  if(Math.abs(n)>=1e6) return '$'+(n/1e6).toFixed(2)+'M';
+  if(Math.abs(n)>=1e3) return '$'+Math.round(n/1e3)+'K';
+  return '$'+Math.round(n);
+};
+const pct = (n,d=1) => (n>=0?'+':'')+n.toFixed(d)+'%';
+const v = id => parseFloat(document.getElementById(id).value)||0;
+const checked = id => document.getElementById(id).checked;
+const el = id => document.getElementById(id);
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  el('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='history')  updateHistory();
+  if(name==='scenarios') updateScen();
+}
+
+// ── Compound calc ─────────────────────────────────────────────────────────────
+function calcCompound(principal, monthly, rate, years, inflation, tax, growth) {
+  const pts = [];
+  let bal = principal, dep = principal, mon = monthly;
+  pts.push({y:0, bal:Math.round(bal), dep:Math.round(dep), real:Math.round(bal)});
+  for(let y=1;y<=years;y++){
+    for(let m=0;m<12;m++){
+      const r = rate/100/12;
+      const interest = bal*r;
+      bal = bal + (tax>0?interest*(1-tax/100):interest) + mon;
+      dep += mon;
+    }
+    if(growth>0) mon *= (1+growth/100);
+    const inflD = inflation>0 ? Math.pow(1+inflation/100,y) : 1;
+    pts.push({y, bal:Math.round(bal), dep:Math.round(dep), real:Math.round(bal/inflD)});
+  }
+  return pts;
+}
+
+function updateCalc() {
+  const years = parseInt(el('years').value);
+  el('years-lbl').textContent = years + (years===1?' year':' years');
+  const inflation = checked('tog-inflation') ? v('set-inflation') : 0;
+  const tax       = checked('tog-tax')       ? v('set-tax')       : 0;
+  const growth    = checked('tog-growth')    ? v('set-growth')    : 0;
+  const pts = calcCompound(v('principal'), v('monthly'), v('rate'), years, inflation, tax, growth);
+  const last = pts[pts.length-1];
+  const interest = Math.max(0, last.bal - last.dep);
+  el('s-total').textContent = fmt(last.bal);
+  el('s-dep').textContent   = fmt(last.dep);
+  el('s-int').textContent   = fmt(interest);
+  el('s-real').textContent  = inflation>0||tax>0 ? fmt(last.real) : '—';
+  el('legend-real').style.display = inflation>0||tax>0 ? 'flex' : 'none';
+  const maxBal = Math.max(...pts.map(p=>p.bal));
+  const step = Math.max(1, Math.floor(pts.length/11));
+  const shown = pts.filter((_,i)=>i===0||i%step===0||i===pts.length-1);
+  const barW = Math.max(3,(100/shown.length)-1);
+  el('calc-chart').innerHTML = shown.map(p=>{
+    const totalH = maxBal>0?(p.bal/maxBal)*112:0;
+    const depH   = maxBal>0?(p.dep/maxBal)*112:0;
+    const intH   = Math.max(0,totalH-depH);
+    const realH  = (inflation>0||tax>0) && maxBal>0?(p.real/maxBal)*112:0;
+    return `<div class="bar-col" style="width:${barW}%">
+      <div class="bar-stack">
+        ${(inflation>0||tax>0)?`<div style="position:absolute;left:50%;bottom:${realH-3}px;width:5px;height:5px;border-radius:50%;background:#10b981;transform:translateX(-50%)"></div>`:''}
+        <div class="bar-seg top" style="height:${intH}px;background:#3b82f6;border-radius:2px 2px 0 0"></div>
+        <div class="bar-seg" style="height:${depH}px;background:#2a2a28"></div>
+      </div>
+      <div class="bar-lbl">${p.y===0?'Now':'Yr'+p.y}</div>
+    </div>`;
+  }).join('');
+  const overtake = pts.find(p=>Math.max(0,p.bal-p.dep)>=p.dep);
+  if(overtake && overtake.y > 0){
+    el('milestone').style.display='block';
+    el('milestone').textContent = `🎯  Interest overtakes your contributions around year ${overtake.y} — that's when compounding really accelerates.`;
+  } else { el('milestone').style.display='none'; }
+}
+
+// ── Historical ────────────────────────────────────────────────────────────────
+function buildChips() {
+  Object.entries(GROUPS).forEach(([g, keys]) => {
+    el('chips-'+g).innerHTML = keys.map(k=>{
+      const f = FUNDS[k];
+      const cls = ['chip', f.fire?'fire':'', k===selFund?'sel':''].filter(Boolean).join(' ');
+      return `<button class="${cls}" onclick="selFund='${k}';buildChips();updateHistory()">${k}</button>`;
+    }).join('');
+  });
+}
+
+function updateHistory() {
+  const f = FUNDS[selFund];
+  const startYear = parseInt(el('h-year').value)||f.inception;
+  const minY = Math.max(startYear, f.inception);
+  const maxY = Math.max(...Object.keys(f.returns).map(Number));
+  el('fund-info').innerHTML = `
+    <div class="fund-row">
+      <span class="fund-ticker">${selFund}</span>
+      ${f.fire?'<span class="fund-badge">r/FIRE favorite</span>':''}
+      <span class="fund-er">${f.er}% ER</span>
+    </div>
+    <div class="fund-name">${f.name}</div>
+    <div class="fund-desc">${f.desc}</div>
+    <div class="fund-meta">Inception: ${f.inception}</div>`;
+  if(minY>maxY){
+    ['h-final','h-invested','h-gain','h-avg'].forEach(id=>el(id).textContent='N/A');
+    el('hist-body').innerHTML=`<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--dim)">${selFund} launched in ${f.inception}. Set start year to ${f.inception} or later.</td></tr>`;
+    el('hist-chart').innerHTML='';
+    return;
+  }
+  const lump = v('h-lump'), mon = v('h-monthly');
+  const years = Object.keys(f.returns).map(Number).sort((a,b)=>a-b).filter(y=>y>=minY);
+  let bal = lump, inv = lump;
+  const rows = [];
+  for(const yr of years){
+    const ret = (f.returns[yr]||0)/100;
+    bal = bal*(1+ret)+mon*12;
+    inv += mon*12;
+    rows.push({yr, ret:f.returns[yr]||0, bal:Math.round(bal), inv:Math.round(inv), gl:Math.round(bal-inv)});
+  }
+  const last = rows[rows.length-1];
+  const avg = rows.reduce((a,r)=>a+r.ret,0)/rows.length;
+  el('h-final').textContent    = fmt(last.bal);
+  el('h-invested').textContent = fmt(last.inv);
+  el('h-gain').textContent     = fmt(last.gl);
+  el('h-gain').className       = 'stat-val '+(last.gl>=0?'green':'');
+  el('h-gain').style.color     = last.gl<0?'var(--red)':'';
+  el('h-avg').textContent      = avg.toFixed(1)+'%';
+  el('h-avg').className        = 'stat-val '+(avg>=0?'green':'');
+  const maxV = Math.max(...rows.map(r=>r.bal));
+  el('hist-chart').innerHTML = rows.map(r=>{
+    const isDown = r.ret<0;
+    const totH = maxV>0?(r.bal/maxV)*112:0;
+    const invH = maxV>0?(r.inv/maxV)*112:0;
+    const gainH = Math.max(0,totH-invH);
+    const barW = Math.max(3,(100/rows.length)-1);
+    return `<div class="bar-col" style="width:${barW}%">
+      <div class="bar-stack">
+        <div class="bar-seg top" style="height:${gainH}px;background:${isDown?'#ef4444':'#3b82f6'};border-radius:2px 2px 0 0"></div>
+        <div class="bar-seg" style="height:${invH}px;background:#2a2a28"></div>
+      </div>
+      ${rows.length<=22?`<div class="bar-lbl">'${String(r.yr).slice(2)}</div>`:''}
+    </div>`;
+  }).join('');
+  el('hist-body').innerHTML = rows.map(r=>`
+    <tr>
+      <td>${r.yr}</td>
+      <td><span class="${r.ret>=0?'badge-up':'badge-dn'}">${r.ret>=0?'+':''}${r.ret.toFixed(1)}%</span></td>
+      <td class="td-right ${r.ret>=0?'txt-green':'txt-red'}">${fmt(r.bal)}</td>
+      <td class="td-right">${fmt(r.inv)}</td>
+      <td class="td-right ${r.gl>=0?'txt-green':'txt-red'}">${fmt(r.gl)}</td>
+    </tr>`).join('');
+}
+
+// ── Scenarios ─────────────────────────────────────────────────────────────────
+const SCEN_COLORS = ['#64748b','#3b82f6','#10b981'];
+
+function updateScen() {
+  const years = parseInt(el('s-years').value);
+  el('s-years-lbl').textContent = years+(years===1?' year':' years');
+  const principal = v('s-principal'), monthly = v('s-monthly');
+  const rates = [v('sr1'),v('sr2'),v('sr3')];
+  const labels = ['Conservative','Moderate','Aggressive'];
+  const datasets = rates.map(r=>calcCompound(principal,monthly,r,years,0,0,0));
+  const maxV = Math.max(...datasets.flatMap(d=>d.map(p=>p.bal)));
+  const step = Math.max(1,Math.floor((years+1)/10));
+  const shownYears = datasets[0].filter((_,i)=>i===0||i%step===0||i===datasets[0].length-1).map(p=>p.y);
+  el('scen-cards').innerHTML = datasets.map((d,i)=>{
+    const last=d[d.length-1];
+    const gain=(last.bal-last.dep)/last.dep*100;
+    return `<div class="scen-card" style="border-top:2px solid ${SCEN_COLORS[i]}">
+      <div class="scen-rate" style="color:${SCEN_COLORS[i]}">${rates[i]}% / year</div>
+      <div class="scen-val">${fmt(last.bal)}</div>
+      <div class="scen-gain" style="color:${SCEN_COLORS[i]}">${pct(gain)} gain</div>
+      <div class="scen-sub">${fmt(Math.max(0,last.bal-last.dep))} interest</div>
+    </div>`;
+  }).join('');
+  el('scen-legend').innerHTML = rates.map((r,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${SCEN_COLORS[i]}"></div>${r}% / yr</div>`).join('');
+  const barGroupW = 100/shownYears.length;
+  el('scen-chart').innerHTML = shownYears.map(yr=>{
+    const barW = Math.max(3,(barGroupW/3)-0.8);
+    return `<div style="width:${barGroupW}%;display:flex;flex-direction:column;align-items:center">
+      <div style="display:flex;gap:1px;align-items:flex-end;height:120px">
+        ${datasets.map((d,i)=>{
+          const pt = d[yr]||d[d.length-1];
+          const h = maxV>0?(pt.bal/maxV)*112:0;
+          return `<div style="width:${barW}%;height:${h}px;background:${SCEN_COLORS[i]};border-radius:2px 2px 0 0;min-width:3px"></div>`;
+        }).join('')}
+      </div>
+      <div class="bar-lbl">${yr===0?'Now':yr+'yr'}</div>
+    </div>`;
+  }).join('');
+  const diff = datasets[2][datasets[2].length-1].bal - datasets[0][datasets[0].length-1].bal;
+  el('scen-callout').innerHTML = `💡 The difference between ${rates[0]}% and ${rates[2]}% over ${years} years: <strong>${fmt(diff)}</strong> — that's the power of optimizing for returns.`;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildChips();
+updateCalc();
+updateHistory();
+updateScen();
+</script>
+
+</body>
+</html>
