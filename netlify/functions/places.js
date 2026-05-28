@@ -1,8 +1,12 @@
 exports.handler = async function(event) {
-  const { query, key } = event.queryStringParameters || {};
+  const { query } = event.queryStringParameters || {};
+  const key = process.env.GOOGLE_PLACES_KEY;
 
-  if (!query || !key) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query or key' }) };
+  if (!query) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query' }) };
+  }
+  if (!key) {
+    return { statusCode: 500, body: JSON.stringify({ error: 'GOOGLE_PLACES_KEY env var not set in Netlify' }) };
   }
 
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
