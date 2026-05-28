@@ -461,7 +461,7 @@
   <div class="card">
     <div class="card-label">Search</div>
 
-    <div class="key-row">
+    <div class="key-row" style="display:none;">
       <div class="form-group">
         <label for="apikey">Google Places API key</label>
         <input type="password" id="apikey" placeholder="AIza... (leave blank for demo data)" />
@@ -518,8 +518,6 @@
 <footer>jonestes.me · built with care</footer>
 
 <script>
-const STORED_KEY = 'AIzaSyD3cmVEzlSTaDqVWYwQ59Emc6pml53TBlo';
-
 const DEMO = [
   { name:'Peak Roofing Solutions', rating:4.8, reviews:63, address:'1242 Morse Ave, Sacramento, CA', hasWebsite:false },
   { name:'Capital City Roofers', rating:4.6, reviews:41, address:'887 Fulton Ave, Sacramento, CA', hasWebsite:false },
@@ -532,27 +530,15 @@ const DEMO = [
 let allResults = [];
 let emails = {};
 
-// Pre-fill the key field
-document.getElementById('apikey').value = STORED_KEY;
-updateModePill();
-document.getElementById('apikey').addEventListener('input', updateModePill);
-
-function updateModePill() {
-  const key = document.getElementById('apikey').value.trim();
-  const pill = document.getElementById('mode-pill');
-  if (key.startsWith('AIza')) {
-    pill.className = 'mode-pill mode-live';
-    pill.textContent = '⬤ Live';
-  } else {
-    pill.className = 'mode-pill mode-demo';
-    pill.textContent = '⬤ Demo';
-  }
-}
+// Key is handled server-side via Netlify env var — no need to enter it
+document.getElementById('apikey').value = '';
+document.getElementById('apikey').placeholder = 'Stored securely on server — leave blank';
+document.getElementById('apikey').disabled = true;
+document.getElementById('mode-pill').className = 'mode-pill mode-live';
+document.getElementById('mode-pill').textContent = '⬤ Live';
 
 async function runSearch() {
   const btn = document.getElementById('search-btn');
-  // Read inputs at the moment the button is clicked
-  const key = document.getElementById('apikey').value.trim();
   const city = document.getElementById('city').value.trim() || 'Sacramento, CA';
   const btype = document.getElementById('btype').value.trim() || 'Roofing contractor';
 
@@ -564,17 +550,13 @@ async function runSearch() {
   document.getElementById('filter-row').style.display = 'none';
   emails = {};
 
-  if (key.startsWith('AIza')) {
-    try {
-      allResults = await fetchPlaces(key, btype, city);
-    } catch(e) {
-      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
-      btn.disabled = false;
-      btn.innerHTML = '🔍 Find leads';
-      return;
-    }
-  } else {
-    allResults = DEMO.map(b => ({...b}));
+  try {
+    allResults = await fetchPlaces(btype, city);
+  } catch(e) {
+    document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
+    btn.disabled = false;
+    btn.innerHTML = '🔍 Find leads';
+    return;
   }
 
   showStats();
@@ -584,13 +566,13 @@ async function runSearch() {
   btn.innerHTML = '🔍 Find leads';
 }
 
-async function fetchPlaces(key, btype, city) {
+async function fetchPlaces(btype, city) {
   const query = btype + ' in ' + city;
-  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}&key=${encodeURIComponent(key)}`;
+  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
-  if (data.status === 'REQUEST_DENIED') throw new Error('API key denied: ' + (data.error_message || ''));
+  if (data.status === 'REQUEST_DENIED') throw new Error('API key denied — check Netlify env var GOOGLE_PLACES_KEY');
   if (data.status === 'ZERO_RESULTS') return [];
   if (data.status !== 'OK') throw new Error(data.status + (data.error_message ? ': ' + data.error_message : ''));
   return data.results.slice(0, 20).map(p => ({
