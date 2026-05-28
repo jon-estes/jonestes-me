@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0f0f0e" />
+  <title>Lead Gen · Jon Estes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0e;
+      --surface: #1a1a18;
+      --surface2: #232320;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: #f0ede6;
+      --muted: #888880;
+      --accent: #c8b89a;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Nav (matches jonestes.me pill nav) ── */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 28px 20px 0;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    nav a.active {
+      color: var(--text);
+      border-color: var(--border-hover);
+      background: var(--surface);
+    }
+
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown > a {
+      cursor: pointer;
+    }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface2);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius);
+      padding: 6px;
+      z-index: 100;
+      min-width: 140px;
+      white-space: nowrap;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-menu {
+      display: block;
+    }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-dropdown-menu a:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    /* ── Page container ── */
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 14px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* ── Form controls ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input, select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder { color: var(--muted); }
+    input:focus, select:focus { border-color: var(--border-hover); }
+
+    select option { background: #1a1a18; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      font-family: var(--font);
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border-hover);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn:hover { background: var(--surface2); border-color: rgba(255,255,255,0.25); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f0f0e;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover { background: #d4c4a8; border-color: #d4c4a8; }
+
+    .btn-sm {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 7px;
+    }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Business card ── */
+    .biz-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
+    }
+
+    .biz-card:hover { border-color: var(--border-hover); }
+
+    .biz-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .biz-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .biz-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .biz-stars {
+      font-size: 12px;
+      color: var(--yellow);
+      margin-top: 3px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-no-web { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+    .badge-has-web { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+
+    /* ── Email box ── */
+    .email-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .email-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .email-body {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .email-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* ── Loading / spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 14px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+
+    .empty-state .big { font-size: 32px; margin-bottom: 8px; }
+
+    /* ── Filters ── */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle input { width: auto; accent-color: var(--accent); }
+    .toggle:hover { color: var(--text); }
+
+    /* ── Export bar ── */
+    .export-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* ── API key notice ── */
+    .key-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .mode-demo { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+    .mode-live { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 12px;
+      color: #444;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a href="/">Home</a>
+  <div class="nav-dropdown">
+    <a href="/estella">Estella ▾</a>
+    <div class="nav-dropdown-menu">
+      <a href="/estella">📸 Estella</a>
+      <a href="/estella529">🎓 529 Plan</a>
+    </div>
+  </div>
+  <a href="/hawaii">🌺 Hawaii</a>
+  <a href="/leadgen" class="active">🎯 Lead Gen</a>
+  <a href="/contact">Contact</a>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <h1>Local <em>Lead Gen</em></h1>
+    <p>Find businesses without websites. Generate outreach emails. Close deals.</p>
+  </div>
+
+  <!-- Config card -->
+  <div class="card">
+    <div class="card-label">Search</div>
+
+    <div class="key-row">
+      <div class="form-group">
+        <label for="apikey">Google Places API key</label>
+        <input type="password" id="apikey" placeholder="AIza... (leave blank for demo data)" />
+      </div>
+      <span id="mode-pill" class="mode-pill mode-demo">⬤ Demo</span>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="btype">Business type</label>
+        <select id="btype">
+          <option>Roofing contractor</option>
+          <option>Plumber</option>
+          <option>HVAC company</option>
+          <option>Electrician</option>
+          <option>Landscaper</option>
+          <option>Auto repair shop</option>
+          <option>Cleaning service</option>
+          <option>Dentist</option>
+          <option>Restaurant</option>
+          <option>Salon / barber</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="e.g. Sacramento, CA" value="Sacramento, CA" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="search-btn" onclick="runSearch()">
+      🔍 Find leads
+    </button>
+  </div>
+
+  <!-- Filters (hidden until results) -->
+  <div id="filter-row" class="filter-row" style="display:none;">
+    <span style="font-size:13px;color:var(--muted);">Filter:</span>
+    <label class="toggle"><input type="checkbox" id="no-web-only" checked onchange="renderResults()"> No website only</label>
+    <label class="toggle"><input type="checkbox" id="high-rated" onchange="renderResults()"> 4+ stars only</label>
+  </div>
+
+  <!-- Stats (hidden until results) -->
+  <div id="stats-row" class="stats-row" style="display:none;">
+    <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-label">Found</div></div>
+    <div class="stat"><div class="stat-val" id="s-noweb">0</div><div class="stat-label">No website</div></div>
+    <div class="stat"><div class="stat-val" id="s-rating">—</div><div class="stat-label">Avg rating</div></div>
+  </div>
+
+  <!-- Results area -->
+  <div id="results-area">
+    <div class="empty-state">
+      <div class="big">🎯</div>
+      Enter a business type and city, then hit Find leads
+    </div>
+  </div>
+
+  <!-- Export (hidden until results) -->
+  <div id="export-bar" class="export-bar" style="display:none;">
+    <button class="btn btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn btn-sm" onclick="copyAllEmails()">📋 Copy all emails</button>
+  </div>
+
+</div>
+
+<footer>jonestes.me · built with care</footer>
+
+<script>
+const API_KEY = 'AIzaSyD3cmVEzlSTaDqVWYwQ59Emc6pml53TBlo';
+
+const DEMO = [
+  { name:'Peak Roofing Solutions', rating:4.8, reviews:63, address:'1242 Morse Ave, Sacramento, CA', hasWebsite:false },
+  { name:'Capital City Roofers', rating:4.6, reviews:41, address:'887 Fulton Ave, Sacramento, CA', hasWebsite:false },
+  { name:'Sunrise Roofing & Gutters', rating:3.9, reviews:12, address:'3201 Watt Ave, Sacramento, CA', hasWebsite:false },
+  { name:'Gold Rush Roofing Co.', rating:4.9, reviews:112, address:'455 El Camino Ave, Sacramento, CA', hasWebsite:true },
+  { name:'Valley Roof Pros', rating:4.2, reviews:28, address:'6710 Stockton Blvd, Sacramento, CA', hasWebsite:false },
+  { name:'Sierra Roofing Inc.', rating:4.7, reviews:55, address:'902 Arden Way, Sacramento, CA', hasWebsite:false },
+];
+
+let allResults = [];
+let emails = {};
+
+// Auto-populate the API key
+document.getElementById('apikey').value = API_KEY;
+updateModePill();
+
+document.getElementById('apikey').addEventListener('input', updateModePill);
+
+function updateModePill() {
+  const key = document.getElementById('apikey').value.trim();
+  const pill = document.getElementById('mode-pill');
+  if (key.startsWith('AIza')) {
+    pill.className = 'mode-pill mode-live';
+    pill.textContent = '⬤ Live';
+  } else {
+    pill.className = 'mode-pill mode-demo';
+    pill.textContent = '⬤ Demo';
+  }
+}
+
+async function runSearch() {
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Searching...';
+  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching Google Maps...</div>';
+  document.getElementById('stats-row').style.display = 'none';
+  document.getElementById('export-bar').style.display = 'none';
+  document.getElementById('filter-row').style.display = 'none';
+  emails = {};
+
+  const key = document.getElementById('apikey').value.trim();
+  const city = document.getElementById('city').value.trim() || 'Sacramento, CA';
+  const btype = document.getElementById('btype').value;
+
+  await new Promise(r => setTimeout(r, 800));
+
+  if (key.startsWith('AIza')) {
+    try {
+      allResults = await fetchPlaces(key, btype, city);
+    } catch(e) {
+      allResults = DEMO;
+      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">API error: ' + e.message + '<br>Showing demo data instead.</div>';
+      await new Promise(r => setTimeout(r, 1200));
+    }
+  } else {
+    allResults = DEMO.map(b => ({...b}));
+  }
+
+  showStats();
+  document.getElementById('filter-row').style.display = 'flex';
+  renderResults();
+  btn.disabled = false;
+  btn.innerHTML = '🔍 Find leads';
+}
+
+async function fetchPlaces(key, btype, city) {
+  const typeMap = {
+    'Roofing contractor':'roofing_contractor','Plumber':'plumber','HVAC company':'hvac_contractor',
+    'Electrician':'electrician','Landscaper':'landscaper','Auto repair shop':'car_repair',
+    'Cleaning service':'cleaning_service','Dentist':'dentist','Restaurant':'restaurant','Salon / barber':'hair_care'
+  };
+  const t = typeMap[btype] || 'roofing_contractor';
+  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(btype+' in '+city)}&type=${t}&key=${key}`;
+  const resp = await fetch(url);
+  const data = await resp.json();
+  if (data.status !== 'OK') throw new Error(data.status);
+  return data.results.slice(0,20).map(p => ({
+    name: p.name,
+    rating: p.rating || null,
+    reviews: p.user_ratings_total || 0,
+    address: p.formatted_address || p.vicinity || '',
+    hasWebsite: !!(p.website),
+  }));
+}
+
+function showStats() {
+  const noWeb = allResults.filter(b => !b.hasWebsite).length;
+  const rated = allResults.filter(b => b.rating);
+  const avg = rated.length ? (rated.reduce((s,b) => s+b.rating,0)/rated.length).toFixed(1) : '—';
+  document.getElementById('s-total').textContent = allResults.length;
+  document.getElementById('s-noweb').textContent = noWeb;
+  document.getElementById('s-rating').textContent = avg;
+  document.getElementById('stats-row').style.display = 'grid';
+}
+
+function renderResults() {
+  const noWebOnly = document.getElementById('no-web-only').checked;
+  const highRated = document.getElementById('high-rated').checked;
+  const btype = document.getElementById('btype').value;
+  const city = document.getElementById('city').value;
+
+  let list = allResults.filter(b => {
+    if (noWebOnly && b.hasWebsite) return false;
+    if (highRated && (!b.rating || b.rating < 4)) return false;
+    return true;
+  });
+
+  if (!list.length) {
+    document.getElementById('results-area').innerHTML = '<div class="empty-state">No businesses match your filters.</div>';
+    document.getElementById('export-bar').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('results-area').innerHTML = list.map((b, i) => {
+    const stars = b.rating ? '★'.repeat(Math.round(b.rating)) + '☆'.repeat(5-Math.round(b.rating)) : '';
+    const emailHtml = emails[b.name] ? `
+      <div class="email-box">
+        <div class="email-label">✉ Outreach email</div>
+        <div class="email-body" id="email-${i}">${emails[b.name]}</div>
+        <div class="email-actions">
+          <button class="btn btn-sm" onclick="copyEmail(${i})">📋 Copy</button>
+          <button class="btn btn-sm" onclick="genEmail(${i},'${esc(b.name)}','${esc(b.address)}','${b.rating||''}','${b.reviews}','${esc(btype)}','${esc(city)}')">↺ Regenerate</button>
+        </div>
+      </div>` : `<button class="btn btn-sm" style="margin-top:10px;" onclick="genEmail(${i},'${esc(b.name)}','${esc(b.address)}','${b.rating||''}','${b.reviews}','${esc(btype)}','${esc(city)}')">✉ Generate outreach email</button>`;
+    return `
+    <div class="biz-card">
+      <div class="biz-top">
+        <div>
+          <div class="biz-name">${b.name}</div>
+          <div class="biz-meta">📍 ${b.address}</div>
+          ${b.rating ? `<div class="biz-stars">${stars} <span style="color:var(--muted)">${b.rating} · ${b.reviews} reviews</span></div>` : ''}
+        </div>
+        <span class="badge ${b.hasWebsite ? 'badge-has-web' : 'badge-no-web'}">${b.hasWebsite ? '✓ Has website' : '✗ No website'}</span>
+      </div>
+      ${emailHtml}
+    </div>`;
+  }).join('');
+
+  document.getElementById('export-bar').style.display = 'flex';
+}
+
+function esc(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+
+async function genEmail(idx, name, address, rating, reviews, btype, city) {
+  // Remove old generate button / replace with loading
+  const cards = document.querySelectorAll('.biz-card');
+  const card = cards[idx];
+  const genBtn = card.querySelector('button.btn-sm');
+  if (!genBtn) return;
+  genBtn.disabled = true;
+  genBtn.innerHTML = '<span class="spinner"></span> Writing...';
+
+  const prompt = `Write a short personalized cold outreach email to the owner of "${name}", a ${btype} in ${address}.
+They have ${rating ? rating+'/5 stars and '+reviews+' Google reviews' : 'no rating yet'} but NO website.
+Offer to build them a clean professional website that showcases their reviews and has a booking button — for a flat one-time fee.
+Keep it under 110 words. Friendly, direct, specific to their business name. No subject line. Start "Hi [Owner]," and sign off as Jon.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:300, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text||'').join('') || 'Could not generate.';
+    emails[name] = text;
+    renderResults();
+  } catch(e) {
+    genBtn.disabled = false;
+    genBtn.innerHTML = '✉ Generate outreach email';
+    alert('Error generating email: ' + e.message);
+  }
+}
+
+function copyEmail(idx) {
+  const el = document.getElementById('email-'+idx);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const btn = el.closest('.email-box').querySelector('.btn-sm');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied!';
+    setTimeout(() => btn.innerHTML = orig, 1500);
+  });
+}
+
+function copyAllEmails() {
+  const all = Object.entries(emails).map(([n,e]) => `--- ${n} ---\n${e}`).join('\n\n');
+  if (!all) { alert('Generate some emails first!'); return; }
+  navigator.clipboard.writeText(all).then(() => alert('All emails copied!'));
+}
+
+function exportCSV() {
+  const noWebOnly = document.getElementById('no-web-only').checked;
+  const rows = [['Name','Address','Rating','Reviews','Has Website','Email Draft']];
+  allResults.filter(b => !noWebOnly || !b.hasWebsite).forEach(b => {
+    rows.push([b.name, b.address, b.rating||'', b.reviews, b.hasWebsite?'Yes':'No', (emails[b.name]||'').replace(/\n/g,' ')]);
+  });
+  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = 'leads.csv';
+  a.click();
+}
+</script>
+
+</body>
+</html>
