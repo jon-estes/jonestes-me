@@ -568,7 +568,7 @@ async function runSearch() {
     try {
       allResults = await fetchPlaces(key, btype, city);
     } catch(e) {
-      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ API error: ' + e.message + '<br><br>Note: Google Places API blocks direct browser requests (CORS). You may need to enable a proxy or use the Netlify function approach.</div>';
+      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
       btn.disabled = false;
       btn.innerHTML = '🔍 Find leads';
       return;
@@ -585,21 +585,14 @@ async function runSearch() {
 }
 
 async function fetchPlaces(key, btype, city) {
-  // Use the CORS proxy approach for browser-side Places API calls
-  const query = encodeURIComponent(btype + ' in ' + city);
-  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${key}`;
-  // Try direct first, fall back to cors-anywhere if needed
-  let resp;
-  try {
-    resp = await fetch(url, { mode: 'cors' });
-  } catch(e) {
-    throw new Error('CORS blocked — Google Places API requires a server-side proxy. See note below.');
-  }
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  const query = btype + ' in ' + city;
+  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}&key=${encodeURIComponent(key)}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
   if (data.status === 'REQUEST_DENIED') throw new Error('API key denied: ' + (data.error_message || ''));
   if (data.status === 'ZERO_RESULTS') return [];
-  if (data.status !== 'OK') throw new Error(data.status + ': ' + (data.error_message || ''));
+  if (data.status !== 'OK') throw new Error(data.status + (data.error_message ? ': ' + data.error_message : ''));
   return data.results.slice(0, 20).map(p => ({
     name: p.name,
     rating: p.rating || null,
