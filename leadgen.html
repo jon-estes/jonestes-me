@@ -656,12 +656,13 @@ Offer to build them a clean professional website that showcases their reviews an
 Keep it under 110 words. Friendly, direct, specific to their business name. No subject line. Start "Hi [Owner]," and sign off as Jon.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:300, messages:[{role:'user',content:prompt}] })
+    const resp = await fetch('/.netlify/functions/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
     });
     const data = await resp.json();
+    if (data.error) throw new Error(data.error);
     const text = data.content?.map(c => c.text||'').join('') || 'Could not generate.';
     emails[name] = text;
     renderResults();
