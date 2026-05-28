@@ -472,18 +472,7 @@
     <div class="form-row">
       <div class="form-group">
         <label for="btype">Business type</label>
-        <select id="btype">
-          <option>Roofing contractor</option>
-          <option>Plumber</option>
-          <option>HVAC company</option>
-          <option>Electrician</option>
-          <option>Landscaper</option>
-          <option>Auto repair shop</option>
-          <option>Cleaning service</option>
-          <option>Dentist</option>
-          <option>Restaurant</option>
-          <option>Salon / barber</option>
-        </select>
+        <input type="text" id="btype" placeholder="e.g. Restaurant, Plumber, Dentist..." value="Roofing contractor" />
       </div>
       <div class="form-group">
         <label for="city">City</label>
@@ -529,7 +518,7 @@
 <footer>jonestes.me · built with care</footer>
 
 <script>
-const API_KEY = 'AIzaSyD3cmVEzlSTaDqVWYwQ59Emc6pml53TBlo';
+const STORED_KEY = 'AIzaSyD3cmVEzlSTaDqVWYwQ59Emc6pml53TBlo';
 
 const DEMO = [
   { name:'Peak Roofing Solutions', rating:4.8, reviews:63, address:'1242 Morse Ave, Sacramento, CA', hasWebsite:false },
@@ -543,10 +532,9 @@ const DEMO = [
 let allResults = [];
 let emails = {};
 
-// Auto-populate the API key
-document.getElementById('apikey').value = API_KEY;
+// Pre-fill the key field
+document.getElementById('apikey').value = STORED_KEY;
 updateModePill();
-
 document.getElementById('apikey').addEventListener('input', updateModePill);
 
 function updateModePill() {
@@ -563,27 +551,27 @@ function updateModePill() {
 
 async function runSearch() {
   const btn = document.getElementById('search-btn');
+  // Read inputs at the moment the button is clicked
+  const key = document.getElementById('apikey').value.trim();
+  const city = document.getElementById('city').value.trim() || 'Sacramento, CA';
+  const btype = document.getElementById('btype').value.trim() || 'Roofing contractor';
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Searching...';
-  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching Google Maps...</div>';
+  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching Google Maps for ' + btype + ' in ' + city + '...</div>';
   document.getElementById('stats-row').style.display = 'none';
   document.getElementById('export-bar').style.display = 'none';
   document.getElementById('filter-row').style.display = 'none';
   emails = {};
 
-  const key = document.getElementById('apikey').value.trim();
-  const city = document.getElementById('city').value.trim() || 'Sacramento, CA';
-  const btype = document.getElementById('btype').value;
-
-  await new Promise(r => setTimeout(r, 800));
-
   if (key.startsWith('AIza')) {
     try {
       allResults = await fetchPlaces(key, btype, city);
     } catch(e) {
-      allResults = DEMO;
-      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">API error: ' + e.message + '<br>Showing demo data instead.</div>';
-      await new Promise(r => setTimeout(r, 1200));
+      document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ API error: ' + e.message + '<br><br>Note: Google Places API blocks direct browser requests (CORS). You may need to enable a proxy or use the Netlify function approach.</div>';
+      btn.disabled = false;
+      btn.innerHTML = '🔍 Find leads';
+      return;
     }
   } else {
     allResults = DEMO.map(b => ({...b}));
@@ -597,17 +585,22 @@ async function runSearch() {
 }
 
 async function fetchPlaces(key, btype, city) {
-  const typeMap = {
-    'Roofing contractor':'roofing_contractor','Plumber':'plumber','HVAC company':'hvac_contractor',
-    'Electrician':'electrician','Landscaper':'landscaper','Auto repair shop':'car_repair',
-    'Cleaning service':'cleaning_service','Dentist':'dentist','Restaurant':'restaurant','Salon / barber':'hair_care'
-  };
-  const t = typeMap[btype] || 'roofing_contractor';
-  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(btype+' in '+city)}&type=${t}&key=${key}`;
-  const resp = await fetch(url);
+  // Use the CORS proxy approach for browser-side Places API calls
+  const query = encodeURIComponent(btype + ' in ' + city);
+  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${key}`;
+  // Try direct first, fall back to cors-anywhere if needed
+  let resp;
+  try {
+    resp = await fetch(url, { mode: 'cors' });
+  } catch(e) {
+    throw new Error('CORS blocked — Google Places API requires a server-side proxy. See note below.');
+  }
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
   const data = await resp.json();
-  if (data.status !== 'OK') throw new Error(data.status);
-  return data.results.slice(0,20).map(p => ({
+  if (data.status === 'REQUEST_DENIED') throw new Error('API key denied: ' + (data.error_message || ''));
+  if (data.status === 'ZERO_RESULTS') return [];
+  if (data.status !== 'OK') throw new Error(data.status + ': ' + (data.error_message || ''));
+  return data.results.slice(0, 20).map(p => ({
     name: p.name,
     rating: p.rating || null,
     reviews: p.user_ratings_total || 0,
@@ -629,8 +622,8 @@ function showStats() {
 function renderResults() {
   const noWebOnly = document.getElementById('no-web-only').checked;
   const highRated = document.getElementById('high-rated').checked;
-  const btype = document.getElementById('btype').value;
-  const city = document.getElementById('city').value;
+  const btype = document.getElementById('btype').value.trim();
+  const city = document.getElementById('city').value.trim();
 
   let list = allResults.filter(b => {
     if (noWebOnly && b.hasWebsite) return false;
@@ -675,7 +668,6 @@ function renderResults() {
 function esc(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 
 async function genEmail(idx, name, address, rating, reviews, btype, city) {
-  // Remove old generate button / replace with loading
   const cards = document.querySelectorAll('.biz-card');
   const card = cards[idx];
   const genBtn = card.querySelector('button.btn-sm');
