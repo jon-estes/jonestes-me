@@ -529,6 +529,7 @@ const DEMO = [
 
 let allResults = [];
 let emails = {};
+let sentEmails = new Set();
 
 // Key is handled server-side via Netlify env var — no need to enter it
 document.getElementById('apikey').value = '';
@@ -617,8 +618,18 @@ function renderResults() {
     const emailHtml = emails[b.name] ? `
       <div class="email-box">
         <div class="email-label">✉ Outreach email</div>
-        <div class="email-body" id="email-${i}">${emails[b.name]}</div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label style="font-size:11px;">To (recipient email)</label>
+          <input type="email" id="to-${i}" placeholder="owner@business.com" style="font-size:13px; padding:7px 10px;" />
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label style="font-size:11px;">Subject line</label>
+          <input type="text" id="subj-${i}" value="Quick idea for ${b.name}" style="font-size:13px; padding:7px 10px;" />
+        </div>
+        <div class="email-label" style="margin-top:10px;">Message</div>
+        <div class="email-body" id="email-${i}" contenteditable="true" style="outline:none; min-height:80px;">${emails[b.name]}</div>
         <div class="email-actions">
+          <button class="btn btn-sm btn-primary" id="send-btn-${i}" onclick="sendEmail(${i},'${esc(b.name)}')">📤 Send</button>
           <button class="btn btn-sm" onclick="copyEmail(${i})">📋 Copy</button>
           <button class="btn btn-sm" onclick="genEmail(${i},'${esc(b.name)}','${esc(b.address)}','${b.rating||''}','${b.reviews}','${esc(btype)}','${esc(city)}')">↺ Regenerate</button>
         </div>
@@ -670,6 +681,39 @@ Keep it under 110 words. Friendly, direct, specific to their business name. No s
     genBtn.disabled = false;
     genBtn.innerHTML = '✉ Generate outreach email';
     alert('Error generating email: ' + e.message);
+  }
+}
+
+async function sendEmail(idx, name) {
+  const to = document.getElementById('to-'+idx)?.value.trim();
+  const subject = document.getElementById('subj-'+idx)?.value.trim();
+  const body = document.getElementById('email-'+idx)?.innerText.trim();
+  const btn = document.getElementById('send-btn-'+idx);
+
+  if (!to) { alert('Please enter the recipient email address.'); return; }
+  if (!to.includes('@')) { alert('Please enter a valid email address.'); return; }
+  if (!body) { alert('Email body is empty.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+
+  try {
+    const resp = await fetch('/.netlify/functions/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject, body }),
+    });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    btn.innerHTML = '✓ Sent!';
+    btn.style.background = 'rgba(74,222,128,0.15)';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'rgba(74,222,128,0.3)';
+    sentEmails.add(name);
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '📤 Send';
+    alert('Send failed: ' + e.message);
   }
 }
 
