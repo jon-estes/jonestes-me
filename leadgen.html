@@ -581,6 +581,10 @@ async function fetchPlaces(btype, city) {
     rating: p.rating || null,
     reviews: p.user_ratings_total || 0,
     address: p.formatted_address || p.vicinity || '',
+    phone: p.phone || null,
+    phone_intl: p.phone_intl || null,
+    website: p.website || null,
+    google_maps_url: p.google_maps_url || null,
     hasWebsite: !!(p.website),
   }));
 }
@@ -634,6 +638,24 @@ function renderResults() {
           <button class="btn btn-sm" onclick="genEmail(${i},'${esc(b.name)}','${esc(b.address)}','${b.rating||''}','${b.reviews}','${esc(btype)}','${esc(city)}')">↺ Regenerate</button>
         </div>
       </div>` : `<button class="btn btn-sm" style="margin-top:10px;" onclick="genEmail(${i},'${esc(b.name)}','${esc(b.address)}','${b.rating||''}','${b.reviews}','${esc(btype)}','${esc(city)}')">✉ Generate outreach email</button>`;
+
+    const contactRow = `
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        ${b.phone ? `
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <a href="tel:${b.phone_intl||b.phone}" style="font-size:13px;color:var(--text-primary);text-decoration:none;font-weight:500;">📞 ${b.phone}</a>
+            <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;" onclick="copyText('${esc(b.phone)}', this)">Copy</button>
+            <a href="sms:${b.phone_intl||b.phone}" class="btn btn-sm" style="padding:3px 8px;font-size:11px;text-decoration:none;">💬 Text</a>
+            <button class="btn btn-sm" id="vm-btn-${i}" style="padding:3px 8px;font-size:11px;" onclick="dropVoicemail(${i},'${esc(b.name)}','${esc(b.phone)}')">🔊 Drop Voicemail</button>
+          </div>` : '<span style="font-size:12px;color:var(--muted);">📞 No phone listed</span>'}
+        ${b.website ? `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <a href="${b.website}" target="_blank" style="font-size:12px;color:var(--muted);text-decoration:none;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🌐 ${b.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</a>
+          </div>` : ''}
+        ${b.google_maps_url ? `
+          <a href="${b.google_maps_url}" target="_blank" class="btn btn-sm" style="padding:3px 8px;font-size:11px;text-decoration:none;">📍 Google Maps</a>` : ''}
+      </div>`;
+
     return `
     <div class="biz-card">
       <div class="biz-top">
@@ -644,6 +666,7 @@ function renderResults() {
         </div>
         <span class="badge ${b.hasWebsite ? 'badge-has-web' : 'badge-no-web'}">${b.hasWebsite ? '✓ Has website' : '✗ No website'}</span>
       </div>
+      ${contactRow}
       ${emailHtml}
     </div>`;
   }).join('');
@@ -734,11 +757,53 @@ function copyAllEmails() {
   navigator.clipboard.writeText(all).then(() => alert('All emails copied!'));
 }
 
+async function dropVoicemail(idx, name, phone) {
+  const btn = document.getElementById('vm-btn-'+idx);
+  if (!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Dropping...';
+
+  try {
+    const resp = await fetch('/.netlify/functions/voicemail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, name }),
+    });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    btn.innerHTML = '✓ Voicemail Sent!';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '🔊 Drop Voicemail';
+    alert('Voicemail failed: ' + e.message);
+  }
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓';
+    setTimeout(() => btn.innerHTML = orig, 1500);
+  });
+}
+
 function exportCSV() {
   const noWebOnly = document.getElementById('no-web-only').checked;
-  const rows = [['Name','Address','Rating','Reviews','Has Website','Email Draft']];
+  const rows = [['Name','Address','Phone','Has Website','Website URL','Google Maps','Rating','Reviews','Email Draft']];
   allResults.filter(b => !noWebOnly || !b.hasWebsite).forEach(b => {
-    rows.push([b.name, b.address, b.rating||'', b.reviews, b.hasWebsite?'Yes':'No', (emails[b.name]||'').replace(/\n/g,' ')]);
+    rows.push([
+      b.name,
+      b.address,
+      b.phone || '',
+      b.hasWebsite ? 'Yes' : 'No',
+      b.website || '',
+      b.google_maps_url || '',
+      b.rating || '',
+      b.reviews,
+      (emails[b.name] || '').replace(/\n/g,' ')
+    ]);
   });
   const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
   const a = document.createElement('a');
