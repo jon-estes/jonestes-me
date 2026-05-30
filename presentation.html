@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f0e">
+<title>Poker Hands 101 · Presentation</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAoACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAgDBAUHBv/EADQQAAECBQEGAwUJAQAAAAAAAAECAwAEBRESBgcTITFBYRQyURUWInGhCCNSYnKBgpGxwf/EABoBAAIDAQEAAAAAAAAAAAAAAAEFAAIDBAb/xAAiEQABBAIBBAMAAAAAAAAAAAABAAIDEQQxIQUSE0FRkfD/2gAMAwEAAhEDEQA/AEyi3ISTky4Lgpb6m3P5Rp6HoT+odQSlMlwkuzL6GW8/KFKNrnsOZh5NIbANkLFHRTq7TahOzxRZdRXOuIOfUpQghKR6AhXcnnBAJ0t48eWVpcxtgJSPdmj+5m+8Yr2pvL+Hsndbq3K/mzvxvy/2Ofz8k5LOGwKm+hty7GGprH2c5mW2mqokpW3X9IlrxSZ4WLoF7bg9N53ta3G1/hj3uo9hWyOforlIocpU6bW22wfFKm1O2PqpKjioeoATz6RSOOQX3G0wnxfOGHHiLeKNnZ+f30kOgje1xQn9PV+bpkwlAdln1suYG6SpJtcdjzEEWSkgg0VsbIaq1R9VyM84UgMvnLLlZSSnj24w4VH2iNIYQh9wK4WAdSbj+Q4f3CZ6Joni3XnEvNtrQ0XCVdeNgkR6ugaqqVDcEnPpVNSiDjY+dA/Keo7H6Rox4HBTfpeeyAGOTRN2m4ndXl+QUtkMstqTxe3mQA7GMSqa+lg0sS5QleGKlNIOagPVR6RyYV6RNB9oeNHgPPe/DLla34ulo5xqPVdQrS1SkkFS0mo44jzufqP/AAfWNXPDU8yc6HGaDsnQWDteqzVY1VPTzRSUvPgpx5EJSE3HbhBEGpaA7LSLUy8B94k4K5cunygjnJteOkeZHl59m1DomqyMk+jxkuH0pSU45YkXN8h3i/qDUcm6w5LtyrKBvMkrtd0p6JJgggKiwDXXvZxlQpwAqzwv8GVrZW9bRfo9ZYZKHVlGQ5pUrHjb1ggiIkkqfWdfVUpdgJxQlDQaQgKv8z+/CCCCIgv/2Q==" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0e;
+  --navy: #1b2a4a;
+  --navy-dark: #111d34;
+  --gold: #c9962a;
+  --gold-light: #e8b84b;
+  --white: #f4f6fa;
+  --muted: #8a97b0;
+  --card-red: #c0392b;
+  --surface: #1a1a19;
+  --surface2: #222221;
+  --border: #2a2a28;
+  --sidebar-w: 220px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+/* ══════════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════════ */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: rgba(15,15,14,0.92); backdrop-filter: blur(12px); z-index: 100;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); text-decoration: none; }
+.nav-title { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.nav-quiz-btn { background: var(--gold); color: var(--navy-dark); border: none; padding: 0.45rem 1.1rem; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+.nav-quiz-btn:hover { background: var(--gold-light); }
+
+.hero { position: relative; padding: 5rem 2rem 4rem; text-align: center; overflow: hidden; }
+.hero-suit { position: absolute; font-size: 28rem; color: var(--navy); opacity: 0.18; top: -4rem; right: -4rem; line-height: 1; pointer-events: none; user-select: none; }
+.hero-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.05; margin-bottom: 1.2rem; }
+.hero p { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-primary { background: var(--gold); color: var(--navy-dark); padding: 0.75rem 2rem; border-radius: 4px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--white); padding: 0.75rem 2rem; border-radius: 4px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid var(--border); cursor: pointer; transition: border-color 0.2s; }
+.btn-outline:hover { border-color: var(--gold); }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.6rem; margin-top: 2rem; }
+.toc-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
+.toc-item:hover { border-color: var(--gold); background: var(--surface2); }
+.toc-num { width: 24px; height: 24px; border-radius: 4px; background: var(--navy-dark); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--gold); flex-shrink: 0; }
+footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; text-align: center; color: var(--muted); font-size: 0.78rem; }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* ══════════════════════════════════════════
+   FULLSCREEN SLIDESHOW
+══════════════════════════════════════════ */
+#fullscreenOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+#fullscreenOverlay.active { display: flex; }
+
+/* ── Sidebar tracker ── */
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  height: 100%;
+  background: rgba(17,29,52,0.7);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+.sidebar-header {
+  padding: 1.1rem 1rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-title {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  font-weight: 600;
+}
+.sidebar-sub {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+.sidebar-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.6rem 0;
+}
+.sidebar-list::-webkit-scrollbar { width: 3px; }
+.sidebar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.sidebar-hand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.9rem;
+  opacity: 0.2;
+  transition: opacity 0.5s ease, transform 0.4s ease;
+  transform: translateX(-8px);
+  font-size: 0.8rem;
+}
+.sidebar-hand.unlocked {
+  opacity: 1;
+  transform: translateX(0);
+}
+.sidebar-hand.current {
+  background: rgba(201,150,42,0.12);
+  border-radius: 6px;
+}
+.sb-rank {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: background 0.4s, color 0.4s, border-color 0.4s;
+}
+.sidebar-hand.unlocked .sb-rank {
+  background: var(--gold);
+  color: var(--navy-dark);
+  border-color: var(--gold);
+}
+.sb-name {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.2;
+  transition: color 0.4s;
+}
+.sidebar-hand.unlocked .sb-name { color: var(--white); }
+.sidebar-hand.current .sb-name { color: var(--gold-light); font-weight: 600; }
+
+.sidebar-mini-cards {
+  display: flex;
+  gap: 2px;
+  padding: 0 0.9rem 0.5rem 2.5rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+  max-height: 0;
+  overflow: hidden;
+}
+.sidebar-hand.unlocked + .sidebar-mini-cards {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 40px;
+}
+.mini-card {
+  width: 20px; height: 28px;
+  background: white;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.mini-card.red { color: var(--card-red); }
+.mini-card.black { color: #1a1a2e; }
+
+/* ── Main slide area ── */
+#slideMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Top bar in fullscreen */
+.fs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(15,15,14,0.6);
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.fs-counter { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+.fs-progress { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.fs-progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
+.fs-actions { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+.fs-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.3rem 0.65rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.fs-btn:hover { border-color: var(--gold); color: var(--white); }
+.fs-btn.gold { background: var(--gold); color: var(--navy-dark); border-color: var(--gold); font-weight: 600; }
+.fs-btn.gold:hover { background: var(--gold-light); }
+
+/* Slide viewport */
+#slideViewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Bottom nav bar */
+.fs-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid var(--border);
+  background: rgba(15,15,14,0.6);
+  flex-shrink: 0;
+  gap: 1rem;
+}
+.build-indicator { font-size: 0.72rem; color: var(--muted); }
+.nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--white); padding: 0.5rem 1.3rem; border-radius: 6px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; transition: all 0.15s; }
+.nav-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--surface2); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-btn.primary { background: var(--gold); color: var(--navy-dark); border-color: var(--gold); font-weight: 600; }
+.nav-btn.primary:hover { background: var(--gold-light); }
+
+/* ══════════════════════════════════════════
+   SLIDE CARDS (inside fullscreen)
+══════════════════════════════════════════ */
+.slide-card {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+.slide-card.active { display: flex; }
+.slide-card::-webkit-scrollbar { width: 4px; }
+.slide-card::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+@keyframes slideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* Reveal system */
+[data-reveal] { opacity:0; transform:translateY(14px); transition: opacity 0.4s ease, transform 0.4s ease; pointer-events:none; }
+[data-reveal].revealed { opacity:1; transform:translateY(0); pointer-events:auto; }
+.reveal-hint { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--gold); margin-left:0.5rem; animation:blink 1.2s ease-in-out infinite; vertical-align:middle; opacity:0; transition:opacity 0.3s; }
+.reveal-hint.visible { opacity:1; }
+@keyframes blink { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+/* ── Slide header (fullscreen) ── */
+.slide-header {
+  background: var(--navy-dark);
+  padding: 1.2rem 2.5rem;
+  display: flex; align-items: center; gap: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.rank-badge { width: 52px; height: 52px; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:1.2rem; flex-shrink:0; }
+.rank-gold { background:var(--gold); color:var(--navy-dark); }
+.rank-blue { background:#2d6cb0; color:white; }
+.rank-gray { background:#3a3a38; color:var(--muted); }
+.slide-header-title { flex:1; }
+.slide-header-title h2 { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,3vw,2.4rem); font-weight:700; }
+.slide-odds { font-size:0.95rem; color:var(--gold-light); margin-top:0.2rem; }
+
+/* ── Slide body (2 col) ── */
+.slide-body { display:grid; grid-template-columns:1fr 1fr; flex:1; min-height:0; overflow:hidden; }
+.slide-left { padding:2.5rem 2.5rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:1.25rem; overflow-y:auto; min-height:0; }
+.slide-right { padding:2.5rem 2.5rem; display:flex; flex-direction:column; gap:1.25rem; justify-content:center; overflow-y:auto; min-height:0; }
+.slide-left::-webkit-scrollbar, .slide-right::-webkit-scrollbar { width:3px; }
+.slide-left::-webkit-scrollbar-thumb, .slide-right::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+/* ── Playing cards ── */
+.cards-display { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start; }
+.playing-card { width:90px; height:126px; background:white; border-radius:10px; border:1px solid #ddd; display:flex; flex-direction:column; align-items:flex-start; padding:8px 10px; position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.45); flex-shrink:0; }
+.playing-card.card-anim { animation: dealCard 0.35s ease both; }
+.playing-card.card-anim:nth-child(2){animation-delay:0.06s}
+.playing-card.card-anim:nth-child(3){animation-delay:0.12s}
+.playing-card.card-anim:nth-child(4){animation-delay:0.18s}
+.playing-card.card-anim:nth-child(5){animation-delay:0.24s}
+@keyframes dealCard { from{opacity:0;transform:translateY(-20px) rotate(-5deg)} to{opacity:1;transform:translateY(0) rotate(0)} }
+.card-label { font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; line-height:1; }
+.card-suit-top { font-size:1.05rem; line-height:1; margin-top:2px; }
+.card-suit-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2.4rem; line-height:1; }
+.red { color:var(--card-red); }
+.black { color:#1a1a2e; }
+
+/* ── Text / content elements ── */
+.desc-label { font-size:0.78rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); margin-bottom:0.4rem; font-weight:600; }
+.desc-text { font-size:clamp(1rem,1.8vw,1.25rem); line-height:1.7; color:var(--white); }
+.tip-box { background:rgba(201,150,42,0.1); border:1px solid rgba(201,150,42,0.25); border-radius:10px; padding:1.1rem 1.3rem; font-size:clamp(0.9rem,1.5vw,1.05rem); color:#d4a84b; line-height:1.65; font-style:italic; }
+.tip-box::before { content:"💡  "; }
+
+/* ── Ranking bar ── */
+.ranking-section { padding:1.1rem 2.5rem; border-top:1px solid var(--border); background:rgba(0,0,0,0.2); flex-shrink:0; }
+.ranking-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.6rem; }
+.ranking-bar { display:flex; gap:5px; }
+.rank-pip { flex:1; height:8px; border-radius:4px; background:var(--border); transition:background 0.3s; position:relative; }
+.rank-pip.active { background:var(--gold); }
+.rank-pip .rank-tooltip { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:var(--navy-dark); color:var(--white); font-size:0.65rem; padding:3px 7px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.15s; border:1px solid var(--border); }
+.rank-pip:hover .rank-tooltip { opacity:1; }
+.ranking-ends { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--muted); margin-top:0.4rem; }
+
+/* ── Intro / basics slides ── */
+.slide-content { padding:2rem 2.5rem; flex:1; overflow-y:auto; min-height:0; display:flex; flex-direction:column; gap:1.4rem; }
+.slide-content::-webkit-scrollbar { width: 4px; }
+.slide-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
+.intro-card { background:var(--surface2); border:1px solid var(--border); border-left:4px solid var(--gold); border-radius:10px; padding:1.4rem 1.5rem; }
+.intro-card strong { display:block; font-size:1.05rem; margin-bottom:0.5rem; }
+.intro-card p { font-size:0.92rem; color:var(--muted); line-height:1.6; }
+
+/* ── Stacked examples on hand slides ── */
+.stacked-examples { display:flex; flex-direction:column; gap:1.1rem; overflow-y:auto; flex:1; min-height:0; }
+.stacked-examples::-webkit-scrollbar { width:3px; }
+.stacked-examples::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.example-row { display:flex; flex-direction:column; gap:0.4rem; }
+.example-row-label { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); font-weight:600; }
+.example-row-cards { display:flex; gap:8px; flex-wrap:wrap; }
+/* When an example-row is revealed, re-trigger deal animation on its cards */
+.example-row.revealed .playing-card { animation: dealCard 0.35s ease both; }
+.example-row.revealed .playing-card:nth-child(2){animation-delay:0.06s}
+.example-row.revealed .playing-card:nth-child(3){animation-delay:0.12s}
+.example-row.revealed .playing-card:nth-child(4){animation-delay:0.18s}
+.example-row.revealed .playing-card:nth-child(5){animation-delay:0.24s}
+
+/* ── Reference table ── */
+.ref-table { width:100%; border-collapse:collapse; font-size:1rem; }
+.ref-table th { text-align:left; padding:0.75rem 1rem; background:var(--navy-dark); color:var(--muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; }
+.ref-table td { padding:0.7rem 1rem; border-bottom:1px solid var(--border); font-size:1rem; }
+.ref-table tr:nth-child(odd) td { background:rgba(255,255,255,0.02); }
+.ref-rank { color:var(--gold); font-weight:700; font-family:'Playfair Display',serif; font-size:1.1rem; }
+.ref-rank.top3 { color:var(--gold-light); }
+
+/* ── Texas Hold'em ── */
+.holdem-table {
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, #1a6b3a 0%, #0e4424 60%, #07291a 100%);
+  border-radius: 120px;
+  border: 8px solid #5c3a1e;
+  box-shadow: 0 0 0 4px #3a2010, inset 0 2px 20px rgba(0,0,0,0.4);
+  padding: 1.1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 580px;
+  margin: 0 auto;
+}
+.holdem-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; text-align:center; }
+.holdem-community { display:flex; gap:10px; justify-content:center; }
+.holdem-divider { width:60%; height:1px; background:rgba(255,255,255,0.15); }
+.holdem-hole { display:flex; gap:10px; justify-content:center; }
+.holdem-player { font-size:0.8rem; color:rgba(255,255,255,0.5); text-align:center; margin-top:0.2rem; }
+
+/* ── Quiz CTA ── */
+.quiz-cta-inner { padding:2.5rem 3rem; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; min-height:0; overflow-y:auto; text-align:center; }
+.quiz-cta-inner::-webkit-scrollbar { width:4px; }
+.quiz-cta-inner h2 { font-family:'Playfair Display',serif; font-size:2.6rem; margin-bottom:0.75rem; }
+.quiz-cta-box { background:linear-gradient(135deg,var(--navy-dark),#0d1628); border:1px solid rgba(201,150,42,0.3); border-radius:14px; padding:2.5rem; margin-top:1rem; max-width:560px; width:100%; }
+.quiz-cta-box p { color:var(--muted); font-size:1.05rem; line-height:1.75; margin:0.75rem 0 1.75rem; }
+.suit-row { font-size:2.5rem; letter-spacing:0.4em; margin-bottom:1rem; }
+
+
+/* ── Department toggle ── */
+.dept-toggle {
+  display: flex;
+  gap: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.dept-btn {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.dept-btn.active-training { background: #2d6cb0; color: white; }
+.dept-btn.active-facilities { background: #27ae60; color: white; }
+.dept-btn:not(.active-training):not(.active-facilities):hover { color: var(--white); }
+/* Training view = default, Facilities view = hidden until toggled */
+.fac-view { display: none; }
+.show-fac .fac-view { display: block; }
+.show-fac .trn-view { display: none; }
+
+/* ── Speaker notes ── */
+#speakerNotes {
+  display: none;
+  position: absolute;
+  bottom: 56px; left: 0; right: 0;
+  background: rgba(10,16,32,0.97);
+  border-top: 2px solid var(--gold);
+  padding: 1rem 2.5rem;
+  font-size: 0.92rem;
+  color: #d4a84b;
+  line-height: 1.65;
+  font-style: italic;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+#speakerNotes::before { content: "🎤  Speaker: "; font-weight: 700; font-style: normal; color: var(--gold); }
+#speakerNotes.visible { display: block; }
+#slideViewport { position: relative; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<nav>
+  <a href="https://jonestes.me" class="nav-logo">JE</a>
+  <span class="nav-title">Poker Hands 101</span>
+  <a href="poker-quiz.html" class="nav-quiz-btn">🎯 Take the Quiz</a>
+</nav>
+
+<div class="hero" id="heroSection">
+  <div class="hero-suit">♠</div>
+  <div style="font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Training Team · May 2026</div>
+  <h1>Poker Hands 101</h1>
+  <p>A fun & fast guide to the 10 winning hands — built for the Medical Device Training Team presentation.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="startSlideshow()">▶ Start Slideshow</button>
+    <a href="poker-quiz.html" class="btn-outline">🎯 Jump to Quiz</a>
+  </div>
+</div>
+
+<div id="tocSection" style="max-width:900px;margin:0 auto 5rem;padding:0 1.5rem;">
+  <div style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Jump to any section</div>
+  <div class="toc" id="tocGrid"></div>
+</div>
+
+<footer>
+  <a href="https://jonestes.me">jonestes.me</a> · Poker Hands 101 · Training Team Presentation · May 2026
+</footer>
+
+<!-- ══════════════ FULLSCREEN OVERLAY ══════════════ -->
+<div id="fullscreenOverlay" tabindex="0" style="outline:none;">
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">♠ Hand Rankings</div>
+      <div class="sidebar-sub">Unlocks as we go</div>
+    </div>
+    <div class="sidebar-list" id="sidebarList"></div>
+  </div>
+
+  <!-- Main area -->
+  <div id="slideMain">
+    <div class="fs-topbar">
+      <span class="fs-counter" id="fsCounter">1 / 16</span>
+      <div class="fs-progress"><div class="fs-progress-fill" id="fsProgressFill" style="width:6%"></div></div>
+      <div class="fs-actions">
+        <button class="fs-btn" id="notesBtn" onclick="toggleNotes()">📝 Notes</button>
+        <button class="fs-btn" onclick="toggleBrowserFS()">⛶ Full Screen</button>
+        <a href="poker-quiz.html" class="fs-btn gold" style="text-decoration:none;">🎯 Quiz</a>
+        <button class="fs-btn" onclick="exitSlideshow()">✕ Exit</button>
+      </div>
+    </div>
+
+    <div id="slideViewport">
+      <div id="speakerNotes"></div>
+      <!-- slides injected by JS -->
+    </div>
+
+    <div class="fs-bottombar">
+      <button class="nav-btn" id="prevBtn" onclick="prevAction()" disabled>← Prev</button>
+      <span class="build-indicator" id="buildIndicator"></span>
+      <button class="nav-btn primary" id="nextBtn" onclick="nextAction()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const HANDS = [
+  { rank:1,  name:"Royal Flush",
+    odds:"1 in 649,740",
+    notes:"Ask the room: 'Has anyone ever seen one of these in real life?' Almost nobody has. It's essentially a myth — which is what makes it legendary.",
+    desc:`The absolute best hand in poker — <em style="color:var(--gold);font-style:normal;font-weight:700;">Ace-high straight</em>, all <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> cards the same suit.`,
+    tip:"If you get this, try not to look too excited. Most players never see one in their lifetime.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}],
+      [{l:"A",s:"♥"},{l:"K",s:"♥"},{l:"Q",s:"♥"},{l:"J",s:"♥"},{l:"10",s:"♥"}],
+      [{l:"A",s:"♦"},{l:"K",s:"♦"},{l:"Q",s:"♦"},{l:"J",s:"♦"},{l:"10",s:"♦"}],
+      [{l:"A",s:"♣"},{l:"K",s:"♣"},{l:"Q",s:"♣"},{l:"J",s:"♣"},{l:"10",s:"♣"}],
+    ]},
+  { rank:2,  name:"Straight Flush",
+    odds:"1 in 72,193",
+    notes:"Point out: same as a straight, same as a flush — just both at once. Good analogy: a procedure that hits every checkpoint perfectly.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> consecutive cards, all the same suit. Any straight flush except Ace-high.`,
+    tip:"The Ace-high version is the Royal Flush. Everything else — like 5-6-7-8-9 of hearts — is a Straight Flush.",
+    examples:[
+      [{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}],
+      [{l:"6",s:"♣"},{l:"7",s:"♣"},{l:"8",s:"♣"},{l:"9",s:"♣"},{l:"10",s:"♣"}],
+      [{l:"2",s:"♦"},{l:"3",s:"♦"},{l:"4",s:"♦"},{l:"5",s:"♦"},{l:"6",s:"♦"}],
+      [{l:"J",s:"♠"},{l:"10",s:"♠"},{l:"9",s:"♠"},{l:"8",s:"♠"},{l:"7",s:"♠"}],
+    ]},
+  { rank:3,  name:"Four of a Kind",
+    odds:"1 in 4,165",
+    notes:"Great moment to check understanding: 'What's the one thing that could beat this?' (Only Straight Flush or Royal Flush.) Reinforces the hierarchy.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">4</em> cards of the same rank — all <em style="color:var(--gold);font-style:normal;font-weight:700;">4</em> suits — plus any <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> fifth card.`,
+    tip:"Also called 'Quads.' Extremely hard to beat. Only a Straight Flush or Royal Flush wins.",
+    examples:[
+      [{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♦"}],
+      [{l:"9",s:"♠"},{l:"9",s:"♥"},{l:"9",s:"♦"},{l:"9",s:"♣"},{l:"Q",s:"♥"}],
+      [{l:"5",s:"♠"},{l:"5",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♣"}],
+    ]},
+  { rank:4,  name:"Full House",
+    odds:"1 in 694",
+    notes:"'Three of a kind PLUS a pair' is the simplest way to remember it. The three-of-a-kind part determines who wins if two players both have Full Houses.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> cards of one rank + <em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> of another. Example: three Jacks and two <em style="color:var(--gold);font-style:normal;font-weight:700;">9</em>s.`,
+    tip:"Read as 'Jacks full of Nines.' If two players have a Full House, the higher three-of-a-kind wins.",
+    examples:[
+      [{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"K",s:"♠"},{l:"K",s:"♣"}],
+      [{l:"7",s:"♣"},{l:"7",s:"♦"},{l:"7",s:"♥"},{l:"4",s:"♠"},{l:"4",s:"♦"}],
+      [{l:"Q",s:"♠"},{l:"Q",s:"♦"},{l:"Q",s:"♣"},{l:"2",s:"♥"},{l:"2",s:"♠"}],
+    ]},
+  { rank:5,  name:"Flush",
+    odds:"1 in 509",
+    notes:"Common confusion: people think a Flush beats a Full House. It doesn't — Full House is higher. Emphasize this.",
+    desc:`Any <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> cards of the same suit — they don't need to be in sequence.`,
+    tip:"The actual ranks only matter for breaking ties. Ace-high flush beats King-high flush.",
+    examples:[
+      [{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}],
+      [{l:"K",s:"♥"},{l:"J",s:"♥"},{l:"8",s:"♥"},{l:"6",s:"♥"},{l:"3",s:"♥"}],
+      [{l:"Q",s:"♣"},{l:"9",s:"♣"},{l:"7",s:"♣"},{l:"5",s:"♣"},{l:"2",s:"♣"}],
+      [{l:"A",s:"♠"},{l:"8",s:"♠"},{l:"6",s:"♠"},{l:"4",s:"♠"},{l:"3",s:"♠"}],
+    ]},
+  { rank:6,  name:"Straight",
+    odds:"1 in 255",
+    notes:"The Ace rule trips people up. A-2-3-4-5 is 'the wheel' — the lowest straight. A-K-Q-J-10 is the highest. You can't wrap around like Q-K-A-2-3.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">5</em> consecutive cards of mixed suits. Example: <em style="color:var(--gold);font-style:normal;font-weight:700;">4-5-6-7-8</em>.`,
+    tip:"Ace can be high (A-K-Q-J-10) or low (A-2-3-4-5). You can't 'wrap around' like Q-K-A-2-3.",
+    examples:[
+      [{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}],
+      [{l:"A",s:"♦"},{l:"2",s:"♣"},{l:"3",s:"♥"},{l:"4",s:"♠"},{l:"5",s:"♦"}],
+      [{l:"J",s:"♣"},{l:"10",s:"♦"},{l:"9",s:"♥"},{l:"8",s:"♠"},{l:"7",s:"♣"}],
+      [{l:"K",s:"♥"},{l:"Q",s:"♠"},{l:"J",s:"♦"},{l:"10",s:"♣"},{l:"9",s:"♥"}],
+    ]},
+  { rank:7,  name:"Three of a Kind",
+    odds:"1 in 47",
+    notes:"'Trips' vs 'Set' is a fun distinction. Not essential but interesting — it tells other players how likely more of that rank is in the deck.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> cards of the same rank, plus <em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> unrelated cards.`,
+    tip:"Called 'Trips' when you pair a community card, 'A Set' when you use both hole cards. Same hand, different names.",
+    examples:[
+      [{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♥"},{l:"2",s:"♦"}],
+      [{l:"6",s:"♥"},{l:"6",s:"♠"},{l:"6",s:"♦"},{l:"K",s:"♣"},{l:"J",s:"♥"}],
+      [{l:"10",s:"♣"},{l:"10",s:"♦"},{l:"10",s:"♥"},{l:"5",s:"♠"},{l:"3",s:"♣"}],
+    ]},
+  { rank:8,  name:"Two Pair",
+    odds:"1 in 21",
+    notes:"The 'kicker' concept is worth mentioning — if both pairs match, the 5th card (kicker) decides. This is the first hand where that tiebreaker matters a lot.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> different pairs, plus any <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> fifth card. Example: two Aces and two <em style="color:var(--gold);font-style:normal;font-weight:700;">5</em>s.`,
+    tip:"The highest pair decides the winner. If that ties, the second pair. Then the 5th card — the 'kicker'.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}],
+      [{l:"K",s:"♣"},{l:"K",s:"♦"},{l:"J",s:"♠"},{l:"J",s:"♥"},{l:"9",s:"♦"}],
+      [{l:"9",s:"♠"},{l:"9",s:"♣"},{l:"3",s:"♥"},{l:"3",s:"♦"},{l:"Q",s:"♠"}],
+      [{l:"8",s:"♦"},{l:"8",s:"♣"},{l:"4",s:"♠"},{l:"4",s:"♥"},{l:"A",s:"♦"}],
+    ]},
+  { rank:9,  name:"One Pair",
+    odds:"1 in 2.4",
+    notes:"This is what most people end up with. Reinforce: one pair of twos still BEATS a high card hand, no matter how high the high card is.",
+    desc:`<em style="color:var(--gold);font-style:normal;font-weight:700;">2</em> cards of the same rank, plus <em style="color:var(--gold);font-style:normal;font-weight:700;">3</em> unrelated cards.`,
+    tip:"The most common made hand. Higher pair wins ties. If pairs match, the highest unmatched card (kicker) wins.",
+    examples:[
+      [{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}],
+      [{l:"A",s:"♠"},{l:"A",s:"♣"},{l:"8",s:"♦"},{l:"5",s:"♥"},{l:"3",s:"♠"}],
+      [{l:"J",s:"♥"},{l:"J",s:"♦"},{l:"Q",s:"♠"},{l:"4",s:"♣"},{l:"2",s:"♦"}],
+      [{l:"3",s:"♣"},{l:"3",s:"♦"},{l:"K",s:"♥"},{l:"10",s:"♠"},{l:"6",s:"♣"}],
+    ]},
+  { rank:10, name:"High Card",
+    odds:"~1 in 1",
+    notes:"A good reality check: in most rounds, many players end up with just High Card. Poker is often about bluffing — making others think you have more.",
+    desc:`No combination — your highest single card plays. Whoever has the highest <em style="color:var(--gold);font-style:normal;font-weight:700;">1</em> card wins.`,
+    tip:"The most common outcome. If everyone has High Card, the player with the highest individual card wins.",
+    examples:[
+      [{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}],
+      [{l:"K",s:"♥"},{l:"10",s:"♣"},{l:"7",s:"♦"},{l:"5",s:"♠"},{l:"3",s:"♥"}],
+      [{l:"Q",s:"♦"},{l:"9",s:"♠"},{l:"8",s:"♣"},{l:"4",s:"♥"},{l:"2",s:"♠"}],
+      [{l:"A",s:"♣"},{l:"8",s:"♦"},{l:"6",s:"♥"},{l:"4",s:"♦"},{l:"2",s:"♣"}],
+    ]},
+];
+const RED_SUITS = ["♥","♦"];
+const HAND_NAMES_SHORT = ["Royal Flush","Str. Flush","4 of a Kind","Full House","Flush","Straight","3 of a Kind","Two Pair","One Pair","High Card"];
+const REF_WHAT = ["A-K-Q-J-10 same suit","5 in a row, same suit","Four matching ranks","Three-of-a-kind + Pair","Any 5 same suit","5 in a row, mixed suits","Three matching ranks","Two different pairs","Two matching ranks","No combination"];
+
+// Slide numbering: 0=title,1=why,2=basics,3–12=hands,13=holdem,14=audience challenge,15=ref,16=tie-in,17=quiz
+const TOTAL_SLIDES = 19;
+const FIRST_HAND_SLIDE = 3;
+let currentSlide = 0;
+const revealState = {};
+
+function sc(s){return RED_SUITS.includes(s)?"red":"black";}
+function card(c,anim=false){return `<div class="playing-card${anim?' card-anim':''}"><div class="card-label ${sc(c.s)}">${c.l}</div><div class="card-suit-top ${sc(c.s)}">${c.s}</div><div class="card-suit-center ${sc(c.s)}">${c.s}</div></div>`;}
+function rbClass(r){return r<=3?"rank-gold":r<=6?"rank-blue":"rank-gray";}
+function rankBar(active){return HAND_NAMES_SHORT.map((n,i)=>`<div class="rank-pip ${i===active-1?'active':''}"><span class="rank-tooltip">#${i+1} ${n}</span></div>`).join('');}
+
+// (example cycling removed — examples now stack via data-reveal)
+/* ═══════════════════════════════════════
+   BUILD SLIDES
+═══════════════════════════════════════ */
+function buildAllSlides(){
+  const vp = document.getElementById('slideViewport');
+
+  // SLIDE 0: Title
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="0">
+    <div style="flex:1;min-height:0;background:linear-gradient(135deg,#111d34 0%,#0d1628 60%,#0a1020 100%);display:flex;align-items:stretch;position:relative;overflow:hidden;">
+      <!-- Left: text -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:3rem 3rem 2.5rem;position:relative;z-index:2;">
+        <div data-reveal style="font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">Medical Device Training Team · May 2026</div>
+        <h2 data-reveal style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.05;margin-bottom:0.75rem;">Poker Hands 101</h2>
+        <p data-reveal style="color:var(--muted);font-size:1.05rem;max-width:480px;line-height:1.7;margin-bottom:1.5rem;">A fun &amp; fast guide to the 10 winning hands — and what they say about how we think.</p>
+        <div data-reveal style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <span style="background:var(--gold);padding:0.4rem 1rem;border-radius:4px;color:var(--navy-dark);font-weight:700;font-size:0.85rem;">25 min + Q&amp;A</span>
+          <span style="background:rgba(255,255,255,0.06);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:4px;color:var(--muted);font-size:0.85rem;">♠ ♥ ♦ ♣</span>
+        </div>
+      </div>
+      <!-- Right: illustrated fan of cards SVG -->
+      <div style="width:420px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:2;">
+        <svg viewBox="0 0 340 320" width="340" height="320" xmlns="http://www.w3.org/2000/svg">
+          <!-- Card fan: 5 cards fanned out -->
+          <!-- Card 5 (back, far right) -->
+          <g transform="rotate(28,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="#1b2a4a" stroke="#c9962a" stroke-width="1.5"/>
+            <rect x="101" y="66" width="78" height="114" rx="7" fill="none" stroke="rgba(201,150,42,0.3)" stroke-width="1"/>
+            <text x="140" y="138" font-family="serif" font-size="32" fill="rgba(201,150,42,0.4)" text-anchor="middle">♠</text>
+          </g>
+          <!-- Card 4 -->
+          <g transform="rotate(14,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#c0392b">K</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#c0392b">♥</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#c0392b" text-anchor="middle">♥</text>
+          </g>
+          <!-- Card 3 (center) -->
+          <g transform="rotate(0,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5" filter="url(#shadow)"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#1a1a2e">A</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#1a1a2e">♠</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="42" fill="#1a1a2e" text-anchor="middle">♠</text>
+          </g>
+          <!-- Card 2 -->
+          <g transform="rotate(-14,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#c0392b">Q</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#c0392b">♦</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#c0392b" text-anchor="middle">♦</text>
+          </g>
+          <!-- Card 1 (far left) -->
+          <g transform="rotate(-28,170,220)">
+            <rect x="95" y="60" width="90" height="126" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+            <text x="104" y="82" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="#1a1a2e">J</text>
+            <text x="104" y="98" font-family="Georgia,serif" font-size="13" fill="#1a1a2e">♣</text>
+            <text x="140" y="140" font-family="Georgia,serif" font-size="36" fill="#1a1a2e" text-anchor="middle">♣</text>
+          </g>
+          <defs>
+            <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/></filter>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 1: Why Poker
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="1">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">WHY</div>
+      <div class="slide-header-title"><h2>Why Poker? <span class="reveal-hint" id="hint-1"></span></h2></div>
+    </div>
+    <div class="slide-content" style="flex-direction:row;align-items:center;gap:2.5rem;padding:2rem 2.5rem;">
+      <!-- Left: training record + card illustration -->
+      <div style="flex-shrink:0;width:180px;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 180 210" width="180" height="210" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="10" width="105" height="140" rx="8" fill="#1b2a4a" stroke="#c9962a" stroke-width="1.5"/>
+          <rect x="28" y="26" width="65" height="7" rx="3" fill="#c9962a" opacity="0.9"/>
+          <rect x="28" y="42" width="80" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="53" width="72" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="64" width="78" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+          <rect x="28" y="79" width="45" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <rect x="28" y="90" width="58" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <rect x="28" y="101" width="50" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+          <circle cx="98" cy="108" r="14" fill="#27ae60"/>
+          <text x="98" y="114" font-family="sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">&#x2713;</text>
+          <rect x="85" y="133" width="80" height="24" rx="5" fill="#c9962a"/>
+          <text x="125" y="149" font-family="sans-serif" font-size="9" font-weight="bold" fill="#111d34" text-anchor="middle">NEW EMPLOYEE</text>
+          <g transform="rotate(18,145,90)">
+            <rect x="115" y="55" width="52" height="74" rx="6" fill="white" stroke="#ddd" stroke-width="1" filter="url(#sh2)"/>
+            <text x="122" y="75" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#c0392b">A</text>
+            <text x="122" y="88" font-family="Georgia,serif" font-size="10" fill="#c0392b">&#x2665;</text>
+            <text x="141" y="110" font-family="Georgia,serif" font-size="24" fill="#c0392b" text-anchor="middle">&#x2665;</text>
+          </g>
+          <defs><filter id="sh2"><feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/></filter></defs>
+        </svg>
+      </div>
+      <!-- Right: 3 clean points -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:1rem;">
+        <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.7;">We train <strong style="color:var(--white);">new employees</strong> every day — whether that's in Training or Facilities, we all deal with onboarding, compliance, and getting people up to speed.</p>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F0CF;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">10 hands to learn</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Just like MQIs and WIs &#x2014; fixed rules, clear hierarchy. Learn them once, use them forever.</div>
+          </div>
+        </div>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid #2d6cb0;border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F4CB;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">Pattern recognition</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Reading a hand fast = scanning a training record for a gap. Same skill, different table.</div>
+          </div>
+        </div>
+        <div data-reveal style="display:flex;align-items:flex-start;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-left:4px solid #27ae60;border-radius:10px;padding:1rem 1.25rem;">
+          <div style="font-size:1.6rem;flex-shrink:0;">&#x1F91D;</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.2rem;">A shared experience</div>
+            <div style="font-size:0.88rem;color:var(--muted);line-height:1.5;">Learning something new together is exactly what we help new hires do every single day.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+
+  // SLIDE 2: The Basics
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="2">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">101</div>
+      <div class="slide-header-title"><h2>The Basics <span class="reveal-hint" id="hint-2"></span></h2></div>
+    </div>
+    <div class="slide-content">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;">
+        <div data-reveal style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem 0.5rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">52</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Cards in a Deck</div>
+          <div style="font-size:0.65rem;color:var(--border);margin-top:0.2rem;">4 suits × 13 ranks</div>
+        </div>
+        <div data-reveal style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem 0.5rem;">
+          <div style="font-size:1.6rem;margin-bottom:0.15rem;letter-spacing:0.1em;"><span style="color:var(--white);">♠</span><span style="color:#c0392b;">♥</span><span style="color:#c0392b;">♦</span><span style="color:var(--white);">♣</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);">4 Suits</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:0.2rem;">Spades · Hearts · Diamonds · Clubs</div>
+        </div>
+        <div data-reveal style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem 0.5rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Cards Per Hand</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:0.2rem;">Best 5 from 7 in Hold'em</div>
+        </div>
+        <div data-reveal style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem 0.5rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">10</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Hand Rankings</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:0.2rem;">High Card → Royal Flush</div>
+        </div>
+      </div>
+      <div data-reveal style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.9rem 1.2rem;">
+        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:0.5rem;">Card Rank Order — Low to High</div>
+        <div style="font-size:1rem;letter-spacing:0.12em;color:var(--white);">2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · J · Q · K · <span style="color:var(--gold);font-weight:700;">A</span></div>
+      </div>
+      <div data-reveal style="background:rgba(201,150,42,0.08);border:1px solid rgba(201,150,42,0.2);border-radius:8px;padding:0.85rem 1.1rem;font-size:0.87rem;color:#d4a84b;line-height:1.65;">
+        🃏 <strong style="color:var(--gold-light);">Fun fact — Deuce &amp; Trey:</strong> The 2 is called a <em>deuce</em> and the 3 is called a <em>trey</em> in poker. Both come from Old French — <em>deus</em> (two) and <em>treis</em> (three) — carried into English through card games played by French and Norman settlers centuries ago. You'll hear these at any poker table.
+      </div>
+      <div data-reveal style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);border-radius:8px;padding:0.85rem 1.1rem;font-size:0.87rem;color:#e07060;line-height:1.6;">
+        ⚠️  <strong>Special rule:</strong> Ace can be HIGH (above King) or LOW (below 2) depending on the hand. It can't do both at once.
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDES 3–12: The 10 Hands
+  HANDS.forEach((h, i) => {
+    const sn = i + FIRST_HAND_SLIDE;
+    const div = document.createElement('div');
+    div.className = 'slide-card';
+    div.setAttribute('data-slide', sn);
+    // Example 1 is always visible. Examples 2 and 3 are data-reveal.
+    const ex1 = h.examples[0].map(c=>card(c,true)).join('');
+    const ex2 = h.examples[1].map(c=>card(c,true)).join('');
+    const ex3 = h.examples[2].map(c=>card(c,true)).join('');
+    div.innerHTML = `
+      <div class="slide-header">
+        <div class="rank-badge ${rbClass(h.rank)}">#${h.rank}</div>
+        <div class="slide-header-title">
+          <h2>${h.name} <span class="reveal-hint" id="hint-${sn}"></span></h2>
+          <div class="slide-odds">Odds: ${h.odds}</div>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="slide-body" style="flex:none;">
+          <div class="slide-left" style="overflow:visible;">
+            <div class="desc-label" style="margin-bottom:0.5rem;">Example 1</div>
+            <div class="example-row-cards">${ex1}</div>
+          </div>
+          <div class="slide-right">
+            <div data-reveal class="desc-label">What it is</div>
+            <div data-reveal class="desc-text">${h.desc}</div>
+            <div data-reveal class="tip-box">${h.tip}</div>
+          </div>
+        </div>
+        <div style="padding:0 0 0 0;overflow-y:auto;flex:1;min-height:0;">
+          <div data-reveal class="example-row" style="padding:0.75rem 2.5rem 0.5rem;border-top:1px solid var(--border);">
+            <div class="example-row-label">Example 2</div>
+            <div class="example-row-cards">${ex2}</div>
+          </div>
+          <div data-reveal class="example-row" style="padding:0.75rem 2.5rem 0.5rem;border-top:1px solid var(--border);">
+            <div class="example-row-label">Example 3</div>
+            <div class="example-row-cards">${ex3}</div>
+          </div>
+        </div>
+      </div>
+      <div data-reveal class="ranking-section">
+        <div class="ranking-label">All 10 Hands — Best to Worst</div>
+        <div class="ranking-bar">${rankBar(h.rank)}</div>
+        <div class="ranking-ends"><span>← Best (Royal Flush)</span><span>(High Card) Worst →</span></div>
+      </div>`;
+    vp.appendChild(div);
+  });
+
+  // SLIDE 13: Texas Hold'em
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="13" data-notes="Walk through the diagram slowly. Ask: 'Given these community cards and hole cards, what's the best 5-card hand?' Answer: Full House — Kings full of Sevens. The audience may surprise you!">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">♠♥</div>
+      <div class="slide-header-title"><h2>How Texas Hold'em Works <span class="reveal-hint" id="hint-13"></span></h2></div>
+    </div>
+    <div class="slide-content" style="align-items:center;padding:1.5rem 2.5rem;gap:1rem;">
+      <p data-reveal style="color:var(--muted);font-size:0.95rem;line-height:1.7;max-width:680px;text-align:center;">
+        In Texas Hold'em — the most popular poker variant — every player gets <strong style="color:var(--white);">2 private cards</strong> (hole cards) and shares <strong style="color:var(--white);">5 community cards</strong> on the table. You build the best 5-card hand from any combination of your 7 cards.
+      </p>
+      <div data-reveal class="holdem-table">
+        <div class="holdem-label">Community Cards — shared by everyone at the table</div>
+        <div class="holdem-community">
+          ${[{l:"K",s:"♦"},{l:"7",s:"♥"},{l:"7",s:"♣"},{l:"2",s:"♠"},{l:"J",s:"♦"}].map(c=>card(c)).join('')}
+        </div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);text-align:center;">The Flop (3 cards) · The Turn (1) · The River (1)</div>
+        <div class="holdem-divider"></div>
+        <div class="holdem-label">Your Hole Cards — private, only you see these</div>
+        <div class="holdem-hole">
+          ${[{l:"K",s:"♥"},{l:"K",s:"♣"}].map(c=>card(c)).join('')}
+        </div>
+        <div class="holdem-player">Your best hand = Full House: Kings full of Sevens 🏆</div>
+      </div>
+      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;max-width:680px;width:100%;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">2</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Hole Cards<br><span style="font-size:0.7rem;">Private. Only yours.</span></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Community Cards<br><span style="font-size:0.7rem;">Everyone shares these.</span></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);">5</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Best Final Hand<br><span style="font-size:0.7rem;">Any 5 of your 7 cards.</span></div>
+        </div>
+      </div>
+      <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:0.75rem 1rem;font-size:0.88rem;color:#d4a84b;line-height:1.6;max-width:680px;width:100%;font-style:italic;">
+        💡 This is why reading hands is a skill — you're always working with partial information. Your opponents see the same community cards but have different hole cards.
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 14: Live Audience Challenge
+  const challengeHands = [
+    { cards:[{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"K",s:"♠"},{l:"K",s:"♥"}], answer:"Full House", hint:"Three of one rank, two of another" },
+    { cards:[{l:"10",s:"♠"},{l:"J",s:"♠"},{l:"Q",s:"♠"},{l:"K",s:"♠"},{l:"A",s:"♠"}], answer:"Royal Flush", hint:"The best hand in poker" },
+    { cards:[{l:"4",s:"♥"},{l:"7",s:"♣"},{l:"Q",s:"♦"},{l:"2",s:"♠"},{l:"9",s:"♥"}], answer:"High Card", hint:"No matching cards, no sequence, no suit pattern" },
+    { cards:[{l:"6",s:"♣"},{l:"6",s:"♦"},{l:"8",s:"♠"},{l:"8",s:"♥"},{l:"J",s:"♦"}], answer:"Two Pair", hint:"Two different pairs" },
+    { cards:[{l:"3",s:"♦"},{l:"5",s:"♦"},{l:"7",s:"♦"},{l:"9",s:"♦"},{l:"J",s:"♦"}], answer:"Flush", hint:"All five cards share the same suit" },
+  ];
+  const challengeCardsHTML = challengeHands.map((ch, i) =>
+    `<div class="challenge-hand" id="ch-${i}" style="display:${i===0?'block':'none'}">
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+        ${ch.cards.map(c=>card(c,true)).join('')}
+      </div>
+      <div id="ch-answer-${i}" style="display:none;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);margin-bottom:0.5rem;">${ch.answer}</div>
+        <div style="font-size:1rem;color:var(--muted);font-style:italic;">${ch.hint}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="14" data-notes="Show each hand, give the room 5–10 seconds to discuss quietly, then click to reveal. Keep energy up — celebrate right answers! This is the most interactive part.">
+    <div class="slide-header">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">🎯</div>
+      <div class="slide-header-title"><h2>Live Challenge — What's the Hand?</h2></div>
+    </div>
+    <div class="slide-content" style="align-items:center;gap:1.25rem;padding:1.5rem 2.5rem;">
+      <p style="color:var(--muted);font-size:1rem;text-align:center;max-width:560px;">Look at the cards below. What hand is it? Discuss with the person next to you — then we'll reveal!</p>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.5rem 2rem;max-width:600px;width:100%;text-align:center;">
+        ${challengeCardsHTML}
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
+          <button onclick="revealChallenge()" class="nav-btn primary" id="revealBtn" style="font-size:1rem;padding:0.65rem 1.75rem;">👁 Reveal Answer</button>
+          <button onclick="nextChallenge()" class="nav-btn" id="nextChallengeBtn" style="font-size:1rem;padding:0.65rem 1.75rem;display:none;">Next Hand →</button>
+        </div>
+      </div>
+      <div style="color:var(--muted);font-size:0.8rem;" id="challengeCounter">Hand 1 of ${challengeHands.length}</div>
+    </div>
+  </div>`;
+
+  // SLIDE 15: Quick Reference
+  const refRows = HANDS.map((h,i) => `<tr data-reveal><td><span class="ref-rank ${h.rank<=3?'top3':''}">${h.rank}</span></td><td style="font-weight:500">${h.name}</td><td style="color:var(--muted)">${REF_WHAT[i]}</td><td style="color:var(--muted)">${h.odds}</td></tr>`).join('');
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="15" data-notes="Each click reveals one row. Go through them in order — this is the 'full picture' moment. Ask if anyone has questions about the order or any specific hand.">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">REF</div>
+      <div class="slide-header-title"><h2>Quick Reference — All 10 Hands <span class="reveal-hint" id="hint-15"></span></h2></div>
+      <!-- mini podium SVG -->
+      <svg viewBox="0 0 120 48" width="120" height="48" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.7">
+        <rect x="0"  y="28" width="36" height="20" rx="3" fill="#2d6cb0"/>
+        <text x="18" y="22" font-family="serif" font-size="10" fill="#e8b84b" text-anchor="middle" font-weight="bold">#3</text>
+        <rect x="40" y="10" width="40" height="38" rx="3" fill="#c9962a"/>
+        <text x="60" y="6"  font-family="serif" font-size="10" fill="white"   text-anchor="middle" font-weight="bold">#1</text>
+        <rect x="84" y="20" width="36" height="28" rx="3" fill="#3a3a38"/>
+        <text x="102" y="14" font-family="serif" font-size="10" fill="#8a97b0" text-anchor="middle" font-weight="bold">#2</text>
+        <text x="18" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">3rd</text>
+        <text x="60" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">1st</text>
+        <text x="102" y="42" font-family="sans-serif" font-size="7" fill="white" text-anchor="middle">2nd</text>
+      </svg>
+    </div>
+    <div class="slide-content">
+      <table class="ref-table">
+        <thead><tr><th>#</th><th>Hand</th><th>What You Need</th><th>Approx. Odds</th></tr></thead>
+        <tbody>${refRows}</tbody>
+      </table>
+    </div>
+  </div>`;
+
+  // SLIDE 16: Work Tie-In (dual dept toggle)
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="16" id="slide16" data-notes="Toggle between Training and Facilities using the buttons in the header. Great moment to call out both teams. Ask each group which one resonates most with their day-to-day.">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">&#x1F4A1;</div>
+      <div class="slide-header-title"><h2>Poker Thinking in Our Work <span class="reveal-hint" id="hint-16"></span></h2></div>
+      <div class="dept-toggle">
+        <button class="dept-btn active-training" id="toggle16-trn" onclick="setDept(16,'training')">&#x1F4CB; Training</button>
+        <button class="dept-btn" id="toggle16-fac" onclick="setDept(16,'facilities')">&#x1F527; Facilities</button>
+      </div>
+    </div>
+    <div class="slide-content" id="slide16-content">
+      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:760px;">The same mental moves that make a great poker player show up in both our departments every single day. Here&#39;s how they map.</p>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">&#x2660; Reading a hand quickly under pressure</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;font-size:0.95rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--white);">Scanning a training record or controlled document for critical compliance points</div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem 1rem;color:#7ddfaa;">Scanning a work order or facilities request to figure out exactly what&#39;s needed before you show up with the wrong tools</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">&#x2665; Knowing when to fold &#x2014; cut your losses</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;font-size:0.95rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--white);">Recognizing when a training approach isn&#39;t landing and pivoting in real time</div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem 1rem;color:#7ddfaa;">Realizing halfway through painting a room that the wall prep wasn&#39;t done right &#x2014; stopping to fix it properly instead of covering it up</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">&#x2666; Calculating odds with incomplete info</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;font-size:0.95rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--white);">Weighing training investment vs. performance outcomes before recommending a program change</div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem 1rem;color:#7ddfaa;">Deciding whether to handle the broken door hinge, the leaking ceiling tile, or the furniture move first when three requests come in at once</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;font-size:0.95rem;color:#d4a84b;">&#x2663; Reading your opponents&#39; reactions</div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;font-size:0.95rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--white);">Gauging learner comprehension in real time &#x2014; adjusting pacing and examples on the fly</div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem 1rem;color:#7ddfaa;">Picking up on what a department actually needs &#x2014; sometimes a furniture request is really about a workflow problem, not just where a desk sits</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 17: Risk & Calibration tie-in (dual dept toggle)
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="17" id="slide17" data-notes="Use the toggle again here. Ask both teams: when did you last have to make a call without full information? Facilities folks will have great stories about equipment decisions.">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">🎲</div>
+      <div class="slide-header-title"><h2>Risk, Uncertainty &amp; Good Judgment <span class="reveal-hint" id="hint-17"></span></h2></div>
+      <div class="dept-toggle">
+        <button class="dept-btn active-training" id="toggle17-trn" onclick="setDept(17,'training')">&#x1F4CB; Training</button>
+        <button class="dept-btn" id="toggle17-fac" onclick="setDept(17,'facilities')">&#x1F527; Facilities</button>
+      </div>
+    </div>
+    <div class="slide-content">
+      <p data-reveal style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:780px;">Poker is fundamentally a game of <strong style="color:var(--white);">incomplete information</strong> — you never know your opponent's cards. Great players don't wait for certainty. They make calibrated decisions. Sound familiar?</p>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;" id="slide17-content">
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;color:#d4a84b;">
+            <div style="font-weight:700;margin-bottom:0.35rem;">&#x1F0CF; Betting with incomplete info</div>
+            <div style="font-size:0.88rem;">You see 7 of 52 cards. The other 45 are hidden. You bet on <em>probability</em>, not certainty.</div>
+          </div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;padding:0.5rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;color:var(--white);">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Designing with incomplete data</div>
+              <div style="font-size:0.88rem;color:var(--muted);">You build programs from compliance gaps and incident reports. You never have the full picture — but you still commit.</div>
+            </div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem;color:#7ddfaa;">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Walking in without the full story</div>
+              <div style="font-size:0.88rem;color:var(--muted);">A work order says 'fix the door.' You show up and it's the frame, the hinge, AND the floor clearance. You assess fast and figure it out.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;color:#d4a84b;">
+            <div style="font-weight:700;margin-bottom:0.35rem;">&#x1F914; The Bluff</div>
+            <div style="font-size:0.88rem;">Representing a stronger hand than you have — a calculated risk to shape how others respond.</div>
+          </div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;padding:0.5rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;color:var(--white);">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Selling the vision early</div>
+              <div style="font-size:0.88rem;color:var(--muted);">Championing a new initiative to leadership before you have every answer — because momentum matters.</div>
+            </div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem;color:#7ddfaa;">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Keeping things moving when it\'s chaotic</div>
+              <div style="font-size:0.88rem;color:var(--muted);">Three rooms need painting, a desk move is at noon, and a ceiling tile just fell. Working the list calmly keeps everyone around you steady.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;">
+          <div data-reveal style="background:rgba(201,150,42,0.1);border:1px solid rgba(201,150,42,0.25);border-radius:10px;padding:1rem 1.25rem;color:#d4a84b;">
+            <div style="font-weight:700;margin-bottom:0.35rem;">&#x1F4CA; The Fold</div>
+            <div style="font-size:0.88rem;">Elite players fold 70-80% of hands. Knowing when to stop is a skill, not a failure.</div>
+          </div>
+          <div style="font-size:1.4rem;color:var(--gold);text-align:center;">&#x2192;</div>
+          <div data-reveal style="border-radius:10px;padding:0.5rem;">
+            <div class="trn-view" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;color:var(--white);">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Retiring what isn't working</div>
+              <div style="font-size:0.88rem;color:var(--muted);">Cutting a failing module before sinking more resources into it is exactly the right call.</div>
+            </div>
+            <div class="fac-view" style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:0.75rem;color:#7ddfaa;">
+              <div style="font-weight:700;margin-bottom:0.25rem;">Knowing when to call it in</div>
+              <div style="font-size:0.88rem;color:var(--muted);">Noticing that a simple patch job is actually water damage behind the wall — stopping to get the right person before making it worse.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>`;
+
+  // SLIDE 18: Quiz CTA
+  vp.innerHTML += `
+  <div class="slide-card" data-slide="18" data-notes="Pull up poker-quiz.html on everyone's devices. The competitive leaderboard keeps energy high — great way to close the session on a fun note.">
+    <div class="slide-header" style="background:linear-gradient(135deg,#111d34,#0d1628);">
+      <div class="rank-badge rank-gold" style="width:auto;padding:0 0.75rem;">&#x1F3AF;</div>
+      <div class="slide-header-title"><h2>Time to Play</h2></div>
+      <svg viewBox="0 0 160 44" width="160" height="44" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.8">
+        <text x="8"   y="32" font-size="26" fill="white"   font-family="serif">&#x2660;</text>
+        <text x="46"  y="32" font-size="26" fill="#c0392b" font-family="serif">&#x2665;</text>
+        <text x="84"  y="32" font-size="26" fill="#c0392b" font-family="serif">&#x2666;</text>
+        <text x="122" y="32" font-size="26" fill="white"   font-family="serif">&#x2663;</text>
+      </svg>
+    </div>
+    <div class="slide-content" style="align-items:center;text-align:center;">
+      <p data-reveal style="color:var(--muted);font-size:1.05rem;line-height:1.75;max-width:620px;">You've seen all 10 hands. You know the odds, the strategies, and how it all connects to what we do. Now prove it.</p>
+      <div data-reveal style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;max-width:680px;width:100%;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.4rem;">&#x23F1;</div>
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.25rem;">Timed</div>
+          <div style="font-size:0.82rem;color:var(--muted);line-height:1.5;">Clock counts down on every question. Easy, Medium, or Hard.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.4rem;">&#x1F525;</div>
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.25rem;">Streak Bonuses</div>
+          <div style="font-size:0.82rem;color:var(--muted);line-height:1.5;">Answer 2+ in a row and earn bonus points on top.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.4rem;">&#x1F3C6;</div>
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.25rem;">Leaderboard</div>
+          <div style="font-size:0.82rem;color:var(--muted);line-height:1.5;">Live team rankings. See who tops the board.</div>
+        </div>
+      </div>
+      <div data-reveal>
+        <a href="poker-quiz.html" class="btn-primary" style="display:inline-block;font-size:1.1rem;padding:1rem 3rem;border-radius:6px;">&#x1F3AF; Launch the Quiz</a>
+        <div style="margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">jonestes.me/poker-quiz</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+function buildSidebar(){
+  const list = document.getElementById('sidebarList');
+  HANDS.forEach((h, i) => {
+    const row = document.createElement('div');
+    row.id = `sb-hand-${h.rank}`;
+    row.className = 'sidebar-hand';
+    row.innerHTML = `<div class="sb-rank">${h.rank}</div><div class="sb-name">${h.name}</div>`;
+    list.appendChild(row);
+
+    // Mini cards beneath
+    const miniCards = document.createElement('div');
+    miniCards.className = 'sidebar-mini-cards';
+    miniCards.id = `sb-cards-${h.rank}`;
+    miniCards.innerHTML = h.examples[0].map(c => `<div class="mini-card ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>`).join('');
+    list.appendChild(miniCards);
+  });
+}
+
+function updateSidebar(slideNum){
+  HANDS.forEach((h, i) => {
+    const handSlide = i + FIRST_HAND_SLIDE;
+    const row = document.getElementById(`sb-hand-${h.rank}`);
+    if (!row) return;
+    const isUnlocked = slideNum >= handSlide;
+    const isCurrent  = slideNum === handSlide;
+    row.classList.toggle('unlocked', isUnlocked);
+    row.classList.toggle('current',  isCurrent);
+  });
+}
+
+/* ═══════════════════════════════════════
+   AUDIENCE CHALLENGE SLIDE
+═══════════════════════════════════════ */
+let challengeIdx = 0;
+const CHALLENGE_COUNT = 5;
+
+function revealChallenge(){
+  document.getElementById(`ch-answer-${challengeIdx}`).style.display='block';
+  document.getElementById('revealBtn').style.display='none';
+  document.getElementById('nextChallengeBtn').style.display = challengeIdx < CHALLENGE_COUNT-1 ? 'inline-flex' : 'none';
+}
+
+function nextChallenge(){
+  document.getElementById(`ch-${challengeIdx}`).style.display='none';
+  challengeIdx++;
+  if(challengeIdx < CHALLENGE_COUNT){
+    document.getElementById(`ch-${challengeIdx}`).style.display='block';
+    document.getElementById('revealBtn').style.display='inline-flex';
+    document.getElementById('nextChallengeBtn').style.display='none';
+    document.getElementById('challengeCounter').textContent=`Hand ${challengeIdx+1} of ${CHALLENGE_COUNT}`;
+  }
+}
+
+/* ═══════════════════════════════════════
+   SPEAKER NOTES
+═══════════════════════════════════════ */
+let notesVisible = false;
+function toggleNotes(){
+  notesVisible = !notesVisible;
+  const panel = document.getElementById('speakerNotes');
+  const btn = document.getElementById('notesBtn');
+  panel.classList.toggle('visible', notesVisible);
+  btn.style.borderColor = notesVisible ? 'var(--gold)' : '';
+  btn.style.color = notesVisible ? 'var(--gold-light)' : '';
+}
+function updateNotes(slideNum){
+  const slideEl = document.querySelector(`.slide-card[data-slide="${slideNum}"]`);
+  const notes = slideEl ? slideEl.dataset.notes : '';
+  document.getElementById('speakerNotes').dataset.text = notes || '';
+  const panel = document.getElementById('speakerNotes');
+  // replace text node after ::before
+  panel.textContent = notes || '';
+  if(notes) panel.dataset.notes = notes;
+}
+
+/* ═══════════════════════════════════════
+   TOC (landing page)
+═══════════════════════════════════════ */
+function buildTOC(){
+  const grid = document.getElementById('tocGrid');
+  const items = [
+    {label:"Title",slide:0},{label:"Why Poker?",slide:1},{label:"The Basics",slide:2},
+    ...HANDS.map(h=>({label:`#${h.rank} ${h.name}`,slide:h.rank+2})),
+    {label:"Texas Hold'em",slide:13},{label:"Live Challenge",slide:14},
+    {label:"Quick Reference",slide:15},{label:"Work Tie-In",slide:16},{label:"Risk & Judgment",slide:17},{label:"Quiz Time!",slide:18}
+  ];
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'toc-item';
+    div.innerHTML = `<div class="toc-num">${item.slide+1}</div><span>${item.label}</span>`;
+    div.onclick = () => { startSlideshow(); goToSlide(item.slide); };
+    grid.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════════
+   REVEAL SYSTEM
+═══════════════════════════════════════ */
+function getRevealEls(slideEl){ return Array.from(slideEl.querySelectorAll('[data-reveal]')); }
+
+function initSlide(slideEl){
+  const sn = +slideEl.dataset.slide;
+  if(revealState[sn] === undefined) revealState[sn] = 0;
+  getRevealEls(slideEl).forEach((el,i) => {
+    el.classList.toggle('revealed', i < revealState[sn]);
+  });
+  updateHint(slideEl, sn);
+}
+
+function revealNext(slideEl){
+  const sn = +slideEl.dataset.slide;
+  const els = getRevealEls(slideEl);
+  const idx = revealState[sn] || 0;
+  if(idx < els.length){
+    els[idx].classList.add('revealed');
+    revealState[sn] = idx + 1;
+    updateHint(slideEl, sn);
+    return true;
+  }
+  return false;
+}
+
+function allRevealed(slideEl){
+  const sn = +slideEl.dataset.slide;
+  return (revealState[sn]||0) >= getRevealEls(slideEl).length;
+}
+
+function updateHint(slideEl, sn){
+  const hint = document.getElementById(`hint-${sn}`);
+  if(!hint) return;
+  const remaining = getRevealEls(slideEl).length - (revealState[sn]||0);
+  hint.classList.toggle('visible', remaining > 0);
+}
+
+function updateBuildIndicator(){
+  const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
+  const els = getRevealEls(slideEl);
+  const ind = document.getElementById('buildIndicator');
+  if(!els.length){ ind.textContent=''; return; }
+  const rev = revealState[currentSlide]||0;
+  ind.textContent = rev < els.length ? `${rev} / ${els.length} revealed` : 'Slide complete ✓';
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function nextAction(){
+  const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
+  if(revealNext(slideEl)){ updateBuildIndicator(); return; }
+  if(currentSlide < TOTAL_SLIDES-1) goToSlide(currentSlide+1);
+}
+
+function prevAction(){
+  if(currentSlide <= 0) return;
+  revealState[currentSlide] = 0;
+  goToSlide(currentSlide - 1);
+}
+
+function goToSlide(n){
+  document.querySelectorAll('.slide-card').forEach(c=>c.classList.remove('active'));
+  const target = document.querySelector(`.slide-card[data-slide="${n}"]`);
+  if(!target) return;
+  currentSlide = n;
+  target.classList.add('active');
+  initSlide(target);
+  updateNav();
+  updateBuildIndicator();
+  updateSidebar(n);
+  updateNotes(n);
+  // reset challenge slide state when navigating back to it
+  if(n===14){ challengeIdx=0; document.querySelectorAll('.challenge-hand').forEach((el,i)=>el.style.display=i===0?'block':'none'); const rb=document.getElementById('revealBtn'); if(rb){rb.style.display='inline-flex';} const nb=document.getElementById('nextChallengeBtn'); if(nb){nb.style.display='none';} const cc=document.getElementById('challengeCounter'); if(cc){cc.textContent=`Hand 1 of ${CHALLENGE_COUNT}`;} }
+  // scroll sidebar
+  const curr = document.querySelector('#sidebarList .sidebar-hand.current');
+  if(curr) curr.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+function updateNav(){
+  const pct = Math.round(((currentSlide+1)/TOTAL_SLIDES)*100);
+  document.getElementById('fsProgressFill').style.width = pct+'%';
+  document.getElementById('fsCounter').textContent = `${currentSlide+1} / ${TOTAL_SLIDES}`;
+  document.getElementById('prevBtn').disabled = currentSlide===0;
+  const nb = document.getElementById('nextBtn');
+  const slideEl = document.querySelector(`.slide-card[data-slide="${currentSlide}"]`);
+  if(currentSlide===TOTAL_SLIDES-1 && allRevealed(slideEl)){
+    nb.textContent='✓ Done'; nb.onclick=exitSlideshow;
+  } else {
+    nb.textContent='Next →'; nb.onclick=nextAction;
+  }
+}
+
+/* ═══════════════════════════════════════
+   FULLSCREEN
+═══════════════════════════════════════ */
+function startSlideshow(){
+  document.getElementById('heroSection').style.display='none';
+  document.getElementById('tocSection').style.display='none';
+  document.querySelector('footer').style.display='none';
+  document.querySelector('nav').style.display='none';
+  document.getElementById('fullscreenOverlay').classList.add('active');
+  document.getElementById('fullscreenOverlay').focus();
+  goToSlide(0);
+}
+
+function exitSlideshow(){
+  document.getElementById('fullscreenOverlay').classList.remove('active');
+  document.getElementById('heroSection').style.display='';
+  document.getElementById('tocSection').style.display='';
+  document.querySelector('footer').style.display='';
+  document.querySelector('nav').style.display='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleBrowserFS(){
+  if(!document.fullscreenElement){
+    document.getElementById('fullscreenOverlay').requestFullscreen().catch(()=>{});
+  } else {
+    document.exitFullscreen().catch(()=>{});
+  }
+}
+
+// Keyboard — covers arrow keys, PageDown/Up (most clickers), Enter, and spacebar
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('fullscreenOverlay').classList.contains('active')) return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'||e.key==='Enter'){e.preventDefault();nextAction();}
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();prevAction();}
+  if(e.key==='Escape') exitSlideshow();
+  if(e.key==='f'||e.key==='F') toggleBrowserFS();
+});
+
+// Auto-focus the overlay whenever the slideshow is active so clicker events always register
+document.getElementById('fullscreenOverlay').addEventListener('click', () => {
+  document.getElementById('fullscreenOverlay').focus();
+});
+
+
+/* ═══════════════════════════════════════
+   DEPARTMENT TOGGLE
+═══════════════════════════════════════ */
+let activeDept = { 16: 'training', 17: 'training' };
+
+function setDept(slideNum, dept) {
+  activeDept[slideNum] = dept;
+  const slideEl = document.querySelector(`.slide-card[data-slide="${slideNum}"]`);
+  if (!slideEl) return;
+
+  // Toggle CSS class on the content container
+  const content = slideEl.querySelector('.slide-content') || slideEl.querySelector('[id$="-content"]');
+  if (content) {
+    content.classList.toggle('show-fac', dept === 'facilities');
+  }
+  // Also toggle on the rows div for slide 17
+  const rows = document.getElementById(`slide${slideNum}-content`);
+  if (rows) rows.classList.toggle('show-fac', dept === 'facilities');
+
+  // Update button states
+  const trnBtn = document.getElementById(`toggle${slideNum}-trn`);
+  const facBtn = document.getElementById(`toggle${slideNum}-fac`);
+  if (trnBtn && facBtn) {
+    trnBtn.className = 'dept-btn' + (dept === 'training' ? ' active-training' : '');
+    facBtn.className = 'dept-btn' + (dept === 'facilities' ? ' active-facilities' : '');
+  }
+}
+
+// Init
+buildAllSlides();
+buildSidebar();
+buildTOC();
+</script>
+</body>
+</html>
