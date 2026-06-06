@@ -646,7 +646,15 @@ function renderResults() {
             <a href="tel:${b.phone_intl||b.phone}" style="font-size:13px;color:var(--text-primary);text-decoration:none;font-weight:500;">📞 ${b.phone}</a>
             <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;" onclick="copyText('${esc(b.phone)}', this)">Copy</button>
             <a href="sms:${b.phone_intl||b.phone}" class="btn btn-sm" style="padding:3px 8px;font-size:11px;text-decoration:none;">💬 Text</a>
-            <button class="btn btn-sm" id="vm-btn-${i}" style="padding:3px 8px;font-size:11px;" onclick="dropVoicemail(${i},'${esc(b.name)}','${esc(b.phone)}')">🔊 Drop Voicemail</button>
+            <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;" onclick="toggleVmBox(${i}, '${esc(b.phone)}', '${esc(b.name)}')">🔊 Drop Voicemail</button>
+          </div>
+          <div id="vm-box-${i}" style="display:none;width:100%;margin-top:8px;background:var(--surface2);border-radius:8px;padding:12px;border:1px solid var(--border);">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Send voicemail to:</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input type="tel" id="vm-phone-${i}" value="${b.phone}" style="font-size:13px;padding:7px 10px;flex:1;min-width:160px;" placeholder="Phone number"/>
+              <button class="btn btn-sm btn-primary" id="vm-btn-${i}" style="padding:7px 14px;font-size:13px;" onclick="dropVoicemail(${i},'${esc(b.name)}')">🔊 Send Now</button>
+              <button class="btn btn-sm" style="padding:7px 10px;font-size:13px;" onclick="document.getElementById('vm-box-${i}').style.display='none'">✕</button>
+            </div>
           </div>` : '<span style="font-size:12px;color:var(--muted);">📞 No phone listed</span>'}
         ${b.website ? `
           <div style="display:flex;align-items:center;gap:6px;">
@@ -757,8 +765,20 @@ function copyAllEmails() {
   navigator.clipboard.writeText(all).then(() => alert('All emails copied!'));
 }
 
-async function dropVoicemail(idx, name, phone) {
+function toggleVmBox(idx, defaultPhone, name) {
+  const box = document.getElementById('vm-box-'+idx);
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+async function dropVoicemail(idx, name) {
+  const phoneInput = document.getElementById('vm-phone-'+idx);
+  const phone = phoneInput ? phoneInput.value.trim() : '';
   const btn = document.getElementById('vm-btn-'+idx);
+  if (!phone) { alert('Please enter a phone number.'); return; }
   if (!btn) return;
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Dropping...';
@@ -771,12 +791,12 @@ async function dropVoicemail(idx, name, phone) {
     });
     const data = await resp.json();
     if (data.error) throw new Error(data.error);
-    btn.innerHTML = '✓ Voicemail Sent!';
+    btn.innerHTML = '✓ Sent!';
     btn.style.color = 'var(--green)';
     btn.style.borderColor = 'var(--green)';
   } catch(e) {
     btn.disabled = false;
-    btn.innerHTML = '🔊 Drop Voicemail';
+    btn.innerHTML = '🔊 Send Now';
     alert('Voicemail failed: ' + e.message);
   }
 }
