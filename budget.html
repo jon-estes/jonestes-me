@@ -828,6 +828,7 @@ function applyGlobalFilters(){
     if(month && getMonthKey(r.date) !== month) return false;
     if(who   && r.who !== who)                 return false;
     if(excludeBusiness && r.category === 'Business') return false;
+    if(excludeBusiness && r.category === 'Income' && /whatnot/i.test(r.item)) return false;
     return true;
   });
 
