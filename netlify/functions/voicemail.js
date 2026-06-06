@@ -37,7 +37,7 @@ exports.handler = async function(event) {
     }
 
     console.log('Sending to Slybroadcast...');
-    const resp = await fetch('https://www.slybroadcast.com/gateway/service.php', {
+    const resp = await fetch('https://www.mobile-sphere.com/gateway/vmb.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString(),
