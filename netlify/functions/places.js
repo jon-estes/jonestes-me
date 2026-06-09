@@ -3,25 +3,45 @@ exports.handler = async function(event) {
   const key = process.env.GOOGLE_PLACES_KEY;
 
   if (!query && !pagetoken) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query' }) };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query or pagetoken' }) };
   }
   if (!key) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'GOOGLE_PLACES_KEY env var not set in Netlify' }) };
+    return { statusCode: 500, body: JSON.stringify({ error: 'GOOGLE_PLACES_KEY env var not set' }) };
   }
 
   try {
-    // Step 1: Text search (or next page if pagetoken provided)
-    let searchUrl;
+    // If pagetoken provided, wait 3s — Google requires a delay before next_page_token is valid
     if (pagetoken) {
-      // Must wait ~2s before using a page token or Google returns INVALID_REQUEST
-      await new Promise(r => setTimeout(r, 2000));
-      searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${key}`;
-    } else {
-      searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+      await new Promise(r => setTimeout(r, 3000));
     }
 
+    const searchUrl = pagetoken
+      ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${key}`
+      : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+
+    console.log('Fetching:', pagetoken ? 'page with token' : 'query: ' + query);
     const searchResp = await fetch(searchUrl);
     const searchData = await searchResp.json();
+    console.log('Status:', searchData.status, '| Results:', searchData.results?.length, '| Has next token:', !!searchData.next_page_token);
+
+    if (searchData.status === 'INVALID_REQUEST') {
+      // Token not ready yet — wait more and retry once
+      console.log('INVALID_REQUEST — retrying after extra delay...');
+      await new Promise(r => setTimeout(r, 3000));
+      const retryResp = await fetch(searchUrl);
+      const retryData = await retryResp.json();
+      console.log('Retry status:', retryData.status, '| Results:', retryData.results?.length);
+      if (retryData.status !== 'OK') {
+        return {
+          statusCode: 200,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({ status: 'OK', results: [], next_page_token: null }),
+        };
+      }
+      searchData.results = retryData.results;
+      searchData.next_page_token = retryData.next_page_token;
+      searchData.status = retryData.status;
+    }
 
     if (searchData.status !== 'OK' && searchData.status !== 'ZERO_RESULTS') {
       return {
@@ -31,7 +51,7 @@ exports.handler = async function(event) {
       };
     }
 
-    // Step 2: Fetch Place Details for each result to get phone, website etc.
+    // Fetch place details for each result
     const results = await Promise.all(
       (searchData.results || []).map(async (place) => {
         try {
@@ -56,6 +76,8 @@ exports.handler = async function(event) {
       })
     );
 
+    console.log('Returning', results.length, 'results, next_page_token:', !!searchData.next_page_token);
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -67,6 +89,7 @@ exports.handler = async function(event) {
     };
 
   } catch (e) {
+    console.log('Exception:', e.message);
     return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
   }
 };
