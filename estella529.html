@@ -152,7 +152,7 @@
     <div class="progress-top">
       <div>
         <div class="progress-label">Current balance</div>
-        <div class="progress-amount"><span class="dollar">$</span>497.11</div>
+        <div class="progress-amount"><span class="dollar">$</span>606.61</div>
       </div>
       <div class="progress-goal">
         <div class="progress-label">Goal</div>
@@ -169,13 +169,13 @@
     <div class="accounts-row">
       <div class="account-mini">
         <div class="account-mini-label">CalKIDS account</div>
-        <div class="account-mini-val">$183.65</div>
-        <div class="account-mini-sub">as of 05/04/2026</div>
+        <div class="account-mini-val">$186.90</div>
+        <div class="account-mini-sub">as of 06/05/2026</div>
       </div>
       <div class="account-mini">
         <div class="account-mini-label">ScholarShare 529</div>
-        <div class="account-mini-val">$313.46</div>
-        <div class="account-mini-sub">as of 05/04/2026</div>
+        <div class="account-mini-val">$419.71</div>
+        <div class="account-mini-sub">as of 06/08/2026</div>
       </div>
     </div>
   </div>
@@ -198,7 +198,7 @@
       <div class="legend-item"><div class="legend-dot" style="background:rgba(232,160,176,0.7);"></div> ScholarShare 529</div>
     </div>
     <div class="chart-container">
-      <canvas id="historyChart" role="img" aria-label="Stacked bar chart of Estella's 529 balance history from December 2025 to May 2026. Total grew from $95 to $497.11.">Balance history: Dec 2025 $95, Jan 2026 $110, Feb 2026 $255, Mar 2026 $330, Apr 2026 $400, May 2026 $497.11.</canvas>
+      <canvas id="historyChart" role="img" aria-label="Stacked bar chart of Estella's 529 balance history from December 2025 to June 2026. Total grew from $95 to $606.61.">Balance history: Dec 2025 $95, Jan 2026 $110, Feb 2026 $255, Mar 2026 $330, Apr 2026 $400, May 2026 $497.11, Jun 2026 $606.61.</canvas>
     </div>
 
     <div class="log-table-wrap">
@@ -325,7 +325,7 @@
 
 <script>
   // ── PROGRESS BAR ─────────────────────────────────────────────────────
-  const balance = 497.11;
+  const balance = 606.61;
   const goal = 50000;
   const pct = (balance / goal) * 100;
   window.addEventListener('load', () => {
@@ -344,6 +344,7 @@
     { date: 'Mar 1, 2026',  calkids: 150.00, scholarshare: 180.00, total: 330.00 },
     { date: 'Apr 1, 2026',  calkids: 165.00, scholarshare: 235.00, total: 400.00 },
     { date: 'May 4, 2026',  calkids: 183.65, scholarshare: 313.46, total: 497.11 },
+    { date: 'Jun 8, 2026',  calkids: 186.90, scholarshare: 419.71, total: 606.61 },
   ];
 
   // Build table
