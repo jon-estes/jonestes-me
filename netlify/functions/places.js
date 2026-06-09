@@ -10,24 +10,21 @@ exports.handler = async function(event) {
   }
 
   try {
+    // Log the raw token for debugging
+    if (pagetoken) {
+      console.log('Raw pagetoken length:', pagetoken.length);
+      console.log('Raw pagetoken:', pagetoken);
+    }
+
     const searchUrl = pagetoken
       ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${pagetoken}&key=${key}`
       : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
 
-    // For pagetoken calls, retry up to 4 times if Google returns INVALID_REQUEST
-    // (token activation is async on Google's side and can take up to ~10s)
-    let data;
-    const maxAttempts = pagetoken ? 4 : 1;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      const resp = await fetch(searchUrl);
-      data = await resp.json();
-      console.log(`Attempt ${attempt} status:`, data.status, '| results:', data.results?.length, '| next token:', !!data.next_page_token);
-      if (data.status !== 'INVALID_REQUEST') break;
-      if (attempt < maxAttempts) {
-        console.log(`INVALID_REQUEST on attempt ${attempt}, retrying in 3s...`);
-        await new Promise(r => setTimeout(r, 5000));
-      }
-    }
+    console.log('Search URL (no key):', searchUrl.replace(key, 'REDACTED'));
+
+    const resp = await fetch(searchUrl);
+    const data = await resp.json();
+    console.log('Status:', data.status, '| results:', data.results?.length, '| error:', data.error_message);
 
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
       return {
@@ -39,7 +36,6 @@ exports.handler = async function(event) {
 
     const places = data.results || [];
 
-    // Fetch place details for each result in parallel
     const results = await Promise.all(
       places.map(async (place) => {
         try {
