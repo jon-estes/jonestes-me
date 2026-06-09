@@ -497,7 +497,14 @@
     <div id="batch-area" style="display:none;margin-top:12px;">
       <div class="form-group" style="margin-bottom:10px;">
         <label style="font-size:12px;color:var(--muted);">Cities / neighborhoods (one per line)</label>
-        <textarea id="batch-cities" style="font-size:13px;padding:8px 10px;min-height:110px;resize:vertical;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);" placeholder="Sacramento, CA&#10;Roseville, CA&#10;Elk Grove, CA&#10;Folsom, CA&#10;Rancho Cordova, CA&#10;Lincoln, CA&#10;Natomas Sacramento CA"></textarea>
+        <textarea id="batch-cities" style="font-size:13px;padding:8px 10px;min-height:110px;resize:vertical;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">Sacramento, CA
+Roseville, CA
+Elk Grove, CA
+Folsom, CA
+Rancho Cordova, CA
+Lincoln, CA
+Citrus Heights, CA
+Rocklin, CA</textarea>
       </div>
       <button class="btn btn-primary" id="batch-btn" onclick="runBatchSearch()">
         ⚡ Batch Search All Cities
@@ -570,7 +577,7 @@ async function runSearch() {
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Searching...';
-  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching all results for ' + btype + ' in ' + city + '...</div>';
+  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching up to 60 results for ' + btype + ' in ' + city + '...<br><br><span style="font-size:12px;color:var(--muted);">This may take ~10 seconds while we load all pages</span></div>';
   document.getElementById('stats-row').style.display = 'none';
   document.getElementById('export-bar').style.display = 'none';
   document.getElementById('filter-row').style.display = 'none';
@@ -580,33 +587,8 @@ async function runSearch() {
   nextPageToken = null;
 
   try {
-    // Page 1
-    document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 1 of 3...</div>';
-    const page1 = await fetchPlaces(null, btype, city);
-    allResults = page1.results;
-    nextPageToken = page1.next_page_token || null;
-    console.log('Page 1:', page1.results.length, 'results, token:', !!nextPageToken);
-
-    // Page 2
-    if (nextPageToken) {
-      document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 2 of 3... (' + allResults.length + ' found so far)</div>';
-      await new Promise(r => setTimeout(r, 500));
-      const page2 = await fetchPlaces(nextPageToken, null, null);
-      allResults = allResults.concat(page2.results);
-      nextPageToken = page2.next_page_token || null;
-      console.log('Page 2:', page2.results.length, 'results, token:', !!nextPageToken);
-    }
-
-    // Page 3
-    if (nextPageToken) {
-      document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 3 of 3... (' + allResults.length + ' found so far)</div>';
-      await new Promise(r => setTimeout(r, 500));
-      const page3 = await fetchPlaces(nextPageToken, null, null);
-      allResults = allResults.concat(page3.results);
-      nextPageToken = null;
-      console.log('Page 3:', page3.results.length, 'results');
-    }
-
+    const data = await fetchPlaces(null, btype, city);
+    allResults = data.results;
   } catch(e) {
     document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
     btn.disabled = false;
@@ -623,12 +605,9 @@ async function runSearch() {
 }
 
 async function fetchPlaces(pagetoken, btype, city) {
-  let url;
-  if (pagetoken) {
-    url = `/.netlify/functions/places?pagetoken=${encodeURIComponent(pagetoken)}`;
-  } else {
-    url = `/.netlify/functions/places?query=${encodeURIComponent(btype + ' in ' + city)}`;
-  }
+  // All pagination now handled server-side in a single call
+  const query = btype + ' in ' + city;
+  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
@@ -647,7 +626,7 @@ async function fetchPlaces(pagetoken, btype, city) {
       google_maps_url: p.google_maps_url || null,
       hasWebsite: !!(p.website),
     })),
-    next_page_token: data.next_page_token || null,
+    next_page_token: null,
   };
 }
 
@@ -680,25 +659,9 @@ async function runBatchSearch() {
     document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching <strong>${city}</strong> (${ci+1} of ${cities.length})...<br><br>${allResults.length} results collected so far</div>`;
 
     try {
-      const page1 = await fetchPlaces(null, btype, city);
-      let token = page1.next_page_token || null;
-      addUnique(page1.results, seen);
-      console.log(city + ' page1:', page1.results.length, 'results, token:', !!token);
-
-      if (token) {
-        await new Promise(r => setTimeout(r, 500)); // small client-side delay too
-        const page2 = await fetchPlaces(token, null, null);
-        token = page2.next_page_token || null;
-        addUnique(page2.results, seen);
-        console.log(city + ' page2:', page2.results.length, 'results, token:', !!token);
-      }
-
-      if (token) {
-        await new Promise(r => setTimeout(r, 500));
-        const page3 = await fetchPlaces(token, null, null);
-        addUnique(page3.results, seen);
-        console.log(city + ' page3:', page3.results.length, 'results');
-      }
+      const data = await fetchPlaces(null, btype, city);
+      addUnique(data.results, seen);
+      console.log(city + ':', data.results.length, 'results');
     } catch(e) {
       console.warn('Error searching ' + city + ':', e.message);
     }
