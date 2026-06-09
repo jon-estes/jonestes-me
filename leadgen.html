@@ -577,7 +577,6 @@ async function runSearch() {
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Searching...';
-  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching up to 60 results for ' + btype + ' in ' + city + '...<br><br><span style="font-size:12px;color:var(--muted);">This may take ~10 seconds while we load all pages</span></div>';
   document.getElementById('stats-row').style.display = 'none';
   document.getElementById('export-bar').style.display = 'none';
   document.getElementById('filter-row').style.display = 'none';
@@ -586,9 +585,31 @@ async function runSearch() {
   allResults = [];
   nextPageToken = null;
 
+  const updateMsg = (page, count) => {
+    document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching page ${page} of results for <strong>${btype}</strong> in <strong>${city}</strong>...<br><br><span style="font-size:12px;color:var(--muted);">${count} results so far — up to 60 total</span></div>`;
+  };
+
   try {
-    const data = await fetchPlaces(null, btype, city);
-    allResults = data.results;
+    // Page 1
+    updateMsg(1, 0);
+    const p1 = await fetchPlaces(null, btype, city);
+    allResults = allResults.concat(p1.results);
+
+    // Page 2
+    if (p1.next_page_token) {
+      updateMsg(2, allResults.length);
+      await new Promise(r => setTimeout(r, 2500));
+      const p2 = await fetchPlaces(p1.next_page_token, null, null);
+      allResults = allResults.concat(p2.results);
+
+      // Page 3
+      if (p2.next_page_token) {
+        updateMsg(3, allResults.length);
+        await new Promise(r => setTimeout(r, 2500));
+        const p3 = await fetchPlaces(p2.next_page_token, null, null);
+        allResults = allResults.concat(p3.results);
+      }
+    }
   } catch(e) {
     document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
     btn.disabled = false;
@@ -605,9 +626,14 @@ async function runSearch() {
 }
 
 async function fetchPlaces(pagetoken, btype, city) {
-  // All pagination now handled server-side in a single call
-  const query = btype + ' in ' + city;
-  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
+  // Fetch one page at a time; server returns next_page_token for chaining
+  let url;
+  if (pagetoken) {
+    url = `/.netlify/functions/places?pagetoken=${encodeURIComponent(pagetoken)}`;
+  } else {
+    const query = btype + ' in ' + city;
+    url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
+  }
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
@@ -626,7 +652,7 @@ async function fetchPlaces(pagetoken, btype, city) {
       google_maps_url: p.google_maps_url || null,
       hasWebsite: !!(p.website),
     })),
-    next_page_token: null,
+    next_page_token: data.next_page_token || null,
   };
 }
 
@@ -659,9 +685,25 @@ async function runBatchSearch() {
     document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching <strong>${city}</strong> (${ci+1} of ${cities.length})...<br><br>${allResults.length} results collected so far</div>`;
 
     try {
-      const data = await fetchPlaces(null, btype, city);
-      addUnique(data.results, seen);
-      console.log(city + ':', data.results.length, 'results');
+      // Page 1
+      const p1 = await fetchPlaces(null, btype, city);
+      addUnique(p1.results, seen);
+
+      // Page 2
+      if (p1.next_page_token) {
+        await new Promise(r => setTimeout(r, 2500));
+        const p2 = await fetchPlaces(p1.next_page_token, null, null);
+        addUnique(p2.results, seen);
+
+        // Page 3
+        if (p2.next_page_token) {
+          await new Promise(r => setTimeout(r, 2500));
+          const p3 = await fetchPlaces(p2.next_page_token, null, null);
+          addUnique(p3.results, seen);
+        }
+      }
+
+      console.log(city + ': total now', allResults.length);
     } catch(e) {
       console.warn('Error searching ' + city + ':', e.message);
     }
