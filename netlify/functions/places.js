@@ -28,48 +28,40 @@ exports.handler = async function(event) {
 
     allPlaces = allPlaces.concat(data1.results || []);
 
-    // Page 2 — wait inside the SAME function instance (same IP)
     if (data1.next_page_token) {
+      const token2 = data1.next_page_token;
+      console.log('Token2 length:', token2.length, '| first20:', token2.substring(0, 20), '| last20:', token2.substring(token2.length - 20));
+
       await new Promise(r => setTimeout(r, 2000));
-      const url2 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${data1.next_page_token}&key=${key}`;
 
-      // Retry up to 5 times within this invocation
-      let data2;
       for (let i = 0; i < 5; i++) {
+        // Re-encode the token fresh each attempt to rule out any URL issues
+        const url2 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(token2)}&key=${key}`;
+        console.log(`Page 2 attempt ${i+1} URL snippet:`, url2.substring(0, 120));
         const r2 = await fetch(url2);
-        data2 = await r2.json();
-        console.log(`Page 2 attempt ${i+1}:`, data2.status, '| results:', data2.results?.length);
-        if (data2.status === 'OK') break;
-        await new Promise(r => setTimeout(r, 2000));
-      }
+        const data2 = await r2.json();
+        console.log(`Page 2 attempt ${i+1}:`, data2.status, '| error:', data2.error_message, '| results:', data2.results?.length);
 
-      if (data2?.status === 'OK') {
-        allPlaces = allPlaces.concat(data2.results || []);
+        if (data2.status === 'OK') {
+          allPlaces = allPlaces.concat(data2.results || []);
 
-        // Page 3 — same approach
-        if (data2.next_page_token) {
-          await new Promise(r => setTimeout(r, 2000));
-          const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${data2.next_page_token}&key=${key}`;
-
-          let data3;
-          for (let i = 0; i < 5; i++) {
-            const r3 = await fetch(url3);
-            data3 = await r3.json();
-            console.log(`Page 3 attempt ${i+1}:`, data3.status, '| results:', data3.results?.length);
-            if (data3.status === 'OK') break;
+          if (data2.next_page_token) {
             await new Promise(r => setTimeout(r, 2000));
+            const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(data2.next_page_token)}&key=${key}`;
+            const r3 = await fetch(url3);
+            const data3 = await r3.json();
+            console.log('Page 3:', data3.status, '| results:', data3.results?.length);
+            if (data3.status === 'OK') allPlaces = allPlaces.concat(data3.results || []);
           }
-
-          if (data3?.status === 'OK') {
-            allPlaces = allPlaces.concat(data3.results || []);
-          }
+          break;
         }
+
+        if (i < 4) await new Promise(r => setTimeout(r, 2000));
       }
     }
 
     console.log('Total places:', allPlaces.length);
 
-    // Fetch place details for each result in parallel
     const results = await Promise.all(
       allPlaces.map(async (place) => {
         try {
