@@ -585,21 +585,26 @@ async function runSearch() {
     const page1 = await fetchPlaces(null, btype, city);
     allResults = page1.results;
     nextPageToken = page1.next_page_token || null;
+    console.log('Page 1:', page1.results.length, 'results, token:', !!nextPageToken);
 
     // Page 2
     if (nextPageToken) {
       document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 2 of 3... (' + allResults.length + ' found so far)</div>';
+      await new Promise(r => setTimeout(r, 500));
       const page2 = await fetchPlaces(nextPageToken, null, null);
       allResults = allResults.concat(page2.results);
       nextPageToken = page2.next_page_token || null;
+      console.log('Page 2:', page2.results.length, 'results, token:', !!nextPageToken);
     }
 
     // Page 3
     if (nextPageToken) {
       document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 3 of 3... (' + allResults.length + ' found so far)</div>';
+      await new Promise(r => setTimeout(r, 500));
       const page3 = await fetchPlaces(nextPageToken, null, null);
       allResults = allResults.concat(page3.results);
       nextPageToken = null;
+      console.log('Page 3:', page3.results.length, 'results');
     }
 
   } catch(e) {
@@ -678,14 +683,21 @@ async function runBatchSearch() {
       const page1 = await fetchPlaces(null, btype, city);
       let token = page1.next_page_token || null;
       addUnique(page1.results, seen);
+      console.log(city + ' page1:', page1.results.length, 'results, token:', !!token);
+
       if (token) {
+        await new Promise(r => setTimeout(r, 500)); // small client-side delay too
         const page2 = await fetchPlaces(token, null, null);
         token = page2.next_page_token || null;
         addUnique(page2.results, seen);
+        console.log(city + ' page2:', page2.results.length, 'results, token:', !!token);
       }
+
       if (token) {
+        await new Promise(r => setTimeout(r, 500));
         const page3 = await fetchPlaces(token, null, null);
         addUnique(page3.results, seen);
+        console.log(city + ' page3:', page3.results.length, 'results');
       }
     } catch(e) {
       console.warn('Error searching ' + city + ':', e.message);
