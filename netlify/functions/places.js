@@ -142,6 +142,7 @@ function generateSynonyms(btype) {
     'real estate agent': ['real estate agent', 'realtor', 'real estate broker'],
     'realtor': ['realtor', 'real estate agent', 'real estate agency'],
     'nail salon': ['nail salon', 'nail studio', 'manicure salon'],
+    'nail': ['nail salon', 'nail studio', 'manicure pedicure'],
     'hair salon': ['hair salon', 'hair stylist', 'beauty salon'],
     'gym': ['gym', 'fitness center', 'health club'],
     'chiropractor': ['chiropractor', 'chiropractic clinic', 'chiropractic office'],
@@ -155,19 +156,18 @@ function generateSynonyms(btype) {
     'pool': ['pool company', 'swimming pool contractor', 'pool builder'],
   };
 
-  // Check for a match
+  // Check for a match — exact, input contains key, OR key contains input (e.g. "nail" matches "nail salon")
   for (const [key, synonyms] of Object.entries(synonymMap)) {
-    if (t === key || t.includes(key)) {
+    if (t === key || t.includes(key) || key.includes(t)) {
       return synonyms;
     }
   }
 
-  // No match — generate generic variations
-  const words = btype.trim().split(/\s+/);
-  const last = words[words.length - 1];
+  // No match — generate sensible generic variations
+  const base = btype.trim();
   return [
-    btype,
-    `${btype} company`,
-    `${last} contractor`,
+    base,
+    `${base} company`,
+    `${base} service`,
   ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 3);
 }
