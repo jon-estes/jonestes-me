@@ -16,7 +16,7 @@ exports.handler = async function(event) {
     // This returns nextPageToken that works reliably with the new API
     const searchBody = { textQuery: query, pageSize: 20 };
 
-    const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri';
+    const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri,nextPageToken';
 
     const fetchPage = async (body) => {
       const resp = await fetch('https://places.googleapis.com/v1/places:searchText', {
