@@ -598,14 +598,14 @@ async function runSearch() {
     // Page 2
     if (p1.next_page_token) {
       updateMsg(2, allResults.length);
-      await new Promise(r => setTimeout(r, 2500));
+      await new Promise(r => setTimeout(r, 4000));
       const p2 = await fetchPlaces(p1.next_page_token, null, null);
       allResults = allResults.concat(p2.results);
 
       // Page 3
       if (p2.next_page_token) {
         updateMsg(3, allResults.length);
-        await new Promise(r => setTimeout(r, 2500));
+        await new Promise(r => setTimeout(r, 4000));
         const p3 = await fetchPlaces(p2.next_page_token, null, null);
         allResults = allResults.concat(p3.results);
       }
@@ -691,13 +691,13 @@ async function runBatchSearch() {
 
       // Page 2
       if (p1.next_page_token) {
-        await new Promise(r => setTimeout(r, 2500));
+        await new Promise(r => setTimeout(r, 4000));
         const p2 = await fetchPlaces(p1.next_page_token, null, null);
         addUnique(p2.results, seen);
 
         // Page 3
         if (p2.next_page_token) {
-          await new Promise(r => setTimeout(r, 2500));
+          await new Promise(r => setTimeout(r, 4000));
           const p3 = await fetchPlaces(p2.next_page_token, null, null);
           addUnique(p3.results, seen);
         }
