@@ -1,8 +1,8 @@
 exports.handler = async function(event) {
-  const { query } = event.queryStringParameters || {};
+  const { query, pagetoken } = event.queryStringParameters || {};
   const key = process.env.GOOGLE_PLACES_KEY;
 
-  if (!query) {
+  if (!query && !pagetoken) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Missing query' }) };
   }
   if (!key) {
@@ -10,7 +10,16 @@ exports.handler = async function(event) {
   }
 
   try {
-    const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+    // Step 1: Text search (or next page if pagetoken provided)
+    let searchUrl;
+    if (pagetoken) {
+      // Must wait ~2s before using a page token or Google returns INVALID_REQUEST
+      await new Promise(r => setTimeout(r, 2000));
+      searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${key}`;
+    } else {
+      searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+    }
+
     const searchResp = await fetch(searchUrl);
     const searchData = await searchResp.json();
 
@@ -22,10 +31,11 @@ exports.handler = async function(event) {
       };
     }
 
+    // Step 2: Fetch Place Details for each result to get phone, website etc.
     const results = await Promise.all(
-      (searchData.results || []).slice(0, 20).map(async (place) => {
+      (searchData.results || []).map(async (place) => {
         try {
-          const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,international_phone_number,rating,user_ratings_total,website,url,opening_hours,place_id&key=${key}`;
+          const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,international_phone_number,rating,user_ratings_total,website,url,place_id&key=${key}`;
           const detailResp = await fetch(detailUrl);
           const detailData = await detailResp.json();
           const d = detailData.result || {};
@@ -49,7 +59,11 @@ exports.handler = async function(event) {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ status: 'OK', results }),
+      body: JSON.stringify({
+        status: 'OK',
+        results,
+        next_page_token: searchData.next_page_token || null,
+      }),
     };
 
   } catch (e) {
