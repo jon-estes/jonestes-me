@@ -25,7 +25,7 @@ exports.handler = async function(event) {
       if (data.status !== 'INVALID_REQUEST') break;
       if (attempt < maxAttempts) {
         console.log(`INVALID_REQUEST on attempt ${attempt}, retrying in 3s...`);
-        await new Promise(r => setTimeout(r, 3000));
+        await new Promise(r => setTimeout(r, 5000));
       }
     }
 
