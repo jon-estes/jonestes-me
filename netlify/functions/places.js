@@ -14,7 +14,7 @@ exports.handler = async function(event) {
 
     // Use Places API (New) - Text Search endpoint
     // This returns nextPageToken that works reliably with the new API
-    const searchBody = { textQuery: query };
+    const searchBody = { textQuery: query, pageSize: 20 };
 
     const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri';
 
