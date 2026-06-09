@@ -10,14 +10,24 @@ exports.handler = async function(event) {
   }
 
   try {
-    // Build the search URL — either a fresh text search or a page continuation
     const searchUrl = pagetoken
       ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${key}`
       : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
 
-    const resp = await fetch(searchUrl);
-    const data = await resp.json();
-    console.log('Search status:', data.status, '| results:', data.results?.length, '| next token:', !!data.next_page_token);
+    // For pagetoken calls, retry up to 4 times if Google returns INVALID_REQUEST
+    // (token activation is async on Google's side and can take up to ~10s)
+    let data;
+    const maxAttempts = pagetoken ? 4 : 1;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      const resp = await fetch(searchUrl);
+      data = await resp.json();
+      console.log(`Attempt ${attempt} status:`, data.status, '| results:', data.results?.length, '| next token:', !!data.next_page_token);
+      if (data.status !== 'INVALID_REQUEST') break;
+      if (attempt < maxAttempts) {
+        console.log(`INVALID_REQUEST on attempt ${attempt}, retrying in 3s...`);
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
 
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
       return {
