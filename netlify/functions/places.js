@@ -31,26 +31,42 @@ exports.handler = async function(event) {
 
     // Page 2
     if (data1.next_page_token) {
-      await new Promise(r => setTimeout(r, 3000));
+      await new Promise(r => setTimeout(r, 5000));
       const url2 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(data1.next_page_token)}&key=${key}`;
       const resp2 = await fetch(url2);
       const data2 = await resp2.json();
       console.log('Page 2 status:', data2.status, '| results:', data2.results?.length, '| next token:', !!data2.next_page_token);
 
-      if (data2.status === 'OK') {
+      // If still invalid, wait longer and retry once more
+      if (data2.status === 'INVALID_REQUEST') {
+        console.log('Page 2 still invalid, waiting 5 more seconds...');
+        await new Promise(r => setTimeout(r, 5000));
+        const resp2b = await fetch(url2);
+        const data2b = await resp2b.json();
+        console.log('Page 2 retry status:', data2b.status, '| results:', data2b.results?.length);
+        if (data2b.status === 'OK') {
+          allPlaces = allPlaces.concat(data2b.results || []);
+          // Page 3
+          if (data2b.next_page_token) {
+            await new Promise(r => setTimeout(r, 5000));
+            const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(data2b.next_page_token)}&key=${key}`;
+            const resp3 = await fetch(url3);
+            const data3 = await resp3.json();
+            console.log('Page 3 status:', data3.status, '| results:', data3.results?.length);
+            if (data3.status === 'OK') allPlaces = allPlaces.concat(data3.results || []);
+          }
+        }
+      } else if (data2.status === 'OK') {
         allPlaces = allPlaces.concat(data2.results || []);
 
         // Page 3
         if (data2.next_page_token) {
-          await new Promise(r => setTimeout(r, 3000));
+          await new Promise(r => setTimeout(r, 5000));
           const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(data2.next_page_token)}&key=${key}`;
           const resp3 = await fetch(url3);
           const data3 = await resp3.json();
           console.log('Page 3 status:', data3.status, '| results:', data3.results?.length);
-
-          if (data3.status === 'OK') {
-            allPlaces = allPlaces.concat(data3.results || []);
-          }
+          if (data3.status === 'OK') allPlaces = allPlaces.concat(data3.results || []);
         }
       }
     }
