@@ -69,19 +69,18 @@ exports.handler = async function(event) {
   };
 
   try {
-    // Run synonym queries sequentially to avoid rate limits
+    // Run synonym queries in parallel for speed
+    const resultsPerQuery = await Promise.all(queries.map(q => fetchAllPages(q)));
+
     const seen = new Set();
     const allPlaces = [];
-
-    for (const q of queries) {
-      const places = await fetchAllPages(q);
+    for (const places of resultsPerQuery) {
       for (const p of places) {
         if (p.id && !seen.has(p.id)) {
           seen.add(p.id);
           allPlaces.push(p);
         }
       }
-      console.log(`After "${q}": ${allPlaces.length} unique total`);
     }
 
     console.log('Final unique places:', allPlaces.length);
