@@ -485,6 +485,26 @@
     </button>
   </div>
 
+  <!-- Batch search -->
+  <div class="card" style="margin-top:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div>
+        <div class="card-label" style="margin-bottom:2px;">⚡ Batch Search</div>
+        <div style="font-size:12px;color:var(--muted);">Search multiple cities at once — pulls up to 60 results per city</div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="batch-mode" onchange="toggleBatchMode()"> Enable</label>
+    </div>
+    <div id="batch-area" style="display:none;margin-top:12px;">
+      <div class="form-group" style="margin-bottom:10px;">
+        <label style="font-size:12px;color:var(--muted);">Cities / neighborhoods (one per line)</label>
+        <textarea id="batch-cities" style="font-size:13px;padding:8px 10px;min-height:110px;resize:vertical;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);" placeholder="Sacramento, CA&#10;Roseville, CA&#10;Elk Grove, CA&#10;Folsom, CA&#10;Rancho Cordova, CA&#10;Lincoln, CA&#10;Natomas Sacramento CA"></textarea>
+      </div>
+      <button class="btn btn-primary" id="batch-btn" onclick="runBatchSearch()">
+        ⚡ Batch Search All Cities
+      </button>
+    </div>
+  </div>
+
   <!-- Filters (hidden until results) -->
   <div id="filter-row" class="filter-row" style="display:none;">
     <span style="font-size:13px;color:var(--muted);">Filter:</span>
@@ -505,6 +525,10 @@
       <div class="big">🎯</div>
       Enter a business type and city, then hit Find leads
     </div>
+  </div>
+
+  <div id="load-more-bar" style="display:none;justify-content:center;padding:16px 0;">
+    <button class="btn" id="load-more-btn" onclick="loadMore()">⬇ Load 20 More Results</button>
   </div>
 
   <!-- Export (hidden until results) -->
@@ -530,6 +554,7 @@ const DEMO = [
 let allResults = [];
 let emails = {};
 let sentEmails = new Set();
+let nextPageToken = null;
 
 // Key is handled server-side via Netlify env var — no need to enter it
 document.getElementById('apikey').value = '';
@@ -545,14 +570,38 @@ async function runSearch() {
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Searching...';
-  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching Google Maps for ' + btype + ' in ' + city + '...</div>';
+  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching all results for ' + btype + ' in ' + city + '...</div>';
   document.getElementById('stats-row').style.display = 'none';
   document.getElementById('export-bar').style.display = 'none';
   document.getElementById('filter-row').style.display = 'none';
+  document.getElementById('load-more-bar').style.display = 'none';
   emails = {};
+  allResults = [];
+  nextPageToken = null;
 
   try {
-    allResults = await fetchPlaces(btype, city);
+    // Page 1
+    document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 1 of 3...</div>';
+    const page1 = await fetchPlaces(null, btype, city);
+    allResults = page1.results;
+    nextPageToken = page1.next_page_token || null;
+
+    // Page 2
+    if (nextPageToken) {
+      document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 2 of 3... (' + allResults.length + ' found so far)</div>';
+      const page2 = await fetchPlaces(nextPageToken, null, null);
+      allResults = allResults.concat(page2.results);
+      nextPageToken = page2.next_page_token || null;
+    }
+
+    // Page 3
+    if (nextPageToken) {
+      document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Loading page 3 of 3... (' + allResults.length + ' found so far)</div>';
+      const page3 = await fetchPlaces(nextPageToken, null, null);
+      allResults = allResults.concat(page3.results);
+      nextPageToken = null;
+    }
+
   } catch(e) {
     document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
     btn.disabled = false;
@@ -562,31 +611,136 @@ async function runSearch() {
 
   showStats();
   document.getElementById('filter-row').style.display = 'flex';
+  document.getElementById('load-more-bar').style.display = 'none';
   renderResults();
   btn.disabled = false;
   btn.innerHTML = '🔍 Find leads';
 }
 
-async function fetchPlaces(btype, city) {
-  const query = btype + ' in ' + city;
-  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
+async function fetchPlaces(pagetoken, btype, city) {
+  let url;
+  if (pagetoken) {
+    url = `/.netlify/functions/places?pagetoken=${encodeURIComponent(pagetoken)}`;
+  } else {
+    url = `/.netlify/functions/places?query=${encodeURIComponent(btype + ' in ' + city)}`;
+  }
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
   if (data.status === 'REQUEST_DENIED') throw new Error('API key denied — check Netlify env var GOOGLE_PLACES_KEY');
-  if (data.status === 'ZERO_RESULTS') return [];
+  if (data.status === 'ZERO_RESULTS') return { results: [], next_page_token: null };
   if (data.status !== 'OK') throw new Error(data.status + (data.error_message ? ': ' + data.error_message : ''));
-  return data.results.slice(0, 20).map(p => ({
-    name: p.name,
-    rating: p.rating || null,
-    reviews: p.user_ratings_total || 0,
-    address: p.formatted_address || p.vicinity || '',
-    phone: p.phone || null,
-    phone_intl: p.phone_intl || null,
-    website: p.website || null,
-    google_maps_url: p.google_maps_url || null,
-    hasWebsite: !!(p.website),
-  }));
+  return {
+    results: data.results.map(p => ({
+      name: p.name,
+      rating: p.rating || null,
+      reviews: p.user_ratings_total || 0,
+      address: p.formatted_address || p.vicinity || '',
+      phone: p.phone || null,
+      phone_intl: p.phone_intl || null,
+      website: p.website || null,
+      google_maps_url: p.google_maps_url || null,
+      hasWebsite: !!(p.website),
+    })),
+    next_page_token: data.next_page_token || null,
+  };
+}
+
+function toggleBatchMode() {
+  const enabled = document.getElementById('batch-mode').checked;
+  document.getElementById('batch-area').style.display = enabled ? 'block' : 'none';
+}
+
+async function runBatchSearch() {
+  const btype = document.getElementById('btype').value.trim() || 'Roofing contractor';
+  const citiesRaw = document.getElementById('batch-cities').value.trim();
+  const cities = citiesRaw.split('\n').map(c => c.trim()).filter(c => c.length > 0);
+  if (!cities.length) { alert('Enter at least one city.'); return; }
+
+  const btn = document.getElementById('batch-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Searching...';
+  document.getElementById('results-area').innerHTML = '<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Starting batch search across ' + cities.length + ' cities...</div>';
+  document.getElementById('stats-row').style.display = 'none';
+  document.getElementById('export-bar').style.display = 'none';
+  document.getElementById('filter-row').style.display = 'none';
+  document.getElementById('load-more-bar').style.display = 'none';
+  emails = {};
+  allResults = [];
+
+  const seen = new Set();
+
+  for (let ci = 0; ci < cities.length; ci++) {
+    const city = cities[ci];
+    document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching <strong>${city}</strong> (${ci+1} of ${cities.length})...<br><br>${allResults.length} results collected so far</div>`;
+
+    try {
+      const page1 = await fetchPlaces(null, btype, city);
+      let token = page1.next_page_token || null;
+      addUnique(page1.results, seen);
+      if (token) {
+        const page2 = await fetchPlaces(token, null, null);
+        token = page2.next_page_token || null;
+        addUnique(page2.results, seen);
+      }
+      if (token) {
+        const page3 = await fetchPlaces(token, null, null);
+        addUnique(page3.results, seen);
+      }
+    } catch(e) {
+      console.warn('Error searching ' + city + ':', e.message);
+    }
+
+    if (ci < cities.length - 1) await new Promise(r => setTimeout(r, 500));
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '⚡ Batch Search All Cities';
+  showStats();
+  document.getElementById('filter-row').style.display = 'flex';
+  document.getElementById('load-more-bar').style.display = 'none';
+  renderResults();
+}
+
+function addUnique(results, seen) {
+  for (const r of results) {
+    const key = r.name + '|' + r.address;
+    if (!seen.has(key)) {
+      seen.add(key);
+      allResults.push(r);
+    }
+  }
+}
+
+function updateLoadMore() {
+  const bar = document.getElementById('load-more-bar');
+  if (nextPageToken) {
+    bar.style.display = 'flex';
+    document.getElementById('load-more-btn').disabled = false;
+    document.getElementById('load-more-btn').innerHTML = '⬇ Load 20 More Results';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+async function loadMore() {
+  if (!nextPageToken) return;
+  const btn = document.getElementById('load-more-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Loading...';
+
+  try {
+    const data = await fetchPlaces(nextPageToken, null, null);
+    allResults = allResults.concat(data.results);
+    nextPageToken = data.next_page_token || null;
+    showStats();
+    renderResults();
+    updateLoadMore();
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '⬇ Load 20 More Results';
+    alert('Error loading more: ' + e.message);
+  }
 }
 
 function showStats() {
