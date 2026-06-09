@@ -1,43 +1,77 @@
 exports.handler = async function(event) {
-  const { query, pagetoken } = event.queryStringParameters || {};
+  const { query } = event.queryStringParameters || {};
   const key = process.env.GOOGLE_PLACES_KEY;
 
   if (!key) {
     return { statusCode: 500, body: JSON.stringify({ error: 'GOOGLE_PLACES_KEY env var not set' }) };
   }
-  if (!query && !pagetoken) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query or pagetoken' }) };
+  if (!query) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query' }) };
   }
 
   try {
-    // Log the raw token for debugging
-    if (pagetoken) {
-      console.log('Raw pagetoken length:', pagetoken.length);
-      console.log('Raw pagetoken:', pagetoken);
-    }
+    let allPlaces = [];
 
-    const searchUrl = pagetoken
-      ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${pagetoken}&key=${key}`
-      : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+    // Page 1
+    const url1 = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
+    const resp1 = await fetch(url1);
+    const data1 = await resp1.json();
+    console.log('Page 1:', data1.status, '| results:', data1.results?.length, '| token:', !!data1.next_page_token);
 
-    console.log('Search URL (no key):', searchUrl.replace(key, 'REDACTED'));
-
-    const resp = await fetch(searchUrl);
-    const data = await resp.json();
-    console.log('Status:', data.status, '| results:', data.results?.length, '| error:', data.error_message);
-
-    if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
+    if (data1.status !== 'OK' && data1.status !== 'ZERO_RESULTS') {
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ status: data.status, error_message: data.error_message }),
+        body: JSON.stringify({ status: data1.status, error_message: data1.error_message }),
       };
     }
 
-    const places = data.results || [];
+    allPlaces = allPlaces.concat(data1.results || []);
 
+    // Page 2 — wait inside the SAME function instance (same IP)
+    if (data1.next_page_token) {
+      await new Promise(r => setTimeout(r, 2000));
+      const url2 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${data1.next_page_token}&key=${key}`;
+
+      // Retry up to 5 times within this invocation
+      let data2;
+      for (let i = 0; i < 5; i++) {
+        const r2 = await fetch(url2);
+        data2 = await r2.json();
+        console.log(`Page 2 attempt ${i+1}:`, data2.status, '| results:', data2.results?.length);
+        if (data2.status === 'OK') break;
+        await new Promise(r => setTimeout(r, 2000));
+      }
+
+      if (data2?.status === 'OK') {
+        allPlaces = allPlaces.concat(data2.results || []);
+
+        // Page 3 — same approach
+        if (data2.next_page_token) {
+          await new Promise(r => setTimeout(r, 2000));
+          const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${data2.next_page_token}&key=${key}`;
+
+          let data3;
+          for (let i = 0; i < 5; i++) {
+            const r3 = await fetch(url3);
+            data3 = await r3.json();
+            console.log(`Page 3 attempt ${i+1}:`, data3.status, '| results:', data3.results?.length);
+            if (data3.status === 'OK') break;
+            await new Promise(r => setTimeout(r, 2000));
+          }
+
+          if (data3?.status === 'OK') {
+            allPlaces = allPlaces.concat(data3.results || []);
+          }
+        }
+      }
+    }
+
+    console.log('Total places:', allPlaces.length);
+
+    // Fetch place details for each result in parallel
     const results = await Promise.all(
-      places.map(async (place) => {
+      allPlaces.map(async (place) => {
         try {
           const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,international_phone_number,rating,user_ratings_total,website,url,place_id&key=${key}`;
           const detailResp = await fetch(detailUrl);
@@ -60,16 +94,12 @@ exports.handler = async function(event) {
       })
     );
 
-    console.log('Returning', results.length, 'results | next_page_token:', !!data.next_page_token);
+    console.log('Returning', results.length, 'total results');
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({
-        status: 'OK',
-        results,
-        next_page_token: data.next_page_token || null,
-      }),
+      body: JSON.stringify({ status: 'OK', results }),
     };
 
   } catch (e) {
