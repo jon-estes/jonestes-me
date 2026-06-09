@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -388,6 +389,8 @@
 
     .toggle input { width: auto; accent-color: var(--accent); }
     .toggle:hover { color: var(--text); }
+    .toggle.active { color: var(--green); }
+    .toggle.active input { accent-color: var(--green); }
 
     /* ── Export bar ── */
     .export-bar {
@@ -585,31 +588,11 @@ async function runSearch() {
   allResults = [];
   nextPageToken = null;
 
-  const updateMsg = (page, count) => {
-    document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching page ${page} of results for <strong>${btype}</strong> in <strong>${city}</strong>...<br><br><span style="font-size:12px;color:var(--muted);">${count} results so far — up to 60 total</span></div>`;
-  };
+  document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching up to 60 results for <strong>${btype}</strong> in <strong>${city}</strong>...<br><br><span style="font-size:12px;color:var(--muted);">This may take 15–20 seconds while all pages load</span></div>`;
 
   try {
-    // Page 1
-    updateMsg(1, 0);
-    const p1 = await fetchPlaces(null, btype, city);
-    allResults = allResults.concat(p1.results);
-
-    // Page 2
-    if (p1.next_page_token) {
-      updateMsg(2, allResults.length);
-      await new Promise(r => setTimeout(r, 2000));
-      const p2 = await fetchPlaces(p1.next_page_token, null, null);
-      allResults = allResults.concat(p2.results);
-
-      // Page 3
-      if (p2.next_page_token) {
-        updateMsg(3, allResults.length);
-        await new Promise(r => setTimeout(r, 2000));
-        const p3 = await fetchPlaces(p2.next_page_token, null, null);
-        allResults = allResults.concat(p3.results);
-      }
-    }
+    const data = await fetchPlaces(btype, city);
+    allResults = data.results;
   } catch(e) {
     document.getElementById('results-area').innerHTML = '<div class="empty-state" style="color:var(--red);">⚠ ' + e.message + '</div>';
     btn.disabled = false;
@@ -625,20 +608,14 @@ async function runSearch() {
   btn.innerHTML = '🔍 Find leads';
 }
 
-async function fetchPlaces(pagetoken, btype, city) {
-  // Fetch one page at a time; server returns next_page_token for chaining
-  let url;
-  if (pagetoken) {
-    url = `/.netlify/functions/places?pagetoken=${encodeURIComponent(pagetoken)}`;
-  } else {
-    const query = btype + ' in ' + city;
-    url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
-  }
+async function fetchPlaces(btype, city) {
+  const query = btype + ' in ' + city;
+  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
   if (data.status === 'REQUEST_DENIED') throw new Error('API key denied — check Netlify env var GOOGLE_PLACES_KEY');
-  if (data.status === 'ZERO_RESULTS') return { results: [], next_page_token: null };
+  if (data.status === 'ZERO_RESULTS') return { results: [] };
   if (data.status !== 'OK') throw new Error(data.status + (data.error_message ? ': ' + data.error_message : ''));
   return {
     results: data.results.map(p => ({
@@ -652,13 +629,15 @@ async function fetchPlaces(pagetoken, btype, city) {
       google_maps_url: p.google_maps_url || null,
       hasWebsite: !!(p.website),
     })),
-    next_page_token: data.next_page_token || null,
   };
 }
 
 function toggleBatchMode() {
   const enabled = document.getElementById('batch-mode').checked;
   document.getElementById('batch-area').style.display = enabled ? 'block' : 'none';
+  const label = document.querySelector('label[for="batch-mode"], label:has(#batch-mode)') 
+    || document.getElementById('batch-mode').closest('label');
+  if (label) label.classList.toggle('active', enabled);
 }
 
 async function runBatchSearch() {
@@ -685,24 +664,8 @@ async function runBatchSearch() {
     document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Searching <strong>${city}</strong> (${ci+1} of ${cities.length})...<br><br>${allResults.length} results collected so far</div>`;
 
     try {
-      // Page 1
-      const p1 = await fetchPlaces(null, btype, city);
-      addUnique(p1.results, seen);
-
-      // Page 2
-      if (p1.next_page_token) {
-        await new Promise(r => setTimeout(r, 2000));
-        const p2 = await fetchPlaces(p1.next_page_token, null, null);
-        addUnique(p2.results, seen);
-
-        // Page 3
-        if (p2.next_page_token) {
-          await new Promise(r => setTimeout(r, 2000));
-          const p3 = await fetchPlaces(p2.next_page_token, null, null);
-          addUnique(p3.results, seen);
-        }
-      }
-
+      const data = await fetchPlaces(btype, city);
+      addUnique(data.results, seen);
       console.log(city + ': total now', allResults.length);
     } catch(e) {
       console.warn('Error searching ' + city + ':', e.message);
