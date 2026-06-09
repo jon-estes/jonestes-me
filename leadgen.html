@@ -493,7 +493,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <div>
         <div class="card-label" style="margin-bottom:2px;">⚡ Batch Search</div>
-        <div style="font-size:12px;color:var(--muted);">Search multiple cities at once — pulls up to 60 results per city</div>
+        <div style="font-size:12px;color:var(--muted);">Search multiple cities at once — pulls up to 180 results per city</div>
       </div>
       <label class="toggle"><input type="checkbox" id="batch-mode" onchange="toggleBatchMode()"> Enable</label>
     </div>
@@ -588,7 +588,7 @@ async function runSearch() {
   allResults = [];
   nextPageToken = null;
 
-  document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching up to 60 results for <strong>${btype}</strong> in <strong>${city}</strong>...<br><br><span style="font-size:12px;color:var(--muted);">This may take 15–20 seconds while all pages load</span></div>`;
+  document.getElementById('results-area').innerHTML = `<div class="empty-state"><span class="spinner" style="width:20px;height:20px;"></span><br><br>Fetching up to 180 results for <strong>${btype}</strong> in <strong>${city}</strong>...<br><br><span style="font-size:12px;color:var(--muted);">Searching multiple query variations — may take 20–30s</span></div>`;
 
   try {
     const data = await fetchPlaces(btype, city);
@@ -609,8 +609,7 @@ async function runSearch() {
 }
 
 async function fetchPlaces(btype, city) {
-  const query = btype + ' in ' + city;
-  const url = `/.netlify/functions/places?query=${encodeURIComponent(query)}`;
+  const url = `/.netlify/functions/places?btype=${encodeURIComponent(btype)}&city=${encodeURIComponent(city)}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error('Function error: HTTP ' + resp.status);
   const data = await resp.json();
