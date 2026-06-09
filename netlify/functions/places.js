@@ -12,79 +12,69 @@ exports.handler = async function(event) {
   try {
     let allPlaces = [];
 
-    // Page 1
-    const url1 = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
-    const resp1 = await fetch(url1);
-    const data1 = await resp1.json();
-    console.log('Page 1:', data1.status, '| results:', data1.results?.length, '| token:', !!data1.next_page_token);
+    // Use Places API (New) - Text Search endpoint
+    // This returns nextPageToken that works reliably with the new API
+    const searchBody = { textQuery: query };
 
-    if (data1.status !== 'OK' && data1.status !== 'ZERO_RESULTS') {
+    const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri';
+
+    const fetchPage = async (body) => {
+      const resp = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': key,
+          'X-Goog-FieldMask': fields,
+        },
+        body: JSON.stringify(body),
+      });
+      return await resp.json();
+    };
+
+    // Page 1
+    const data1 = await fetchPage(searchBody);
+    console.log('Page 1: places:', data1.places?.length, '| token:', !!data1.nextPageToken, '| error:', data1.error?.message);
+
+    if (data1.error) {
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ status: data1.status, error_message: data1.error_message }),
+        body: JSON.stringify({ status: 'ERROR', error_message: data1.error.message }),
       };
     }
 
-    allPlaces = allPlaces.concat(data1.results || []);
+    allPlaces = allPlaces.concat(data1.places || []);
 
-    if (data1.next_page_token) {
-      const token2 = data1.next_page_token;
-      console.log('Token2 length:', token2.length, '| first20:', token2.substring(0, 20), '| last20:', token2.substring(token2.length - 20));
-
+    // Page 2
+    if (data1.nextPageToken) {
       await new Promise(r => setTimeout(r, 2000));
+      const data2 = await fetchPage({ ...searchBody, pageToken: data1.nextPageToken });
+      console.log('Page 2: places:', data2.places?.length, '| token:', !!data2.nextPageToken, '| error:', data2.error?.message);
+      allPlaces = allPlaces.concat(data2.places || []);
 
-      for (let i = 0; i < 5; i++) {
-        // Re-encode the token fresh each attempt to rule out any URL issues
-        const url2 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(token2)}&key=${key}`;
-        console.log(`Page 2 attempt ${i+1} URL snippet:`, url2.substring(0, 120));
-        const r2 = await fetch(url2);
-        const data2 = await r2.json();
-        console.log(`Page 2 attempt ${i+1}:`, data2.status, '| error:', data2.error_message, '| results:', data2.results?.length);
-
-        if (data2.status === 'OK') {
-          allPlaces = allPlaces.concat(data2.results || []);
-
-          if (data2.next_page_token) {
-            await new Promise(r => setTimeout(r, 2000));
-            const url3 = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(data2.next_page_token)}&key=${key}`;
-            const r3 = await fetch(url3);
-            const data3 = await r3.json();
-            console.log('Page 3:', data3.status, '| results:', data3.results?.length);
-            if (data3.status === 'OK') allPlaces = allPlaces.concat(data3.results || []);
-          }
-          break;
-        }
-
-        if (i < 4) await new Promise(r => setTimeout(r, 2000));
+      // Page 3
+      if (data2.nextPageToken) {
+        await new Promise(r => setTimeout(r, 2000));
+        const data3 = await fetchPage({ ...searchBody, pageToken: data2.nextPageToken });
+        console.log('Page 3: places:', data3.places?.length, '| error:', data3.error?.message);
+        allPlaces = allPlaces.concat(data3.places || []);
       }
     }
 
     console.log('Total places:', allPlaces.length);
 
-    const results = await Promise.all(
-      allPlaces.map(async (place) => {
-        try {
-          const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,formatted_phone_number,international_phone_number,rating,user_ratings_total,website,url,place_id&key=${key}`;
-          const detailResp = await fetch(detailUrl);
-          const detailData = await detailResp.json();
-          const d = detailData.result || {};
-          return {
-            name: d.name || place.name,
-            formatted_address: d.formatted_address || place.formatted_address,
-            phone: d.formatted_phone_number || null,
-            phone_intl: d.international_phone_number || null,
-            rating: d.rating || place.rating,
-            user_ratings_total: d.user_ratings_total || place.user_ratings_total,
-            website: d.website || null,
-            google_maps_url: d.url || `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
-            place_id: place.place_id,
-          };
-        } catch (e) {
-          return { ...place, website: null, phone: null, google_maps_url: null };
-        }
-      })
-    );
+    // Map new API response shape to existing frontend shape
+    const results = allPlaces.map(p => ({
+      name: p.displayName?.text || '',
+      formatted_address: p.formattedAddress || '',
+      phone: p.nationalPhoneNumber || null,
+      phone_intl: p.internationalPhoneNumber || null,
+      rating: p.rating || null,
+      user_ratings_total: p.userRatingCount || 0,
+      website: p.websiteUri || null,
+      google_maps_url: p.googleMapsUri || null,
+      place_id: p.id || null,
+    }));
 
     console.log('Returning', results.length, 'total results');
 
