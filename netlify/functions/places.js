@@ -11,7 +11,7 @@ exports.handler = async function(event) {
 
   try {
     const searchUrl = pagetoken
-      ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${key}`
+      ? `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${pagetoken}&key=${key}`
       : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${key}`;
 
     // For pagetoken calls, retry up to 4 times if Google returns INVALID_REQUEST
