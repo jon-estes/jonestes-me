@@ -1,69 +1,91 @@
 exports.handler = async function(event) {
-  const { query } = event.queryStringParameters || {};
+  const { query, btype, city } = event.queryStringParameters || {};
   const key = process.env.GOOGLE_PLACES_KEY;
 
   if (!key) {
     return { statusCode: 500, body: JSON.stringify({ error: 'GOOGLE_PLACES_KEY env var not set' }) };
   }
-  if (!query) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query' }) };
+
+  // Support both ?query= (legacy) and ?btype=&city= (new multi-synonym mode)
+  let baseType, baseCity;
+  if (btype && city) {
+    baseType = btype;
+    baseCity = city;
+  } else if (query) {
+    baseType = query;
+    baseCity = '';
+  } else {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing query or btype/city' }) };
   }
 
-  try {
-    let allPlaces = [];
+  // Generate synonym queries to maximize unique results (60 per query = up to 180+ total)
+  const synonyms = generateSynonyms(baseType);
+  const queries = synonyms.map(s => baseCity ? `${s} in ${baseCity}` : s);
+  console.log('Running queries:', queries);
 
-    // Use Places API (New) - Text Search endpoint
-    // This returns nextPageToken that works reliably with the new API
-    const searchBody = { textQuery: query, pageSize: 20 };
+  const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri,nextPageToken';
 
-    const fields = 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri,nextPageToken';
+  const fetchPage = async (body) => {
+    const resp = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': key,
+        'X-Goog-FieldMask': fields,
+      },
+      body: JSON.stringify(body),
+    });
+    return await resp.json();
+  };
 
-    const fetchPage = async (body) => {
-      const resp = await fetch('https://places.googleapis.com/v1/places:searchText', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Goog-Api-Key': key,
-          'X-Goog-FieldMask': fields,
-        },
-        body: JSON.stringify(body),
-      });
-      return await resp.json();
-    };
+  // Fetch all 3 pages for a single query text
+  const fetchAllPages = async (textQuery) => {
+    const places = [];
+    const searchBody = { textQuery, pageSize: 20 };
 
-    // Page 1
-    const data1 = await fetchPage(searchBody);
-    console.log('Page 1: places:', data1.places?.length, '| token:', !!data1.nextPageToken, '| error:', data1.error?.message);
-
-    if (data1.error) {
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ status: 'ERROR', error_message: data1.error.message }),
-      };
+    const d1 = await fetchPage(searchBody);
+    if (d1.error || (!d1.places && !d1.nextPageToken)) {
+      console.log(`Query "${textQuery}" error:`, d1.error?.message || 'no results');
+      return places;
     }
+    places.push(...(d1.places || []));
+    console.log(`"${textQuery}" p1: ${d1.places?.length || 0} | token: ${!!d1.nextPageToken}`);
 
-    allPlaces = allPlaces.concat(data1.places || []);
-
-    // Page 2
-    if (data1.nextPageToken) {
+    if (d1.nextPageToken) {
       await new Promise(r => setTimeout(r, 2000));
-      const data2 = await fetchPage({ ...searchBody, pageToken: data1.nextPageToken });
-      console.log('Page 2: places:', data2.places?.length, '| token:', !!data2.nextPageToken, '| error:', data2.error?.message);
-      allPlaces = allPlaces.concat(data2.places || []);
+      const d2 = await fetchPage({ ...searchBody, pageToken: d1.nextPageToken });
+      places.push(...(d2.places || []));
+      console.log(`"${textQuery}" p2: ${d2.places?.length || 0} | token: ${!!d2.nextPageToken}`);
 
-      // Page 3
-      if (data2.nextPageToken) {
+      if (d2.nextPageToken) {
         await new Promise(r => setTimeout(r, 2000));
-        const data3 = await fetchPage({ ...searchBody, pageToken: data2.nextPageToken });
-        console.log('Page 3: places:', data3.places?.length, '| error:', data3.error?.message);
-        allPlaces = allPlaces.concat(data3.places || []);
+        const d3 = await fetchPage({ ...searchBody, pageToken: d2.nextPageToken });
+        places.push(...(d3.places || []));
+        console.log(`"${textQuery}" p3: ${d3.places?.length || 0}`);
       }
     }
 
-    console.log('Total places:', allPlaces.length);
+    return places;
+  };
 
-    // Map new API response shape to existing frontend shape
+  try {
+    // Run synonym queries sequentially to avoid rate limits
+    const seen = new Set();
+    const allPlaces = [];
+
+    for (const q of queries) {
+      const places = await fetchAllPages(q);
+      for (const p of places) {
+        if (p.id && !seen.has(p.id)) {
+          seen.add(p.id);
+          allPlaces.push(p);
+        }
+      }
+      console.log(`After "${q}": ${allPlaces.length} unique total`);
+    }
+
+    console.log('Final unique places:', allPlaces.length);
+
     const results = allPlaces.map(p => ({
       name: p.displayName?.text || '',
       formatted_address: p.formattedAddress || '',
@@ -76,8 +98,6 @@ exports.handler = async function(event) {
       place_id: p.id || null,
     }));
 
-    console.log('Returning', results.length, 'total results');
-
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -89,3 +109,65 @@ exports.handler = async function(event) {
     return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
   }
 };
+
+function generateSynonyms(btype) {
+  const t = btype.toLowerCase().trim();
+
+  // Common synonym maps
+  const synonymMap = {
+    'roofing contractor': ['roofing contractor', 'roofing company', 'roofer'],
+    'roofer': ['roofer', 'roofing contractor', 'roofing company'],
+    'roofing company': ['roofing company', 'roofing contractor', 'roofer'],
+    'plumber': ['plumber', 'plumbing contractor', 'plumbing company'],
+    'plumbing': ['plumbing contractor', 'plumber', 'plumbing company'],
+    'electrician': ['electrician', 'electrical contractor', 'electrical company'],
+    'hvac': ['hvac contractor', 'hvac company', 'heating and cooling'],
+    'landscaper': ['landscaper', 'landscaping company', 'lawn care service'],
+    'landscaping': ['landscaping company', 'landscaper', 'lawn care service'],
+    'painter': ['painter', 'painting contractor', 'painting company'],
+    'painting contractor': ['painting contractor', 'painter', 'painting company'],
+    'general contractor': ['general contractor', 'home remodeling', 'construction company'],
+    'dentist': ['dentist', 'dental office', 'dental clinic'],
+    'dental': ['dental office', 'dentist', 'dental clinic'],
+    'attorney': ['attorney', 'lawyer', 'law office'],
+    'lawyer': ['lawyer', 'attorney', 'law firm'],
+    'restaurant': ['restaurant', 'eatery', 'dining'],
+    'auto repair': ['auto repair', 'car repair', 'auto mechanic'],
+    'mechanic': ['mechanic', 'auto repair shop', 'car repair'],
+    'cleaning service': ['cleaning service', 'house cleaning', 'maid service'],
+    'pest control': ['pest control', 'exterminator', 'pest exterminator'],
+    'moving company': ['moving company', 'movers', 'moving service'],
+    'movers': ['movers', 'moving company', 'moving service'],
+    'insurance agent': ['insurance agent', 'insurance agency', 'insurance broker'],
+    'real estate agent': ['real estate agent', 'realtor', 'real estate broker'],
+    'realtor': ['realtor', 'real estate agent', 'real estate agency'],
+    'nail salon': ['nail salon', 'nail studio', 'manicure salon'],
+    'hair salon': ['hair salon', 'hair stylist', 'beauty salon'],
+    'gym': ['gym', 'fitness center', 'health club'],
+    'chiropractor': ['chiropractor', 'chiropractic clinic', 'chiropractic office'],
+    'accountant': ['accountant', 'cpa', 'accounting firm'],
+    'cpa': ['cpa', 'accountant', 'accounting services'],
+    'solar': ['solar company', 'solar installer', 'solar panel installation'],
+    'fence': ['fence company', 'fencing contractor', 'fence installer'],
+    'garage door': ['garage door company', 'garage door repair', 'garage door installer'],
+    'window': ['window company', 'window installer', 'window replacement'],
+    'concrete': ['concrete contractor', 'concrete company', 'concrete services'],
+    'pool': ['pool company', 'swimming pool contractor', 'pool builder'],
+  };
+
+  // Check for a match
+  for (const [key, synonyms] of Object.entries(synonymMap)) {
+    if (t === key || t.includes(key)) {
+      return synonyms;
+    }
+  }
+
+  // No match — generate generic variations
+  const words = btype.trim().split(/\s+/);
+  const last = words[words.length - 1];
+  return [
+    btype,
+    `${btype} company`,
+    `${last} contractor`,
+  ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 3);
+}
