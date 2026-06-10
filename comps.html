@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comp Checker · Jon Estes</title>
+<meta name="description" content="Look up sold comps and market values across eBay, Facebook Marketplace, Google, WorthPoint, and more.">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --bg-card: #121216;
+    --bg-card-hover: #1a1a20;
+    --border: #26262e;
+    --text: #d8d8dc;
+    --text-dim: #8a8a94;
+    --silver: #c0c4cc;
+    --green: #6ea36e;
+    --green-bright: #8fd08f;
+    --red: #b05656;
+    --gold: #c9a14a;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  [data-theme="light"] {
+    --bg: #f4f4f2;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f0ee;
+    --border: #d8d8d4;
+    --text: #1a1a1e;
+    --text-dim: #6a6a72;
+    --silver: #4a4e56;
+    --green: #3e7a3e;
+    --green-bright: #2e6a2e;
+    --red: #a04040;
+    --gold: #9a7a30;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container { max-width: 920px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  /* Header */
+  header { margin-bottom: 2.5rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: 2.2rem; font-weight: 400; color: var(--silver); }
+  h1 .accent { color: var(--green-bright); font-style: italic; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.4rem; max-width: 56ch; }
+
+  /* Search */
+  .search-row { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; }
+  #itemInput {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #itemInput:focus { border-color: var(--green); }
+  #itemInput::placeholder { color: var(--text-dim); opacity: 0.7; }
+  .btn {
+    background: var(--green);
+    color: #0a0a0c;
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem 1.4rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--green-bright); }
+  .btn:active { transform: scale(0.97); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text); }
+  .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--green-bright);
+    outline-offset: 2px;
+  }
+
+  /* Recent chips */
+  .recent { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2rem; min-height: 1.8rem; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .chip:hover { color: var(--green-bright); border-color: var(--green); }
+
+  /* Sections */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin: 2.25rem 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .section-label .hint { letter-spacing: 0; text-transform: none; font-size: 0.68rem; opacity: 0.8; }
+
+  /* Link grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.6rem;
+  }
+  .comp-link {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem 0.95rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    position: relative;
+  }
+  .comp-link:hover { background: var(--bg-card-hover); border-color: var(--green); transform: translateY(-1px); }
+  .comp-link.disabled { opacity: 0.45; pointer-events: none; }
+  .comp-link .name { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--silver); }
+  .comp-link .desc { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem; font-family: var(--mono); }
+  .comp-link .tag {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+  }
+  .tag-sold { background: rgba(110,163,110,0.15); color: var(--green-bright); }
+  .tag-live { background: rgba(192,196,204,0.1); color: var(--text-dim); }
+  .tag-coin { background: rgba(201,161,74,0.15); color: var(--gold); }
+
+  /* Comp log */
+  .log-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.4fr auto;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .log-form input, .log-form select {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.55rem 0.7rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    outline: none;
+    min-width: 0;
+  }
+  .log-form input:focus, .log-form select:focus { border-color: var(--green); }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.78rem; }
+  th {
+    text-align: left;
+    color: var(--text-dim);
+    font-weight: 400;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td.num { color: var(--green-bright); white-space: nowrap; }
+  td.num.low { color: var(--red); }
+  td.num.high { color: var(--gold); }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0 0.3rem;
+  }
+  .del-btn:hover { color: var(--red); }
+  .empty-state {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 1.25rem 0.5rem;
+    text-align: center;
+  }
+  .log-actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+  .log-actions .btn { padding: 0.5rem 1rem; font-size: 0.72rem; }
+
+  .footnote {
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+  .footnote a { color: var(--green); }
+
+  @media (max-width: 720px) {
+    .log-form { grid-template-columns: 1fr 1fr; }
+    .log-form input[name="item"] { grid-column: 1 / -1; }
+    .log-form button { grid-column: 1 / -1; }
+    h1 { font-size: 1.7rem; }
+    .table-wrap { overflow-x: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Market Research</div>
+    <h1>Comp <span class="accent">Checker</span></h1>
+    <p class="subtitle">Type an item once, search everywhere. One-click deep links to sold comps and live listings across every major marketplace — plus a personal comp log to build your own pricing database.</p>
+  </header>
+
+  <div class="search-row">
+    <input type="text" id="itemInput" placeholder="e.g. 1964 Kennedy half dollar BU" autocomplete="off" autofocus>
+    <button class="btn" id="searchBtn">SEARCH ALL</button>
+    <button class="btn btn-ghost" id="openTopBtn" title="Opens eBay Sold, Google Shopping & FB Marketplace in new tabs">OPEN TOP 3</button>
+  </div>
+  <div class="recent" id="recentChips"></div>
+
+  <div class="section-label"><span>Sold Comps — what it actually sells for</span><span class="hint">best signal</span></div>
+  <div class="grid" id="soldGrid"></div>
+
+  <div class="section-label"><span>Live Listings — what it's listed at</span><span class="hint">asking ≠ getting</span></div>
+  <div class="grid" id="liveGrid"></div>
+
+  <div class="section-label"><span>Coin &amp; Bullion Guides</span><span class="hint">for the Whatnot inventory</span></div>
+  <div class="grid" id="coinGrid"></div>
+
+  <div class="section-label"><span>Comp Log</span><span class="hint">saved locally in your browser</span></div>
+  <div class="log-form">
+    <input type="text" name="item" id="logItem" placeholder="Item">
+    <input type="number" step="0.01" id="logLow" placeholder="Low $">
+    <input type="number" step="0.01" id="logAvg" placeholder="Avg $">
+    <input type="number" step="0.01" id="logHigh" placeholder="High $">
+    <select id="logSource">
+      <option value="eBay Sold">eBay Sold</option>
+      <option value="FB Marketplace">FB Marketplace</option>
+      <option value="WorthPoint">WorthPoint</option>
+      <option value="Mercari">Mercari</option>
+      <option value="Whatnot">Whatnot</option>
+      <option value="PCGS/NGC">PCGS/NGC</option>
+      <option value="Other">Other</option>
+    </select>
+    <button class="btn" id="logAddBtn">LOG IT</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Item</th><th>Low</th><th>Avg</th><th>High</th><th>Source</th><th></th></tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="logEmpty">No comps logged yet. Research an item above, then record what you find.</div>
+  <div class="log-actions">
+    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
+    <button class="btn btn-ghost" id="clearBtn">CLEAR LOG</button>
+  </div>
+
+  <div class="footnote">
+    Tip: on eBay sold results, sort by "Ended recently" and ignore outliers — auction lows and "best offer accepted" prices (shown with a strikethrough) skew the data. WorthPoint requires a subscription for full prices but previews are free. · <a href="/">jonestes.me</a>
+  </div>
+
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const enc = (q) => encodeURIComponent(q.trim());
+
+  // ---- Marketplace link definitions ----
+  const SOLD_LINKS = [
+    { name: 'eBay — Sold', desc: 'completed + sold, newest first', tag: 'sold',
+      url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}&LH_Sold=1&LH_Complete=1&_sop=13` },
+    { name: 'eBay — Sold (Auctions)', desc: 'auction results only', tag: 'sold',
+      url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}&LH_Sold=1&LH_Complete=1&LH_Auction=1&_sop=13` },
+    { name: 'WorthPoint', desc: 'historic sold price archive', tag: 'sold',
+      url: (q) => `https://www.worthpoint.com/search?query=${enc(q)}` },
+    { name: 'Mercari — Sold', desc: 'sold listings on Mercari', tag: 'sold',
+      url: (q) => `https://www.mercari.com/search/?keyword=${enc(q)}&status=sold_out` },
+  ];
+
+  const LIVE_LINKS = [
+    { name: 'eBay — Active', desc: 'current listings, lowest first', tag: 'live',
+      url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}&_sop=15` },
+    { name: 'FB Marketplace', desc: 'Sacramento area listings', tag: 'live',
+      url: (q) => `https://www.facebook.com/marketplace/sacramento/search?query=${enc(q)}` },
+    { name: 'Google Shopping', desc: 'retail + marketplace prices', tag: 'live',
+      url: (q) => `https://www.google.com/search?q=${enc(q)}&tbm=shop` },
+    { name: 'Google', desc: 'general web search + "price"', tag: 'live',
+      url: (q) => `https://www.google.com/search?q=${enc(q)}+price` },
+    { name: 'Whatnot', desc: 'live auctions & listings', tag: 'live',
+      url: (q) => `https://www.whatnot.com/search?query=${enc(q)}` },
+    { name: 'Etsy', desc: 'vintage & collectibles', tag: 'live',
+      url: (q) => `https://www.etsy.com/search?q=${enc(q)}` },
+    { name: 'Craigslist — Sac', desc: 'local for-sale listings', tag: 'live',
+      url: (q) => `https://sacramento.craigslist.org/search/sss?query=${enc(q)}` },
+    { name: 'OfferUp', desc: 'local marketplace', tag: 'live',
+      url: (q) => `https://offerup.com/search?q=${enc(q)}` },
+  ];
+
+  const COIN_LINKS = [
+    { name: 'PCGS Price Guide', desc: 'graded coin values', tag: 'coin',
+      url: (q) => `https://www.pcgs.com/search#q=${enc(q)}` },
+    { name: 'NGC', desc: 'price guide & coin lookup', tag: 'coin',
+      url: (q) => `https://www.ngccoin.com/search/?q=${enc(q)}` },
+    { name: 'Numista', desc: 'catalog, mintages, swaps', tag: 'coin',
+      url: (q) => `https://en.numista.com/catalogue/index.php?r=${enc(q)}` },
+    { name: 'eBay — Sold Coins', desc: 'sold, Coins & Paper Money only', tag: 'coin',
+      url: (q) => `https://www.ebay.com/sch/11116/i.html?_nkw=${enc(q)}&LH_Sold=1&LH_Complete=1&_sop=13` },
+  ];
+
+  // ---- Render link grids ----
+  function renderGrid(elId, links, query) {
+    const grid = $(elId);
+    grid.innerHTML = '';
+    links.forEach((l) => {
+      const a = document.createElement('a');
+      a.className = 'comp-link' + (query ? '' : ' disabled');
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.href = query ? l.url(query) : '#';
+      a.innerHTML =
+        `<span class="tag tag-${l.tag}">${l.tag}</span>` +
+        `<div class="name">${l.name}</div>` +
+        `<div class="desc">${l.desc}</div>`;
+      grid.appendChild(a);
+    });
+  }
+
+  function renderAll(query) {
+    renderGrid('soldGrid', SOLD_LINKS, query);
+    renderGrid('liveGrid', LIVE_LINKS, query);
+    renderGrid('coinGrid', COIN_LINKS, query);
+  }
+
+  // ---- Recent searches ----
+  const RECENT_KEY = 'compChecker.recent';
+  function getRecent() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; }
+  }
+  function saveRecent(q) {
+    let r = getRecent().filter((x) => x.toLowerCase() !== q.toLowerCase());
+    r.unshift(q);
+    r = r.slice(0, 8);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+    renderRecent();
+  }
+  function renderRecent() {
+    const wrap = $('recentChips');
+    wrap.innerHTML = '';
+    getRecent().forEach((q) => {
+      const c = document.createElement('button');
+      c.className = 'chip';
+      c.textContent = q;
+      c.addEventListener('click', () => { $('itemInput').value = q; doSearch(); });
+      wrap.appendChild(c);
+    });
+  }
+
+  // ---- Search actions ----
+  function doSearch() {
+    const q = $('itemInput').value.trim();
+    if (!q) return;
+    renderAll(q);
+    saveRecent(q);
+    $('logItem').value = q;
+  }
+
+  $('searchBtn').addEventListener('click', doSearch);
+  $('itemInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+
+  $('openTopBtn').addEventListener('click', () => {
+    const q = $('itemInput').value.trim();
+    if (!q) return;
+    doSearch();
+    // Note: browser popup blockers may only allow the first tab.
+    window.open(SOLD_LINKS[0].url(q), '_blank');
+    window.open(LIVE_LINKS[2].url(q), '_blank');
+    window.open(LIVE_LINKS[1].url(q), '_blank');
+  });
+
+  // ---- Comp log ----
+  const LOG_KEY = 'compChecker.log';
+  function getLog() {
+    try { return JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch { return []; }
+  }
+  function setLog(rows) {
+    localStorage.setItem(LOG_KEY, JSON.stringify(rows));
+    renderLog();
+  }
+  const fmt = (n) => (n === null || n === '' || isNaN(n)) ? '—' : '$' + Number(n).toFixed(2);
+
+  function renderLog() {
+    const rows = getLog();
+    const body = $('logBody');
+    body.innerHTML = '';
+    $('logEmpty').style.display = rows.length ? 'none' : 'block';
+    rows.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      const cells = [
+        ['td', r.date],
+        ['td', r.item],
+        ['td num low', fmt(r.low)],
+        ['td num', fmt(r.avg)],
+        ['td num high', fmt(r.high)],
+        ['td', r.source],
+      ];
+      cells.forEach(([cls, text]) => {
+        const td = document.createElement('td');
+        td.className = cls.replace('td', '').trim();
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      const tdDel = document.createElement('td');
+      const del = document.createElement('button');
+      del.className = 'del-btn';
+      del.textContent = '✕';
+      del.title = 'Delete entry';
+      del.addEventListener('click', () => {
+        const all = getLog();
+        all.splice(i, 1);
+        setLog(all);
+      });
+      tdDel.appendChild(del);
+      tr.appendChild(tdDel);
+      body.appendChild(tr);
+    });
+  }
+
+  $('logAddBtn').addEventListener('click', () => {
+    const item = $('logItem').value.trim();
+    if (!item) { $('logItem').focus(); return; }
+    const rows = getLog();
+    rows.unshift({
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }),
+      item,
+      low: $('logLow').value || '',
+      avg: $('logAvg').value || '',
+      high: $('logHigh').value || '',
+      source: $('logSource').value,
+    });
+    setLog(rows);
+    ['logLow', 'logAvg', 'logHigh'].forEach((id) => { $(id).value = ''; });
+  });
+
+  $('exportBtn').addEventListener('click', () => {
+    const rows = getLog();
+    if (!rows.length) return;
+    const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+    const csv = ['Date,Item,Low,Avg,High,Source']
+      .concat(rows.map((r) => [r.date, r.item, r.low, r.avg, r.high, r.source].map(esc).join(',')))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'comp-log.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  $('clearBtn').addEventListener('click', () => {
+    if (confirm('Clear all logged comps? This cannot be undone.')) setLog([]);
+  });
+
+  // ---- Init ----
+  renderAll('');
+  renderRecent();
+  renderLog();
+})();
+</script>
+</body>
+</html>
