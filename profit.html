@@ -119,22 +119,42 @@
     <div class="stat"><div class="n" id="tNet">$0</div><div class="l">net profit</div></div>
   </div>
   <div class="log-actions">
-    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
-    <button class="btn btn-ghost" id="clearBtn">CLEAR (NEW STREAM)</button>
+    <button class="btn btn-ghost" id="exportBtn">EXPORT TONIGHT CSV</button>
+    <button class="btn btn-ghost" id="clearBtn">END STREAM → ARCHIVE</button>
+  </div>
+
+  <div class="section-label"><span>All-Time History</span><span class="hint">every stream, every sale — nothing is deleted by ending a stream</span></div>
+  <div class="totals-bar" id="histBar" style="display:none">
+    <div class="stat"><div class="n" id="hStreams">0</div><div class="l">streams</div></div>
+    <div class="stat"><div class="n" id="hSales">0</div><div class="l">total sales</div></div>
+    <div class="stat"><div class="n" id="hGross">$0</div><div class="l">all-time gross</div></div>
+    <div class="stat"><div class="n" id="hNet">$0</div><div class="l">all-time net</div></div>
+  </div>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead><tr><th>Stream date</th><th>Sales</th><th>Gross</th><th>Fees + costs</th><th>Net</th><th>Avg margin</th></tr></thead>
+      <tbody id="histBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="histEmpty">No archived streams yet. End a stream above and it lands here.</div>
+  <div class="log-actions">
+    <button class="btn btn-ghost" id="exportAllBtn">EXPORT FULL HISTORY CSV</button>
+    <button class="btn btn-ghost" id="deleteAllBtn">DELETE ALL HISTORY</button>
   </div>
 
   <div class="footnote">
-    Default fees are Whatnot's standard 8% commission + 2.9% + $0.30 processing — confirm against your seller dashboard, since rates vary by category and promo. Processing applies to the buyer's total. Don't forget: net profit here is pre-tax. · <a href="/">jonestes.me</a>
+    Default fees are Whatnot's standard 8% commission + 2.9% + $0.30 processing — confirm against your seller dashboard, since rates vary by category and promo. Processing applies to the buyer's total. Don't forget: net profit here is pre-tax. Ending a stream archives it to history — sales are only ever deleted by DELETE ALL HISTORY or the ✕ on a row. · <a href="/">jonestes.me</a>
   </div>
 </div>
 
 <script src="/nav.js" defer></script>
 <script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
 <script>
 (function(){
   const $=(id)=>document.getElementById(id);
   const money=(n)=>(n<0?'−$':'$')+Math.abs(n).toFixed(2);
-  const FEES_KEY='whatnotProfit.fees', LOG_KEY='whatnotProfit.log';
+  const FEES_KEY='whatnotProfit.fees';
 
   // restore fee settings
   try{
@@ -178,23 +198,34 @@
 
   ['salePrice','costBasis','shipCost','buyerShip','feeCommission','feeProc','feeFlat'].forEach(id=>$(id).addEventListener('input',calc));
 
-  // ---- Log ----
-  function getLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY))||[]}catch{return[]}}
-  function setLog(r){localStorage.setItem(LOG_KEY,JSON.stringify(r));renderLog();}
+  // ---- Log (persistent, stream-aware) ----
+  const LOG_KEY='whatnotProfit.log', STREAM_KEY='whatnotProfit.streamStart';
+  function getLog(){
+    try{
+      const rows=JSON.parse(localStorage.getItem(LOG_KEY))||[];
+      // migrate entries from before history existed
+      rows.forEach(r=>{if(r.ts===undefined){r.ts=0;r.date='(earlier)';}});
+      return rows;
+    }catch{return[]}
+  }
+  function setLog(r){localStorage.setItem(LOG_KEY,JSON.stringify(r));renderLog();renderHistory();}
+  function streamStart(){return Number(localStorage.getItem(STREAM_KEY)||0);}
 
   function renderLog(){
-    const rows=getLog(), body=$('logBody');
+    const all=getLog();
+    const rows=all.map((r,idx)=>({r,idx})).filter(x=>x.r.ts>=streamStart());
+    const body=$('logBody');
     body.innerHTML='';
     $('logEmpty').style.display=rows.length?'none':'block';
     $('totalsBar').style.display=rows.length?'grid':'none';
     let tg=0,tf=0,tn=0;
-    rows.forEach((r,i)=>{
+    rows.forEach(({r,idx})=>{
       tg+=r.gross;tf+=r.fees+r.costs;tn+=r.net;
       const tr=document.createElement('tr');
       tr.innerHTML=`<td>${r.time}</td><td>${money(r.gross)}</td><td class="neg">−${money(r.fees)}</td><td class="neg">−${money(r.costs)}</td><td class="${r.net>=0?'pos':'neg'}">${money(r.net)}</td><td>${r.margin.toFixed(0)}%</td>`;
       const td=document.createElement('td');
-      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Delete';
-      del.addEventListener('click',()=>{const all=getLog();all.splice(i,1);setLog(all);});
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Delete this sale permanently';
+      del.addEventListener('click',()=>{const a=getLog();a.splice(idx,1);setLog(a);});
       td.appendChild(del);tr.appendChild(td);body.appendChild(tr);
     });
     $('tSales').textContent=rows.length;
@@ -204,26 +235,95 @@
     $('tNet').className='n'+(tn<0?' neg':'');
   }
 
+  function renderHistory(){
+    const all=getLog();
+    const groups={};
+    all.forEach(r=>{
+      const key=r.date||'(earlier)';
+      (groups[key]=groups[key]||[]).push(r);
+    });
+    const keys=Object.keys(groups).sort((a,b)=>{
+      const ta=groups[a][0].ts||0, tb=groups[b][0].ts||0;
+      return tb-ta;
+    });
+    const body=$('histBody');
+    body.innerHTML='';
+    $('histEmpty').style.display=keys.length?'none':'block';
+    $('histBar').style.display=keys.length?'grid':'none';
+    let aG=0,aN=0;
+    keys.forEach(k=>{
+      const g=groups[k];
+      const gr=g.reduce((s,r)=>s+r.gross,0), fc=g.reduce((s,r)=>s+r.fees+r.costs,0), nt=g.reduce((s,r)=>s+r.net,0);
+      const avgM=g.length?g.reduce((s,r)=>s+r.margin,0)/g.length:0;
+      aG+=gr;aN+=nt;
+      const isTonight=g.some(r=>r.ts>=streamStart())&&streamStart()>0||(!streamStart()&&false);
+      const live=g.some(r=>r.ts>=streamStart());
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${k}${live?' <span class="pos" style="font-size:.62rem">● live</span>':''}</td><td>${g.length}</td><td>${money(gr)}</td><td class="neg">−${money(fc)}</td><td class="${nt>=0?'pos':'neg'}">${money(nt)}</td><td>${avgM.toFixed(0)}%</td>`;
+      body.appendChild(tr);
+    });
+    $('hStreams').textContent=keys.length;
+    $('hSales').textContent=all.length;
+    $('hGross').textContent=money(aG);
+    $('hNet').textContent=money(aN);
+    $('hNet').className='n'+(aN<0?' neg':'');
+  }
+
   $('logBtn').addEventListener('click',()=>{
     if(!Number($('salePrice').value)){$('salePrice').focus();return;}
     const r=calc();
     const rows=getLog();
-    rows.push({time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),...r});
+    const now=new Date();
+    rows.push({
+      ts:Date.now(),
+      date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      time:now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),
+      ...r
+    });
     setLog(rows);
   });
 
-  $('exportBtn').addEventListener('click',()=>{
-    const rows=getLog();if(!rows.length)return;
-    const csv=['Time,Gross,Fees,Costs,Net,Margin%'].concat(rows.map(r=>[r.time,r.gross.toFixed(2),r.fees.toFixed(2),r.costs.toFixed(2),r.net.toFixed(2),r.margin.toFixed(1)].join(','))).join('\n');
+  const csvOf=(rows,withDate)=>{
+    const head=(withDate?'Date,':'')+'Time,Gross,Fees,Costs,Net,Margin%';
+    return [head].concat(rows.map(r=>
+      (withDate?(r.date||'')+',':'')+[r.time,r.gross.toFixed(2),r.fees.toFixed(2),r.costs.toFixed(2),r.net.toFixed(2),r.margin.toFixed(1)].join(',')
+    )).join('\n');
+  };
+  const download=(csv,name)=>{
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-    a.download='whatnot-stream-'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(a.href);
+    a.download=name;a.click();URL.revokeObjectURL(a.href);
+  };
+
+  $('exportBtn').addEventListener('click',()=>{
+    const rows=getLog().filter(r=>r.ts>=streamStart());
+    if(!rows.length)return;
+    download(csvOf(rows,false),'whatnot-stream-'+new Date().toISOString().slice(0,10)+'.csv');
+  });
+
+  $('exportAllBtn').addEventListener('click',()=>{
+    const rows=getLog();
+    if(!rows.length)return;
+    download(csvOf(rows,true),'whatnot-all-time.csv');
   });
 
   $('clearBtn').addEventListener('click',()=>{
-    if(confirm('Clear the sales log and start a new stream?'))setLog([]);
+    const tonight=getLog().filter(r=>r.ts>=streamStart()).length;
+    if(!tonight){alert('No sales in the current stream yet.');return;}
+    if(confirm('End this stream? Tonight\'s '+tonight+' sale(s) stay saved in All-Time History — the table above just resets for the next stream.')){
+      localStorage.setItem(STREAM_KEY,String(Date.now()));
+      renderLog();renderHistory();
+    }
   });
 
-  calc();renderLog();
+  $('deleteAllBtn').addEventListener('click',()=>{
+    if(confirm('Permanently delete ALL sales history? Export a CSV first if you want a record. This cannot be undone.')){
+      localStorage.removeItem(LOG_KEY);
+      localStorage.removeItem(STREAM_KEY);
+      renderLog();renderHistory();
+    }
+  });
+
+  calc();renderLog();renderHistory();
 })();
 </script>
 </body>

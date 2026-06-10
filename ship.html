@@ -61,7 +61,12 @@
 
   <div id="verdicts"></div>
 
-  <div class="section-label"><span>Your Rate Table</span><span class="hint">editable — rates change yearly, verify at USPS/eBay</span></div>
+  <a href="https://www.pirateship.com" target="_blank" rel="noopener" style="display:block;background:var(--bg-card);border:1px solid var(--gold);border-radius:10px;padding:.85rem 1.1rem;margin:.9rem 0 0;text-decoration:none;">
+    <span style="font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--gold);">🏴‍☠️ Buy the label on PirateShip →</span>
+    <span style="font-family:var(--mono);font-size:.7rem;color:var(--text-dim);display:block;margin-top:.2rem;">Free to use, no markup — commercial USPS &amp; UPS rates well below the post office counter. Quote there, then update the rate table below to match.</span>
+  </a>
+
+  <div class="section-label"><span>Your Rate Table</span><span class="hint">editable — set these from your PirateShip quotes</span></div>
   <div class="table-wrap">
     <table>
       <thead><tr><th>Service</th><th>Best for</th><th>Cost $</th><th>Limits</th><th>Protection</th></tr></thead>
@@ -78,6 +83,9 @@
   <div class="section-label"><span>Coin Shipping Rules of Thumb</span></div>
   <div class="rules">
     <ul>
+      <li><b>PirateShip is your default label source.</b> It's free software with commercial pricing baked in — Ground Advantage and Priority run meaningfully cheaper than USPS retail, and UPS rates are discounted too. Quote both carriers side-by-side before buying.</li>
+      <li><b>PirateShip insurance (InsureShield)</b> is usually cheaper than USPS counter insurance and — unlike USPS — it covers coins and bullion. Check the per-$100 rate when shipping anything over the included $100, and update the "extra insurance" row above to match.</li>
+      <li><b>One exception:</b> eBay Standard Envelope only exists inside eBay's label flow — PirateShip can't sell it. Everything else, go pirate.</li>
       <li><b>eBay Standard Envelope</b> only for items that fit the thickness limit — single coins in flips taped to cardboard, never in a 2×2 snap case (too thick). Delivery confirmation is scan-based, not full tracking, and claims are capped low. Never for anything you'd be upset to lose.</li>
       <li><b>Tape the coin down.</b> A loose coin in an envelope is a coin the sorting machine ate.</li>
       <li><b>Ground Advantage</b> is the default once value passes the envelope cap — the included $100 insurance covers most stream sales.</li>
@@ -88,12 +96,13 @@
   </div>
 
   <div class="footnote">
-    Rates above are editable placeholders — USPS adjusts prices every January and July, and your eBay/Whatnot commercial rates run below retail. Set them once from a recent label purchase and the recommendations stay accurate. Settings save locally. · <a href="/">jonestes.me</a>
+    Rates above are editable placeholders — USPS adjusts prices every January and July. Since you ship through <a href="https://www.pirateship.com" target="_blank" rel="noopener">PirateShip</a>, set each rate from a real PirateShip quote once and the recommendations stay accurate to what you actually pay. Settings save locally. · <a href="/">jonestes.me</a>
   </div>
 </div>
 
 <script src="/nav.js" defer></script>
 <script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
 <script>
 (function(){
   const $=(id)=>document.getElementById(id);

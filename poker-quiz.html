@@ -234,6 +234,14 @@
 
   footer { border-top:1px solid var(--border); padding:1.5rem; text-align:center; color:var(--muted); font-size:0.78rem; }
   footer a { color:var(--gold); text-decoration:none; }
+
+  /* multi-hand layouts (duels & hold'em boards) */
+  .card-groups { display:flex; flex-wrap:wrap; gap:0.9rem 1.4rem; justify-content:center; align-items:flex-end; margin:0 0 0.5rem; }
+  .card-group { text-align:center; }
+  .group-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:0.45rem; }
+  .group-cards { display:flex; gap:0.4rem; justify-content:center; flex-wrap:wrap; }
+  .vs-divider { align-self:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--gold); font-size:1.1rem; padding:0 0.2rem; }
+  .pts-pop { font-weight:700; }
 </style>
 </head>
 <body>
@@ -248,7 +256,7 @@
   <div class="start-hero">
     <div class="start-suits">♠ ♥ ♦ ♣</div>
     <h1>Poker Quiz</h1>
-    <p>10 questions. Identify the hand. Race the clock. How well do you know your cards?</p>
+    <p>10 questions across four challenge types — identify hands, rank them, judge showdowns, and read full Hold'em boards. Race the clock. Scores post to the <strong>global leaderboard</strong>.</p>
   </div>
 
   <div class="name-input-wrap">
@@ -259,9 +267,9 @@
   <div style="text-align:center;margin-bottom:1.25rem;">
     <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Difficulty</div>
     <div class="difficulty-row">
-      <button class="diff-btn selected" data-diff="easy" onclick="selectDiff(this,'easy')">🟢 Easy — 20s</button>
-      <button class="diff-btn" data-diff="medium" onclick="selectDiff(this,'medium')">🟡 Medium — 12s</button>
-      <button class="diff-btn" data-diff="hard" onclick="selectDiff(this,'hard')">🔴 Hard — 7s</button>
+      <button class="diff-btn selected" data-diff="easy" onclick="selectDiff(this,'easy')">🟢 Easy — classics · 20s · 1×</button>
+      <button class="diff-btn" data-diff="medium" onclick="selectDiff(this,'medium')">🟡 Medium — trick hands &amp; showdowns · 14s · 1.5×</button>
+      <button class="diff-btn" data-diff="hard" onclick="selectDiff(this,'hard')">🔴 Hard — boards &amp; duels · 10s · 2×</button>
     </div>
   </div>
 
@@ -287,7 +295,7 @@
   <div class="progress-bar"><div class="progress-fill" id="qProgress" style="width:0%"></div></div>
 
   <div class="quiz-meta">
-    <div class="q-prompt">What hand is this? <strong id="qHint"></strong></div>
+    <div class="q-prompt" id="qPrompt">What hand is this?</div>
     <div class="q-score">Score: <span id="scoreDisplay">0</span></div>
   </div>
 
@@ -318,7 +326,8 @@
   </div>
 
   <div class="leaderboard" id="leaderboardSection">
-    <div class="lb-title">🏆 Leaderboard</div>
+    <div class="lb-title">🏆 Global Leaderboard</div>
+    <div id="lbStatus" style="font-size:0.72rem;color:var(--muted);margin-bottom:0.5rem;"></div>
     <div id="lbList"></div>
   </div>
 
@@ -338,274 +347,475 @@
 </footer>
 
 <script>
-const HANDS = [
-  { name:"Royal Flush",     desc:"A-K-Q-J-10 same suit — the ultimate hand.",          cards:[{l:"A",s:"♠"},{l:"K",s:"♠"},{l:"Q",s:"♠"},{l:"J",s:"♠"},{l:"10",s:"♠"}] },
-  { name:"Straight Flush",  desc:"Five in a row, all same suit.",                       cards:[{l:"9",s:"♥"},{l:"8",s:"♥"},{l:"7",s:"♥"},{l:"6",s:"♥"},{l:"5",s:"♥"}] },
-  { name:"Four of a Kind",  desc:"Four cards of the same rank.",                        cards:[{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"K",s:"♦"},{l:"K",s:"♣"},{l:"3",s:"♠"}] },
-  { name:"Full House",      desc:"Three of a kind plus a pair.",                        cards:[{l:"J",s:"♦"},{l:"J",s:"♥"},{l:"J",s:"♣"},{l:"9",s:"♠"},{l:"9",s:"♥"}] },
-  { name:"Flush",           desc:"Any five cards of the same suit (not in sequence).",  cards:[{l:"A",s:"♦"},{l:"10",s:"♦"},{l:"7",s:"♦"},{l:"4",s:"♦"},{l:"2",s:"♦"}] },
-  { name:"Straight",        desc:"Five in a row, mixed suits.",                         cards:[{l:"8",s:"♠"},{l:"7",s:"♥"},{l:"6",s:"♦"},{l:"5",s:"♠"},{l:"4",s:"♣"}] },
-  { name:"Three of a Kind", desc:"Three cards of the same rank.",                       cards:[{l:"Q",s:"♠"},{l:"Q",s:"♥"},{l:"Q",s:"♣"},{l:"8",s:"♦"},{l:"3",s:"♥"}] },
-  { name:"Two Pair",        desc:"Two different pairs.",                                cards:[{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"5",s:"♦"},{l:"5",s:"♣"},{l:"K",s:"♠"}] },
-  { name:"One Pair",        desc:"Two cards of the same rank.",                         cards:[{l:"7",s:"♥"},{l:"7",s:"♦"},{l:"K",s:"♠"},{l:"9",s:"♣"},{l:"2",s:"♥"}] },
-  { name:"High Card",       desc:"No combination — highest card plays.",                cards:[{l:"A",s:"♠"},{l:"J",s:"♦"},{l:"9",s:"♥"},{l:"6",s:"♣"},{l:"2",s:"♦"}] },
-];
+// ============================================================
+// Poker Quiz v2 — four question types, weighted scoring,
+// global leaderboard backed by the site's Redis store.
+// ============================================================
 
-// Extra variant hands for more variety
-const HAND_VARIANTS = {
-  "Royal Flush":     [ [{l:"A",s:"♥"},{l:"K",s:"♥"},{l:"Q",s:"♥"},{l:"J",s:"♥"},{l:"10",s:"♥"}], [{l:"A",s:"♦"},{l:"K",s:"♦"},{l:"Q",s:"♦"},{l:"J",s:"♦"},{l:"10",s:"♦"}] ],
-  "Straight Flush":  [ [{l:"6",s:"♣"},{l:"7",s:"♣"},{l:"8",s:"♣"},{l:"9",s:"♣"},{l:"10",s:"♣"}] ],
-  "Four of a Kind":  [ [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"A",s:"♣"},{l:"7",s:"♦"}] ],
-  "Full House":      [ [{l:"A",s:"♠"},{l:"A",s:"♥"},{l:"A",s:"♦"},{l:"K",s:"♠"},{l:"K",s:"♣"}] ],
-  "Flush":           [ [{l:"3",s:"♣"},{l:"6",s:"♣"},{l:"8",s:"♣"},{l:"J",s:"♣"},{l:"K",s:"♣"}] ],
-  "Straight":        [ [{l:"A",s:"♠"},{l:"2",s:"♥"},{l:"3",s:"♦"},{l:"4",s:"♣"},{l:"5",s:"♥"}] ],
-  "Three of a Kind": [ [{l:"9",s:"♣"},{l:"9",s:"♦"},{l:"9",s:"♥"},{l:"2",s:"♠"},{l:"6",s:"♦"}] ],
-  "Two Pair":        [ [{l:"K",s:"♠"},{l:"K",s:"♥"},{l:"3",s:"♦"},{l:"3",s:"♣"},{l:"J",s:"♠"}] ],
-  "One Pair":        [ [{l:"A",s:"♠"},{l:"A",s:"♦"},{l:"8",s:"♥"},{l:"4",s:"♣"},{l:"2",s:"♦"}] ],
-  "High Card":       [ [{l:"K",s:"♠"},{l:"J",s:"♥"},{l:"8",s:"♦"},{l:"5",s:"♣"},{l:"3",s:"♥"}] ],
+const CAT_NAMES = {1:'High Card',2:'One Pair',3:'Two Pair',4:'Three of a Kind',5:'Straight',6:'Flush',7:'Full House',8:'Four of a Kind',9:'Straight Flush'};
+const ALL_NAMES = ['High Card','One Pair','Two Pair','Three of a Kind','Straight','Flush','Full House','Four of a Kind','Straight Flush','Royal Flush'];
+const RANKS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const RANK_VAL = Object.fromEntries(RANKS.map((r,i)=>[r,i+2]));
+const VAL_RANK = Object.fromEntries(RANKS.map((r,i)=>[i+2,r]));
+const SUITS = ['♠','♥','♦','♣'];
+const RED_SUITS = ['♥','♦'];
+const DIFF = {
+  easy:   { time:20, mult:1.0 },
+  medium: { time:14, mult:1.5 },
+  hard:   { time:10, mult:2.0 },
 };
 
-const ALL_NAMES = HANDS.map(h => h.name);
-const RED_SUITS = ["♥","♦"];
-const DIFF_TIMES = { easy:20, medium:12, hard:7 };
-
-let difficulty = 'easy';
-let timeLimit = 20;
-let playerName = '';
-let questions = [];
-let currentQ = 0;
-let score = 0;
-let streak = 0;
-let bestStreak = 0;
-let answered = false;
-let timerInterval = null;
-let timeLeft = 0;
-let totalTime = 0;
-let questionTimes = [];
-let answers = [];
-let questionStart = 0;
-
-// Leaderboard stored in sessionStorage (resets per session — no server needed)
-function getLeaderboard() {
-  try { return JSON.parse(sessionStorage.getItem('pokerLB') || '[]'); } catch { return []; }
-}
-function saveLeaderboard(lb) {
-  sessionStorage.setItem('pokerLB', JSON.stringify(lb));
-}
-
-function selectDiff(btn, diff) {
-  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  difficulty = diff;
-  timeLimit = DIFF_TIMES[diff];
-}
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+// ---------- hand evaluator ----------
+function evalHand(cards){ // cards: [{l,s}] x5 -> comparable array [cat, tiebreaks...]
+  const vals = cards.map(c=>RANK_VAL[c.l]).sort((a,b)=>b-a);
+  const flush = cards.every(c=>c.s===cards[0].s);
+  const counts = {};
+  vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+  const groups = Object.entries(counts).map(([v,c])=>({v:+v,c})).sort((a,b)=>b.c-a.c||b.v-a.v);
+  let straightHigh = 0;
+  const uniq = [...new Set(vals)];
+  if (uniq.length===5){
+    if (uniq[0]-uniq[4]===4) straightHigh = uniq[0];
+    else if (uniq[0]===14 && uniq[1]===5 && uniq[1]-uniq[4]===3) straightHigh = 5; // wheel A-2-3-4-5
   }
-  return a;
+  if (flush && straightHigh) return [9, straightHigh];
+  if (groups[0].c===4) return [8, groups[0].v, groups[1].v];
+  if (groups[0].c===3 && groups[1].c===2) return [7, groups[0].v, groups[1].v];
+  if (flush) return [6, ...vals];
+  if (straightHigh) return [5, straightHigh];
+  if (groups[0].c===3) return [4, groups[0].v, groups[1].v, groups[2].v];
+  if (groups[0].c===2 && groups[1].c===2) return [3, groups[0].v, groups[1].v, groups[2].v];
+  if (groups[0].c===2) return [2, groups[0].v, groups[1].v, groups[2].v, groups[3].v];
+  return [1, ...vals];
+}
+function cmpEval(a,b){
+  for (let i=0;i<Math.max(a.length,b.length);i++){
+    const d=(a[i]||0)-(b[i]||0);
+    if (d) return d;
+  }
+  return 0;
+}
+function best7(cards){ // best 5-of-7
+  let best=null;
+  for (let i=0;i<7;i++) for (let j=i+1;j<7;j++){
+    const five=cards.filter((_,k)=>k!==i&&k!==j);
+    const e=evalHand(five);
+    if (!best||cmpEval(e,best)>0) best=e;
+  }
+  return best;
+}
+function evalName(e){
+  if (e[0]===9 && e[1]===14) return 'Royal Flush';
+  return CAT_NAMES[e[0]];
+}
+function evalDetail(e){
+  const n = evalName(e);
+  const r = (v)=>VAL_RANK[v]+'s';
+  switch(e[0]){
+    case 8: return n+' ('+r(e[1])+')';
+    case 7: return n+' ('+r(e[1])+' full of '+r(e[2])+')';
+    case 4: return n+' ('+r(e[1])+')';
+    case 3: return n+' ('+r(e[1])+' & '+r(e[2])+')';
+    case 2: return n+' ('+r(e[1])+', '+VAL_RANK[e[2]]+' kicker)';
+    case 5: case 9: return n+' ('+(e[1]===5?'5':VAL_RANK[e[1]])+' high)';
+    case 6: case 1: return n+' ('+VAL_RANK[e[1]]+' high)';
+    default: return n;
+  }
 }
 
-function getCards(hand) {
-  const variants = HAND_VARIANTS[hand.name] || [];
-  const pool = [hand.cards, ...variants];
-  return pool[Math.floor(Math.random() * pool.length)];
+// ---------- deck utils ----------
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function freshDeck(){const d=[];for(const s of SUITS)for(const l of RANKS)d.push({l,s});return d;}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+// ---------- tricky hand generators (identify) ----------
+const C=(l,s)=>({l,s});
+function genIdentify(tricky){
+  const makers = tricky ? [
+    ()=>{ // four-flush trap: looks like a flush, isn't
+      const su=pick(SUITS), off=pick(SUITS.filter(x=>x!==su));
+      const vs=shuffle(RANKS).slice(0,5);
+      return [C(vs[0],su),C(vs[1],su),C(vs[2],su),C(vs[3],su),C(vs[4],off)];
+    },
+    ()=>{ // almost-straight: 4 in a row + gap
+      const lo=2+Math.floor(Math.random()*7);
+      const vals=[lo,lo+1,lo+2,lo+3,lo+6>14?lo-2:lo+6];
+      return shuffle(vals).map(v=>C(VAL_RANK[v],pick(SUITS)));
+    },
+    ()=>{ // the wheel: A-2-3-4-5 mixed suits
+      return shuffle([14,2,3,4,5]).map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
+    },
+    ()=>{ // steel wheel: A-2-3-4-5 suited (straight flush, not "ace high flush")
+      const su=pick(SUITS);
+      return shuffle([14,2,3,4,5]).map(v=>C(VAL_RANK[v],su));
+    },
+    ()=>{ // flush hiding 4-straight
+      const su=pick(SUITS), lo=3+Math.floor(Math.random()*6);
+      return shuffle([lo,lo+1,lo+2,lo+3,lo+7>14?lo-2:lo+7]).map(v=>C(VAL_RANK[v],su));
+    },
+    ()=>{ // full house scrambled (vs two-pair confusion)
+      const a=pick(RANKS), b=pick(RANKS.filter(x=>x!==a));
+      return shuffle([C(a,'♠'),C(a,'♥'),C(a,'♦'),C(b,'♣'),C(b,'♠')]);
+    },
+    ()=>{ // broadway straight, mixed suits (royal bait)
+      return shuffle([10,11,12,13,14]).map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
+    },
+    ()=>{ // two pair with big kicker
+      const [a,b,k]=shuffle(RANKS).slice(0,3);
+      return shuffle([C(a,'♠'),C(a,'♥'),C(b,'♦'),C(b,'♣'),C(k,'♠')]);
+    },
+  ] : [
+    ()=>{const su=pick(SUITS);return [C('A',su),C('K',su),C('Q',su),C('J',su),C('10',su)];},
+    ()=>{const su=pick(SUITS);const lo=2+Math.floor(Math.random()*8);return [lo+4,lo+3,lo+2,lo+1,lo].map(v=>C(VAL_RANK[v],su));},
+    ()=>{const a=pick(RANKS),k=pick(RANKS.filter(x=>x!==a));return [C(a,'♠'),C(a,'♥'),C(a,'♦'),C(a,'♣'),C(k,'♦')];},
+    ()=>{const a=pick(RANKS),b=pick(RANKS.filter(x=>x!==a));return [C(a,'♦'),C(a,'♥'),C(a,'♣'),C(b,'♠'),C(b,'♥')];},
+    ()=>{const su=pick(SUITS);let vs;do{vs=shuffle(RANKS).slice(0,5).map(r=>RANK_VAL[r]).sort((a,b)=>b-a);}while(vs[0]-vs[4]===4);return vs.map(v=>C(VAL_RANK[v],su));},
+    ()=>{const lo=2+Math.floor(Math.random()*8);return [lo,lo+1,lo+2,lo+3,lo+4].map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));},
+    ()=>{const a=pick(RANKS);const rest=shuffle(RANKS.filter(x=>x!==a)).slice(0,2);return [C(a,'♠'),C(a,'♥'),C(a,'♦'),C(rest[0],'♣'),C(rest[1],'♠')];},
+    ()=>{const [a,b,k]=shuffle(RANKS).slice(0,3);return [C(a,'♠'),C(a,'♥'),C(b,'♦'),C(b,'♣'),C(k,'♠')];},
+    ()=>{const [a,...r]=shuffle(RANKS).slice(0,4);return [C(a,'♥'),C(a,'♦'),C(r[0],'♠'),C(r[1],'♣'),C(r[2],'♥')];},
+  ];
+  let cards, e;
+  do { cards = pick(makers)(); e = evalHand(cards); }
+  while (new Set(cards.map(c=>c.l+c.s)).size !== 5);
+  const correct = evalName(e);
+  const wrong = shuffle(ALL_NAMES.filter(n=>n!==correct)).slice(0,3);
+  return {
+    type:'identify',
+    prompt:'What hand is this?',
+    groups:[{label:'', cards: tricky ? shuffle(cards) : cards}],
+    correct,
+    choices: shuffle([correct,...wrong]),
+    explain:()=> 'That\'s ' + evalDetail(e) + '.',
+  };
 }
 
-function startQuiz() {
-  playerName = document.getElementById('playerName').value.trim() || 'Anonymous';
-  timeLimit = DIFF_TIMES[difficulty];
+// ---------- "which beats" (ranking knowledge) ----------
+function genBeats(){
+  const order=['High Card','One Pair','Two Pair','Three of a Kind','Straight','Flush','Full House','Four of a Kind'];
+  const ti=1+Math.floor(Math.random()*(order.length-2)); // target between One Pair..Full House
+  const target=order[ti];
+  const above=order.slice(ti+1).concat(ti+1>=order.length-1?['Straight Flush']:[]);
+  const below=order.slice(0,ti+1); // includes target itself (a hand doesn't beat itself)
+  const correct=pick(above);
+  const wrong=shuffle(below).slice(0,3);
+  return {
+    type:'beats',
+    prompt:'Which of these BEATS a '+target+'?',
+    groups:[],
+    correct,
+    choices:shuffle([correct,...wrong]),
+    explain:()=>correct+' ranks above '+target+'. Order: Pair → Two Pair → Trips → Straight → Flush → Full House → Quads → Straight Flush.',
+  };
+}
 
-  // Build 10 shuffled questions
-  questions = shuffle(HANDS).slice(0, 10).map(h => {
-    const correct = h.name;
-    const wrong = shuffle(ALL_NAMES.filter(n => n !== correct)).slice(0, 3);
-    const choices = shuffle([correct, ...wrong]);
-    return { hand: h, correct, choices, cards: getCards(h) };
-  });
+// ---------- showdown duel ----------
+function genDuel(){
+  // 20%: engineered split pot
+  if (Math.random()<0.2){
+    const lo=2+Math.floor(Math.random()*8);
+    const vals=[lo,lo+1,lo+2,lo+3,lo+4];
+    const A=vals.map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
+    const B=vals.map((v,i)=>C(VAL_RANK[v],SUITS[(i+2)%4]));
+    return duelQuestion(A,B);
+  }
+  // otherwise: random-but-close hands
+  let A,B,eA,eB,tries=0;
+  do {
+    const deck=shuffle(freshDeck());
+    A=deck.slice(0,5); B=deck.slice(5,10);
+    eA=evalHand(A); eB=evalHand(B);
+    tries++;
+  } while (Math.abs(eA[0]-eB[0])>2 && tries<40);
+  return duelQuestion(A,B);
+}
+function duelQuestion(A,B){
+  const eA=evalHand(A), eB=evalHand(B);
+  const c=cmpEval(eA,eB);
+  const correct = c>0?'Hand A wins':c<0?'Hand B wins':'Split pot';
+  return {
+    type:'duel',
+    prompt:'Showdown — who takes it?',
+    groups:[{label:'Hand A',cards:A},{vs:true},{label:'Hand B',cards:B}],
+    correct,
+    choices:['Hand A wins','Hand B wins','Split pot'],
+    explain:()=> 'A: '+evalDetail(eA)+'  ·  B: '+evalDetail(eB)+(c===0?' — identical strength, chop it up.':'.'),
+  };
+}
 
-  currentQ = 0; score = 0; streak = 0; bestStreak = 0;
-  answers = []; questionTimes = [];
+// ---------- best hand from 7 (hold'em board) ----------
+function genBest7(){
+  let seven,e,tries=0;
+  do {
+    seven=shuffle(freshDeck()).slice(0,7);
+    e=best7(seven);
+    tries++;
+  } while (e[0]===1 && tries<15 && Math.random()<0.7); // mostly avoid boring high-card boards
+  const correct=evalName(e);
+  const wrong=shuffle(ALL_NAMES.filter(n=>n!==correct)).slice(0,3);
+  return {
+    type:'best7',
+    prompt:'Your best 5-card hand from all 7?',
+    groups:[{label:'Your hole cards',cards:seven.slice(0,2)},{label:'The board',cards:seven.slice(2)}],
+    correct,
+    choices:shuffle([correct,...wrong]),
+    explain:()=> 'Best five make '+evalDetail(e)+'.',
+  };
+}
 
+// ---------- quiz state ----------
+let difficulty='easy';
+let timeLimit=20;
+let playerName='';
+let questions=[], currentQ=0, score=0, streak=0, bestStreak=0;
+let answered=false, timerInterval=null, timeLeft=0;
+let questionTimes=[], answers=[], questionStart=0;
+let runId='';
+
+function selectDiff(btn,diff){
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  difficulty=diff;
+}
+
+function buildQuestions(){
+  const mix={
+    easy:   [...Array(7)].map(()=>()=>genIdentify(false)).concat([...Array(3)].map(()=>()=>genIdentify(true))),
+    medium: [...Array(4)].map(()=>()=>genIdentify(true)).concat([...Array(3)].map(()=>()=>genBeats()),[...Array(3)].map(()=>()=>genDuel())),
+    hard:   [...Array(3)].map(()=>()=>genIdentify(true)).concat([...Array(3)].map(()=>()=>genDuel()),[...Array(4)].map(()=>()=>genBest7())),
+  }[difficulty];
+  return shuffle(mix).map(fn=>fn());
+}
+
+function startQuiz(){
+  playerName=document.getElementById('playerName').value.trim()||'Anonymous';
+  timeLimit=DIFF[difficulty].time;
+  runId=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  questions=buildQuestions();
+  currentQ=0; score=0; streak=0; bestStreak=0; answers=[]; questionTimes=[];
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('quizScreen').classList.add('active');
   renderQuestion();
 }
 
-function renderQuestion() {
-  const q = questions[currentQ];
-  answered = false;
-  questionStart = Date.now();
-
-  document.getElementById('qCounter').textContent = `Question ${currentQ+1} of ${questions.length}`;
-  document.getElementById('qProgress').style.width = `${(currentQ / questions.length) * 100}%`;
-  document.getElementById('scoreDisplay').textContent = score;
-  document.getElementById('qHint').textContent = '';
-  document.getElementById('feedbackBox').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-
-  // Streak badge
-  const sb = document.getElementById('streakBadge');
-  if (streak >= 2) { sb.style.display = 'inline-flex'; document.getElementById('streakNum').textContent = streak; }
-  else { sb.style.display = 'none'; }
-
-  // Cards
-  const cardsRow = document.getElementById('cardsRow');
-  cardsRow.innerHTML = q.cards.map(c => `
-    <div class="playing-card">
-      <div class="card-label ${RED_SUITS.includes(c.s)?'red':'black'}">${c.l}</div>
-      <div class="card-suit-top ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>
-      <div class="card-center ${RED_SUITS.includes(c.s)?'red':'black'}">${c.s}</div>
-    </div>`).join('');
-
-  // Choices
-  const grid = document.getElementById('choicesGrid');
-  grid.innerHTML = q.choices.map(name => `
-    <button class="choice-btn" onclick="answer('${name.replace(/'/g,"\\'")}')">
-      ${name}
-    </button>`).join('');
-
-  // Timer
-  clearInterval(timerInterval);
-  timeLeft = timeLimit;
-  updateTimer(1);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimer(timeLeft / timeLimit);
-    if (timeLeft <= 0) { clearInterval(timerInterval); timeUp(); }
-  }, 1000);
+function cardHTML(c){
+  const red=RED_SUITS.includes(c.s)?'red':'black';
+  return `<div class="playing-card">
+    <div class="card-label ${red}">${c.l}</div>
+    <div class="card-suit-top ${red}">${c.s}</div>
+    <div class="card-center ${red}">${c.s}</div>
+  </div>`;
 }
 
-function updateTimer(fraction) {
-  const circumference = 163.4;
-  const offset = circumference * (1 - fraction);
-  const circle = document.getElementById('timerCircle');
-  circle.style.strokeDashoffset = offset;
-  document.getElementById('timerText').textContent = Math.max(0, timeLeft);
-  if (fraction < 0.3) circle.style.stroke = '#c0392b';
-  else if (fraction < 0.6) circle.style.stroke = '#e8b84b';
-  else circle.style.stroke = 'var(--gold)';
-}
+function renderQuestion(){
+  const q=questions[currentQ];
+  answered=false;
+  questionStart=Date.now();
 
-function timeUp() {
-  if (answered) return;
-  answer(null);
-}
+  document.getElementById('qCounter').textContent=`Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('qProgress').style.width=`${(currentQ/questions.length)*100}%`;
+  document.getElementById('scoreDisplay').textContent=score;
+  document.getElementById('qPrompt').textContent=q.prompt;
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
 
-function answer(chosen) {
-  if (answered) return;
-  answered = true;
-  clearInterval(timerInterval);
+  const sb=document.getElementById('streakBadge');
+  if(streak>=2){sb.style.display='inline-flex';document.getElementById('streakNum').textContent=streak;}
+  else{sb.style.display='none';}
 
-  const elapsed = (Date.now() - questionStart) / 1000;
-  questionTimes.push(elapsed);
-
-  const q = questions[currentQ];
-  const isCorrect = chosen === q.correct;
-
-  if (isCorrect) {
-    score += Math.max(1, Math.round(timeLeft * 10 / timeLimit)) + (streak >= 2 ? 5 : 0);
-    streak++;
-    if (streak > bestStreak) bestStreak = streak;
+  const cardsRow=document.getElementById('cardsRow');
+  if(!q.groups.length){
+    cardsRow.innerHTML='';
+  } else if(q.groups.length===1 && !q.groups[0].label){
+    cardsRow.innerHTML=q.groups[0].cards.map(cardHTML).join('');
   } else {
-    streak = 0;
+    cardsRow.innerHTML='<div class="card-groups">'+q.groups.map(g=>
+      g.vs?'<div class="vs-divider">vs</div>'
+      :`<div class="card-group"><div class="group-label">${g.label}</div><div class="group-cards">${g.cards.map(cardHTML).join('')}</div></div>`
+    ).join('')+'</div>';
   }
 
-  answers.push({ hand: q.correct, chose: chosen, correct: isCorrect });
-  document.getElementById('scoreDisplay').textContent = score;
+  const grid=document.getElementById('choicesGrid');
+  grid.innerHTML=q.choices.map((name,i)=>
+    `<button class="choice-btn" onclick="answerIdx(${i})">${name}</button>`).join('');
 
-  // Highlight choices
-  document.querySelectorAll('.choice-btn').forEach(btn => {
-    btn.disabled = true;
-    if (btn.textContent.trim() === q.correct) btn.classList.add('correct');
-    else if (btn.textContent.trim() === chosen && !isCorrect) btn.classList.add('wrong');
+  clearInterval(timerInterval);
+  timeLeft=timeLimit;
+  updateTimer(1);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    updateTimer(timeLeft/timeLimit);
+    if(timeLeft<=0){clearInterval(timerInterval);timeUp();}
+  },1000);
+}
+
+function updateTimer(fraction){
+  const circumference=163.4;
+  const circle=document.getElementById('timerCircle');
+  circle.style.strokeDashoffset=circumference*(1-fraction);
+  document.getElementById('timerText').textContent=Math.max(0,timeLeft);
+  if(fraction<0.3)circle.style.stroke='#c0392b';
+  else if(fraction<0.6)circle.style.stroke='#e8b84b';
+  else circle.style.stroke='var(--gold)';
+}
+
+function timeUp(){if(!answered)resolveAnswer(null);}
+function answerIdx(i){if(!answered)resolveAnswer(questions[currentQ].choices[i]);}
+
+// ---------- scoring ----------
+// correct: (100 base + up to 100 speed) × difficulty mult × streak mult (1.0 → 2.0)
+// wrong: −50 · timeout: −25 · total never drops below 0
+function resolveAnswer(chosen){
+  answered=true;
+  clearInterval(timerInterval);
+  questionTimes.push((Date.now()-questionStart)/1000);
+
+  const q=questions[currentQ];
+  const isCorrect=chosen===q.correct;
+  let pts=0, detail='';
+
+  if(isCorrect){
+    streak++;
+    if(streak>bestStreak)bestStreak=streak;
+    const base=100;
+    const speed=Math.round(100*Math.max(timeLeft,0)/timeLimit);
+    const streakMult=Math.min(1+0.1*(streak-1),2);
+    const diffMult=DIFF[difficulty].mult;
+    pts=Math.round((base+speed)*diffMult*streakMult);
+    detail=`+${pts} <span style="font-weight:400;opacity:.8">(${base} base + ${speed} speed${streakMult>1?` × ${streakMult.toFixed(1)} streak`:''}${diffMult>1?` × ${diffMult}× ${difficulty}`:''})</span>`;
+  } else {
+    streak=0;
+    pts=chosen===null?-25:-50;
+    detail=`${pts} pts`;
+  }
+  score=Math.max(0,score+pts);
+
+  answers.push({prompt:q.prompt,hand:q.correct,chose:chosen,correct:isCorrect});
+  document.getElementById('scoreDisplay').textContent=score;
+
+  document.querySelectorAll('.choice-btn').forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent.trim()===q.correct)btn.classList.add('correct');
+    else if(btn.textContent.trim()===chosen&&!isCorrect)btn.classList.add('wrong');
   });
 
-  // Feedback
-  const fb = document.getElementById('feedbackBox');
-  fb.className = 'feedback-box ' + (isCorrect ? 'correct' : 'wrong');
-  if (!chosen) {
-    fb.innerHTML = `<strong>⏰ Time's up!</strong>That was a <strong>${q.correct}</strong>. ${q.hand.desc}`;
-  } else if (isCorrect) {
-    const bonus = streak >= 2 ? ` (+${5} streak bonus!)` : '';
-    fb.innerHTML = `<strong>✓ Correct!${bonus}</strong>${q.hand.desc}`;
+  const fb=document.getElementById('feedbackBox');
+  fb.className='feedback-box '+(isCorrect?'correct':'wrong');
+  if(chosen===null){
+    fb.innerHTML=`<strong>⏰ Time's up! <span class="pts-pop">${detail}</span></strong>${q.explain()}`;
+  } else if(isCorrect){
+    fb.innerHTML=`<strong>✓ Correct! <span class="pts-pop">${detail}</span></strong>${q.explain()}`;
   } else {
-    fb.innerHTML = `<strong>✗ Not quite.</strong>That was a <strong>${q.correct}</strong>. ${q.hand.desc}`;
+    fb.innerHTML=`<strong>✗ Not quite. <span class="pts-pop">${detail}</span></strong>${q.explain()}`;
   }
-  fb.style.display = 'block';
-  document.getElementById('nextBtn').style.display = 'block';
-  document.getElementById('nextBtn').textContent = currentQ < questions.length - 1 ? 'Next Question →' : 'See Results →';
+  fb.style.display='block';
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='block';
+  nb.textContent=currentQ<questions.length-1?'Next Question →':'See Results →';
 }
 
-function nextQuestion() {
+function nextQuestion(){
   currentQ++;
-  if (currentQ >= questions.length) showResults();
+  if(currentQ>=questions.length)showResults();
   else renderQuestion();
 }
 
-function showResults() {
+// ---------- global leaderboard (Redis via /store function) ----------
+const STORE_URL='/.netlify/functions/store';
+const LB_FIELD='poker.leaderboard';
+
+async function fetchLeaderboard(){
+  try{
+    const r=await fetch(STORE_URL,{cache:'no-store'});
+    if(r.ok){
+      const data=await r.json();
+      return {lb:JSON.parse(data[LB_FIELD]||'[]'),global:true};
+    }
+  }catch(e){}
+  try{return {lb:JSON.parse(localStorage.getItem(LB_FIELD)||'[]'),global:false};}catch{return {lb:[],global:false};}
+}
+
+async function submitScore(entry){
+  // read-merge-write so simultaneous quiz takers don't clobber each other
+  const {lb,global}=await fetchLeaderboard();
+  if(!lb.some(e=>e.id===entry.id))lb.push(entry);
+  lb.sort((a,b)=>b.score-a.score||b.correct-a.correct||a.ts-b.ts);
+  const trimmed=lb.slice(0,50);
+  localStorage.setItem(LB_FIELD,JSON.stringify(trimmed));
+  let saved=false;
+  if(global){
+    try{
+      const r=await fetch(STORE_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({updates:{[LB_FIELD]:JSON.stringify(trimmed)}}),
+      });
+      saved=r.ok;
+    }catch(e){}
+  }
+  return {lb:trimmed,saved};
+}
+
+async function showResults(){
   document.getElementById('quizScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.add('active');
 
-  const correct = answers.filter(a => a.correct).length;
-  const pct = Math.round((correct / questions.length) * 100);
-  const avgTime = questionTimes.length ? Math.round(questionTimes.reduce((a,b)=>a+b,0) / questionTimes.length) : 0;
+  const correct=answers.filter(a=>a.correct).length;
+  const pct=Math.round((correct/questions.length)*100);
+  const avgTime=questionTimes.length?Math.round(questionTimes.reduce((a,b)=>a+b,0)/questionTimes.length):0;
 
-  document.getElementById('finalScore').textContent = `${correct}/${questions.length}`;
-  document.getElementById('scoreCircle').style.setProperty('--pct', `${pct}%`);
-  document.getElementById('statCorrect').textContent = correct;
-  document.getElementById('statTime').textContent = avgTime + 's';
-  document.getElementById('statStreak').textContent = bestStreak;
+  document.getElementById('finalScore').textContent=`${correct}/${questions.length}`;
+  document.getElementById('scoreCircle').style.setProperty('--pct',`${pct}%`);
+  document.getElementById('statCorrect').textContent=correct;
+  document.getElementById('statTime').textContent=avgTime+'s';
+  document.getElementById('statStreak').textContent=bestStreak;
 
-  // Title
-  let emoji, title, sub;
-  if (pct === 100) { emoji='🏆'; title='Royal Flush!'; sub='Perfect score! You\'re a poker pro.'; }
-  else if (pct >= 80) { emoji='⭐'; title='Straight Flush!'; sub='Really impressive — you know your hands.'; }
-  else if (pct >= 60) { emoji='♠'; title='Full House!'; sub='Solid work. A little more practice and you\'ll be unstoppable.'; }
-  else if (pct >= 40) { emoji='♥'; title='One Pair...'; sub='A decent start! Review the hands and try again.'; }
-  else { emoji='🃏'; title='High Card'; sub='Everyone starts somewhere. Review the slide deck and come back!'; }
+  let emoji,title,sub;
+  if(pct===100){emoji='🏆';title='Royal Flush!';sub='Perfect score! You\'re a poker pro.';}
+  else if(pct>=80){emoji='⭐';title='Straight Flush!';sub='Really impressive — you know your hands.';}
+  else if(pct>=60){emoji='♠';title='Full House!';sub='Solid work. A little more practice and you\'ll be unstoppable.';}
+  else if(pct>=40){emoji='♥';title='One Pair...';sub='A decent start! Review the hands and try again.';}
+  else{emoji='🃏';title='High Card';sub='Everyone starts somewhere. Review the slide deck and come back!';}
 
-  document.getElementById('resultEmoji').textContent = emoji;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultSubtitle').textContent = sub;
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultSubtitle').textContent=sub+` Final score: ${score} pts on ${difficulty}.`;
 
-  // Save to leaderboard
-  const lb = getLeaderboard();
-  lb.push({ name: playerName, score, correct, pct, time: Date.now() });
-  lb.sort((a,b) => b.score - a.score || b.correct - a.correct);
-  saveLeaderboard(lb.slice(0, 20));
-  renderLeaderboard(lb);
-
-  // Review
-  const list = document.getElementById('reviewList');
-  list.innerHTML = answers.map(a => `
-    <div class="review-item ${a.correct ? 'correct-item' : 'wrong-item'}">
-      <div class="review-icon">${a.correct ? '✓' : '✗'}</div>
+  // review list
+  document.getElementById('reviewList').innerHTML=answers.map(a=>`
+    <div class="review-item ${a.correct?'correct-item':'wrong-item'}">
+      <div class="review-icon">${a.correct?'✓':'✗'}</div>
       <div class="review-hand">${a.hand}</div>
-      ${!a.correct ? `<div class="review-answer">You said: ${a.chose || 'Timed out'}</div>` : ''}
+      ${!a.correct?`<div class="review-answer">You said: ${a.chose||'Timed out'}</div>`:''}
     </div>`).join('');
+
+  // leaderboard
+  const status=document.getElementById('lbStatus');
+  status.textContent='Posting your score…';
+  const entry={id:runId,name:playerName,score,correct,total:questions.length,diff:difficulty,ts:Date.now()};
+  const {lb,saved}=await submitScore(entry);
+  status.textContent=saved?'Synced — scores from every device, every player.':'⚠ Offline — showing this device only. Your score will count once the site connection is back.';
+  renderLeaderboard(lb);
 }
 
-function renderLeaderboard(lb) {
-  const list = document.getElementById('lbList');
-  const top = lb.slice(0, 8);
-  if (!top.length) { list.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;">No scores yet — you\'re the first!</p>'; return; }
-  list.innerHTML = top.map((entry, i) => {
-    const isMe = entry.name === playerName && i === top.findIndex(e => e.name === playerName);
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+function renderLeaderboard(lb){
+  const list=document.getElementById('lbList');
+  const top=lb.slice(0,10);
+  if(!top.length){list.innerHTML='<p style="color:var(--muted);font-size:0.85rem;">No scores yet — you\'re the first!</p>';return;}
+  list.innerHTML=top.map((entry,i)=>{
+    const isMe=entry.id===runId;
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    const diffTag=entry.diff?` · ${entry.diff}`:'';
     return `<div class="lb-row ${isMe?'me':''}">
-      <div class="lb-pos">${medal || (i+1)}</div>
-      <div class="lb-name">${entry.name}${isMe?' (you)':''}</div>
-      <div class="lb-meta">${entry.correct}/10 correct</div>
+      <div class="lb-pos">${medal||(i+1)}</div>
+      <div class="lb-name">${String(entry.name).slice(0,20)}${isMe?' (you)':''}</div>
+      <div class="lb-meta">${entry.correct}/${entry.total||10}${diffTag}</div>
       <div class="lb-score">${entry.score} pts</div>
     </div>`;
   }).join('');
 }
 
-function restartQuiz() {
+function restartQuiz(){
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('startScreen').classList.add('active');
 }

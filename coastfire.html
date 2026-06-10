@@ -53,7 +53,7 @@
     <div class="panel">
       <label class="field-label" for="age">Current age</label><input type="number" id="age" value="28">
       <label class="field-label" for="retAge">Retirement age</label><input type="number" id="retAge" value="60">
-      <label class="field-label" for="invested">Currently invested $</label><input type="number" step="500" id="invested" value="50000">
+      <label class="field-label" for="invested">Currently invested $</label><input type="number" step="500" id="invested" value="" placeholder="e.g. 50000">
       <label class="field-label" for="monthly">Monthly contribution $</label><input type="number" step="50" id="monthly" value="800">
       <label class="field-label" for="spend">Desired annual spend in retirement $</label><input type="number" step="1000" id="spend" value="60000">
       <label class="field-label" for="ret">Real return % (after inflation)</label><input type="number" step="0.1" id="ret" value="5">
@@ -68,7 +68,7 @@
         <div class="stat"><div class="n" id="rFireDate">—</div><div class="l">Full FIRE date</div><div class="sub">if contributions continue</div></div>
       </div>
       <div class="verdict" id="verdict"></div>
-      <svg id="chart" viewBox="0 0 600 280" role="img" aria-label="Projection of portfolio growth toward coast and FIRE targets"></svg>
+      <svg id="chart" viewBox="0 0 600 300" role="img" aria-label="Projection of portfolio growth toward coast and FIRE targets"></svg>
       <div class="legend">
         <span><span class="sw" style="background:var(--silver)"></span>portfolio</span>
         <span><span class="sw" style="background:var(--gold)"></span>coast threshold</span>
@@ -84,6 +84,7 @@
 
 <script src="/nav.js" defer></script>
 <script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
 <script>
 (function(){
   const $=(id)=>document.getElementById(id);
@@ -160,26 +161,66 @@
 
   function drawChart(series,fireNum,coastNow,r,months){
     const svg=$('chart');
-    const W=600,H=280,P={l:8,r:8,t:14,b:18};
-    const maxY=Math.max(fireNum*1.1,...series)||1;
+    const W=600,H=300,P={l:58,r:16,t:16,b:36};
+    const age=Number($('age').value||0);
+    const retAge=Number($('retAge').value||0);
+    const maxY=Math.max(fireNum*1.15,...series)||1;
     const x=(i)=>P.l+(W-P.l-P.r)*(months>0?i/months:0);
     const y=(v)=>H-P.b-(H-P.t-P.b)*(v/maxY);
+    const fmtK=(v)=>v>=1e6?'$'+(v/1e6).toFixed(v<3e6?1:0)+'M':'$'+Math.round(v/1000)+'k';
+    const T='font-family="monospace" font-size="10" fill="var(--text-dim)"';
+    let g='';
 
-    let path='M';
-    const step=Math.max(1,Math.floor(series.length/300));
-    for(let i=0;i<series.length;i+=step){path+=`${x(i).toFixed(1)},${y(series[i]).toFixed(1)} `;}
-    // coast threshold declines toward fireNum at retirement: coast(t)=fireNum/(1+r)^(yrsLeft)
-    let coastPath='M';
-    for(let i=0;i<=months;i+=Math.max(1,Math.floor(months/120))){
-      const yrsLeft=(months-i)/12;
-      coastPath+=`${x(i).toFixed(1)},${y(fireNum/Math.pow(1+r,yrsLeft)).toFixed(1)} `;
+    // horizontal gridlines + y-axis dollar labels
+    const ticks=5;
+    for(let t=0;t<=ticks;t++){
+      const v=maxY*t/ticks;
+      g+=`<line x1="${P.l}" y1="${y(v).toFixed(1)}" x2="${W-P.r}" y2="${y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1"/>`;
+      g+=`<text x="${P.l-8}" y="${(y(v)+3).toFixed(1)}" text-anchor="end" ${T}>${fmtK(v)}</text>`;
     }
 
-    svg.innerHTML=
-      `<line x1="${P.l}" y1="${y(fireNum)}" x2="${W-P.r}" y2="${y(fireNum)}" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="6 4"/>`+
-      `<path d="${coastPath}" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="2 3"/>`+
-      `<path d="${path}" fill="none" stroke="var(--silver)" stroke-width="2"/>`+
-      `<text x="${P.l+4}" y="${Math.max(y(fireNum)-6,12)}" fill="var(--red)" font-size="10" font-family="monospace">FIRE ${'$'+Math.round(fireNum/1000)}k</text>`;
+    // x-axis age ticks
+    const yrsTotal=months/12;
+    const step=yrsTotal>25?10:yrsTotal>12?5:yrsTotal>6?2:1;
+    for(let a=Math.ceil(age/step)*step;a<=age+yrsTotal+0.01;a+=step){
+      const i=(a-age)*12;
+      if(i<0)continue;
+      g+=`<line x1="${x(i).toFixed(1)}" y1="${H-P.b}" x2="${x(i).toFixed(1)}" y2="${H-P.b+4}" stroke="var(--text-dim)" stroke-width="1"/>`;
+      g+=`<text x="${x(i).toFixed(1)}" y="${H-P.b+16}" text-anchor="middle" ${T}>${a}</text>`;
+    }
+    g+=`<text x="${((P.l+W-P.r)/2).toFixed(0)}" y="${H-5}" text-anchor="middle" ${T} letter-spacing="2">AGE</text>`;
+    g+=`<text x="14" y="${((P.t+H-P.b)/2).toFixed(0)}" text-anchor="middle" ${T} letter-spacing="2" transform="rotate(-90 14 ${((P.t+H-P.b)/2).toFixed(0)})">PORTFOLIO</text>`;
+
+    // axes
+    g+=`<line x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${H-P.b}" stroke="var(--text-dim)" stroke-width="1"/>`;
+    g+=`<line x1="${P.l}" y1="${H-P.b}" x2="${W-P.r}" y2="${H-P.b}" stroke="var(--text-dim)" stroke-width="1"/>`;
+
+    // FIRE target line + label
+    g+=`<line x1="${P.l}" y1="${y(fireNum).toFixed(1)}" x2="${W-P.r}" y2="${y(fireNum).toFixed(1)}" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+    g+=`<text x="${W-P.r-4}" y="${Math.max(y(fireNum)-6,P.t+10).toFixed(1)}" text-anchor="end" font-family="monospace" font-size="10" fill="var(--red)">FIRE ${fmtK(fireNum)}</text>`;
+
+    // coast threshold curve + label
+    let coastPath='M';
+    for(let i=0;i<=months;i+=Math.max(1,Math.floor(months/120)||1)){
+      const yrsLeft=(months-i)/12;
+      coastPath+=`${x(i).toFixed(1)},${y(Math.min(fireNum/Math.pow(1+r,yrsLeft),maxY)).toFixed(1)} `;
+    }
+    g+=`<path d="${coastPath}" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="2 3"/>`;
+    g+=`<text x="${P.l+6}" y="${Math.max(y(Math.min(coastNow,maxY))-7,P.t+10).toFixed(1)}" font-family="monospace" font-size="10" fill="var(--gold)">coast ${fmtK(coastNow)}</text>`;
+
+    // portfolio line
+    let path='M';
+    const stepN=Math.max(1,Math.floor(series.length/300));
+    for(let i=0;i<series.length;i+=stepN){path+=`${x(i).toFixed(1)},${y(Math.min(series[i],maxY)).toFixed(1)} `;}
+    path+=`${x(series.length-1).toFixed(1)},${y(Math.min(series[series.length-1],maxY)).toFixed(1)}`;
+    g+=`<path d="${path}" fill="none" stroke="var(--silver)" stroke-width="2"/>`;
+
+    // end-point marker + value label
+    const endV=series[series.length-1];
+    g+=`<circle cx="${x(series.length-1).toFixed(1)}" cy="${y(Math.min(endV,maxY)).toFixed(1)}" r="3.5" fill="var(--silver)"/>`;
+    g+=`<text x="${(x(series.length-1)-6).toFixed(1)}" y="${Math.max(y(Math.min(endV,maxY))-9,P.t+10).toFixed(1)}" text-anchor="end" font-family="monospace" font-size="10" fill="var(--silver)">${fmtK(endV)} @ age ${retAge}</text>`;
+
+    svg.innerHTML=g;
   }
 
   IDS.forEach(id=>$(id).addEventListener('input',calc));

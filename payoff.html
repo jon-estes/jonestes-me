@@ -19,8 +19,8 @@
   .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .75rem;display:flex;justify-content:space-between;align-items:baseline}
   .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
   .add-row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:.5rem;margin-bottom:.75rem}
-  input{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.82rem;outline:none;min-width:0;width:100%}
-  input:focus{border-color:var(--green)}
+  input,select{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.82rem;outline:none;min-width:0;width:100%}
+  input:focus,select:focus{border-color:var(--green)}
   .btn{background:var(--green);color:#0a0a0c;border:none;border-radius:8px;padding:.65rem 1.2rem;font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:background .15s;white-space:nowrap}
   .btn:hover{background:var(--green-bright)}
   .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
@@ -73,7 +73,7 @@
   </div>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Debt</th><th class="r">Balance</th><th class="r">APR</th><th class="r">Min payment</th><th></th></tr></thead>
+      <thead><tr><th>Debt</th><th class="r">Balance</th><th class="r">APR</th><th class="r">Min payment</th><th class="r">Paid down</th><th></th></tr></thead>
       <tbody id="debtBody"></tbody>
     </table>
   </div>
@@ -83,6 +83,21 @@
     <div><span class="field-label">Extra toward debt each month $ (beyond minimums)</span><input type="number" step="25" id="extra" value="200"></div>
     <button class="btn btn-ghost" id="clearBtn">CLEAR ALL</button>
   </div>
+
+  <div class="section-label"><span>Log a Payment</span><span class="hint">drops the balance &amp; keeps a permanent record</span></div>
+  <div class="add-row" style="grid-template-columns:1.6fr 1fr auto">
+    <select id="payDebt"></select>
+    <input type="number" step="0.01" id="payAmt" placeholder="Amount $">
+    <button class="btn" id="payBtn">LOG PAYMENT</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Debt</th><th class="r">Payment</th><th class="r">Balance after</th><th></th></tr></thead>
+      <tbody id="payBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="payEmpty">No payments logged yet. Every payment you record updates the balance and the projections below.</div>
+  <div class="empty-state" id="payTotals" style="display:none;font-style:normal"></div>
 
   <div class="compare" id="compare" style="display:none">
     <div class="strategy" id="stratSnow">
@@ -110,12 +125,13 @@
   </div>
 
   <div class="footnote">
-    Both simulations pay all minimums, then pour the extra (plus freed-up minimums from paid-off debts) into the target. Avalanche is always mathematically ≤ snowball on interest; snowball sometimes wins on psychology. Interest compounds monthly at APR÷12. If a debt's minimum doesn't cover its interest, the tool flags it. · <a href="/">jonestes.me</a>
+    Both simulations pay all minimums, then pour the extra (plus freed-up minimums from paid-off debts) into the target. Avalanche is always mathematically ≤ snowball on interest; snowball sometimes wins on psychology. Interest compounds monthly at APR÷12. If a debt's minimum doesn't cover its interest, the tool flags it. Logged payments reduce the live balance, so the strategies and chart always project from where you actually stand — deleting a payment record restores the balance. · <a href="/">jonestes.me</a>
   </div>
 </div>
 
 <script src="/nav.js" defer></script>
 <script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
 <script>
 (function(){
   const $=(id)=>document.getElementById(id);
@@ -123,8 +139,11 @@
   const money=(n)=>'$'+Math.round(n).toLocaleString();
   let debts=[];
 
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s){debts=s.debts||[];if(s.extra!==undefined)$('extra').value=s.extra;}}catch{}
-  function save(){localStorage.setItem(KEY,JSON.stringify({debts,extra:$('extra').value}));}
+  let payments=[];
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s){debts=s.debts||[];payments=s.payments||[];if(s.extra!==undefined)$('extra').value=s.extra;}}catch{}
+  // migrate: track original balance + paid-to-date on older saved debts
+  debts.forEach(d=>{if(d.origBal===undefined)d.origBal=Number(d.bal);if(d.paid===undefined)d.paid=0;});
+  function save(){localStorage.setItem(KEY,JSON.stringify({debts,payments,extra:$('extra').value}));}
 
   function renderDebts(){
     const body=$('debtBody');
@@ -132,12 +151,44 @@
     $('debtEmpty').style.display=debts.length?'none':'block';
     debts.forEach((d,i)=>{
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${d.name}</td><td class="r">${money(d.bal)}</td><td class="r">${d.apr}%</td><td class="r">${money(d.min)}</td>`;
+      const paidPct=d.origBal>0?Math.round((d.paid||0)/d.origBal*100):0;
+      const done=d.bal<=0.005;
+      tr.innerHTML=`<td>${d.name}${done?' <span class="pos" style="font-size:.62rem">✓ paid off</span>':''}</td>`+
+        `<td class="r">${money(d.bal)}</td><td class="r">${d.apr}%</td><td class="r">${money(d.min)}</td>`+
+        `<td class="r ${d.paid>0?'pos':''}">${money(d.paid||0)}${d.paid>0?` <span style="color:var(--text-dim);font-size:.64rem">(${paidPct}%)</span>`:''}</td>`;
       const td=document.createElement('td');
-      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Remove debt';
       del.addEventListener('click',()=>{debts.splice(i,1);save();renderDebts();simulate();});
       td.appendChild(del);tr.appendChild(td);body.appendChild(tr);
     });
+    const sel=$('payDebt');
+    sel.innerHTML=debts.length
+      ?debts.map((d,i)=>`<option value="${i}"${d.bal<=0.005?' disabled':''}>${d.name} — ${money(d.bal)}</option>`).join('')
+      :'<option value="">add a debt first…</option>';
+    renderPayments();
+  }
+
+  function renderPayments(){
+    const body=$('payBody');
+    body.innerHTML='';
+    $('payEmpty').style.display=payments.length?'none':'block';
+    $('payTotals').style.display=payments.length?'block':'none';
+    payments.slice().reverse().forEach((p)=>{
+      const realIdx=payments.indexOf(p);
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${p.date}</td><td>${p.name}</td><td class="r pos">−${money(p.amount)}</td><td class="r">${money(p.after)}</td>`;
+      const td=document.createElement('td');
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Delete record & restore balance';
+      del.addEventListener('click',()=>{
+        const debt=debts.find(d=>d.name===p.name);
+        if(debt){debt.bal+=p.amount;debt.paid=Math.max((debt.paid||0)-p.amount,0);}
+        payments.splice(realIdx,1);
+        save();renderDebts();simulate();
+      });
+      td.appendChild(del);tr.appendChild(td);body.appendChild(tr);
+    });
+    const total=payments.reduce((s,p)=>s+p.amount,0);
+    $('payTotals').textContent=`${payments.length} payment${payments.length>1?'s':''} logged · ${money(total)} paid down all-time`;
   }
 
   function runSim(order){
@@ -241,15 +292,35 @@
     const name=$('dName').value.trim();
     if(!name){$('dName').focus();return;}
     if(!$('dBal').value){$('dBal').focus();return;}
-    debts.push({name,bal:Number($('dBal').value),apr:Number($('dApr').value||0),min:Number($('dMin').value||0)});
+    debts.push({name,bal:Number($('dBal').value),origBal:Number($('dBal').value),paid:0,apr:Number($('dApr').value||0),min:Number($('dMin').value||0)});
     ['dName','dBal','dApr','dMin'].forEach(id=>$(id).value='');
     $('dName').focus();
     save();renderDebts();simulate();
   });
   $('dMin').addEventListener('keydown',(e)=>{if(e.key==='Enter')$('addBtn').click();});
   $('extra').addEventListener('input',simulate);
+  $('payBtn').addEventListener('click',()=>{
+    const i=Number($('payDebt').value);
+    const amt=Number($('payAmt').value||0);
+    if(!debts.length||isNaN(i)||!debts[i]){return;}
+    if(amt<=0){$('payAmt').focus();return;}
+    const d=debts[i];
+    const pay=Math.min(amt,d.bal);
+    if(pay<=0)return;
+    d.bal=Math.round((d.bal-pay)*100)/100;
+    d.paid=Math.round(((d.paid||0)+pay)*100)/100;
+    payments.push({
+      ts:Date.now(),
+      date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      name:d.name,amount:pay,after:d.bal
+    });
+    $('payAmt').value='';
+    save();renderDebts();simulate();
+  });
+  $('payAmt').addEventListener('keydown',(e)=>{if(e.key==='Enter')$('payBtn').click();});
+
   $('clearBtn').addEventListener('click',()=>{
-    if(confirm('Clear all debts?')){debts=[];save();renderDebts();simulate();}
+    if(confirm('Clear all debts AND the payment history?')){debts=[];payments=[];save();renderDebts();simulate();}
   });
 
   renderDebts();simulate();
