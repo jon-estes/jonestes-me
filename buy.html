@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourcing Compare · Jon Estes</title>
+<meta name="description" content="Compare AliExpress, Alibaba, Temu and more for product sourcing — with a landed cost-per-unit calculator.">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --bg-card: #121216;
+    --bg-card-hover: #1a1a20;
+    --border: #26262e;
+    --text: #d8d8dc;
+    --text-dim: #8a8a94;
+    --silver: #c0c4cc;
+    --green: #6ea36e;
+    --green-bright: #8fd08f;
+    --red: #b05656;
+    --gold: #c9a14a;
+    --copper: #c87f5a;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  [data-theme="light"] {
+    --bg: #f4f4f2;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f0ee;
+    --border: #d8d8d4;
+    --text: #1a1a1e;
+    --text-dim: #6a6a72;
+    --silver: #4a4e56;
+    --green: #3e7a3e;
+    --green-bright: #2e6a2e;
+    --red: #a04040;
+    --gold: #9a7a30;
+    --copper: #a05a36;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  header { margin-bottom: 2.5rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: 2.2rem; font-weight: 400; color: var(--silver); }
+  h1 .accent { color: var(--copper); font-style: italic; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.4rem; max-width: 58ch; }
+
+  .search-row { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; }
+  #itemInput {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #itemInput:focus { border-color: var(--copper); }
+  #itemInput::placeholder { color: var(--text-dim); opacity: 0.7; }
+  .btn {
+    background: var(--copper);
+    color: #0a0a0c;
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem 1.4rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn:hover { filter: brightness(1.15); }
+  .btn:active { transform: scale(0.97); }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text); filter: none; }
+  .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--copper);
+    outline-offset: 2px;
+  }
+
+  .recent { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2rem; min-height: 1.8rem; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .chip:hover { color: var(--copper); border-color: var(--copper); }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin: 2.25rem 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .section-label .hint { letter-spacing: 0; text-transform: none; font-size: 0.68rem; opacity: 0.8; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; }
+  .src-link {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  .src-link:hover { background: var(--bg-card-hover); border-color: var(--copper); transform: translateY(-1px); }
+  .src-link.disabled { opacity: 0.45; pointer-events: none; }
+  .src-link .name { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; color: var(--silver); }
+  .src-link .desc { font-size: 0.74rem; color: var(--text-dim); margin-top: 0.2rem; font-family: var(--mono); line-height: 1.45; }
+  .src-link .meta { margin-top: 0.45rem; display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(192,196,204,0.08);
+    color: var(--text-dim);
+  }
+  .pill.good { background: rgba(110,163,110,0.15); color: var(--green-bright); }
+  .pill.warn { background: rgba(201,161,74,0.15); color: var(--gold); }
+  .pill.bad { background: rgba(176,86,86,0.15); color: var(--red); }
+
+  /* Calculator */
+  .calc-form {
+    display: grid;
+    grid-template-columns: 1.4fr 1.6fr 1fr 1fr 1fr auto;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .calc-form input, .calc-form select {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.55rem 0.7rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    outline: none;
+    min-width: 0;
+  }
+  .calc-form input:focus, .calc-form select:focus { border-color: var(--copper); }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.78rem; }
+  th {
+    text-align: left; color: var(--text-dim); font-weight: 400; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border);
+  }
+  td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td.num { white-space: nowrap; }
+  td.unit { color: var(--copper); font-weight: 600; white-space: nowrap; }
+  tr.best td { background: rgba(110,163,110,0.07); }
+  tr.best td.unit { color: var(--green-bright); }
+  .best-badge {
+    font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
+    background: rgba(110,163,110,0.2); color: var(--green-bright);
+    border-radius: 4px; padding: 0.1rem 0.4rem; margin-left: 0.4rem; vertical-align: middle;
+  }
+  .del-btn { background: none; border: none; color: var(--text-dim); font-family: var(--mono); cursor: pointer; font-size: 0.85rem; padding: 0 0.3rem; }
+  .del-btn:hover { color: var(--red); }
+  .empty-state { color: var(--text-dim); font-size: 0.85rem; font-style: italic; padding: 1.25rem 0.5rem; text-align: center; }
+  .log-actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+  .log-actions .btn { padding: 0.5rem 1rem; font-size: 0.72rem; }
+
+  /* Cheat sheet */
+  .cheat {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.6rem;
+  }
+  .cheat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+  .cheat-card .site { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--copper); margin-bottom: 0.35rem; }
+  .cheat-card ul { list-style: none; }
+  .cheat-card li { font-size: 0.78rem; color: var(--text-dim); padding-left: 1rem; position: relative; margin-bottom: 0.2rem; }
+  .cheat-card li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--copper); }
+
+  .footnote {
+    margin-top: 3rem; font-size: 0.75rem; font-family: var(--mono);
+    color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 1rem;
+  }
+  .footnote a { color: var(--copper); }
+
+  @media (max-width: 760px) {
+    .calc-form { grid-template-columns: 1fr 1fr; }
+    .calc-form input#calcProduct { grid-column: 1 / -1; }
+    .calc-form button { grid-column: 1 / -1; }
+    h1 { font-size: 1.7rem; }
+    .table-wrap { overflow-x: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Supplier Research</div>
+    <h1>Sourcing <span class="accent">Compare</span></h1>
+    <p class="subtitle">One search across AliExpress, Alibaba, Temu, and the rest of the sourcing world — then log what you find and let the calculator tell you the true landed cost per unit.</p>
+  </header>
+
+  <div class="search-row">
+    <input type="text" id="itemInput" placeholder="e.g. copper rounds 1 oz .999" autocomplete="off" autofocus>
+    <button class="btn" id="searchBtn">SEARCH ALL</button>
+    <button class="btn btn-ghost" id="openBig3Btn" title="Opens AliExpress, Alibaba & Temu in new tabs">OPEN BIG 3</button>
+  </div>
+  <div class="recent" id="recentChips"></div>
+
+  <div class="section-label"><span>The Big 3</span><span class="hint">same parent companies, very different games</span></div>
+  <div class="grid" id="big3Grid"></div>
+
+  <div class="section-label"><span>More Sources</span><span class="hint">cross-check before you commit</span></div>
+  <div class="grid" id="moreGrid"></div>
+
+  <div class="section-label"><span>Landed Cost Comparison</span><span class="hint">lowest cost/unit wins · saved locally</span></div>
+  <div class="calc-form">
+    <select id="calcSource">
+      <option value="AliExpress">AliExpress</option>
+      <option value="Alibaba">Alibaba</option>
+      <option value="Temu">Temu</option>
+      <option value="DHgate">DHgate</option>
+      <option value="Made-in-China">Made-in-China</option>
+      <option value="eBay">eBay</option>
+      <option value="Amazon">Amazon</option>
+      <option value="Other">Other</option>
+    </select>
+    <input type="text" id="calcProduct" placeholder="Product / listing note">
+    <input type="number" step="0.01" id="calcPrice" placeholder="Item total $">
+    <input type="number" step="0.01" id="calcShip" placeholder="Shipping $">
+    <input type="number" step="1" id="calcQty" placeholder="Qty (units)">
+    <button class="btn" id="calcAddBtn">ADD</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Source</th><th>Product</th><th>Item $</th><th>Ship $</th><th>Qty</th><th>$ / Unit</th><th></th></tr>
+      </thead>
+      <tbody id="calcBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="calcEmpty">Nothing logged yet. Find a listing, punch in the totals, and the best deal gets flagged automatically.</div>
+  <div class="log-actions">
+    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
+    <button class="btn btn-ghost" id="clearBtn">CLEAR TABLE</button>
+  </div>
+
+  <div class="section-label"><span>Know Your Marketplace</span><span class="hint">30-second cheat sheet</span></div>
+  <div class="cheat">
+    <div class="cheat-card">
+      <div class="site">AliExpress</div>
+      <ul>
+        <li>Retail quantities, no MOQ — best for testing a product</li>
+        <li>Sort by orders to surface proven sellers</li>
+        <li>"Choice" listings = faster shipping, vetted sellers</li>
+        <li>2–4 week shipping typical; buyer protection is decent</li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="site">Alibaba</div>
+      <ul>
+        <li>Wholesale/factory direct — MOQs of 50–500+ common</li>
+        <li>Listed prices are starting points; message for real quotes</li>
+        <li>Look for Verified Supplier + Trade Assurance</li>
+        <li>Best per-unit price once you know what sells</li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="site">Temu</div>
+      <ul>
+        <li>Cheapest sticker price, free shipping over threshold</li>
+        <li>Quality is a lottery — order a sample first</li>
+        <li>Weak for specialty items like .999 copper bullion</li>
+        <li>Good for stream supplies, packaging, accessories</li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="site">Copper rounds specifically</div>
+      <ul>
+        <li>Verify ".999 fine" and true 1 oz AVDP weight in specs</li>
+        <li>Copper spot is pennies/oz — you're paying for minting</li>
+        <li>Compare against US dealers (Golden State Mint, JM Bullion) at volume — shipping can erase overseas savings</li>
+        <li>Ask Alibaba sellers for assay/material certs on big orders</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Listed prices on Alibaba are negotiable openers — always factor MOQ and freight before comparing. · <a href="/">jonestes.me</a>
+  </div>
+
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const enc = (q) => encodeURIComponent(q.trim());
+
+  const BIG3 = [
+    { name: 'AliExpress — Best Match', desc: 'retail qty, no minimums', pills: [['no moq','good'],['2-4 wk ship','warn']],
+      url: (q) => `https://www.aliexpress.com/wholesale?SearchText=${enc(q)}` },
+    { name: 'AliExpress — By Orders', desc: 'proven sellers first', pills: [['trust signal','good']],
+      url: (q) => `https://www.aliexpress.com/wholesale?SearchText=${enc(q)}&SortType=total_tranpro_desc` },
+    { name: 'Alibaba', desc: 'factory direct, wholesale pricing', pills: [['best $/unit','good'],['moq 50+','warn']],
+      url: (q) => `https://www.alibaba.com/trade/search?SearchText=${enc(q)}` },
+    { name: 'Temu', desc: 'lowest sticker, mixed quality', pills: [['cheap','good'],['sample first','bad']],
+      url: (q) => `https://www.temu.com/search_result.html?search_key=${enc(q)}` },
+  ];
+
+  const MORE = [
+    { name: 'DHgate', desc: 'small-batch wholesale middle ground', pills: [['low moq','good']],
+      url: (q) => `https://www.dhgate.com/wholesale/search.do?act=search&searchkey=${enc(q)}` },
+    { name: 'Made-in-China', desc: 'manufacturer directory', pills: [['factories','warn']],
+      url: (q) => `https://www.made-in-china.com/multi-search/${enc(q)}/F1.html` },
+    { name: 'eBay — Bulk Lots', desc: 'domestic lots, fast shipping', pills: [['us stock','good']],
+      url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}+lot&_sop=15` },
+    { name: 'eBay — Sold Lots', desc: 'what bulk actually sells for', pills: [['resale check','good']],
+      url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${enc(q)}+lot&LH_Sold=1&LH_Complete=1&_sop=13` },
+    { name: 'Amazon', desc: 'price ceiling sanity check', pills: [['retail','warn']],
+      url: (q) => `https://www.amazon.com/s?k=${enc(q)}` },
+    { name: 'Google Shopping', desc: 'broad price scan', pills: [['overview','warn']],
+      url: (q) => `https://www.google.com/search?q=${enc(q)}+wholesale&tbm=shop` },
+  ];
+
+  function renderGrid(elId, links, query) {
+    const grid = $(elId);
+    grid.innerHTML = '';
+    links.forEach((l) => {
+      const a = document.createElement('a');
+      a.className = 'src-link' + (query ? '' : ' disabled');
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.href = query ? l.url(query) : '#';
+      const pills = (l.pills || []).map(([t, c]) => `<span class="pill ${c}">${t}</span>`).join('');
+      a.innerHTML = `<div class="name">${l.name}</div><div class="desc">${l.desc}</div><div class="meta">${pills}</div>`;
+      grid.appendChild(a);
+    });
+  }
+
+  function renderAll(query) {
+    renderGrid('big3Grid', BIG3, query);
+    renderGrid('moreGrid', MORE, query);
+  }
+
+  // ---- Recent searches ----
+  const RECENT_KEY = 'sourcingCompare.recent';
+  function getRecent() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; }
+  }
+  function saveRecent(q) {
+    let r = getRecent().filter((x) => x.toLowerCase() !== q.toLowerCase());
+    r.unshift(q);
+    r = r.slice(0, 8);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+    renderRecent();
+  }
+  function renderRecent() {
+    const wrap = $('recentChips');
+    wrap.innerHTML = '';
+    getRecent().forEach((q) => {
+      const c = document.createElement('button');
+      c.className = 'chip';
+      c.textContent = q;
+      c.addEventListener('click', () => { $('itemInput').value = q; doSearch(); });
+      wrap.appendChild(c);
+    });
+  }
+
+  function doSearch() {
+    const q = $('itemInput').value.trim();
+    if (!q) return;
+    renderAll(q);
+    saveRecent(q);
+    $('calcProduct').value = q;
+  }
+
+  $('searchBtn').addEventListener('click', doSearch);
+  $('itemInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+
+  $('openBig3Btn').addEventListener('click', () => {
+    const q = $('itemInput').value.trim();
+    if (!q) return;
+    doSearch();
+    // Popup blockers may only allow the first tab until you allow popups for this site.
+    window.open(BIG3[0].url(q), '_blank');
+    window.open(BIG3[2].url(q), '_blank');
+    window.open(BIG3[3].url(q), '_blank');
+  });
+
+  // ---- Landed cost table ----
+  const LOG_KEY = 'sourcingCompare.calc';
+  function getLog() {
+    try { return JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch { return []; }
+  }
+  function setLog(rows) {
+    localStorage.setItem(LOG_KEY, JSON.stringify(rows));
+    renderLog();
+  }
+  const money = (n) => '$' + Number(n).toFixed(2);
+
+  function perUnit(r) {
+    const total = Number(r.price || 0) + Number(r.ship || 0);
+    const qty = Number(r.qty || 0);
+    return qty > 0 ? total / qty : null;
+  }
+
+  function renderLog() {
+    const rows = getLog();
+    const body = $('calcBody');
+    body.innerHTML = '';
+    $('calcEmpty').style.display = rows.length ? 'none' : 'block';
+
+    // find best (lowest) per-unit among valid rows
+    let bestIdx = -1, bestVal = Infinity;
+    rows.forEach((r, i) => {
+      const u = perUnit(r);
+      if (u !== null && u < bestVal) { bestVal = u; bestIdx = i; }
+    });
+
+    rows.forEach((r, i) => {
+      const u = perUnit(r);
+      const tr = document.createElement('tr');
+      if (i === bestIdx && rows.length > 1) tr.className = 'best';
+
+      const tdSource = document.createElement('td');
+      tdSource.textContent = r.source;
+      if (i === bestIdx && rows.length > 1) {
+        const b = document.createElement('span');
+        b.className = 'best-badge';
+        b.textContent = 'best';
+        tdSource.appendChild(b);
+      }
+      tr.appendChild(tdSource);
+
+      const cells = [
+        ['', r.product],
+        ['num', money(r.price)],
+        ['num', money(r.ship)],
+        ['num', r.qty],
+        ['unit', u === null ? '—' : money(u)],
+      ];
+      cells.forEach(([cls, text]) => {
+        const td = document.createElement('td');
+        if (cls) td.className = cls;
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+
+      const tdDel = document.createElement('td');
+      const del = document.createElement('button');
+      del.className = 'del-btn';
+      del.textContent = '✕';
+      del.title = 'Delete row';
+      del.addEventListener('click', () => {
+        const all = getLog();
+        all.splice(i, 1);
+        setLog(all);
+      });
+      tdDel.appendChild(del);
+      tr.appendChild(tdDel);
+      body.appendChild(tr);
+    });
+  }
+
+  $('calcAddBtn').addEventListener('click', () => {
+    const product = $('calcProduct').value.trim();
+    const price = $('calcPrice').value;
+    const qty = $('calcQty').value;
+    if (!product || !price || !qty) {
+      (!product ? $('calcProduct') : !price ? $('calcPrice') : $('calcQty')).focus();
+      return;
+    }
+    const rows = getLog();
+    rows.push({
+      source: $('calcSource').value,
+      product,
+      price: Number(price),
+      ship: Number($('calcShip').value || 0),
+      qty: Number(qty),
+    });
+    setLog(rows);
+    ['calcPrice', 'calcShip', 'calcQty'].forEach((id) => { $(id).value = ''; });
+  });
+
+  $('exportBtn').addEventListener('click', () => {
+    const rows = getLog();
+    if (!rows.length) return;
+    const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+    const csv = ['Source,Product,Item Total,Shipping,Qty,Cost Per Unit']
+      .concat(rows.map((r) => {
+        const u = perUnit(r);
+        return [r.source, r.product, r.price, r.ship, r.qty, u === null ? '' : u.toFixed(4)].map(esc).join(',');
+      }))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sourcing-comparison.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  $('clearBtn').addEventListener('click', () => {
+    if (confirm('Clear the whole comparison table? This cannot be undone.')) setLog([]);
+  });
+
+  // ---- Init ----
+  renderAll('');
+  renderRecent();
+  renderLog();
+})();
+</script>
+</body>
+</html>
