@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wheel · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎡</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.5rem;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--red);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem}
+  .layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start}
+  .wheel-wrap{position:relative;max-width:460px;margin:0 auto}
+  canvas{width:100%;height:auto;display:block}
+  .pointer{position:absolute;top:50%;right:-6px;transform:translateY(-50%);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-right:26px solid var(--gold);filter:drop-shadow(0 0 4px rgba(0,0,0,.5))}
+  .spin-btn{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:84px;height:84px;border-radius:50%;border:3px solid var(--bg);
+    background:var(--gold);color:#0a0a0c;font-family:var(--mono);font-weight:700;font-size:.85rem;
+    letter-spacing:.08em;cursor:pointer;transition:filter .15s,transform .1s;box-shadow:0 0 0 2px var(--gold)
+  }
+  .spin-btn:hover{filter:brightness(1.12)}
+  .spin-btn:active{transform:translate(-50%,-50%) scale(.95)}
+  .spin-btn:disabled{filter:grayscale(.6);cursor:default}
+  .winner{
+    text-align:center;font-family:var(--mono);margin-top:1.25rem;min-height:4.2rem;
+  }
+  .winner .name{font-size:1.7rem;color:var(--green-bright);font-weight:700}
+  .winner .label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+  .winner-actions{display:flex;gap:.5rem;justify-content:center;margin-top:.6rem}
+  .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.4rem}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.7rem .85rem;color:var(--text);font-family:var(--mono);font-size:.84rem;outline:none;min-height:220px;resize:vertical;line-height:1.9}
+  textarea:focus{border-color:var(--red)}
+  .btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.05em;cursor:pointer}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text)}
+  .btn.primary{background:var(--red);color:#fff;border:none}
+  .btn.primary:hover{filter:brightness(1.15)}
+  .btn:focus-visible,textarea:focus-visible,.spin-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .panel .actions{display:flex;gap:.4rem;margin-top:.7rem;flex-wrap:wrap}
+  label.opt{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);margin-top:.8rem;cursor:pointer}
+  .history{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);margin-top:.9rem;line-height:1.9}
+  .history b{color:var(--silver);font-weight:600}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem;text-align:center}
+  .footnote a{color:var(--red)}
+  @media(max-width:760px){.layout{grid-template-columns:1fr}h1{font-size:1.7rem}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Training Room</div>
+    <h1>The <span class="accent">Wheel</span></h1>
+    <p class="subtitle">Who's answering next? No volunteers needed — the wheel has spoken.</p>
+  </header>
+
+  <div class="layout">
+    <div>
+      <div class="wheel-wrap">
+        <canvas id="wheel" width="460" height="460"></canvas>
+        <div class="pointer"></div>
+        <button class="spin-btn" id="spinBtn">SPIN</button>
+      </div>
+      <div class="winner" id="winnerBox" aria-live="polite"></div>
+    </div>
+
+    <div class="panel">
+      <span class="field-label">Names — one per line</span>
+      <textarea id="names" placeholder="Alex
+Jordan
+Sam
+Priya
+Marcus"></textarea>
+      <label class="opt"><input type="checkbox" id="removeWinner" checked> remove winner after each spin</label>
+      <div class="actions">
+        <button class="btn primary" id="updateBtn">UPDATE WHEEL</button>
+        <button class="btn" id="restoreBtn">RESTORE ALL</button>
+        <button class="btn" id="shuffleBtn">SHUFFLE</button>
+      </div>
+      <div class="history" id="history"></div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Tip for trainings: leave "remove winner" on so everyone gets exactly one turn — the wheel never calls on the same person twice. Names save locally between sessions. Works great on a projector. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='wheel.state';
+  const canvas=$('wheel'),ctx=canvas.getContext('2d');
+  const SIZE=460,R=SIZE/2-6,CX=SIZE/2,CY=SIZE/2;
+  // muted palette rotation matching the site
+  const COLORS=['#6ea36e','#c9a14a','#b05656','#5a7a9a','#8a6a9a','#c87f5a','#4a8a8a','#9a8a4a'];
+  let names=[],allNames=[],angle=0,spinning=false,picked=[];
+
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s){names=s.names||[];allNames=s.allNames||names.slice();picked=s.picked||[];$('removeWinner').checked=s.remove!==false;$('names').value=(s.textarea!==undefined?s.textarea:names.join('\n'));}
+  }catch{}
+  function save(){localStorage.setItem(KEY,JSON.stringify({names,allNames,picked,remove:$('removeWinner').checked,textarea:$('names').value}));}
+
+  function draw(){
+    ctx.clearRect(0,0,SIZE,SIZE);
+    const n=names.length;
+    if(!n){
+      ctx.fillStyle='#26262e';
+      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#8a8a94';ctx.font='13px monospace';ctx.textAlign='center';
+      ctx.fillText('add names →',CX,CY+4);
+      return;
+    }
+    const slice=Math.PI*2/n;
+    for(let i=0;i<n;i++){
+      const start=angle+i*slice;
+      ctx.beginPath();
+      ctx.moveTo(CX,CY);
+      ctx.arc(CX,CY,R,start,start+slice);
+      ctx.closePath();
+      ctx.fillStyle=COLORS[i%COLORS.length];
+      // avoid same color touching at the wrap seam
+      if(n%COLORS.length===1&&i===n-1)ctx.fillStyle=COLORS[1];
+      ctx.fill();
+      ctx.strokeStyle='#0a0a0c';ctx.lineWidth=2;ctx.stroke();
+      // label
+      ctx.save();
+      ctx.translate(CX,CY);
+      ctx.rotate(start+slice/2);
+      ctx.textAlign='right';
+      ctx.fillStyle='#0a0a0c';
+      const fontSize=n>16?11:n>10?13:15;
+      ctx.font='600 '+fontSize+'px monospace';
+      let label=names[i];
+      if(label.length>14)label=label.slice(0,13)+'…';
+      ctx.fillText(label,R-14,5);
+      ctx.restore();
+    }
+    // hub
+    ctx.beginPath();ctx.arc(CX,CY,52,0,Math.PI*2);ctx.fillStyle='#0a0a0c';ctx.fill();
+  }
+
+  function currentWinner(){
+    // pointer is at angle 0 (3 o'clock)
+    const n=names.length;
+    const slice=Math.PI*2/n;
+    let a=(0-angle)%(Math.PI*2);
+    if(a<0)a+=Math.PI*2;
+    return Math.floor(a/slice);
+  }
+
+  function spin(){
+    if(spinning||names.length<2)return;
+    spinning=true;
+    $('spinBtn').disabled=true;
+    $('winnerBox').innerHTML='';
+    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const target=angle+(reduced?Math.PI*2:Math.PI*2*(4+Math.random()*3))+Math.random()*Math.PI*2;
+    const dur=reduced?300:3600+Math.random()*800;
+    const start=performance.now(),from=angle;
+    function frame(t){
+      const p=Math.min((t-start)/dur,1);
+      const ease=1-Math.pow(1-p,3);
+      angle=from+(target-from)*ease;
+      draw();
+      if(p<1)requestAnimationFrame(frame);
+      else finish();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function finish(){
+    spinning=false;
+    $('spinBtn').disabled=false;
+    const i=currentWinner();
+    const winner=names[i];
+    picked.push(winner);
+    $('winnerBox').innerHTML=`<div class="label">the wheel has chosen</div><div class="name">🎉 ${winner}</div>`+
+      `<div class="winner-actions"><button class="btn" id="respinBtn">SPIN AGAIN</button></div>`;
+    $('respinBtn').addEventListener('click',()=>{ 
+      if($('removeWinner').checked)removeName(i);
+      spin();
+    });
+    if($('removeWinner').checked){
+      // remove after a beat so the slice is visible under the pointer
+      setTimeout(()=>{removeName(i);},1200);
+    }
+    renderHistory();
+    save();
+  }
+  function removeName(i){
+    if(i>=0&&i<names.length){names.splice(i,1);draw();save();}
+  }
+
+  function renderHistory(){
+    $('history').innerHTML=picked.length
+      ?'<b>Picked:</b> '+picked.join(' → ')
+      :'';
+  }
+
+  $('spinBtn').addEventListener('click',spin);
+  $('updateBtn').addEventListener('click',()=>{
+    names=$('names').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    allNames=names.slice();picked=[];angle=0;
+    $('winnerBox').innerHTML='';
+    draw();renderHistory();save();
+  });
+  $('restoreBtn').addEventListener('click',()=>{
+    names=allNames.slice();picked=[];angle=0;
+    $('winnerBox').innerHTML='';
+    draw();renderHistory();save();
+  });
+  $('shuffleBtn').addEventListener('click',()=>{
+    for(let i=names.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[names[i],names[j]]=[names[j],names[i]];}
+    draw();save();
+  });
+  $('removeWinner').addEventListener('change',save);
+
+  draw();renderHistory();
+})();
+</script>
+</body>
+</html>

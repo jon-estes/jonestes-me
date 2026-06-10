@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Generator · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔳</text></svg>">
+<meta name="description" content="Generate QR codes for links, Wi-Fi, and text — entirely in your browser.">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --bg-card: #121216;
+    --bg-card-hover: #1a1a20;
+    --border: #26262e;
+    --text: #d8d8dc;
+    --text-dim: #8a8a94;
+    --silver: #c0c4cc;
+    --green: #6ea36e;
+    --green-bright: #8fd08f;
+    --red: #b05656;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  [data-theme="light"] {
+    --bg: #f4f4f2;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f0ee;
+    --border: #d8d8d4;
+    --text: #1a1a1e;
+    --text-dim: #6a6a72;
+    --silver: #4a4e56;
+    --green: #3e7a3e;
+    --green-bright: #2e6a2e;
+    --red: #a04040;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; line-height: 1.6; }
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  header { margin-bottom: 2rem; }
+  .eyebrow { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+  h1 { font-size: 2.2rem; font-weight: 400; color: var(--silver); }
+  h1 .accent { color: var(--green-bright); font-style: italic; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.4rem; max-width: 56ch; }
+
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+
+  .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+  label.field-label { display: block; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin: 1rem 0 0.35rem; }
+  label.field-label:first-child { margin-top: 0; }
+  textarea, input[type="text"], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.7rem 0.85rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus { border-color: var(--green); }
+  textarea { min-height: 84px; }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .chip {
+    font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.25rem 0.7rem; cursor: pointer; transition: color 0.15s, border-color 0.15s;
+  }
+  .chip:hover { color: var(--green-bright); border-color: var(--green); }
+
+  .opt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .color-row { display: flex; align-items: center; gap: 0.6rem; }
+  input[type="color"] {
+    width: 42px; height: 34px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg); cursor: pointer; padding: 2px;
+  }
+  .color-row span { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+
+  .btn {
+    background: var(--green); color: #0a0a0c; border: none; border-radius: 8px;
+    padding: 0.8rem 1.3rem; font-family: var(--mono); font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.05em; cursor: pointer; transition: background 0.15s, transform 0.1s;
+    width: 100%; margin-top: 1.25rem;
+  }
+  .btn:hover { background: var(--green-bright); }
+  .btn:active { transform: scale(0.98); }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); margin-top: 0.5rem; }
+  .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text); }
+  .btn:focus-visible, input:focus-visible, select:focus-visible, .chip:focus-visible { outline: 2px solid var(--green-bright); outline-offset: 2px; }
+
+  /* Preview */
+  .preview-panel { text-align: center; position: sticky; top: 1rem; }
+  #qrBox {
+    background: #fff; border-radius: 10px; padding: 16px;
+    display: inline-block; min-width: 232px; min-height: 232px;
+    line-height: 0;
+  }
+  #qrBox img, #qrBox canvas { max-width: 100%; height: auto; }
+  .preview-empty { font-family: var(--mono); font-size: 0.75rem; color: #999; padding-top: 96px; }
+  .preview-note { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); margin-top: 0.75rem; }
+
+  .footnote { margin-top: 3rem; font-size: 0.75rem; font-family: var(--mono); color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 1rem; }
+  .footnote a { color: var(--green); }
+
+  @media (max-width: 720px) {
+    .layout { grid-template-columns: 1fr; }
+    .preview-panel { position: static; }
+    h1 { font-size: 1.7rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Utility</div>
+    <h1>QR <span class="accent">Generator</span></h1>
+    <p class="subtitle">Links, text, or Wi-Fi credentials to scannable codes — generated entirely in your browser, downloadable as PNG.</p>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <label class="field-label" for="qrText">Content</label>
+      <textarea id="qrText" placeholder="https://jonestes.me" spellcheck="false"></textarea>
+      <div class="presets">
+        <button class="chip" data-preset="https://jonestes.me">jonestes.me</button>
+        <button class="chip" data-preset="https://mendemarketing.com">mendemarketing.com</button>
+        <button class="chip" data-preset="https://www.whatnot.com/">Whatnot stream</button>
+        <button class="chip" id="wifiChip">Wi-Fi network…</button>
+      </div>
+
+      <div class="opt-row" style="margin-top:1rem;">
+        <div>
+          <label class="field-label" for="qrSize">Size</label>
+          <select id="qrSize">
+            <option value="200">200 px — small</option>
+            <option value="300" selected>300 px — standard</option>
+            <option value="500">500 px — print</option>
+            <option value="800">800 px — poster</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="qrEcc">Error correction</label>
+          <select id="qrEcc">
+            <option value="L">L — 7% (densest)</option>
+            <option value="M" selected>M — 15% (standard)</option>
+            <option value="Q">Q — 25%</option>
+            <option value="H">H — 30% (most robust)</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="field-label">Colors</label>
+      <div class="opt-row">
+        <div class="color-row"><input type="color" id="colorDark" value="#0a0a0c"><span>foreground</span></div>
+        <div class="color-row"><input type="color" id="colorLight" value="#ffffff"><span>background</span></div>
+      </div>
+
+      <button class="btn" id="genBtn">GENERATE</button>
+    </div>
+
+    <div class="panel preview-panel">
+      <div id="qrBox"><div class="preview-empty">your code appears here</div></div>
+      <button class="btn" id="downloadBtn" style="display:none;">DOWNLOAD PNG</button>
+      <button class="btn btn-ghost" id="copyBtn" style="display:none;">COPY TO CLIPBOARD</button>
+      <div class="preview-note">Tip: keep foreground dark on light background — inverted codes scan poorly. Test with your phone before printing.</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Everything runs locally — nothing is uploaded anywhere. Wi-Fi codes use the standard WIFI: format that iPhone and Android cameras recognize natively. · <a href="/">jonestes.me</a>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  let lastDataUrl = null;
+
+  function generate() {
+    const text = $('qrText').value.trim();
+    if (!text) { $('qrText').focus(); return; }
+    const size = parseInt($('qrSize').value, 10);
+    const ecc = $('qrEcc').value;
+    const box = $('qrBox');
+    box.innerHTML = '';
+    lastDataUrl = null;
+    $('downloadBtn').style.display = 'none';
+    $('copyBtn').style.display = 'none';
+
+    try {
+      new QRCode(box, {
+        text,
+        width: size,
+        height: size,
+        colorDark: $('colorDark').value,
+        colorLight: $('colorLight').value,
+        correctLevel: QRCode.CorrectLevel[ecc],
+      });
+    } catch (e) {
+      box.innerHTML = '<div class="preview-empty">Content too long for this error-correction level — try level L or shorten the text.</div>';
+      return;
+    }
+
+    // qrcodejs renders a canvas + img; grab the data URL once ready
+    setTimeout(() => {
+      const img = box.querySelector('img');
+      const canvas = box.querySelector('canvas');
+      lastDataUrl = (img && img.src) || (canvas && canvas.toDataURL('image/png')) || null;
+      if (lastDataUrl) {
+        $('downloadBtn').style.display = 'block';
+        if (navigator.clipboard && window.ClipboardItem) $('copyBtn').style.display = 'block';
+      }
+    }, 60);
+  }
+
+  function slugify(s) {
+    return s.replace(/^https?:\/\//, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').slice(0, 40).toLowerCase() || 'qr-code';
+  }
+
+  $('genBtn').addEventListener('click', generate);
+  $('qrText').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generate();
+  });
+
+  $('downloadBtn').addEventListener('click', () => {
+    if (!lastDataUrl) return;
+    const a = document.createElement('a');
+    a.href = lastDataUrl;
+    a.download = 'qr-' + slugify($('qrText').value) + '.png';
+    a.click();
+  });
+
+  $('copyBtn').addEventListener('click', async () => {
+    if (!lastDataUrl) return;
+    try {
+      const blob = await (await fetch(lastDataUrl)).blob();
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      $('copyBtn').textContent = 'COPIED ✓';
+      setTimeout(() => { $('copyBtn').textContent = 'COPY TO CLIPBOARD'; }, 1500);
+    } catch {
+      $('copyBtn').textContent = 'COPY FAILED — USE DOWNLOAD';
+      setTimeout(() => { $('copyBtn').textContent = 'COPY TO CLIPBOARD'; }, 2000);
+    }
+  });
+
+  // Presets
+  document.querySelectorAll('.chip[data-preset]').forEach((c) => {
+    c.addEventListener('click', () => {
+      $('qrText').value = c.dataset.preset;
+      generate();
+    });
+  });
+
+  // Wi-Fi builder
+  $('wifiChip').addEventListener('click', () => {
+    const ssid = prompt('Wi-Fi network name (SSID):');
+    if (!ssid) return;
+    const pass = prompt('Password (leave blank for open network):') || '';
+    const esc = (s) => s.replace(/([\\;,:"'])/g, '\\$1');
+    $('qrText').value = pass
+      ? `WIFI:T:WPA;S:${esc(ssid)};P:${esc(pass)};;`
+      : `WIFI:T:nopass;S:${esc(ssid)};;`;
+    generate();
+  });
+})();
+</script>
+</body>
+</html>

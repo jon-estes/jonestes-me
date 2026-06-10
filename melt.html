@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Melt Value · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪙</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--copper:#c87f5a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30;--copper:#a05a36}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .spot-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+  .spot{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+  .spot .l{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.3rem}
+  .spot input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.55rem .75rem;color:var(--text);font-family:var(--mono);font-size:1rem;outline:none}
+  .spot input:focus{border-color:var(--green)}
+  .spot.ag .l{color:var(--silver)}.spot.au .l{color:var(--gold)}.spot.cu .l{color:var(--copper)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:2rem 0 .75rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.78rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  th.r,td.r{text-align:right}
+  td{padding:.45rem .5rem;border-bottom:1px solid var(--border);vertical-align:middle}
+  td.coin{color:var(--text)}
+  td.content{color:var(--text-dim);font-size:.7rem}
+  td.each{color:var(--silver);white-space:nowrap}
+  td.total{color:var(--green-bright);font-weight:600;white-space:nowrap}
+  td input{width:72px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.35rem .5rem;color:var(--text);font-family:var(--mono);font-size:.78rem;outline:none;text-align:right}
+  td input:focus{border-color:var(--green)}
+  .grand{display:flex;justify-content:space-between;align-items:baseline;background:var(--bg-card);border:1px solid var(--green);border-radius:10px;padding:1rem 1.25rem;margin-top:1.5rem;font-family:var(--mono)}
+  .grand .l{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+  .grand .v{font-size:1.6rem;color:var(--green-bright)}
+  .grand .sub{font-size:.68rem;color:var(--text-dim)}
+  .btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text)}
+  .btn:focus-visible,input:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px}
+  .actions{display:flex;gap:.5rem;margin-top:1rem}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+  @media(max-width:680px){.spot-bar{grid-template-columns:1fr}h1{font-size:1.7rem}.table-wrap{overflow-x:auto}td.content{display:none}th.content-h{display:none}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Numismatics</div>
+    <h1>Melt <span class="accent">Calculator</span></h1>
+    <p class="subtitle">Enter spot prices once, then punch in coin counts — instant melt value for everything from junk silver to war nickels to copper cents. Counts and spot prices are saved between visits.</p>
+  </header>
+
+  <div class="spot-bar">
+    <div class="spot ag"><div class="l">Silver spot $/ozt</div><input type="number" step="0.01" id="spotAg" value="30.00"></div>
+    <div class="spot au"><div class="l">Gold spot $/ozt</div><input type="number" step="0.01" id="spotAu" value="2600.00"></div>
+    <div class="spot cu"><div class="l">Copper spot $/lb</div><input type="number" step="0.01" id="spotCu" value="4.50"></div>
+  </div>
+
+  <div class="section-label"><span>90% Silver (pre-1965)</span><span class="hint">the junk silver workhorses</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Coin</th><th class="content-h">Silver content</th><th class="r">Qty</th><th class="r">Melt each</th><th class="r">Total</th></tr></thead><tbody id="tbl90"></tbody></table></div>
+
+  <div class="section-label"><span>Other Silver</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Coin</th><th class="content-h">Silver content</th><th class="r">Qty</th><th class="r">Melt each</th><th class="r">Total</th></tr></thead><tbody id="tblOther"></tbody></table></div>
+
+  <div class="section-label"><span>Gold</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Coin</th><th class="content-h">Gold content</th><th class="r">Qty</th><th class="r">Melt each</th><th class="r">Total</th></tr></thead><tbody id="tblGold"></tbody></table></div>
+
+  <div class="section-label"><span>Copper</span><span class="hint">note: melting US cents is illegal — this is collector/hedge value</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Item</th><th class="content-h">Copper content</th><th class="r">Qty</th><th class="r">Melt each</th><th class="r">Total</th></tr></thead><tbody id="tblCopper"></tbody></table></div>
+
+  <div class="grand">
+    <div><div class="l">Total melt value</div><div class="sub" id="grandSub">—</div></div>
+    <div class="v" id="grandTotal">$0.00</div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="resetBtn">RESET COUNTS</button>
+    <button class="btn" id="copyBtn">COPY SUMMARY</button>
+  </div>
+
+  <div class="footnote">
+    Silver weights are actual silver weight (ASW) in troy oz for average-circulated coins — heavily worn 90% can run ~1–2% light. "Face × 0.715" is the dealer convention for circulated 90% bags. Spot defaults are placeholders: update them from your <a href="/silver">silver tracker</a> or kitco before trusting the totals. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='meltCalc.state';
+  const money=(n)=>'$'+n.toFixed(2);
+
+  // metal: ag/au = troy oz per coin; cu = pounds of copper per coin
+  const COINS={
+    tbl90:[
+      {id:'dime90',name:'Dime (1946–64 Roosevelt, Mercury)',oz:0.0723,metal:'ag',note:'.0723 ozt'},
+      {id:'qtr90',name:'Quarter (1932–64 Washington)',oz:0.1808,metal:'ag',note:'.1808 ozt'},
+      {id:'half90',name:'Half (1916–64 Walker, Franklin, 64 Kennedy)',oz:0.3617,metal:'ag',note:'.3617 ozt'},
+      {id:'dollar90',name:'Morgan / Peace dollar',oz:0.7734,metal:'ag',note:'.7734 ozt'},
+    ],
+    tblOther:[
+      {id:'half40',name:'40% Half (1965–70 Kennedy)',oz:0.1479,metal:'ag',note:'.1479 ozt'},
+      {id:'warnickel',name:'War nickel (1942–45, 35%)',oz:0.0563,metal:'ag',note:'.0563 ozt'},
+      {id:'ase',name:'American Silver Eagle (1 ozt)',oz:1.0,metal:'ag',note:'1.000 ozt'},
+      {id:'round',name:'Generic .999 round / bar (1 ozt)',oz:1.0,metal:'ag',note:'1.000 ozt'},
+    ],
+    tblGold:[
+      {id:'age1',name:'American Gold Eagle (1 ozt)',oz:1.0,metal:'au',note:'1.000 ozt'},
+      {id:'dbleagle',name:'$20 Double Eagle (pre-1933)',oz:0.9675,metal:'au',note:'.9675 ozt'},
+      {id:'eagle10',name:'$10 Eagle (pre-1933)',oz:0.4838,metal:'au',note:'.4838 ozt'},
+      {id:'half5',name:'$5 Half Eagle (pre-1933)',oz:0.2419,metal:'au',note:'.2419 ozt'},
+      {id:'tenthoz',name:'1/10 ozt gold (any)',oz:0.1,metal:'au',note:'.100 ozt'},
+    ],
+    tblCopper:[
+      {id:'cent',name:'Copper cent (1959–82, 95% Cu)',oz:0.006513,metal:'cu',note:'2.95 g Cu'},
+      {id:'curound',name:'Copper round (1 oz AVDP .999)',oz:0.0625,metal:'cu',note:'1 oz AVDP'},
+    ],
+  };
+
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY))||{}}catch{}
+  if(state.spotAg)$('spotAg').value=state.spotAg;
+  if(state.spotAu)$('spotAu').value=state.spotAu;
+  if(state.spotCu)$('spotCu').value=state.spotCu;
+
+  function spot(metal){
+    return Number(metal==='ag'?$('spotAg').value:metal==='au'?$('spotAu').value:$('spotCu').value)||0;
+  }
+
+  // build rows
+  Object.entries(COINS).forEach(([tbl,coins])=>{
+    const body=$(tbl);
+    coins.forEach(c=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td class="coin">${c.name}</td><td class="content">${c.note}</td>`+
+        `<td class="r"><input type="number" min="0" step="1" id="qty_${c.id}" value="${state['qty_'+c.id]||''}" placeholder="0"></td>`+
+        `<td class="r each" id="each_${c.id}">—</td><td class="r total" id="tot_${c.id}">—</td>`;
+      body.appendChild(tr);
+    });
+  });
+
+  const allCoins=Object.values(COINS).flat();
+
+  function recalc(){
+    let grand=0, ozAg=0, ozAu=0;
+    allCoins.forEach(c=>{
+      const each=c.oz*spot(c.metal);
+      const qty=Number($('qty_'+c.id).value||0);
+      const tot=each*qty;
+      grand+=tot;
+      if(c.metal==='ag')ozAg+=c.oz*qty;
+      if(c.metal==='au')ozAu+=c.oz*qty;
+      $('each_'+c.id).textContent=each>0?money(each):'—';
+      $('tot_'+c.id).textContent=qty>0?money(tot):'—';
+      state['qty_'+c.id]=$('qty_'+c.id).value;
+    });
+    state.spotAg=$('spotAg').value;state.spotAu=$('spotAu').value;state.spotCu=$('spotCu').value;
+    localStorage.setItem(KEY,JSON.stringify(state));
+    $('grandTotal').textContent=money(grand);
+    const subs=[];
+    if(ozAg>0)subs.push(ozAg.toFixed(3)+' ozt silver');
+    if(ozAu>0)subs.push(ozAu.toFixed(3)+' ozt gold');
+    $('grandSub').textContent=subs.length?subs.join(' · '):'—';
+  }
+
+  document.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
+
+  $('resetBtn').addEventListener('click',()=>{
+    allCoins.forEach(c=>{$('qty_'+c.id).value='';});
+    recalc();
+  });
+
+  $('copyBtn').addEventListener('click',async()=>{
+    const lines=['Melt value @ Ag $'+$('spotAg').value+' / Au $'+$('spotAu').value+' / Cu $'+$('spotCu').value];
+    allCoins.forEach(c=>{
+      const qty=Number($('qty_'+c.id).value||0);
+      if(qty>0)lines.push(`${qty}× ${c.name}: ${$('tot_'+c.id).textContent}`);
+    });
+    lines.push('TOTAL: '+$('grandTotal').textContent);
+    try{await navigator.clipboard.writeText(lines.join('\n'));
+      $('copyBtn').textContent='COPIED ✓';setTimeout(()=>{$('copyBtn').textContent='COPY SUMMARY'},1500);
+    }catch{}
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>

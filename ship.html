@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ship It · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .ask{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.5rem}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.3rem}
+  input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.9rem;outline:none}
+  input:focus{border-color:var(--green)}
+  .verdict{border:1px solid var(--green);background:var(--bg-card);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:.6rem;display:none}
+  .verdict.show{display:block}
+  .verdict .v-name{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--green-bright)}
+  .verdict .v-why{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);margin-top:.3rem;line-height:1.6}
+  .verdict .v-cost{float:right;font-family:var(--mono);font-size:1.1rem;color:var(--silver)}
+  .alt{border-color:var(--border)}
+  .alt .v-name{color:var(--silver);font-weight:400;font-size:.85rem}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:2rem 0 .75rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.76rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  td{padding:.5rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text-dim)}
+  td.svc{color:var(--silver)}
+  td input{width:76px;text-align:right;padding:.3rem .45rem;font-size:.76rem}
+  .pill{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.1rem .4rem;border-radius:4px;background:rgba(110,163,110,.15);color:var(--green-bright)}
+  .pill.warn{background:rgba(201,161,74,.15);color:var(--gold)}
+  .pill.bad{background:rgba(176,86,86,.15);color:var(--red)}
+  .rules{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-size:.82rem;color:var(--text-dim)}
+  .rules li{margin:.35rem 0 .35rem 1.1rem}
+  .rules b{color:var(--silver);font-weight:600}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+  @media(max-width:640px){.ask{grid-template-columns:1fr}h1{font-size:1.7rem}.table-wrap{overflow-x:auto}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Logistics</div>
+    <h1>Ship <span class="accent">It</span></h1>
+    <p class="subtitle">Item value and weight in, shipping method out. Tuned for coins and bullion — when to risk the cheap envelope, when tracking is non-negotiable, and when only Registered Mail will do.</p>
+  </header>
+
+  <div class="ask">
+    <div><span class="field-label">Item value $</span><input type="number" step="0.01" id="val" placeholder="45.00"></div>
+    <div><span class="field-label">Packed weight oz</span><input type="number" step="0.1" id="wt" placeholder="2.5"></div>
+  </div>
+
+  <div id="verdicts"></div>
+
+  <div class="section-label"><span>Your Rate Table</span><span class="hint">editable — rates change yearly, verify at USPS/eBay</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Service</th><th>Best for</th><th>Cost $</th><th>Limits</th><th>Protection</th></tr></thead>
+      <tbody>
+        <tr><td class="svc">eBay Standard Envelope</td><td>Single coins, low value</td><td><input type="number" step="0.01" id="rEnv" value="0.79"></td><td>≤ 3 oz, ≤ ¼" thick, item ≤ <input type="number" id="envMax" value="20" style="width:56px"> $</td><td><span class="pill warn">tracking-lite</span></td></tr>
+        <tr><td class="svc">USPS Ground Advantage</td><td>Most coin orders</td><td><input type="number" step="0.01" id="rGA" value="5.25"></td><td>≤ 15.99 oz at this rate</td><td><span class="pill">$100 incl. ins.</span></td></tr>
+        <tr><td class="svc">Priority Flat Rate (sm box)</td><td>Heavy lots, rolls, bullion</td><td><input type="number" step="0.01" id="rPri" value="10.40"></td><td>Up to 70 lb</td><td><span class="pill">$100 incl. ins.</span></td></tr>
+        <tr><td class="svc">+ Extra insurance</td><td>Values over $100</td><td><input type="number" step="0.01" id="rIns" value="3.35"></td><td>per add'l $100 covered (approx.)</td><td><span class="pill">declared value</span></td></tr>
+        <tr><td class="svc">Registered Mail</td><td>High-value: gold, key dates</td><td><input type="number" step="0.01" id="rReg" value="18.60"></td><td>Required > <input type="number" id="regMin" value="1000" style="width:64px"> $ (your rule)</td><td><span class="pill">up to $50k, chain of custody</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label"><span>Coin Shipping Rules of Thumb</span></div>
+  <div class="rules">
+    <ul>
+      <li><b>eBay Standard Envelope</b> only for items that fit the thickness limit — single coins in flips taped to cardboard, never in a 2×2 snap case (too thick). Delivery confirmation is scan-based, not full tracking, and claims are capped low. Never for anything you'd be upset to lose.</li>
+      <li><b>Tape the coin down.</b> A loose coin in an envelope is a coin the sorting machine ate.</li>
+      <li><b>Ground Advantage</b> is the default once value passes the envelope cap — the included $100 insurance covers most stream sales.</li>
+      <li><b>Insurance through eBay/Whatnot labels</b> is often cheaper than USPS retail counter rates.</li>
+      <li><b>Registered Mail</b> for anything four figures — it travels in locked containers with signatures at every handoff. Slow but the gold standard, literally.</li>
+      <li><b>Never write "coins" on the package.</b> Boring packages don't grow legs.</li>
+    </ul>
+  </div>
+
+  <div class="footnote">
+    Rates above are editable placeholders — USPS adjusts prices every January and July, and your eBay/Whatnot commercial rates run below retail. Set them once from a recent label purchase and the recommendations stay accurate. Settings save locally. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='shipIt.rates';
+  const RATE_IDS=['rEnv','rGA','rPri','rIns','rReg','envMax','regMin'];
+
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s)RATE_IDS.forEach(id=>{if(s[id]!==undefined)$(id).value=s[id];});
+  }catch{}
+
+  function saveRates(){
+    const s={};RATE_IDS.forEach(id=>s[id]=$(id).value);
+    localStorage.setItem(KEY,JSON.stringify(s));
+  }
+
+  function card(name,cost,why,primary){
+    return `<div class="verdict show${primary?'':' alt'}"><span class="v-cost">${cost}</span><div class="v-name">${primary?'→ ':''}${name}</div><div class="v-why">${why}</div></div>`;
+  }
+  const money=(n)=>'$'+n.toFixed(2);
+
+  function decide(){
+    const val=Number($('val').value||0);
+    const wt=Number($('wt').value||0);
+    const box=$('verdicts');
+    if(!val&&!wt){box.innerHTML='';return;}
+
+    const rEnv=Number($('rEnv').value),rGA=Number($('rGA').value),rPri=Number($('rPri').value),
+          rIns=Number($('rIns').value),rReg=Number($('rReg').value),
+          envMax=Number($('envMax').value),regMin=Number($('regMin').value);
+
+    let out='';
+    if(val>=regMin){
+      out+=card('Registered Mail',money(rReg),`Value ≥ ${money(regMin)} — chain-of-custody handling and insurable to $50k. Slow (10–14 days) but this is what dealers use for gold and key dates.`,true);
+      out+=card('Priority + full insurance',money(rPri+Math.ceil(Math.max(val-100,0)/100)*rIns),'Faster alternative if the buyer is antsy — insure to full declared value.',false);
+    } else if(val<=envMax && wt>0 && wt<=3){
+      out+=card('eBay Standard Envelope',money(rEnv),`Under ${money(envMax)} and ≤ 3 oz — the margin-saver. Coin in a flip, taped to cardboard, under ¼" thick. Accept that ~1–2% may wander; at this value the math still works.`,true);
+      out+=card('Ground Advantage',money(rGA),'Upgrade if the buyer pays shipping anyway, the coin is thick-packaged, or you just don\'t want the risk tonight.',false);
+    } else if(wt<16||wt===0){
+      const ins=val>100?Math.ceil((val-100)/100)*rIns:0;
+      out+=card('USPS Ground Advantage'+(ins?' + insurance':''),money(rGA+ins),
+        val>100
+          ?`Includes $100 insurance; adding ~${money(ins)} covers the full ${money(val)}. 2–5 day delivery with real tracking.`
+          :'Included $100 insurance already covers this. Real tracking, 2–5 days. The default for a reason.',true);
+      if(wt>=10)out+=card('Priority Flat Rate (small box)',money(rPri),'Worth comparing at this weight — flat rate beats GA as ounces climb, and it\'s faster.',false);
+    } else {
+      const ins=val>100?Math.ceil((val-100)/100)*rIns:0;
+      out+=card('Priority Flat Rate (small box)'+(ins?' + insurance':''),money(rPri+ins),'Over a pound — flat rate ignores weight entirely. Rolls, bulk lots, and bullion live here. If it fits, it ships.',true);
+      out+=card('Ground Advantage (weight-based)','varies','Can still beat flat rate for short zones — check your label tool both ways.',false);
+    }
+    box.innerHTML=out;
+  }
+
+  ['val','wt'].forEach(id=>$(id).addEventListener('input',decide));
+  RATE_IDS.forEach(id=>$(id).addEventListener('input',()=>{saveRates();decide();}));
+  decide();
+})();
+</script>
+</body>
+</html>

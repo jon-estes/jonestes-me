@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whatnot Profit · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:56ch}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:2rem 0 1rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start}
+  .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin:.85rem 0 .3rem}
+  .field-label:first-child{margin-top:0}
+  input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.9rem;outline:none;transition:border-color .15s}
+  input:focus{border-color:var(--green)}
+  .fee-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+  .result-line{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.82rem;padding:.35rem 0;color:var(--text-dim)}
+  .result-line .v{color:var(--text)}
+  .result-line.neg .v{color:var(--red)}
+  .result-line.total{border-top:1px solid var(--border);margin-top:.5rem;padding-top:.7rem;font-size:1rem}
+  .result-line.total .v{font-weight:700}
+  .result-line.total.profit .v{color:var(--green-bright)}
+  .result-line.total.loss .v{color:var(--red)}
+  .margin-badge{font-family:var(--mono);font-size:.72rem;text-align:right;color:var(--text-dim);margin-top:.3rem}
+  .btn{background:var(--green);color:#0a0a0c;border:none;border-radius:8px;padding:.75rem 1.3rem;font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:background .15s,transform .1s}
+  .btn:hover{background:var(--green-bright)}
+  .btn:active{transform:scale(.98)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text)}
+  .btn.full{width:100%;margin-top:1rem}
+  .btn:focus-visible,input:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.76rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  td{padding:.5rem;border-bottom:1px solid var(--border)}
+  td.pos{color:var(--green-bright)}td.neg{color:var(--red)}
+  .del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.85rem}
+  .del-btn:hover{color:var(--red)}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:1rem .5rem;text-align:center}
+  .totals-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:1rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.1rem;color:var(--green-bright)}
+  .stat .n.neg{color:var(--red)}
+  .stat .l{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .log-actions{display:flex;gap:.5rem;margin-top:.9rem}
+  .log-actions .btn{padding:.5rem 1rem;font-size:.72rem}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+  @media(max-width:720px){.layout{grid-template-columns:1fr}h1{font-size:1.7rem}.totals-bar{grid-template-columns:1fr 1fr}.table-wrap{overflow-x:auto}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Whatnot Business</div>
+    <h1>Profit <span class="accent">Calculator</span></h1>
+    <p class="subtitle">Sale price in, true profit out — after Whatnot's commission, payment processing, shipping, and your cost basis. Log sales as the stream runs and watch the night's totals build.</p>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <label class="field-label" for="salePrice">Sale price $</label>
+      <input type="number" step="0.01" id="salePrice" placeholder="25.00">
+      <label class="field-label" for="costBasis">Your cost basis (what you paid) $</label>
+      <input type="number" step="0.01" id="costBasis" placeholder="12.00">
+      <label class="field-label" for="shipCost">Your shipping + materials cost $</label>
+      <input type="number" step="0.01" id="shipCost" placeholder="1.00">
+      <label class="field-label" for="buyerShip">Buyer-paid shipping you keep $ (usually 0 — Whatnot handles it)</label>
+      <input type="number" step="0.01" id="buyerShip" placeholder="0.00">
+
+      <div class="section-label" style="margin-top:1.5rem"><span>Fees</span><span class="hint">editable — verify in your seller dashboard</span></div>
+      <div class="fee-grid">
+        <div><label class="field-label" for="feeCommission">Commission %</label><input type="number" step="0.1" id="feeCommission" value="8"></div>
+        <div><label class="field-label" for="feeProc">Processing %</label><input type="number" step="0.1" id="feeProc" value="2.9"></div>
+        <div><label class="field-label" for="feeFlat">Flat fee $</label><input type="number" step="0.01" id="feeFlat" value="0.30"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:.5rem;margin-top:.9rem;font-family:var(--mono);font-size:.72rem;color:var(--text-dim);cursor:pointer">
+        <input type="checkbox" id="rememberFees" style="width:auto" checked> remember my fee settings
+      </label>
+    </div>
+
+    <div class="panel">
+      <div class="section-label" style="margin-top:0"><span>Breakdown</span></div>
+      <div class="result-line"><span>Gross (sale + kept shipping)</span><span class="v" id="rGross">$0.00</span></div>
+      <div class="result-line neg"><span>Commission</span><span class="v" id="rCommission">−$0.00</span></div>
+      <div class="result-line neg"><span>Payment processing</span><span class="v" id="rProc">−$0.00</span></div>
+      <div class="result-line neg"><span>Flat transaction fee</span><span class="v" id="rFlat">−$0.00</span></div>
+      <div class="result-line neg"><span>Shipping + materials</span><span class="v" id="rShip">−$0.00</span></div>
+      <div class="result-line neg"><span>Cost basis</span><span class="v" id="rBasis">−$0.00</span></div>
+      <div class="result-line total" id="rTotalLine"><span>Net profit</span><span class="v" id="rNet">$0.00</span></div>
+      <div class="margin-badge" id="rMargin">margin — · ROI —</div>
+      <button class="btn full" id="logBtn">LOG THIS SALE</button>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Tonight's Sales</span><span class="hint">saved locally</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Time</th><th>Sale</th><th>Fees</th><th>Costs</th><th>Net</th><th>Margin</th><th></th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="logEmpty">No sales logged yet. Run the numbers above, then hit LOG THIS SALE.</div>
+  <div class="totals-bar" id="totalsBar" style="display:none">
+    <div class="stat"><div class="n" id="tSales">0</div><div class="l">sales</div></div>
+    <div class="stat"><div class="n" id="tGross">$0</div><div class="l">gross</div></div>
+    <div class="stat"><div class="n" id="tFees">$0</div><div class="l">fees + costs</div></div>
+    <div class="stat"><div class="n" id="tNet">$0</div><div class="l">net profit</div></div>
+  </div>
+  <div class="log-actions">
+    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
+    <button class="btn btn-ghost" id="clearBtn">CLEAR (NEW STREAM)</button>
+  </div>
+
+  <div class="footnote">
+    Default fees are Whatnot's standard 8% commission + 2.9% + $0.30 processing — confirm against your seller dashboard, since rates vary by category and promo. Processing applies to the buyer's total. Don't forget: net profit here is pre-tax. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const money=(n)=>(n<0?'−$':'$')+Math.abs(n).toFixed(2);
+  const FEES_KEY='whatnotProfit.fees', LOG_KEY='whatnotProfit.log';
+
+  // restore fee settings
+  try{
+    const f=JSON.parse(localStorage.getItem(FEES_KEY));
+    if(f){$('feeCommission').value=f.c;$('feeProc').value=f.p;$('feeFlat').value=f.f;}
+  }catch{}
+
+  function calc(){
+    const sale=Number($('salePrice').value||0);
+    const basis=Number($('costBasis').value||0);
+    const ship=Number($('shipCost').value||0);
+    const buyerShip=Number($('buyerShip').value||0);
+    const cPct=Number($('feeCommission').value||0)/100;
+    const pPct=Number($('feeProc').value||0)/100;
+    const flat=Number($('feeFlat').value||0);
+
+    const gross=sale+buyerShip;
+    const commission=sale*cPct;
+    const proc=gross*pPct;
+    const totalCosts=commission+proc+flat+ship+basis;
+    const net=gross-totalCosts;
+    const margin=gross>0?(net/gross*100):0;
+    const invested=basis+ship;
+    const roi=invested>0?(net/invested*100):0;
+
+    $('rGross').textContent=money(gross);
+    $('rCommission').textContent='−'+money(commission);
+    $('rProc').textContent='−'+money(proc);
+    $('rFlat').textContent='−'+money(flat);
+    $('rShip').textContent='−'+money(ship);
+    $('rBasis').textContent='−'+money(basis);
+    $('rNet').textContent=money(net);
+    $('rTotalLine').className='result-line total '+(net>=0?'profit':'loss');
+    $('rMargin').textContent=gross>0?`margin ${margin.toFixed(1)}% · ROI ${invested>0?roi.toFixed(0)+'%':'—'}`:'margin — · ROI —';
+
+    if($('rememberFees').checked){
+      localStorage.setItem(FEES_KEY,JSON.stringify({c:$('feeCommission').value,p:$('feeProc').value,f:$('feeFlat').value}));
+    }
+    return {gross,fees:commission+proc+flat,costs:ship+basis,net,margin};
+  }
+
+  ['salePrice','costBasis','shipCost','buyerShip','feeCommission','feeProc','feeFlat'].forEach(id=>$(id).addEventListener('input',calc));
+
+  // ---- Log ----
+  function getLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY))||[]}catch{return[]}}
+  function setLog(r){localStorage.setItem(LOG_KEY,JSON.stringify(r));renderLog();}
+
+  function renderLog(){
+    const rows=getLog(), body=$('logBody');
+    body.innerHTML='';
+    $('logEmpty').style.display=rows.length?'none':'block';
+    $('totalsBar').style.display=rows.length?'grid':'none';
+    let tg=0,tf=0,tn=0;
+    rows.forEach((r,i)=>{
+      tg+=r.gross;tf+=r.fees+r.costs;tn+=r.net;
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${r.time}</td><td>${money(r.gross)}</td><td class="neg">−${money(r.fees)}</td><td class="neg">−${money(r.costs)}</td><td class="${r.net>=0?'pos':'neg'}">${money(r.net)}</td><td>${r.margin.toFixed(0)}%</td>`;
+      const td=document.createElement('td');
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Delete';
+      del.addEventListener('click',()=>{const all=getLog();all.splice(i,1);setLog(all);});
+      td.appendChild(del);tr.appendChild(td);body.appendChild(tr);
+    });
+    $('tSales').textContent=rows.length;
+    $('tGross').textContent=money(tg);
+    $('tFees').textContent=money(tf);
+    $('tNet').textContent=money(tn);
+    $('tNet').className='n'+(tn<0?' neg':'');
+  }
+
+  $('logBtn').addEventListener('click',()=>{
+    if(!Number($('salePrice').value)){$('salePrice').focus();return;}
+    const r=calc();
+    const rows=getLog();
+    rows.push({time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),...r});
+    setLog(rows);
+  });
+
+  $('exportBtn').addEventListener('click',()=>{
+    const rows=getLog();if(!rows.length)return;
+    const csv=['Time,Gross,Fees,Costs,Net,Margin%'].concat(rows.map(r=>[r.time,r.gross.toFixed(2),r.fees.toFixed(2),r.costs.toFixed(2),r.net.toFixed(2),r.margin.toFixed(1)].join(','))).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='whatnot-stream-'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(a.href);
+  });
+
+  $('clearBtn').addEventListener('click',()=>{
+    if(confirm('Clear the sales log and start a new stream?'))setLog([]);
+  });
+
+  calc();renderLog();
+})();
+</script>
+</body>
+</html>

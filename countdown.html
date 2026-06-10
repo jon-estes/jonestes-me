@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown · Jon &amp; Ashley</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem}
+  .palindrome{font-family:var(--mono);font-size:.78rem;color:var(--gold);margin-top:.5rem;letter-spacing:.25em}
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:2rem 0}
+  .unit{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem .5rem;text-align:center}
+  .unit .n{font-family:var(--mono);font-size:2.4rem;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}
+  .unit .l{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-top:.3rem}
+  .milestones{font-family:var(--mono);font-size:.74rem;color:var(--text-dim);text-align:center;margin-bottom:2.5rem;line-height:2}
+  .milestones b{color:var(--silver);font-weight:600}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:2rem 0 1rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .budget-head{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.3rem}
+  input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.85rem;outline:none}
+  input:focus{border-color:var(--gold)}
+  .cat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;margin-bottom:.55rem}
+  .cat-top{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:.6rem;align-items:center}
+  .cat-top input{background:var(--bg)}
+  .bar{height:6px;background:var(--bg);border-radius:3px;margin-top:.6rem;overflow:hidden}
+  .bar .fill{height:100%;background:var(--gold);border-radius:3px;transition:width .3s}
+  .bar .fill.over{background:var(--red)}
+  .cat-meta{font-family:var(--mono);font-size:.66rem;color:var(--text-dim);margin-top:.35rem;display:flex;justify-content:space-between}
+  .del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.9rem;padding:.2rem}
+  .del-btn:hover{color:var(--red)}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.65rem 1.2rem;font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:filter .15s}
+  .btn:hover{filter:brightness(1.15)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text);filter:none}
+  .btn:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .totals{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1.25rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.15rem;color:var(--gold)}
+  .stat .n.good{color:var(--green-bright)}
+  .stat .n.bad{color:var(--red)}
+  .stat .l{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .big-bar{height:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:5px;margin-top:.9rem;overflow:hidden}
+  .big-bar .fill{height:100%;background:var(--gold);transition:width .3s}
+  .big-bar .fill.over{background:var(--red)}
+  .savings-hint{font-family:var(--mono);font-size:.72rem;color:var(--text-dim);text-align:center;margin-top:.7rem}
+  .savings-hint b{color:var(--green-bright)}
+  .actions{display:flex;gap:.5rem;margin-top:1rem;justify-content:center}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem;text-align:center}
+  .footnote a{color:var(--gold)}
+  @media(max-width:640px){.countdown{grid-template-columns:repeat(2,1fr)}.unit .n{font-size:1.8rem}.cat-top{grid-template-columns:1fr 1fr;gap:.5rem}.cat-top input:first-child{grid-column:1/-1}.totals{grid-template-columns:1fr}h1{font-size:1.7rem}.budget-head{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Jon &amp; Ashley · Hawaii</div>
+    <h1>The <span class="accent">Countdown</span></h1>
+    <p class="subtitle">August 20, 2028 — beach, vows, and a date that reads the same in both directions.</p>
+    <div class="palindrome">8 · 2 0 · 2 0 2 8</div>
+  </header>
+
+  <div class="countdown">
+    <div class="unit"><div class="n" id="cdDays">—</div><div class="l">days</div></div>
+    <div class="unit"><div class="n" id="cdHours">—</div><div class="l">hours</div></div>
+    <div class="unit"><div class="n" id="cdMins">—</div><div class="l">minutes</div></div>
+    <div class="unit"><div class="n" id="cdSecs">—</div><div class="l">seconds</div></div>
+  </div>
+  <div class="milestones" id="milestones"></div>
+
+  <div class="section-label"><span>Budget</span><span class="hint">saved locally — every dollar has a job</span></div>
+  <div class="budget-head">
+    <div><span class="field-label">Total budget $</span><input type="number" step="100" id="totalBudget" value="12500"></div>
+    <div><span class="field-label">Saved so far $</span><input type="number" step="100" id="savedSoFar" placeholder="0"></div>
+  </div>
+
+  <div id="cats"></div>
+  <div class="actions">
+    <button class="btn" id="addCatBtn">+ ADD CATEGORY</button>
+    <button class="btn btn-ghost" id="resetCatsBtn">RESET TO DEFAULTS</button>
+  </div>
+
+  <div class="totals">
+    <div class="stat"><div class="n" id="tPlanned">$0</div><div class="l">planned</div></div>
+    <div class="stat"><div class="n" id="tSpent">$0</div><div class="l">spent</div></div>
+    <div class="stat"><div class="n" id="tLeft">$0</div><div class="l">budget remaining</div></div>
+  </div>
+  <div class="big-bar"><div class="fill" id="bigFill" style="width:0%"></div></div>
+  <div class="savings-hint" id="savingsHint"></div>
+
+  <div class="footnote">
+    Planned = what you've allocated per category · Spent = what's actually gone out the door. The savings pace line assumes you save the gap evenly between now and the big day. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='wedding.budget';
+  const WEDDING=new Date('2028-08-20T16:00:00-10:00'); // 4pm Hawaii time
+  const money=(n)=>'$'+Math.round(n).toLocaleString();
+
+  // ---- Countdown ----
+  function tick(){
+    const now=new Date();
+    let d=WEDDING-now;
+    if(d<0)d=0;
+    const days=Math.floor(d/86400000);
+    const hours=Math.floor(d%86400000/3600000);
+    const mins=Math.floor(d%3600000/60000);
+    const secs=Math.floor(d%60000/1000);
+    $('cdDays').textContent=days.toLocaleString();
+    $('cdHours').textContent=String(hours).padStart(2,'0');
+    $('cdMins').textContent=String(mins).padStart(2,'0');
+    $('cdSecs').textContent=String(secs).padStart(2,'0');
+
+    const weeks=Math.floor(days/7);
+    const fridays=Math.floor(days/7); // approx paydays if biweekly ≈ /14
+    const paydays=Math.floor(days/14);
+    $('milestones').innerHTML=days>0
+      ?`That's <b>${weeks.toLocaleString()} weekends</b> left to plan · about <b>${paydays} paychecks</b> if you're paid biweekly · <b>${Math.floor(days/30.44)} months</b> out`
+      :'<b>It\'s wedding day. Go get married! 🌺</b>';
+  }
+  tick();setInterval(tick,1000);
+
+  // ---- Budget ----
+  const DEFAULTS=[
+    {name:'Venue / ceremony site',plan:3500,spent:0},
+    {name:'Flights (family)',plan:3000,spent:0},
+    {name:'Lodging',plan:2500,spent:0},
+    {name:'Photographer',plan:1500,spent:0},
+    {name:'Attire & rings',plan:1000,spent:0},
+    {name:'Food & celebration',plan:800,spent:0},
+    {name:'Flowers / leis / decor',plan:400,spent:0},
+    {name:'Officiant & permits',plan:300,spent:0},
+  ];
+  let state={total:12500,saved:'',cats:JSON.parse(JSON.stringify(DEFAULTS))};
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.cats)state=s;}catch{}
+  $('totalBudget').value=state.total;
+  $('savedSoFar').value=state.saved;
+
+  function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+
+  function render(){
+    const wrap=$('cats');
+    wrap.innerHTML='';
+    state.cats.forEach((c,i)=>{
+      const div=document.createElement('div');
+      div.className='cat';
+      const pct=c.plan>0?Math.min(c.spent/c.plan*100,100):0;
+      const over=Number(c.spent)>Number(c.plan)&&c.plan>0;
+      div.innerHTML=`<div class="cat-top">
+        <input type="text" value="${String(c.name).replace(/"/g,'&quot;')}" data-i="${i}" data-f="name" placeholder="Category">
+        <input type="number" step="50" value="${c.plan}" data-i="${i}" data-f="plan" placeholder="Planned $">
+        <input type="number" step="50" value="${c.spent||''}" data-i="${i}" data-f="spent" placeholder="Spent $">
+        <button class="del-btn" data-del="${i}" title="Remove">✕</button>
+      </div>
+      <div class="bar"><div class="fill${over?' over':''}" style="width:${over?100:pct}%"></div></div>
+      <div class="cat-meta"><span>${money(c.spent||0)} of ${money(c.plan||0)}</span><span>${over?'over by '+money(c.spent-c.plan):money((c.plan||0)-(c.spent||0))+' left'}</span></div>`;
+      wrap.appendChild(div);
+    });
+
+    wrap.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input',()=>{
+        const i=Number(inp.dataset.i),f=inp.dataset.f;
+        state.cats[i][f]=f==='name'?inp.value:Number(inp.value||0);
+        save();updateTotals();
+        // refresh bars without full re-render (keeps focus)
+        const card=inp.closest('.cat');
+        const c=state.cats[i];
+        const pct=c.plan>0?Math.min(c.spent/c.plan*100,100):0;
+        const over=Number(c.spent)>Number(c.plan)&&c.plan>0;
+        const fill=card.querySelector('.fill');
+        fill.style.width=(over?100:pct)+'%';
+        fill.className='fill'+(over?' over':'');
+        card.querySelector('.cat-meta').innerHTML=`<span>${money(c.spent||0)} of ${money(c.plan||0)}</span><span>${over?'over by '+money(c.spent-c.plan):money((c.plan||0)-(c.spent||0))+' left'}</span>`;
+      });
+    });
+    wrap.querySelectorAll('[data-del]').forEach(b=>{
+      b.addEventListener('click',()=>{state.cats.splice(Number(b.dataset.del),1);save();render();updateTotals();});
+    });
+    updateTotals();
+  }
+
+  function updateTotals(){
+    const planned=state.cats.reduce((s,c)=>s+Number(c.plan||0),0);
+    const spent=state.cats.reduce((s,c)=>s+Number(c.spent||0),0);
+    const total=Number(state.total||0);
+    const left=total-spent;
+    $('tPlanned').textContent=money(planned);
+    $('tPlanned').className='n'+(planned>total?' bad':'');
+    $('tSpent').textContent=money(spent);
+    $('tLeft').textContent=money(left);
+    $('tLeft').className='n '+(left>=0?'good':'bad');
+    const pct=total>0?Math.min(spent/total*100,100):0;
+    $('bigFill').style.width=pct+'%';
+    $('bigFill').className='fill'+(spent>total?' over':'');
+
+    // savings pace
+    const saved=Number(state.saved||0);
+    const days=Math.max((WEDDING-new Date())/86400000,1);
+    const months=days/30.44;
+    const gap=Math.max(total-saved,0);
+    $('savingsHint').innerHTML=saved>0||state.saved!==''
+      ?(gap>0?`To hit ${money(total)} by the big day: save <b>${money(gap/months)}/month</b> (${money(gap)} to go over ${Math.floor(months)} months)`
+              :`<b>Fully funded ✓</b> — the budget is covered. Aloha.`)
+      :'Enter "saved so far" above to see your monthly savings pace.';
+  }
+
+  $('totalBudget').addEventListener('input',()=>{state.total=Number($('totalBudget').value||0);save();updateTotals();});
+  $('savedSoFar').addEventListener('input',()=>{state.saved=$('savedSoFar').value;save();updateTotals();});
+  $('addCatBtn').addEventListener('click',()=>{state.cats.push({name:'',plan:0,spent:0});save();render();});
+  $('resetCatsBtn').addEventListener('click',()=>{
+    if(confirm('Reset categories to the default Hawaii plan? Your numbers will be replaced.')){
+      state.cats=JSON.parse(JSON.stringify(DEFAULTS));save();render();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

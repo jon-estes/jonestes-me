@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coast FIRE · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--red);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .layout{display:grid;grid-template-columns:300px 1fr;gap:1.25rem;align-items:start}
+  .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.15rem}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin:.8rem 0 .3rem}
+  .field-label:first-child{margin-top:0}
+  input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.55rem .75rem;color:var(--text);font-family:var(--mono);font-size:.88rem;outline:none}
+  input:focus{border-color:var(--red)}
+  .results{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+  .stat .n{font-family:var(--mono);font-size:1.25rem;color:var(--silver)}
+  .stat .n.fire{color:var(--red)}
+  .stat .n.good{color:var(--green-bright)}
+  .stat .l{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:.15rem}
+  .stat .sub{font-family:var(--mono);font-size:.64rem;color:var(--text-dim);margin-top:.2rem}
+  .verdict{font-family:var(--mono);font-size:.8rem;line-height:1.7;color:var(--text-dim);background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1rem}
+  .verdict b{color:var(--green-bright);font-weight:600}
+  .verdict .warn{color:var(--gold)}
+  svg{width:100%;height:auto;display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:10px}
+  .legend{font-family:var(--mono);font-size:.66rem;color:var(--text-dim);margin-top:.5rem;display:flex;gap:1.2rem}
+  .legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:.35rem;vertical-align:middle}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--red)}
+  @media(max-width:760px){.layout{grid-template-columns:1fr}h1{font-size:1.7rem}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Personal Finance</div>
+    <h1>Coast <span class="accent">FIRE</span></h1>
+    <p class="subtitle">The question this answers: when could you stop contributing entirely and still retire on time, letting compounding do the rest? All values in today's dollars — returns are net of inflation.</p>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <label class="field-label" for="age">Current age</label><input type="number" id="age" value="28">
+      <label class="field-label" for="retAge">Retirement age</label><input type="number" id="retAge" value="60">
+      <label class="field-label" for="invested">Currently invested $</label><input type="number" step="500" id="invested" value="50000">
+      <label class="field-label" for="monthly">Monthly contribution $</label><input type="number" step="50" id="monthly" value="800">
+      <label class="field-label" for="spend">Desired annual spend in retirement $</label><input type="number" step="1000" id="spend" value="60000">
+      <label class="field-label" for="ret">Real return % (after inflation)</label><input type="number" step="0.1" id="ret" value="5">
+      <label class="field-label" for="swr">Safe withdrawal rate %</label><input type="number" step="0.1" id="swr" value="4">
+    </div>
+
+    <div>
+      <div class="results">
+        <div class="stat"><div class="n fire" id="rFireNum">$0</div><div class="l">FIRE number</div><div class="sub" id="rFireSub"></div></div>
+        <div class="stat"><div class="n" id="rCoastNum">$0</div><div class="l">Coast number (today)</div><div class="sub">enough now = done contributing</div></div>
+        <div class="stat"><div class="n good" id="rCoastDate">—</div><div class="l">Coast date</div><div class="sub" id="rCoastSub"></div></div>
+        <div class="stat"><div class="n" id="rFireDate">—</div><div class="l">Full FIRE date</div><div class="sub">if contributions continue</div></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <svg id="chart" viewBox="0 0 600 280" role="img" aria-label="Projection of portfolio growth toward coast and FIRE targets"></svg>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--silver)"></span>portfolio</span>
+        <span><span class="sw" style="background:var(--gold)"></span>coast threshold</span>
+        <span><span class="sw" style="background:var(--red)"></span>FIRE number</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Coast number today = FIRE number ÷ (1+r)^(years to retirement) — the seed that grows to the target with zero further contributions. A 5% real return ≈ 8% nominal minus 3% inflation; history says 4–6% real is the defensible range for stocks. This is a model, not advice — sequence risk, taxes, and life all apply. Pairs with <a href="/">FIRE Dash</a>. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='coastFire.inputs';
+  const IDS=['age','retAge','invested','monthly','spend','ret','swr'];
+  const money=(n)=>'$'+Math.round(n).toLocaleString();
+
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s)IDS.forEach(id=>{if(s[id]!==undefined)$(id).value=s[id];});}catch{}
+
+  function calc(){
+    const age=Number($('age').value||0), retAge=Number($('retAge').value||0);
+    const invested=Number($('invested').value||0), monthly=Number($('monthly').value||0);
+    const spend=Number($('spend').value||0);
+    const r=Number($('ret').value||0)/100, swr=Number($('swr').value||0)/100;
+    const yrs=Math.max(retAge-age,0);
+    const rm=Math.pow(1+r,1/12)-1;
+
+    const s={};IDS.forEach(id=>s[id]=$(id).value);localStorage.setItem(KEY,JSON.stringify(s));
+
+    const fireNum=swr>0?spend/swr:0;
+    const coastNow=yrs>0?fireNum/Math.pow(1+r,yrs):fireNum;
+
+    $('rFireNum').textContent=money(fireNum);
+    $('rFireSub').textContent=`${money(spend)}/yr ÷ ${(swr*100).toFixed(1)}% SWR`;
+    $('rCoastNum').textContent=money(coastNow);
+
+    // simulate monthly
+    let bal=invested, coastMonth=null, fireMonth=null;
+    const series=[bal];
+    const months=yrs*12;
+    for(let m=1;m<=months;m++){
+      bal=bal*(1+rm)+monthly;
+      series.push(bal);
+      const yrsLeft=(months-m)/12;
+      const coastTarget=fireNum/Math.pow(1+r,yrsLeft);
+      if(coastMonth===null&&bal>=coastTarget)coastMonth=m;
+      if(fireMonth===null&&bal>=fireNum)fireMonth=m;
+    }
+
+    const fmtDate=(m)=>{
+      const d=new Date();d.setMonth(d.getMonth()+m);
+      return d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    };
+    const ageAt=(m)=>(age+m/12).toFixed(1);
+
+    if(invested>=coastNow){
+      $('rCoastDate').textContent='NOW ✓';
+      $('rCoastSub').textContent='already past the coast line';
+    }else if(coastMonth!==null){
+      $('rCoastDate').textContent=fmtDate(coastMonth);
+      $('rCoastSub').textContent='age '+ageAt(coastMonth);
+    }else{
+      $('rCoastDate').textContent='—';
+      $('rCoastSub').textContent='not reached before retirement at this rate';
+    }
+    $('rFireDate').textContent=fireMonth!==null?fmtDate(fireMonth)+' (age '+ageAt(fireMonth)+')':'after age '+retAge;
+
+    // verdict copy
+    let v;
+    if(invested>=fireNum){
+      v=`<b>You've hit your FIRE number.</b> ${money(invested)} at a ${(swr*100).toFixed(1)}% withdrawal rate supports ${money(invested*swr)}/yr.`;
+    }else if(invested>=coastNow){
+      v=`<b>You're coasting.</b> ${money(invested)} growing at ${(r*100).toFixed(1)}% real becomes ${money(invested*Math.pow(1+r,yrs))} by age ${retAge} — past the ${money(fireNum)} target with no further contributions. Anything you keep saving just moves the date up.`;
+    }else if(coastMonth!==null){
+      v=`Keep contributing ${money(monthly)}/mo and you cross the coast line in <b>${fmtDate(coastMonth)}</b> (age ${ageAt(coastMonth)}). After that, contributions become optional — compounding alone carries you to ${money(fireNum)} by ${retAge}.`;
+    }else{
+      const gap=fireNum-series[series.length-1];
+      v=`<span class="warn">At this pace the portfolio reaches ${money(series[series.length-1])} by ${retAge} — ${money(gap)} short.</span> Levers: raise the monthly, push the retirement age, or trim the target spend.`;
+    }
+    $('verdict').innerHTML=v;
+
+    drawChart(series,fireNum,coastNow,r,months);
+  }
+
+  function drawChart(series,fireNum,coastNow,r,months){
+    const svg=$('chart');
+    const W=600,H=280,P={l:8,r:8,t:14,b:18};
+    const maxY=Math.max(fireNum*1.1,...series)||1;
+    const x=(i)=>P.l+(W-P.l-P.r)*(months>0?i/months:0);
+    const y=(v)=>H-P.b-(H-P.t-P.b)*(v/maxY);
+
+    let path='M';
+    const step=Math.max(1,Math.floor(series.length/300));
+    for(let i=0;i<series.length;i+=step){path+=`${x(i).toFixed(1)},${y(series[i]).toFixed(1)} `;}
+    // coast threshold declines toward fireNum at retirement: coast(t)=fireNum/(1+r)^(yrsLeft)
+    let coastPath='M';
+    for(let i=0;i<=months;i+=Math.max(1,Math.floor(months/120))){
+      const yrsLeft=(months-i)/12;
+      coastPath+=`${x(i).toFixed(1)},${y(fireNum/Math.pow(1+r,yrsLeft)).toFixed(1)} `;
+    }
+
+    svg.innerHTML=
+      `<line x1="${P.l}" y1="${y(fireNum)}" x2="${W-P.r}" y2="${y(fireNum)}" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="6 4"/>`+
+      `<path d="${coastPath}" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="2 3"/>`+
+      `<path d="${path}" fill="none" stroke="var(--silver)" stroke-width="2"/>`+
+      `<text x="${P.l+4}" y="${Math.max(y(fireNum)-6,12)}" fill="var(--red)" font-size="10" font-family="monospace">FIRE ${'$'+Math.round(fireNum/1000)}k</text>`;
+  }
+
+  IDS.forEach(id=>$(id).addEventListener('input',calc));
+  calc();
+})();
+</script>
+</body>
+</html>

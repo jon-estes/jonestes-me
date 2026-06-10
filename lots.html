@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lot Splitter · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .lot-bar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.5rem;align-items:end}
+  .field-label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.3rem}
+  input[type="text"],input[type="number"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.85rem;outline:none}
+  input:focus{border-color:var(--gold)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .75rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .add-row{display:grid;grid-template-columns:2fr 1fr auto;gap:.5rem;margin-bottom:1rem}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.7rem 1.2rem;font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:filter .15s,transform .1s;white-space:nowrap}
+  .btn:hover{filter:brightness(1.15)}
+  .btn:active{transform:scale(.98)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text);filter:none}
+  .btn:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.78rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  th.r,td.r{text-align:right}
+  td{padding:.5rem;border-bottom:1px solid var(--border)}
+  td.basis{color:var(--gold);font-weight:600;white-space:nowrap}
+  td.pct{color:var(--text-dim);font-size:.7rem;white-space:nowrap}
+  td input{width:88px;text-align:right;padding:.35rem .5rem;font-size:.78rem}
+  .del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.85rem}
+  .del-btn:hover{color:var(--red)}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:1.25rem .5rem;text-align:center}
+  .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1.25rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.15rem;color:var(--gold)}
+  .stat .l{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .check{font-family:var(--mono);font-size:.72rem;margin-top:.6rem;color:var(--green-bright)}
+  .check.bad{color:var(--red)}
+  .actions{display:flex;gap:.5rem;margin-top:1rem}
+  .actions .btn{padding:.5rem 1rem;font-size:.72rem}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--gold)}
+  @media(max-width:680px){.lot-bar{grid-template-columns:1fr}.add-row{grid-template-columns:1fr 1fr}.add-row .btn{grid-column:1/-1}.summary{grid-template-columns:1fr}h1{font-size:1.7rem}.table-wrap{overflow-x:auto}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Inventory</div>
+    <h1>Lot <span class="accent">Splitter</span></h1>
+    <p class="subtitle">Bought a mixed lot for one price? List each piece with its estimated value and your cost basis gets allocated proportionally — clean numbers for inventory, pricing, and taxes.</p>
+  </header>
+
+  <div class="lot-bar">
+    <div><span class="field-label">Lot name</span><input type="text" id="lotName" placeholder="eBay mixed silver lot — Jun 2026"></div>
+    <div><span class="field-label">Total paid $ (incl. shipping)</span><input type="number" step="0.01" id="lotCost" placeholder="150.00"></div>
+    <div><span class="field-label">&nbsp;</span><button class="btn btn-ghost" id="newLotBtn" style="width:100%">NEW LOT</button></div>
+  </div>
+
+  <div class="section-label"><span>Items in the lot</span><span class="hint">est. value = what you'd realistically sell it for</span></div>
+  <div class="add-row">
+    <input type="text" id="itemName" placeholder="Item — e.g. 1921 Morgan, AU">
+    <input type="number" step="0.01" id="itemValue" placeholder="Est. value $">
+    <button class="btn" id="addBtn">ADD ITEM</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th class="r">Est. value</th><th class="r">% of lot</th><th class="r">Allocated basis</th><th class="r">Margin if sold @ est.</th><th></th></tr></thead>
+      <tbody id="itemsBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="itemsEmpty">No items yet. Add each piece from the lot above.</div>
+
+  <div class="summary" id="summaryBar" style="display:none">
+    <div class="stat"><div class="n" id="sCount">0</div><div class="l">items</div></div>
+    <div class="stat"><div class="n" id="sValue">$0</div><div class="l">total est. value</div></div>
+    <div class="stat"><div class="n" id="sUpside">$0</div><div class="l">upside vs. cost</div></div>
+  </div>
+  <div class="check" id="checkLine" style="display:none"></div>
+
+  <div class="actions">
+    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
+  </div>
+
+  <div class="footnote">
+    Allocated basis = lot cost × (item value ÷ total value), so the pieces always sum exactly back to what you paid — the same proportional method used for tax cost-basis allocation. Edit any estimated value in the table and everything recalculates. Data saves locally per lot name. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='lotSplitter.current';
+  const money=(n)=>'$'+n.toFixed(2);
+  let items=[];
+
+  function load(){
+    try{
+      const s=JSON.parse(localStorage.getItem(KEY));
+      if(s){$('lotName').value=s.name||'';$('lotCost').value=s.cost||'';items=s.items||[];}
+    }catch{}
+  }
+  function save(){
+    localStorage.setItem(KEY,JSON.stringify({name:$('lotName').value,cost:$('lotCost').value,items}));
+  }
+
+  function render(){
+    const body=$('itemsBody');
+    body.innerHTML='';
+    $('itemsEmpty').style.display=items.length?'none':'block';
+    $('summaryBar').style.display=items.length?'grid':'none';
+    $('checkLine').style.display=items.length?'block':'none';
+
+    const cost=Number($('lotCost').value||0);
+    const totalVal=items.reduce((s,i)=>s+Number(i.value||0),0);
+    let basisSum=0;
+
+    items.forEach((it,i)=>{
+      const val=Number(it.value||0);
+      const pct=totalVal>0?val/totalVal:0;
+      // last item absorbs rounding so bases sum exactly to cost
+      let basis;
+      if(i===items.length-1){basis=cost-basisSum;}
+      else{basis=Math.round(cost*pct*100)/100;basisSum+=basis;}
+      const margin=val-basis;
+
+      const tr=document.createElement('tr');
+      const tdName=document.createElement('td');tdName.textContent=it.name;tr.appendChild(tdName);
+
+      const tdVal=document.createElement('td');tdVal.className='r';
+      const inp=document.createElement('input');inp.type='number';inp.step='0.01';inp.value=it.value;
+      inp.addEventListener('input',()=>{items[i].value=inp.value;recalcOnly();});
+      tdVal.appendChild(inp);tr.appendChild(tdVal);
+
+      tr.insertAdjacentHTML('beforeend',
+        `<td class="r pct">${(pct*100).toFixed(1)}%</td>`+
+        `<td class="r basis">${money(Math.max(basis,0))}</td>`+
+        `<td class="r" style="color:${margin>=0?'var(--green-bright)':'var(--red)'}">${margin>=0?'+':''}${money(margin).replace('$-','-$')}</td>`);
+
+      const tdDel=document.createElement('td');
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';del.title='Remove';
+      del.addEventListener('click',()=>{items.splice(i,1);save();render();});
+      tdDel.appendChild(del);tr.appendChild(tdDel);
+      body.appendChild(tr);
+    });
+
+    $('sCount').textContent=items.length;
+    $('sValue').textContent=money(totalVal);
+    const upside=totalVal-cost;
+    $('sUpside').textContent=(upside>=0?'+':'−')+money(Math.abs(upside)).slice(1).replace(/^/,'$');
+    $('sUpside').style.color=upside>=0?'var(--green-bright)':'var(--red)';
+    const pctUp=cost>0?(upside/cost*100).toFixed(0):'—';
+    $('checkLine').textContent=cost>0
+      ?`Bases sum to ${money(cost)} ✓ — est. value is ${pctUp}% ${upside>=0?'above':'below'} what you paid`
+      :'Enter the lot cost above to allocate bases.';
+    $('checkLine').className='check'+(upside<0&&cost>0?' bad':'');
+    save();
+  }
+  // re-render but keep focus in edited input
+  let recalcTimer=null;
+  function recalcOnly(){
+    save();
+    clearTimeout(recalcTimer);
+    recalcTimer=setTimeout(render,600);
+  }
+
+  $('addBtn').addEventListener('click',()=>{
+    const name=$('itemName').value.trim();
+    const value=$('itemValue').value;
+    if(!name){$('itemName').focus();return;}
+    if(!value){$('itemValue').focus();return;}
+    items.push({name,value});
+    $('itemName').value='';$('itemValue').value='';$('itemName').focus();
+    render();
+  });
+  $('itemValue').addEventListener('keydown',(e)=>{if(e.key==='Enter')$('addBtn').click();});
+  $('itemName').addEventListener('keydown',(e)=>{if(e.key==='Enter')$('itemValue').focus();});
+  $('lotCost').addEventListener('input',render);
+  $('lotName').addEventListener('input',save);
+
+  $('newLotBtn').addEventListener('click',()=>{
+    if(items.length&&!confirm('Start a new lot? Current lot will be cleared (export CSV first if you need it).'))return;
+    items=[];$('lotName').value='';$('lotCost').value='';render();
+  });
+
+  $('exportBtn').addEventListener('click',()=>{
+    if(!items.length)return;
+    const cost=Number($('lotCost').value||0);
+    const totalVal=items.reduce((s,i)=>s+Number(i.value||0),0);
+    const esc=(v)=>'"'+String(v).replace(/"/g,'""')+'"';
+    let basisSum=0;
+    const rows=items.map((it,i)=>{
+      const val=Number(it.value||0);
+      let basis;
+      if(i===items.length-1){basis=cost-basisSum;}
+      else{basis=Math.round(cost*(totalVal>0?val/totalVal:0)*100)/100;basisSum+=basis;}
+      return [it.name,val.toFixed(2),basis.toFixed(2),(val-basis).toFixed(2)].map(esc).join(',');
+    });
+    const csv=[esc('Lot: '+($('lotName').value||'untitled')+' — paid '+money(cost)),'Item,Est Value,Allocated Basis,Margin'].concat(rows).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='lot-split.csv';a.click();URL.revokeObjectURL(a.href);
+  });
+
+  load();render();
+})();
+</script>
+</body>
+</html>

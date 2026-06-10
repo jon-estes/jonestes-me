@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:780px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:2rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .85rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .deck-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+  .deck-chip{font-family:var(--mono);font-size:.74rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.5rem .9rem;cursor:pointer;color:var(--text-dim);transition:border-color .15s,color .15s}
+  .deck-chip:hover{border-color:var(--gold);color:var(--text)}
+  .deck-chip.active{border-color:var(--gold);color:var(--gold)}
+  .deck-chip .due{color:var(--green-bright);margin-left:.4rem}
+  input[type="text"],textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem;color:var(--text);font-family:var(--mono);font-size:.84rem;outline:none}
+  input:focus,textarea:focus{border-color:var(--gold)}
+  textarea{min-height:130px;resize:vertical;line-height:1.7}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.7rem 1.2rem;font-family:var(--mono);font-size:.76rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:filter .15s}
+  .btn:hover{filter:brightness(1.15)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text);filter:none}
+  .btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .actions{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+  /* Study card */
+  .study{display:none}
+  .study.show{display:block}
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
+    min-height:240px;padding:2rem 1.75rem;display:flex;flex-direction:column;justify-content:center;
+    text-align:center;cursor:pointer;position:relative;transition:border-color .15s;
+  }
+  .card:hover{border-color:var(--gold)}
+  .card .side-label{position:absolute;top:.85rem;left:1rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+  .card .count{position:absolute;top:.85rem;right:1rem;font-family:var(--mono);font-size:.6rem;color:var(--text-dim)}
+  .card .content{font-size:1.25rem;color:var(--silver);line-height:1.5;white-space:pre-wrap}
+  .card .flip-hint{position:absolute;bottom:.85rem;left:0;right:0;font-family:var(--mono);font-size:.62rem;color:var(--text-dim)}
+  .grade-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.75rem;visibility:hidden}
+  .grade-row.show{visibility:visible}
+  .grade{border:1px solid var(--border);background:var(--bg-card);border-radius:8px;padding:.7rem .4rem;font-family:var(--mono);font-size:.72rem;cursor:pointer;color:var(--text);transition:border-color .15s}
+  .grade small{display:block;font-size:.58rem;color:var(--text-dim);margin-top:.15rem}
+  .grade.again:hover{border-color:var(--red);color:var(--red)}
+  .grade.hard:hover{border-color:var(--gold);color:var(--gold)}
+  .grade.good:hover{border-color:var(--green);color:var(--green-bright)}
+  .grade.easy:hover{border-color:var(--green-bright);color:var(--green-bright)}
+  .done-msg{text-align:center;font-family:var(--mono);font-size:.9rem;color:var(--green-bright);padding:2.5rem 1rem;background:var(--bg-card);border:1px solid var(--green);border-radius:14px}
+  .done-msg small{display:block;color:var(--text-dim);margin-top:.5rem;font-size:.7rem}
+  .stats-line{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-align:center;margin-top:.75rem}
+  .manage-list{font-family:var(--mono);font-size:.74rem;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+  .manage-item{display:flex;justify-content:space-between;gap:.75rem;padding:.5rem .8rem;border-bottom:1px solid var(--border);color:var(--text-dim)}
+  .manage-item:last-child{border-bottom:none}
+  .manage-item .q{color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .del-btn{background:none;border:none;color:var(--text-dim);cursor:pointer}
+  .del-btn:hover{color:var(--red)}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:1rem .5rem;text-align:center}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--gold)}
+  @media(max-width:560px){h1{font-size:1.7rem}.grade-row{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Training</div>
+    <h1>Flash<span class="accent">cards</span></h1>
+    <p class="subtitle">Paste in Q&amp;A pairs, study with spaced repetition. Cards you nail come back less often; cards you miss come back tomorrow. Built for MQI terminology, Work Instruction steps, and anything else worth drilling.</p>
+  </header>
+
+  <div class="section-label"><span>Decks</span><span class="hint">green number = cards due now</span></div>
+  <div class="deck-row" id="deckRow"></div>
+  <div class="actions">
+    <input type="text" id="newDeckName" placeholder="New deck name…" style="max-width:260px">
+    <button class="btn" id="newDeckBtn">CREATE DECK</button>
+  </div>
+
+  <div id="deckArea" style="display:none">
+    <div class="section-label"><span>Study — <span id="deckTitle"></span></span><span class="hint" id="dueCount"></span></div>
+
+    <div class="study show" id="studyArea">
+      <div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
+        <span class="side-label" id="sideLabel">question</span>
+        <span class="count" id="cardCount"></span>
+        <div class="content" id="cardContent">—</div>
+        <div class="flip-hint" id="flipHint">click or press space to flip</div>
+      </div>
+      <div class="grade-row" id="gradeRow">
+        <button class="grade again" data-g="0">Again<small>&lt; 10 min</small></button>
+        <button class="grade hard" data-g="1">Hard<small>1 day</small></button>
+        <button class="grade good" data-g="2">Good<small id="goodInt">3 days</small></button>
+        <button class="grade easy" data-g="3">Easy<small id="easyInt">7 days</small></button>
+      </div>
+      <div class="stats-line" id="statsLine"></div>
+    </div>
+    <div class="done-msg" id="doneMsg" style="display:none">
+      All caught up on this deck ✓
+      <small id="nextDue"></small>
+    </div>
+
+    <div class="section-label"><span>Add Cards</span><span class="hint">one per line: Question | Answer (or tab-separated)</span></div>
+    <textarea id="bulkInput" placeholder="What does MQI stand for? | Manufacturing Quality Instruction
+First step before any line changeover | Verify the Work Instruction revision matches the traveler"></textarea>
+    <div class="actions">
+      <button class="btn" id="importBtn">ADD CARDS</button>
+      <button class="btn btn-ghost" id="exportBtn">EXPORT DECK (JSON)</button>
+      <button class="btn btn-ghost" id="importJsonBtn">IMPORT JSON</button>
+      <button class="btn btn-ghost" id="deleteDeckBtn">DELETE DECK</button>
+      <input type="file" id="jsonFile" accept=".json" style="display:none">
+    </div>
+
+    <div class="section-label"><span>Cards in Deck</span><span class="hint" id="cardTotal"></span></div>
+    <div class="manage-list" id="manageList"></div>
+    <div class="empty-state" id="manageEmpty">No cards yet — paste some above.</div>
+  </div>
+
+  <div class="footnote">
+    Scheduling is a simple Leitner-style ladder: Again resets a card, Good roughly doubles its interval each time (1 → 3 → 7 → 16 → 35 days…), Easy jumps ahead. Five minutes a day beats an hour the night before — tell your trainees. Decks save locally; use Export to back up or share. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='flashcards.decks';
+  const NOW=()=>Date.now();
+  const DAY=86400000;
+
+  // deck: {name, cards:[{q,a,interval(days),due(ms),reps}]}
+  let decks={},current=null,queue=[],flipped=false;
+
+  try{decks=JSON.parse(localStorage.getItem(KEY))||{}}catch{}
+  function save(){localStorage.setItem(KEY,JSON.stringify(decks));}
+
+  const dueCards=(d)=>d.cards.filter(c=>c.due<=NOW());
+
+  function renderDecks(){
+    const row=$('deckRow');
+    row.innerHTML='';
+    const names=Object.keys(decks);
+    if(!names.length){row.innerHTML='<span class="empty-state" style="padding:0">No decks yet — create one below.</span>';}
+    names.forEach(n=>{
+      const b=document.createElement('button');
+      b.className='deck-chip'+(n===current?' active':'');
+      const due=dueCards(decks[n]).length;
+      b.innerHTML=`${n} <span style="color:var(--text-dim)">(${decks[n].cards.length})</span>${due?`<span class="due">${due} due</span>`:''}`;
+      b.addEventListener('click',()=>{current=n;buildQueue();renderAll();});
+      row.appendChild(b);
+    });
+  }
+
+  function buildQueue(){
+    if(!current)return;
+    queue=dueCards(decks[current]).slice();
+    // shuffle
+    for(let i=queue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[queue[i],queue[j]]=[queue[j],queue[i]];}
+    flipped=false;
+  }
+
+  function fmtInterval(d){
+    if(d<1)return'< 1 day';
+    if(d<30)return Math.round(d)+' day'+(Math.round(d)>1?'s':'');
+    return (d/30).toFixed(1)+' mo';
+  }
+
+  function renderStudy(){
+    const deck=decks[current];
+    $('deckTitle').textContent=current;
+    const due=dueCards(deck).length;
+    $('dueCount').textContent=due?due+' due now':'nothing due';
+    if(!queue.length){
+      $('studyArea').style.display='none';
+      $('doneMsg').style.display='block';
+      const future=deck.cards.filter(c=>c.due>NOW()).sort((a,b)=>a.due-b.due);
+      $('nextDue').textContent=future.length
+        ?'Next card due '+new Date(future[0].due).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+        :(deck.cards.length?'':'Add some cards below to get started.');
+      return;
+    }
+    $('studyArea').style.display='block';
+    $('doneMsg').style.display='none';
+    const c=queue[0];
+    $('sideLabel').textContent=flipped?'answer':'question';
+    $('cardContent').textContent=flipped?c.a:c.q;
+    $('cardCount').textContent=queue.length+' left';
+    $('flipHint').style.display=flipped?'none':'block';
+    $('gradeRow').className='grade-row'+(flipped?' show':'');
+    const next=Math.max((c.interval||0)*2.2,3);
+    $('goodInt').textContent=fmtInterval(c.reps?next:3);
+    $('easyInt').textContent=fmtInterval(c.reps?next*2:7);
+    $('statsLine').textContent=`seen ${c.reps||0}× · current interval ${fmtInterval(c.interval||0)}`;
+  }
+
+  function grade(g){
+    const c=queue.shift();
+    c.reps=(c.reps||0)+1;
+    if(g===0){c.interval=0;c.due=NOW()+10*60000;queue.push(c);} // again: back of queue, due in 10 min
+    else if(g===1){c.interval=1;c.due=NOW()+DAY;}
+    else if(g===2){c.interval=c.interval?Math.max(c.interval*2.2,3):3;c.due=NOW()+c.interval*DAY;}
+    else{c.interval=c.interval?Math.max(c.interval*2.2,3)*2:7;c.due=NOW()+c.interval*DAY;}
+    flipped=false;
+    save();renderDecks();renderStudy();
+  }
+
+  function renderManage(){
+    const deck=decks[current];
+    const list=$('manageList');
+    list.innerHTML='';
+    $('cardTotal').textContent=deck.cards.length+' cards';
+    $('manageEmpty').style.display=deck.cards.length?'none':'block';
+    list.style.display=deck.cards.length?'block':'none';
+    deck.cards.forEach((c,i)=>{
+      const div=document.createElement('div');
+      div.className='manage-item';
+      div.innerHTML=`<span class="q" title="${c.q.replace(/"/g,'&quot;')} → ${c.a.replace(/"/g,'&quot;')}">${c.q}</span>`;
+      const del=document.createElement('button');del.className='del-btn';del.textContent='✕';
+      del.addEventListener('click',()=>{deck.cards.splice(i,1);save();buildQueue();renderAll();});
+      div.appendChild(del);list.appendChild(div);
+    });
+  }
+
+  function renderAll(){
+    renderDecks();
+    $('deckArea').style.display=current?'block':'none';
+    if(current){renderStudy();renderManage();}
+  }
+
+  // ---- Events ----
+  $('newDeckBtn').addEventListener('click',()=>{
+    const n=$('newDeckName').value.trim();
+    if(!n){$('newDeckName').focus();return;}
+    if(!decks[n])decks[n]={name:n,cards:[]};
+    current=n;$('newDeckName').value='';
+    save();buildQueue();renderAll();
+  });
+  $('newDeckName').addEventListener('keydown',(e)=>{if(e.key==='Enter')$('newDeckBtn').click();});
+
+  function flip(){if(queue.length){flipped=!flipped;renderStudy();}}
+  $('card').addEventListener('click',flip);
+  document.addEventListener('keydown',(e)=>{
+    if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+    if(e.key===' '){e.preventDefault();flip();}
+    if(flipped&&['1','2','3','4'].includes(e.key))grade(Number(e.key)-1);
+  });
+  document.querySelectorAll('.grade').forEach(b=>b.addEventListener('click',()=>grade(Number(b.dataset.g))));
+
+  $('importBtn').addEventListener('click',()=>{
+    if(!current)return;
+    const lines=$('bulkInput').value.split('\n').map(l=>l.trim()).filter(Boolean);
+    let added=0;
+    lines.forEach(l=>{
+      const parts=l.includes('\t')?l.split('\t'):l.split('|');
+      if(parts.length>=2){
+        decks[current].cards.push({q:parts[0].trim(),a:parts.slice(1).join('|').trim(),interval:0,due:NOW(),reps:0});
+        added++;
+      }
+    });
+    if(added){$('bulkInput').value='';save();buildQueue();renderAll();}
+  });
+
+  $('exportBtn').addEventListener('click',()=>{
+    if(!current)return;
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(decks[current],null,2)],{type:'application/json'}));
+    a.download=current.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-deck.json';
+    a.click();URL.revokeObjectURL(a.href);
+  });
+
+  $('importJsonBtn').addEventListener('click',()=>$('jsonFile').click());
+  $('jsonFile').addEventListener('change',async(e)=>{
+    const f=e.target.files[0];if(!f)return;
+    try{
+      const d=JSON.parse(await f.text());
+      if(d&&d.name&&Array.isArray(d.cards)){
+        let name=d.name,i=1;
+        while(decks[name])name=d.name+' '+(++i);
+        decks[name]=d;current=name;
+        save();buildQueue();renderAll();
+      }else alert('That file doesn\'t look like an exported deck.');
+    }catch{alert('Couldn\'t read that file.');}
+    e.target.value='';
+  });
+
+  $('deleteDeckBtn').addEventListener('click',()=>{
+    if(current&&confirm(`Delete deck "${current}" and all its cards?`)){
+      delete decks[current];current=Object.keys(decks)[0]||null;
+      save();buildQueue();renderAll();
+    }
+  });
+
+  current=Object.keys(decks)[0]||null;
+  buildQueue();renderAll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Shrink · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗜️</text></svg>">
+<meta name="description" content="Resize and compress images in your browser — files never leave your device.">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --bg-card: #121216;
+    --bg-card-hover: #1a1a20;
+    --border: #26262e;
+    --text: #d8d8dc;
+    --text-dim: #8a8a94;
+    --silver: #c0c4cc;
+    --green: #6ea36e;
+    --green-bright: #8fd08f;
+    --red: #b05656;
+    --gold: #c9a14a;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  [data-theme="light"] {
+    --bg: #f4f4f2;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f0ee;
+    --border: #d8d8d4;
+    --text: #1a1a1e;
+    --text-dim: #6a6a72;
+    --silver: #4a4e56;
+    --green: #3e7a3e;
+    --green-bright: #2e6a2e;
+    --red: #a04040;
+    --gold: #9a7a30;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; line-height: 1.6; }
+  .container { max-width: 920px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  header { margin-bottom: 2rem; }
+  .eyebrow { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  h1 { font-size: 2.2rem; font-weight: 400; color: var(--silver); }
+  h1 .accent { color: var(--gold); font-style: italic; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.4rem; max-width: 56ch; }
+
+  /* Drop zone */
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-bottom: 1.25rem;
+  }
+  .dropzone:hover, .dropzone.dragover { border-color: var(--gold); background: var(--bg-card); }
+  .dropzone .big { font-family: var(--mono); font-size: 0.95rem; color: var(--silver); }
+  .dropzone .small { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); margin-top: 0.3rem; }
+  #fileInput { display: none; }
+
+  /* Settings */
+  .settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1.5rem;
+    align-items: end;
+  }
+  .field-label { display: block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.35rem; }
+  select {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
+    padding: 0.55rem 0.7rem; color: var(--text); font-family: var(--mono); font-size: 0.8rem; outline: none;
+  }
+  select:focus { border-color: var(--gold); }
+  .slider-wrap { display: flex; align-items: center; gap: 0.7rem; }
+  input[type="range"] { flex: 1; accent-color: var(--gold); }
+  #qualityVal { font-family: var(--mono); font-size: 0.8rem; color: var(--gold); min-width: 3ch; text-align: right; }
+
+  /* Results */
+  .result-card {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .thumb {
+    width: 72px; height: 72px; object-fit: cover; border-radius: 7px;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .file-info { min-width: 0; }
+  .file-name { font-family: var(--mono); font-size: 0.8rem; color: var(--silver); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-stats { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+  .file-stats .saved { color: var(--green-bright); }
+  .file-stats .grew { color: var(--red); }
+  .file-stats .arrow { color: var(--gold); }
+  .dl-btn {
+    background: var(--gold); color: #0a0a0c; border: none; border-radius: 7px;
+    padding: 0.5rem 0.95rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.05em; cursor: pointer; transition: filter 0.15s; white-space: nowrap;
+  }
+  .dl-btn:hover { filter: brightness(1.15); }
+  .dl-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .batch-actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
+  .btn {
+    background: var(--gold); color: #0a0a0c; border: none; border-radius: 8px;
+    padding: 0.75rem 1.3rem; font-family: var(--mono); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.05em; cursor: pointer; transition: filter 0.15s, transform 0.1s;
+  }
+  .btn:hover { filter: brightness(1.15); }
+  .btn:active { transform: scale(0.98); }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text); filter: none; }
+  .btn:focus-visible, .dl-btn:focus-visible, select:focus-visible, .dropzone:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .summary {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim);
+    margin: 1rem 0 0.5rem;
+  }
+  .summary .saved { color: var(--green-bright); }
+
+  .footnote { margin-top: 3rem; font-size: 0.75rem; font-family: var(--mono); color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 1rem; }
+  .footnote a { color: var(--gold); }
+
+  @media (max-width: 680px) {
+    .settings { grid-template-columns: 1fr 1fr; }
+    .settings .slider-field { grid-column: 1 / -1; }
+    .result-card { grid-template-columns: 56px 1fr; }
+    .result-card .dl-btn { grid-column: 1 / -1; }
+    .thumb { width: 56px; height: 56px; }
+    h1 { font-size: 1.7rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Utility</div>
+    <h1>Image <span class="accent">Shrink</span></h1>
+    <p class="subtitle">Drop in photos, get back web-ready versions. Resizing and compression happen entirely on your device — nothing is uploaded anywhere. Built for coin listing photos, site assets, and anything else too big.</p>
+  </header>
+
+  <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose or drop images">
+    <div class="big">Drop images here, or click to choose</div>
+    <div class="small">JPG · PNG · WebP · HEIC* — multiple files welcome</div>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" multiple>
+
+  <div class="settings">
+    <div>
+      <span class="field-label">Max dimension</span>
+      <select id="maxDim">
+        <option value="800">800 px — thumbnails</option>
+        <option value="1200">1200 px — web standard</option>
+        <option value="1600" selected>1600 px — listings</option>
+        <option value="2000">2000 px — high detail</option>
+        <option value="0">Original size (compress only)</option>
+      </select>
+    </div>
+    <div>
+      <span class="field-label">Format</span>
+      <select id="outFormat">
+        <option value="image/jpeg" selected>JPEG — smallest, photos</option>
+        <option value="image/webp">WebP — modern, smaller still</option>
+        <option value="image/png">PNG — lossless, graphics</option>
+      </select>
+    </div>
+    <div class="slider-field">
+      <span class="field-label">Quality</span>
+      <div class="slider-wrap">
+        <input type="range" id="quality" min="40" max="100" value="82">
+        <span id="qualityVal">82</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="results"></div>
+  <div class="summary" id="summary" style="display:none;"></div>
+  <div class="batch-actions" id="batchActions" style="display:none;">
+    <button class="btn" id="zipBtn">DOWNLOAD ALL (.ZIP)</button>
+    <button class="btn btn-ghost" id="clearBtn">CLEAR</button>
+  </div>
+
+  <div class="footnote">
+    *HEIC support depends on your browser (Safari handles it; Chrome usually doesn't). Quality 80–85 is the sweet spot for listing photos — visually identical, fraction of the size. Re-process anytime by changing settings and re-dropping. · <a href="/">jonestes.me</a>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const processed = []; // { name, blob, url, origSize }
+
+  const fmtBytes = (b) => {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b / 1024).toFixed(0) + ' KB';
+    return (b / 1048576).toFixed(2) + ' MB';
+  };
+
+  // ---- Drop zone wiring ----
+  const dz = $('dropzone');
+  dz.addEventListener('click', () => $('fileInput').click());
+  dz.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('fileInput').click(); } });
+  ['dragenter', 'dragover'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  dz.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+  $('fileInput').addEventListener('change', (e) => { handleFiles(e.target.files); e.target.value = ''; });
+
+  $('quality').addEventListener('input', () => { $('qualityVal').textContent = $('quality').value; });
+
+  // ---- Image processing ----
+  async function loadBitmap(file) {
+    if (window.createImageBitmap) {
+      try {
+        // imageOrientation honors EXIF rotation in modern browsers
+        return await createImageBitmap(file, { imageOrientation: 'from-image' });
+      } catch { /* fall through */ }
+    }
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('decode failed'));
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function targetDims(w, h, maxDim) {
+    if (!maxDim || (w <= maxDim && h <= maxDim)) return [w, h];
+    const scale = maxDim / Math.max(w, h);
+    return [Math.round(w * scale), Math.round(h * scale)];
+  }
+
+  function outName(original, mime) {
+    const base = original.replace(/\.[^.]+$/, '');
+    const ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
+    return base + '-web.' + ext;
+  }
+
+  async function processFile(file) {
+    const maxDim = parseInt($('maxDim').value, 10);
+    const mime = $('outFormat').value;
+    const quality = parseInt($('quality').value, 10) / 100;
+
+    let bmp;
+    try {
+      bmp = await loadBitmap(file);
+    } catch {
+      addErrorCard(file.name, "Couldn't decode this file — your browser may not support its format.");
+      return;
+    }
+
+    const w = bmp.width || bmp.naturalWidth;
+    const h = bmp.height || bmp.naturalHeight;
+    const [tw, th] = targetDims(w, h, maxDim);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = tw;
+    canvas.height = th;
+    const ctx = canvas.getContext('2d');
+    if (mime === 'image/jpeg') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, tw, th); } // flatten transparency
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(bmp, 0, 0, tw, th);
+    if (bmp.close) bmp.close();
+
+    const blob = await new Promise((res) => canvas.toBlob(res, mime, quality));
+    if (!blob) { addErrorCard(file.name, 'Compression failed for this file.'); return; }
+
+    const entry = {
+      name: outName(file.name, mime),
+      blob,
+      url: URL.createObjectURL(blob),
+      origSize: file.size,
+      dims: `${w}×${h} → ${tw}×${th}`,
+    };
+    processed.push(entry);
+    addResultCard(entry);
+    updateSummary();
+  }
+
+  async function handleFiles(fileList) {
+    const files = Array.from(fileList).filter((f) => f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name));
+    for (const f of files) await processFile(f); // sequential keeps memory sane on big batches
+  }
+
+  // ---- UI ----
+  function addResultCard(e) {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = e.url;
+    img.alt = e.name;
+    card.appendChild(img);
+
+    const info = document.createElement('div');
+    info.className = 'file-info';
+    const pct = e.origSize > 0 ? Math.round((1 - e.blob.size / e.origSize) * 100) : 0;
+    const pctHtml = pct >= 0
+      ? `<span class="saved">−${pct}%</span>`
+      : `<span class="grew">+${Math.abs(pct)}%</span>`;
+    info.innerHTML =
+      `<div class="file-name">${e.name}</div>` +
+      `<div class="file-stats">${fmtBytes(e.origSize)} <span class="arrow">→</span> ${fmtBytes(e.blob.size)} ${pctHtml} · ${e.dims}</div>`;
+    card.appendChild(info);
+
+    const dl = document.createElement('button');
+    dl.className = 'dl-btn';
+    dl.textContent = 'DOWNLOAD';
+    dl.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = e.url;
+      a.download = e.name;
+      a.click();
+    });
+    card.appendChild(dl);
+
+    $('results').appendChild(card);
+  }
+
+  function addErrorCard(name, msg) {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML =
+      `<div class="thumb" aria-hidden="true"></div>` +
+      `<div class="file-info"><div class="file-name">${name}</div>` +
+      `<div class="file-stats" style="color:var(--red);">${msg}</div></div>` +
+      `<button class="dl-btn" disabled>—</button>`;
+    $('results').appendChild(card);
+  }
+
+  function updateSummary() {
+    if (!processed.length) {
+      $('summary').style.display = 'none';
+      $('batchActions').style.display = 'none';
+      return;
+    }
+    const orig = processed.reduce((s, e) => s + e.origSize, 0);
+    const out = processed.reduce((s, e) => s + e.blob.size, 0);
+    const pct = orig > 0 ? Math.round((1 - out / orig) * 100) : 0;
+    $('summary').innerHTML =
+      `${processed.length} file${processed.length > 1 ? 's' : ''}: ${fmtBytes(orig)} → ${fmtBytes(out)} ` +
+      `<span class="saved">(saved ${pct}%)</span>`;
+    $('summary').style.display = 'block';
+    $('batchActions').style.display = 'flex';
+  }
+
+  $('zipBtn').addEventListener('click', async () => {
+    if (!processed.length) return;
+    $('zipBtn').textContent = 'ZIPPING…';
+    const zip = new JSZip();
+    const used = new Set();
+    processed.forEach((e) => {
+      let name = e.name, i = 1;
+      while (used.has(name)) { name = e.name.replace(/(\.[^.]+)$/, `-${i++}$1`); }
+      used.add(name);
+      zip.file(name, e.blob);
+    });
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'images-web.zip';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    $('zipBtn').textContent = 'DOWNLOAD ALL (.ZIP)';
+  });
+
+  $('clearBtn').addEventListener('click', () => {
+    processed.forEach((e) => URL.revokeObjectURL(e.url));
+    processed.length = 0;
+    $('results').innerHTML = '';
+    updateSummary();
+  });
+})();
+</script>
+</body>
+</html>
