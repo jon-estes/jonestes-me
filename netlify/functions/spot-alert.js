@@ -6,7 +6,7 @@
 // 1. Env vars needed (Netlify → Site settings → Environment variables):
 //      UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN  (already set)
 //      GOLDAPI_KEY    — your goldapi.io key (same one the silver page uses)
-//      RESEND_API_KEY — your Resend key (already set for mendemarketing)
+//      RESEND_KEY     — your Resend key (already set — function also accepts RESEND_API_KEY)
 //      ALERT_EMAIL    — where to send alerts (your inbox)
 //      ALERT_FROM     — verified sender, e.g. alerts@mendemarketing.com
 // 2. Schedule it in netlify.toml:
@@ -70,10 +70,10 @@ exports.handler = async () => {
     if (!fired) return resp(200, { ...out, note: 'no threshold crossed (or already alerted today)' });
 
     // 4) email via Resend
-    const rsKey = process.env.RESEND_API_KEY;
+    const rsKey = process.env.RESEND_KEY || process.env.RESEND_API_KEY;
     const to = process.env.ALERT_EMAIL;
     const from = process.env.ALERT_FROM || 'onboarding@resend.dev';
-    if (!rsKey || !to) return resp(500, { error: 'RESEND_API_KEY or ALERT_EMAIL missing', ...out });
+    if (!rsKey || !to) return resp(500, { error: 'RESEND_KEY or ALERT_EMAIL missing', ...out });
 
     const subject = `🔔 Silver ${fired.dir === 'above' ? 'broke above' : 'dropped below'} $${fired.level.toFixed(2)} — now $${spot.toFixed(2)}`;
     const html = `
