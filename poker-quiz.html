@@ -256,7 +256,7 @@
   <div class="start-hero">
     <div class="start-suits">♠ ♥ ♦ ♣</div>
     <h1>Poker Quiz</h1>
-    <p>10 questions across four challenge types — identify hands, rank them, judge showdowns, and read full Hold'em boards. Race the clock. Scores post to the <strong>global leaderboard</strong>.</p>
+    <p>15 questions across four challenge types — identify hands, rank them, judge showdowns, and read full Hold'em boards. Race the clock. Scores post to the <strong>global leaderboard</strong>.</p>
   </div>
 
   <div class="name-input-wrap">
@@ -267,9 +267,9 @@
   <div style="text-align:center;margin-bottom:1.25rem;">
     <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Difficulty</div>
     <div class="difficulty-row">
-      <button class="diff-btn selected" data-diff="easy" onclick="selectDiff(this,'easy')">🟢 Easy — classics · 20s · 1×</button>
-      <button class="diff-btn" data-diff="medium" onclick="selectDiff(this,'medium')">🟡 Medium — trick hands &amp; showdowns · 14s · 1.5×</button>
-      <button class="diff-btn" data-diff="hard" onclick="selectDiff(this,'hard')">🔴 Hard — boards &amp; duels · 10s · 2×</button>
+      <button class="diff-btn selected" data-diff="easy" onclick="selectDiff(this,'easy')">🟢 Easy — classics · 18s · 1×</button>
+      <button class="diff-btn" data-diff="medium" onclick="selectDiff(this,'medium')">🟡 Medium — trick hands &amp; showdowns · 12s · 1.5×</button>
+      <button class="diff-btn" data-diff="hard" onclick="selectDiff(this,'hard')">🔴 Hard — boards &amp; duels · 9s · 2×</button>
     </div>
   </div>
 
@@ -360,9 +360,9 @@ const VAL_RANK = Object.fromEntries(RANKS.map((r,i)=>[i+2,r]));
 const SUITS = ['♠','♥','♦','♣'];
 const RED_SUITS = ['♥','♦'];
 const DIFF = {
-  easy:   { time:20, mult:1.0 },
-  medium: { time:14, mult:1.5 },
-  hard:   { time:10, mult:2.0 },
+  easy:   { time:18, mult:1.0 },
+  medium: { time:12, mult:1.5 },
+  hard:   { time:9,  mult:2.0 },
 };
 
 // ---------- hand evaluator ----------
@@ -464,6 +464,19 @@ function genIdentify(tricky){
       const [a,b,k]=shuffle(RANKS).slice(0,3);
       return shuffle([C(a,'♠'),C(a,'♥'),C(b,'♦'),C(b,'♣'),C(k,'♠')]);
     },
+    ()=>{ // pair hiding four to a straight (straight bait)
+      const lo=3+Math.floor(Math.random()*8);
+      const vals=[lo,lo+1,lo+2,lo+3];
+      const pairOf=pick(vals);
+      const cards=vals.map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
+      cards.push(C(VAL_RANK[pairOf],SUITS[(vals.indexOf(pairOf)+2)%4]));
+      return shuffle(cards);
+    },
+    ()=>{ // trips with two random kickers (full-house bait when scrambled)
+      const a=pick(RANKS);
+      const ks=shuffle(RANKS.filter(x=>x!==a)).slice(0,2);
+      return shuffle([C(a,'♠'),C(a,'♥'),C(a,'♦'),C(ks[0],'♣'),C(ks[1],'♠')]);
+    },
   ] : [
     ()=>{const su=pick(SUITS);return [C('A',su),C('K',su),C('Q',su),C('J',su),C('10',su)];},
     ()=>{const su=pick(SUITS);const lo=2+Math.floor(Math.random()*8);return [lo+4,lo+3,lo+2,lo+1,lo].map(v=>C(VAL_RANK[v],su));},
@@ -483,7 +496,7 @@ function genIdentify(tricky){
   return {
     type:'identify',
     prompt:'What hand is this?',
-    groups:[{label:'', cards: tricky ? shuffle(cards) : cards}],
+    groups:[{label:'', cards: shuffle(cards)}],
     correct,
     choices: shuffle([correct,...wrong]),
     explain:()=> 'That\'s ' + evalDetail(e) + '.',
@@ -493,20 +506,39 @@ function genIdentify(tricky){
 // ---------- "which beats" (ranking knowledge) ----------
 function genBeats(){
   const order=['High Card','One Pair','Two Pair','Three of a Kind','Straight','Flush','Full House','Four of a Kind'];
-  const ti=1+Math.floor(Math.random()*(order.length-2)); // target between One Pair..Full House
-  const target=order[ti];
-  const above=order.slice(ti+1).concat(ti+1>=order.length-1?['Straight Flush']:[]);
-  const below=order.slice(0,ti+1); // includes target itself (a hand doesn't beat itself)
-  const correct=pick(above);
-  const wrong=shuffle(below).slice(0,3);
-  return {
-    type:'beats',
-    prompt:'Which of these BEATS a '+target+'?',
-    groups:[],
-    correct,
-    choices:shuffle([correct,...wrong]),
-    explain:()=>correct+' ranks above '+target+'. Order: Pair → Two Pair → Trips → Straight → Flush → Full House → Quads → Straight Flush.',
-  };
+  if (Math.random()<0.5){
+    // Which BEATS a {target}?
+    const ti=1+Math.floor(Math.random()*(order.length-2));
+    const target=order[ti];
+    const above=order.slice(ti+1).concat(['Straight Flush']);
+    const below=order.slice(0,ti+1);
+    const correct=pick(above);
+    const wrong=shuffle(below).slice(0,3);
+    return {
+      type:'beats',
+      prompt:'Which of these BEATS a '+target+'?',
+      groups:[],
+      correct,
+      choices:shuffle([correct,...wrong]),
+      explain:()=>correct+' ranks above '+target+'. Order: Pair → Two Pair → Trips → Straight → Flush → Full House → Quads → Straight Flush.',
+    };
+  } else {
+    // Which LOSES to a {target}? (reversed — trips people up)
+    const ti=1+Math.floor(Math.random()*5); // One Pair .. Flush
+    const target=order[ti];
+    const below=order.slice(0,ti);
+    const above=order.slice(ti+1).concat(['Straight Flush']);
+    const correct=pick(below);
+    const wrong=shuffle(above).slice(0,3);
+    return {
+      type:'beats',
+      prompt:'Which of these LOSES to a '+target+'?',
+      groups:[],
+      correct,
+      choices:shuffle([correct,...wrong]),
+      explain:()=>correct+' ranks below '+target+' — every other option beats it. Order: Pair → Two Pair → Trips → Straight → Flush → Full House → Quads → Straight Flush.',
+    };
+  }
 }
 
 // ---------- showdown duel ----------
@@ -521,12 +553,23 @@ function genDuel(){
   }
   // otherwise: random-but-close hands
   let A,B,eA,eB,tries=0;
+  // hunt for a same-category showdown first (forces kicker/tiebreak reading),
+  // settle for adjacent categories if the deck won't cooperate
   do {
     const deck=shuffle(freshDeck());
     A=deck.slice(0,5); B=deck.slice(5,10);
     eA=evalHand(A); eB=evalHand(B);
     tries++;
-  } while (Math.abs(eA[0]-eB[0])>2 && tries<40);
+  } while (eA[0]!==eB[0] && tries<80);
+  if (eA[0]!==eB[0]){
+    tries=0;
+    do {
+      const deck=shuffle(freshDeck());
+      A=deck.slice(0,5); B=deck.slice(5,10);
+      eA=evalHand(A); eB=evalHand(B);
+      tries++;
+    } while (Math.abs(eA[0]-eB[0])>1 && tries<40);
+  }
   return duelQuestion(A,B);
 }
 function duelQuestion(A,B){
@@ -550,7 +593,7 @@ function genBest7(){
     seven=shuffle(freshDeck()).slice(0,7);
     e=best7(seven);
     tries++;
-  } while (e[0]===1 && tries<15 && Math.random()<0.7); // mostly avoid boring high-card boards
+  } while (e[0]===1 && tries<25); // never settle for a boring high-card board if avoidable
   const correct=evalName(e);
   const wrong=shuffle(ALL_NAMES.filter(n=>n!==correct)).slice(0,3);
   return {
@@ -580,9 +623,9 @@ function selectDiff(btn,diff){
 
 function buildQuestions(){
   const mix={
-    easy:   [...Array(7)].map(()=>()=>genIdentify(false)).concat([...Array(3)].map(()=>()=>genIdentify(true))),
-    medium: [...Array(4)].map(()=>()=>genIdentify(true)).concat([...Array(3)].map(()=>()=>genBeats()),[...Array(3)].map(()=>()=>genDuel())),
-    hard:   [...Array(3)].map(()=>()=>genIdentify(true)).concat([...Array(3)].map(()=>()=>genDuel()),[...Array(4)].map(()=>()=>genBest7())),
+    easy:   [...Array(8)].map(()=>()=>genIdentify(false)).concat([...Array(7)].map(()=>()=>genIdentify(true))),
+    medium: [...Array(5)].map(()=>()=>genIdentify(true)).concat([...Array(4)].map(()=>()=>genBeats()),[...Array(6)].map(()=>()=>genDuel())),
+    hard:   [...Array(4)].map(()=>()=>genIdentify(true)).concat([...Array(5)].map(()=>()=>genDuel()),[...Array(6)].map(()=>()=>genBest7())),
   }[difficulty];
   return shuffle(mix).map(fn=>fn());
 }
