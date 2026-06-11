@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HQ · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎛️</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--copper:#c87f5a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30;--copper:#a05a36}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:980px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.75rem;flex-wrap:wrap;gap:.75rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
+  h1{font-size:2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .sync-line{font-family:var(--mono);font-size:.68rem;color:var(--text-dim)}
+  .sync-line button{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-family:var(--mono);font-size:.66rem;padding:.25rem .6rem;cursor:pointer;margin-left:.5rem}
+  .sync-line button:hover{color:var(--text)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.8rem}
+  .hq-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem;text-decoration:none;color:var(--text);display:block;transition:border-color .15s,transform .1s;position:relative}
+  a.hq-card:hover{border-color:var(--green);transform:translateY(-1px)}
+  .hq-card .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.55rem}
+  .hq-card .t{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim)}
+  .hq-card .e{font-size:1rem}
+  .big{font-family:var(--mono);font-size:1.55rem;color:var(--silver);line-height:1.2}
+  .big.pos{color:var(--green-bright)}.big.neg{color:var(--red)}.big.gold{color:var(--gold)}.big.copper{color:var(--copper)}
+  .sub{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);margin-top:.3rem;line-height:1.6}
+  .sub b{color:var(--text);font-weight:600}
+  .alert-form{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.6rem}
+  .alert-form input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.45rem .6rem;color:var(--text);font-family:var(--mono);font-size:.78rem;outline:none}
+  .alert-form input:focus{border-color:var(--gold)}
+  .alert-form .lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.2rem;display:block}
+  .save-note{font-family:var(--mono);font-size:.62rem;color:var(--green-bright);margin-top:.35rem;min-height:.9rem}
+  .footnote{margin-top:2.5rem;font-size:.74rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+  @media(max-width:560px){h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <div class="eyebrow">Command Center</div>
+      <h1>The <span class="accent">HQ</span></h1>
+    </div>
+    <div class="sync-line"><span id="syncStatus">loading…</span><button id="refreshBtn">↻ REFRESH</button><button id="pinBtn">🔐 PIN</button></div>
+  </header>
+
+  <div class="grid" id="grid">
+    <a class="hq-card" href="/profit"><div class="h"><span class="t">Whatnot</span><span class="e">💸</span></div><div class="big" id="wnLast">—</div><div class="sub" id="wnSub">last stream net</div></a>
+    <a class="hq-card" href="/inventory"><div class="h"><span class="t">Inventory</span><span class="e">📒</span></div><div class="big gold" id="invCount">—</div><div class="sub" id="invSub">items in stock</div></a>
+    <a class="hq-card" href="/payoff"><div class="h"><span class="t">Debts</span><span class="e">📉</span></div><div class="big neg" id="debtLeft">—</div><div class="sub" id="debtSub">remaining</div></a>
+    <a class="hq-card" href="/countdown"><div class="h"><span class="t">Hawaii</span><span class="e">💍</span></div><div class="big copper" id="wedDays">—</div><div class="sub" id="wedSub">days to 8·20·2028</div></a>
+    <a class="hq-card" href="/melt"><div class="h"><span class="t">Silver</span><span class="e">🪙</span></div><div class="big" id="agSpot">—</div><div class="sub" id="agSub">spot (from melt calc)</div></a>
+    <a class="hq-card" href="/coastfire"><div class="h"><span class="t">Coast FIRE</span><span class="e">🔥</span></div><div class="big" id="fireInv">—</div><div class="sub" id="fireSub">invested</div></a>
+    <a class="hq-card" href="/flashcards"><div class="h"><span class="t">Flashcards</span><span class="e">🧠</span></div><div class="big gold" id="fcDue">—</div><div class="sub" id="fcSub">cards due now</div></a>
+    <a class="hq-card" href="/poker-quiz"><div class="h"><span class="t">Poker Crown</span><span class="e">🏆</span></div><div class="big pos" id="pkTop">—</div><div class="sub" id="pkSub">global high score</div></a>
+    <div class="hq-card"><div class="h"><span class="t">Silver Alerts</span><span class="e">🔔</span></div>
+      <div class="alert-form">
+        <div><span class="lbl">Email me above $</span><input type="number" step="0.25" id="alertAbove" placeholder="35.00"></div>
+        <div><span class="lbl">Email me below $</span><input type="number" step="0.25" id="alertBelow" placeholder="27.00"></div>
+      </div>
+      <div class="save-note" id="alertNote"></div>
+      <div class="sub">checked daily by the spot-alert function · clear a box to disable</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Everything on this page reads live from the site store — same numbers on every device. Cards link to their tools. The 🔐 PIN button stores the site PIN on this device if you've enabled protection. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const STORE='/.netlify/functions/store';
+  const money=(n)=>(n<0?'−$':'$')+Math.abs(Math.round(n)).toLocaleString();
+  const pin=()=>{try{return localStorage.getItem('cloud.pin')||''}catch{return ''}};
+  const J=(s,fb)=>{try{return JSON.parse(s)}catch{return fb}};
+
+  async function load(){
+    $('syncStatus').textContent='syncing…';
+    let d={};
+    try{
+      const r=await fetch(STORE,{headers:{'x-pin':pin()},cache:'no-store'});
+      if(r.ok)d=await r.json();
+      $('syncStatus').textContent='synced '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    }catch(e){$('syncStatus').textContent='⚠ offline';}
+
+    // Whatnot
+    const sales=J(d['whatnotProfit.log'],[]);
+    const streamStart=Number(d['whatnotProfit.streamStart']||0);
+    if(sales.length){
+      const tonight=sales.filter(s=>s.ts>=streamStart);
+      const pool=tonight.length?tonight:groupLast(sales);
+      const net=pool.reduce((s,r)=>s+r.net,0);
+      const allNet=sales.reduce((s,r)=>s+r.net,0);
+      $('wnLast').textContent=money(net);
+      $('wnLast').className='big '+(net>=0?'pos':'neg');
+      $('wnSub').innerHTML=(tonight.length?'live stream':'last stream')+' · all-time <b>'+money(allNet)+'</b> over '+sales.length+' sales';
+    } else {$('wnLast').textContent='$0';$('wnSub').textContent='no sales logged yet';}
+    function groupLast(rows){const last=rows[rows.length-1].date;return rows.filter(r=>r.date===last);}
+
+    // Inventory
+    const inv=J(d['inventory.items'],[]);
+    const stock=inv.filter(i=>i.status!=='sold');
+    const tied=stock.reduce((s,i)=>s+Number(i.basis||0),0);
+    const realized=inv.filter(i=>i.status==='sold').reduce((s,i)=>s+(Number(i.soldPrice||0)-Number(i.basis||0)),0);
+    $('invCount').textContent=stock.length;
+    $('invSub').innerHTML='in stock · <b>'+money(tied)+'</b> basis tied up · realized <b>'+money(realized)+'</b>';
+
+    // Debts
+    const pay=J(d['payoff.state'],{});
+    const debts=(pay&&pay.debts)||[];
+    const left=debts.reduce((s,x)=>s+Number(x.bal||0),0);
+    const paid=debts.reduce((s,x)=>s+Number(x.paid||0),0);
+    $('debtLeft').textContent=money(left);
+    $('debtLeft').className='big '+(left>0?'neg':'pos');
+    $('debtSub').innerHTML=left>0?('remaining across '+debts.length+' · <b>'+money(paid)+'</b> paid down'):'debt-free ✓';
+
+    // Wedding
+    const days=Math.max(Math.ceil((new Date('2028-08-20T16:00:00-10:00')-new Date())/86400000),0);
+    $('wedDays').textContent=days.toLocaleString();
+    const wb=J(d['wedding.budget'],null);
+    if(wb){
+      const spent=(wb.cats||[]).reduce((s,c)=>s+Number(c.spent||0),0);
+      $('wedSub').innerHTML='days to 8·20·2028 · <b>'+money(Number(wb.total||0)-spent)+'</b> budget left';
+    }
+
+    // Silver
+    const melt=J(d['meltCalc.state'],null);
+    if(melt&&melt.spotAg){
+      const ag=Number(melt.spotAg);
+      $('agSpot').textContent='$'+ag.toFixed(2);
+      $('agSub').innerHTML='spot · junk melt <b>$'+(ag*0.715).toFixed(2)+'</b> per $1 face';
+    }
+
+    // Coast FIRE
+    const cf=J(d['coastFire.inputs'],null);
+    if(cf&&cf.invested){$('fireInv').textContent=money(Number(cf.invested));$('fireSub').textContent='invested · monthly $'+Number(cf.monthly||0).toLocaleString();}
+
+    // Flashcards due
+    const decks=J(d['flashcards.decks'],{});
+    let due=0,total=0;
+    Object.values(decks).forEach(dk=>(dk.cards||[]).forEach(c=>{total++;if(c.due<=Date.now())due++;}));
+    $('fcDue').textContent=due;
+    $('fcSub').textContent='cards due now of '+total+' total';
+
+    // Poker
+    const lb=J(d['poker.leaderboard'],[]);
+    if(lb.length){$('pkTop').textContent=lb[0].score+' pts';$('pkSub').textContent='held by '+lb[0].name+' ('+lb[0].correct+'/'+(lb[0].total||10)+' '+(lb[0].diff||'')+')';}
+    else{$('pkTop').textContent='—';$('pkSub').textContent='no scores yet — claim it';}
+
+    // Alerts
+    const al=J(d['alerts.silver'],{});
+    if(al.above!==undefined&&!$('alertAbove').matches(':focus'))$('alertAbove').value=al.above??'';
+    if(al.below!==undefined&&!$('alertBelow').matches(':focus'))$('alertBelow').value=al.below??'';
+  }
+
+  // alert threshold saves (direct POST — needs PIN if protection is on)
+  let alertTimer=null;
+  function saveAlerts(){
+    clearTimeout(alertTimer);
+    alertTimer=setTimeout(async()=>{
+      const payload=JSON.stringify({above:$('alertAbove').value||null,below:$('alertBelow').value||null});
+      try{
+        const r=await fetch(STORE,{method:'POST',headers:{'Content-Type':'application/json','x-pin':pin()},body:JSON.stringify({updates:{'alerts.silver':payload}})});
+        $('alertNote').textContent=r.ok?'saved ✓':(r.status===401?'⚠ set your PIN (🔐 button) to save':'save failed');
+      }catch{$('alertNote').textContent='⚠ offline — try again';}
+      setTimeout(()=>$('alertNote').textContent='',3000);
+    },800);
+  }
+  $('alertAbove').addEventListener('input',saveAlerts);
+  $('alertBelow').addEventListener('input',saveAlerts);
+
+  $('refreshBtn').addEventListener('click',load);
+  $('pinBtn').addEventListener('click',()=>{
+    const p=prompt('Site PIN (stored on this device only):',pin());
+    if(p!==null){localStorage.setItem('cloud.pin',p);load();}
+  });
+
+  load();
+  setInterval(load,60000);
+})();
+</script>
+</body>
+</html>

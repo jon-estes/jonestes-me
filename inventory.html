@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📒</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:940px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.75rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem;max-width:58ch}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.25rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.75rem .9rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.1rem;color:var(--gold)}
+  .stat .n.pos{color:var(--green-bright)}
+  .stat .l{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .85rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .add-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:.5rem;margin-bottom:1rem}
+  input{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.82rem;outline:none;min-width:0;width:100%}
+  input:focus{border-color:var(--gold)}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.65rem 1.1rem;font-family:var(--mono);font-size:.74rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:filter .15s;white-space:nowrap}
+  .btn:hover{filter:brightness(1.15)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text);filter:none}
+  .btn:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .filters{display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap}
+  .filter{font-family:var(--mono);font-size:.68rem;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;padding:.3rem .8rem;cursor:pointer;color:var(--text-dim)}
+  .filter.active{border-color:var(--gold);color:var(--gold)}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.76rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  th.r,td.r{text-align:right}
+  td{padding:.5rem;border-bottom:1px solid var(--border);vertical-align:middle}
+  .pill{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.12rem .5rem;border-radius:4px}
+  .pill.stock{background:rgba(192,196,204,.1);color:var(--silver)}
+  .pill.listed{background:rgba(201,161,74,.15);color:var(--gold)}
+  .pill.sold{background:rgba(110,163,110,.15);color:var(--green-bright)}
+  .row-actions{display:flex;gap:.3rem;justify-content:flex-end;flex-wrap:wrap}
+  .mini{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-family:var(--mono);font-size:.62rem;padding:.22rem .5rem;cursor:pointer;white-space:nowrap}
+  .mini:hover{color:var(--text);border-color:var(--text-dim)}
+  .mini.sell:hover{color:var(--green-bright);border-color:var(--green)}
+  .mini.del:hover{color:var(--red);border-color:var(--red)}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:1.25rem .5rem;text-align:center}
+  .actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+  .actions .btn{padding:.5rem 1rem;font-size:.7rem}
+  .footnote{margin-top:3rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--gold)}
+  @media(max-width:720px){.add-row{grid-template-columns:1fr 1fr}.add-row .btn{grid-column:1/-1}.stats{grid-template-columns:1fr 1fr}h1{font-size:1.7rem}.table-wrap{overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Coin Business</div>
+    <h1>The <span class="accent">Vault</span></h1>
+    <p class="subtitle">Every piece in stock with its true cost basis. Import straight from the Lot Splitter, mark items listed or sold, and hand the basis to the Profit Calculator when one moves on a stream.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="sStock">0</div><div class="l">in stock</div></div>
+    <div class="stat"><div class="n" id="sBasis">$0</div><div class="l">basis tied up</div></div>
+    <div class="stat"><div class="n" id="sSold">0</div><div class="l">sold all-time</div></div>
+    <div class="stat"><div class="n pos" id="sProfit">$0</div><div class="l">realized (pre-fee)</div></div>
+  </div>
+
+  <div class="section-label"><span>Add Item</span><span class="hint">or use SEND TO INVENTORY on the lot splitter</span></div>
+  <div class="add-row">
+    <input type="text" id="iName" placeholder="Item — e.g. 1923 Peace dollar AU">
+    <input type="number" step="0.01" id="iBasis" placeholder="Cost basis $">
+    <input type="text" id="iFrom" placeholder="Source (optional)">
+    <button class="btn" id="addBtn">ADD</button>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter active" data-f="all">All</button>
+    <button class="filter" data-f="stock">In stock</button>
+    <button class="filter" data-f="listed">Listed</button>
+    <button class="filter" data-f="sold">Sold</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Source</th><th>Status</th><th class="r">Basis</th><th class="r">Sold for</th><th class="r">Margin</th><th class="r">Actions</th></tr></thead>
+      <tbody id="invBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="invEmpty">Vault's empty. Add pieces above or send a split lot over.</div>
+
+  <div class="actions">
+    <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
+  </div>
+
+  <div class="footnote">
+    "Sell on stream →" pre-loads the item's basis into the <a href="/profit">Profit Calculator</a> so the fee math starts from truth. Margin here is sale − basis (pre-fee); the profit calc gives you the post-fee number. Syncs across devices. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const KEY='inventory.items';
+  const money=(n)=>(n<0?'−$':'$')+Math.abs(n).toFixed(2);
+  let filter='all';
+  let items=[];
+  try{items=JSON.parse(localStorage.getItem(KEY))||[]}catch{}
+  function save(){localStorage.setItem(KEY,JSON.stringify(items));}
+
+  function render(){
+    const body=$('invBody');
+    body.innerHTML='';
+    const shown=items.filter(i=>filter==='all'||(filter==='stock'?i.status==='stock':i.status===filter));
+    $('invEmpty').style.display=shown.length?'none':'block';
+
+    shown.forEach((it)=>{
+      const idx=items.indexOf(it);
+      const tr=document.createElement('tr');
+      const margin=it.status==='sold'?Number(it.soldPrice||0)-Number(it.basis||0):null;
+      tr.innerHTML=`<td>${esc(it.name)}</td><td style="color:var(--text-dim)">${esc(it.from||'—')}</td>`+
+        `<td><span class="pill ${it.status}">${it.status}</span></td>`+
+        `<td class="r">${money(Number(it.basis||0))}</td>`+
+        `<td class="r">${it.status==='sold'?money(Number(it.soldPrice||0)):'—'}</td>`+
+        `<td class="r" style="color:${margin===null?'var(--text-dim)':margin>=0?'var(--green-bright)':'var(--red)'}">${margin===null?'—':(margin>=0?'+':'')+money(margin).replace('$-','-$')}</td>`;
+      const td=document.createElement('td');
+      td.className='r';
+      const acts=document.createElement('div');acts.className='row-actions';
+      if(it.status==='stock'){
+        acts.appendChild(mini('LIST',()=>{it.status='listed';save();render();}));
+        acts.appendChild(mini('SOLD',()=>markSold(idx)));
+      } else if(it.status==='listed'){
+        acts.appendChild(mini('UNLIST',()=>{it.status='stock';save();render();}));
+        acts.appendChild(mini('SOLD',()=>markSold(idx)));
+      }
+      if(it.status!=='sold'){
+        acts.appendChild(mini('Sell on stream →',()=>{
+          localStorage.setItem('whatnotProfit.prefill',JSON.stringify({basis:it.basis,name:it.name,invIdx:idx}));
+          location.href='/profit';
+        },'sell'));
+      } else {
+        acts.appendChild(mini('UNDO',()=>{it.status='stock';delete it.soldPrice;save();render();}));
+      }
+      acts.appendChild(mini('✕',()=>{
+        if(confirm('Remove "'+it.name+'" from the vault?')){items.splice(idx,1);save();render();}
+      },'del'));
+      td.appendChild(acts);tr.appendChild(td);
+      body.appendChild(tr);
+    });
+
+    const stock=items.filter(i=>i.status!=='sold');
+    $('sStock').textContent=stock.length;
+    $('sBasis').textContent=money(stock.reduce((s,i)=>s+Number(i.basis||0),0));
+    const sold=items.filter(i=>i.status==='sold');
+    $('sSold').textContent=sold.length;
+    $('sProfit').textContent=money(sold.reduce((s,i)=>s+(Number(i.soldPrice||0)-Number(i.basis||0)),0));
+  }
+  function mini(label,fn,cls){
+    const b=document.createElement('button');
+    b.className='mini'+(cls?' '+cls:'');
+    b.textContent=label;
+    b.addEventListener('click',fn);
+    return b;
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function markSold(idx){
+    const p=prompt('Sold for $ (hammer price):');
+    if(p===null)return;
+    items[idx].status='sold';
+    items[idx].soldPrice=Number(p||0);
+    items[idx].soldTs=Date.now();
+    save();render();
+  }
+
+  $('addBtn').addEventListener('click',()=>{
+    const name=$('iName').value.trim();
+    if(!name){$('iName').focus();return;}
+    items.unshift({id:Date.now().toString(36),name,basis:Number($('iBasis').value||0),from:$('iFrom').value.trim(),status:'stock',ts:Date.now()});
+    $('iName').value='';$('iBasis').value='';$('iFrom').value='';
+    $('iName').focus();
+    save();render();
+  });
+  $('iBasis').addEventListener('keydown',e=>{if(e.key==='Enter')$('addBtn').click();});
+
+  document.querySelectorAll('.filter').forEach(f=>f.addEventListener('click',()=>{
+    document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+    f.classList.add('active');
+    filter=f.dataset.f;
+    render();
+  }));
+
+  $('exportBtn').addEventListener('click',()=>{
+    if(!items.length)return;
+    const esc2=(v)=>'"'+String(v).replace(/"/g,'""')+'"';
+    const csv=['Item,Source,Status,Basis,Sold For,Margin'].concat(items.map(i=>{
+      const m=i.status==='sold'?(Number(i.soldPrice||0)-Number(i.basis||0)).toFixed(2):'';
+      return [i.name,i.from||'',i.status,Number(i.basis||0).toFixed(2),i.status==='sold'?Number(i.soldPrice||0).toFixed(2):'',m].map(esc2).join(',');
+    })).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='inventory.csv';a.click();URL.revokeObjectURL(a.href);
+  });
+
+  // re-render after cloud.js pull (it reloads the page, so init covers it)
+  render();
+})();
+</script>
+</body>
+</html>

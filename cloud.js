@@ -25,7 +25,10 @@
     'compChecker.',     // comps.html — comp log & recent searches
     'sourcingCompare.', // buy.html — landed-cost table
     'wheel.',           // spinner.html — names
-    'poker.',           // poker quiz — leaderboard
+    'poker.',           // poker quiz — leaderboards
+    'inventory.',       // inventory.html — coin stock
+    'invoice.',         // invoice.html — counter & history
+    'alerts.',          // hq.html — silver alert thresholds
   ];
   const tracked = (k) => typeof k === 'string' && PREFIXES.some((p) => k.indexOf(p) === 0);
 
@@ -41,16 +44,33 @@
     timer = setTimeout(flush, 1200);
   }
 
+  function getPin() { try { return localStorage.getItem('cloud.pin') || ''; } catch { return ''; } }
+
   async function flush() {
     const updates = pending;
     pending = {};
     if (!Object.keys(updates).length) return;
     try {
-      await fetch(ENDPOINT, {
+      const res = await fetch(ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-pin': getPin() },
         body: JSON.stringify({ updates }),
       });
+      if (res.status === 401) {
+        // site PIN is set but this device doesn't have it yet — ask once
+        const pin = prompt('This site is PIN-protected. Enter the site PIN to sync your data:');
+        if (pin) {
+          _set('cloud.pin', pin);
+          const retry = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-pin': pin },
+            body: JSON.stringify({ updates }),
+          });
+          if (!retry.ok) pending = Object.assign({}, updates, pending);
+        } else {
+          pending = Object.assign({}, updates, pending);
+        }
+      }
     } catch (e) {
       // network hiccup — re-queue so the next save retries
       pending = Object.assign({}, updates, pending);
@@ -71,7 +91,7 @@
     if (Object.keys(pending).length && navigator.sendBeacon) {
       navigator.sendBeacon(
         ENDPOINT,
-        new Blob([JSON.stringify({ updates: pending })], { type: 'application/json' })
+        new Blob([JSON.stringify({ updates: pending, pin: getPin() })], { type: 'application/json' })
       );
       pending = {};
     }
@@ -80,7 +100,7 @@
   // ---- inbound: pull latest on load; refresh once if cloud had newer data ----
   (async function pull() {
     try {
-      const res = await fetch(ENDPOINT);
+      const res = await fetch(ENDPOINT, { headers: { 'x-pin': getPin() } });
       if (!res.ok) return;
       const data = await res.json();
       let changed = false;

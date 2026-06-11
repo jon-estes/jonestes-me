@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backup · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:680px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.75rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin-top:.4rem}
+  .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem;margin-bottom:1rem}
+  .panel h2{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--silver);margin-bottom:.5rem}
+  .panel p{font-size:.88rem;color:var(--text-dim);margin-bottom:.9rem}
+  .btn{background:var(--green);color:#0a0a0c;border:none;border-radius:8px;padding:.75rem 1.3rem;font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.05em;cursor:pointer}
+  .btn:hover{filter:brightness(1.12)}
+  .btn.danger{background:var(--red);color:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+  .status{font-family:var(--mono);font-size:.74rem;margin-top:.7rem;min-height:1.1rem;color:var(--text-dim)}
+  .status.ok{color:var(--green-bright)}
+  .status.err{color:var(--red)}
+  .keylist{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin-top:.7rem;line-height:1.9}
+  .keylist b{color:var(--silver);font-weight:600}
+  input[type="file"]{display:none}
+  .footnote{margin-top:2.5rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Utility</div>
+    <h1>Store <span class="accent">Backup</span></h1>
+    <p class="subtitle">Your entire site store — sales history, inventory, debts, decks, invoices, leaderboards — in one downloadable file. Cheap insurance, one click.</p>
+  </header>
+
+  <div class="panel">
+    <h2>📥 Download Backup</h2>
+    <p>Pulls every field from the store into a timestamped JSON file. Keep one before any big change.</p>
+    <button class="btn" id="downloadBtn">DOWNLOAD BACKUP</button>
+    <div class="status" id="dlStatus"></div>
+    <div class="keylist" id="keyList" style="display:none"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📤 Restore</h2>
+    <p>Upload a backup file to write its contents back to the store. Existing fields with the same names are overwritten; fields not in the file are left alone.</p>
+    <button class="btn danger" id="restoreBtn">CHOOSE BACKUP FILE…</button>
+    <input type="file" id="fileInput" accept=".json">
+    <div class="status" id="rsStatus"></div>
+  </div>
+
+  <div class="footnote">
+    If PIN protection is on, set it via the 🔐 button on <a href="/hq">HQ</a> first — this page uses the same stored PIN. Backups contain your private business data; store them somewhere sensible. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const STORE='/.netlify/functions/store';
+  const pin=()=>{try{return localStorage.getItem('cloud.pin')||''}catch{return ''}};
+
+  $('downloadBtn').addEventListener('click',async()=>{
+    const st=$('dlStatus');
+    st.className='status';st.textContent='fetching…';
+    try{
+      const r=await fetch(STORE,{headers:{'x-pin':pin()},cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const data=await r.json();
+      const keys=Object.keys(data);
+      if(!keys.length){st.className='status err';st.textContent='Store is empty (or PIN missing — private fields hidden).';return;}
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='sitetools-backup-'+new Date().toISOString().slice(0,10)+'.json';
+      a.click();URL.revokeObjectURL(a.href);
+      st.className='status ok';
+      st.textContent='✓ '+keys.length+' fields, '+(blob.size/1024).toFixed(1)+' KB';
+      const kl=$('keyList');
+      kl.style.display='block';
+      kl.innerHTML=keys.sort().map(k=>'<b>'+k+'</b> ('+((data[k]||'').length/1024).toFixed(1)+' KB)').join('<br>');
+    }catch(e){st.className='status err';st.textContent='Failed: '+e.message;}
+  });
+
+  $('restoreBtn').addEventListener('click',()=>$('fileInput').click());
+  $('fileInput').addEventListener('change',async(e)=>{
+    const f=e.target.files[0];
+    e.target.value='';
+    if(!f)return;
+    const st=$('rsStatus');
+    try{
+      const data=JSON.parse(await f.text());
+      if(typeof data!=='object'||Array.isArray(data))throw new Error('not a backup object');
+      const keys=Object.keys(data);
+      if(!keys.length)throw new Error('file is empty');
+      if(!confirm('Restore '+keys.length+' fields from "'+f.name+'"? Matching fields in the store will be OVERWRITTEN.'))return;
+      st.className='status';st.textContent='restoring…';
+      const r=await fetch(STORE,{method:'POST',headers:{'Content-Type':'application/json','x-pin':pin()},body:JSON.stringify({updates:data})});
+      if(r.status===401)throw new Error('PIN required — set it on /hq first');
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      st.className='status ok';st.textContent='✓ Restored '+keys.length+' fields. Reload any open tools to pick up the data.';
+    }catch(err){st.className='status err';st.textContent='Failed: '+err.message;}
+  });
+})();
+</script>
+</body>
+</html>

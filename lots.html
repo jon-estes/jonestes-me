@@ -90,6 +90,7 @@
   <div class="check" id="checkLine" style="display:none"></div>
 
   <div class="actions">
+    <button class="btn" id="toInvBtn">SEND ALL TO INVENTORY →</button>
     <button class="btn btn-ghost" id="exportBtn">EXPORT CSV</button>
   </div>
 
@@ -213,6 +214,23 @@
     const csv=[esc('Lot: '+($('lotName').value||'untitled')+' — paid '+money(cost)),'Item,Est Value,Allocated Basis,Margin'].concat(rows).join('\n');
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
     a.download='lot-split.csv';a.click();URL.revokeObjectURL(a.href);
+  });
+
+  $('toInvBtn').addEventListener('click',()=>{
+    if(!items.length)return;
+    const cost=Number($('lotCost').value||0);
+    const totalVal=items.reduce((s,i)=>s+Number(i.value||0),0);
+    const lotName=$('lotName').value.trim()||'untitled lot';
+    let inv=[];try{inv=JSON.parse(localStorage.getItem('inventory.items'))||[]}catch{}
+    let basisSum=0;
+    items.forEach((it,i)=>{
+      let basis;
+      if(i===items.length-1){basis=Math.round((cost-basisSum)*100)/100;}
+      else{basis=Math.round(cost*(totalVal>0?Number(it.value||0)/totalVal:0)*100)/100;basisSum+=basis;}
+      inv.unshift({id:Date.now().toString(36)+i,name:it.name,basis:Math.max(basis,0),from:lotName,status:'stock',ts:Date.now()});
+    });
+    localStorage.setItem('inventory.items',JSON.stringify(inv));
+    if(confirm(items.length+' item(s) sent to the vault with allocated bases. Open inventory now?'))location.href='/inventory';
   });
 
   load();render();

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stream Overlay</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
+<style>
+  /*
+    OBS BROWSER SOURCE — jonestes.me/overlay
+    URL params:
+      ?bg=transparent (default) | green | black
+      ?pin=YOURPIN          — required if site PIN protection is on (sales data is private)
+      ?show=spot,melt,sales — choose segments (default all)
+      ?size=lg              — bigger text for 1080p+
+    Suggested OBS source size: 1920×80, positioned along the bottom.
+  */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:transparent;font-family:'SF Mono','Fira Code',Consolas,monospace;overflow:hidden}
+  body.green{background:#00b140}
+  body.black{background:#0a0a0c}
+  .bar{
+    display:flex;align-items:center;gap:2.2rem;flex-wrap:nowrap;
+    padding:.55rem 1.4rem;
+    background:rgba(10,10,12,.88);
+    border:1px solid rgba(201,161,74,.45);
+    border-radius:12px;
+    width:max-content;max-width:100vw;
+    margin:8px auto;
+    box-shadow:0 4px 24px rgba(0,0,0,.5);
+  }
+  .seg{display:flex;align-items:baseline;gap:.55rem;white-space:nowrap}
+  .lbl{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:#8a8a94}
+  .val{font-size:1.25rem;font-weight:700;color:#c0c4cc}
+  .val.gold{color:#e0b454}
+  .val.green{color:#8fd08f}
+  .val.up::after{content:' ▲';color:#8fd08f;font-size:.8rem}
+  .val.down::after{content:' ▼';color:#c0392b;font-size:.8rem}
+  .divider{width:1px;height:1.6rem;background:rgba(138,138,148,.35)}
+  body.lg .val{font-size:1.7rem}
+  body.lg .lbl{font-size:.74rem}
+  .pulse{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<script>
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const bg=qs.get('bg');
+  if(bg==='green')document.body.classList.add('green');
+  if(bg==='black')document.body.classList.add('black');
+  if(qs.get('size')==='lg')document.body.classList.add('lg');
+  const pin=qs.get('pin')||'';
+  const show=(qs.get('show')||'spot,melt,sales').split(',').map(s=>s.trim());
+
+  const STORE='/.netlify/functions/store';
+  const J=(s,fb)=>{try{return JSON.parse(s)}catch{return fb}};
+  let lastSpot=null;
+
+  function seg(label,valHTML){
+    return `<div class="seg"><span class="lbl">${label}</span><span class="val">${valHTML}</span></div>`;
+  }
+
+  async function refresh(){
+    let d={};
+    try{
+      const r=await fetch(STORE,{headers:{'x-pin':pin},cache:'no-store'});
+      if(r.ok)d=await r.json();
+    }catch(e){}
+
+    const parts=[];
+
+    // silver spot (from melt calc state — synced from any device)
+    const melt=J(d['meltCalc.state'],null);
+    const ag=melt&&melt.spotAg?Number(melt.spotAg):null;
+    if(show.includes('spot')){
+      let cls='gold';
+      if(ag!==null&&lastSpot!==null){if(ag>lastSpot)cls+=' up';else if(ag<lastSpot)cls+=' down';}
+      parts.push(`<div class="seg"><span class="lbl">Silver Spot</span><span class="val ${cls}">${ag!==null?'$'+ag.toFixed(2):'—'}</span></div>`);
+      if(ag!==null)lastSpot=ag;
+    }
+    if(show.includes('melt')&&ag!==null){
+      parts.push(seg('Junk Melt / $1 Face','$'+(ag*0.715).toFixed(2)));
+    }
+
+    // tonight's stream (private — needs ?pin= if protection is on)
+    if(show.includes('sales')){
+      const sales=J(d['whatnotProfit.log'],[]);
+      const start=Number(d['whatnotProfit.streamStart']||0);
+      const tonight=sales.filter(s=>s.ts>=start);
+      if(tonight.length){
+        const net=tonight.reduce((s,r)=>s+r.net,0);
+        parts.push(`<div class="seg"><span class="lbl">Tonight</span><span class="val green pulse">${tonight.length} sold · $${Math.round(net)}</span></div>`);
+      } else if(sales.length||Object.keys(d).some(k=>k.indexOf('whatnotProfit')===0)){
+        parts.push(`<div class="seg"><span class="lbl">Tonight</span><span class="val">ready 🎙</span></div>`);
+      }
+    }
+
+    document.getElementById('bar').innerHTML=parts.join('<div class="divider"></div>')||seg('jonestes.me','live');
+  }
+
+  refresh();
+  setInterval(refresh,30000);
+})();
+</script>
+</body>
+</html>

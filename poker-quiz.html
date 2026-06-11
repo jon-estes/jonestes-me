@@ -274,6 +274,9 @@
   </div>
 
   <button class="start-btn" onclick="startQuiz()">Deal Me In ♠</button>
+  <div style="text-align:center;margin-top:0.9rem;">
+    <button class="diff-btn" style="border-color:var(--gold);" onclick="startDaily()">📅 Daily Challenge — same 15 questions for everyone, fresh daily board</button>
+  </div>
 </div>
 
 <!-- QUIZ SCREEN -->
@@ -359,6 +362,13 @@ const RANK_VAL = Object.fromEntries(RANKS.map((r,i)=>[r,i+2]));
 const VAL_RANK = Object.fromEntries(RANKS.map((r,i)=>[i+2,r]));
 const SUITS = ['♠','♥','♦','♣'];
 const RED_SUITS = ['♥','♦'];
+// seeded RNG for the Daily Challenge (same 15 questions worldwide each day)
+function seedFromDate(str){let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let rand=Math.random;
+const todayKey=()=>new Date().toISOString().slice(0,10);
+let dailyMode=false;
+
 const DIFF = {
   easy:   { time:18, mult:1.0 },
   medium: { time:12, mult:1.5 },
@@ -424,9 +434,9 @@ function evalDetail(e){
 }
 
 // ---------- deck utils ----------
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function freshDeck(){const d=[];for(const s of SUITS)for(const l of RANKS)d.push({l,s});return d;}
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function pick(arr){return arr[Math.floor(rand()*arr.length)];}
 
 // ---------- tricky hand generators (identify) ----------
 const C=(l,s)=>({l,s});
@@ -438,7 +448,7 @@ function genIdentify(tricky){
       return [C(vs[0],su),C(vs[1],su),C(vs[2],su),C(vs[3],su),C(vs[4],off)];
     },
     ()=>{ // almost-straight: 4 in a row + gap
-      const lo=2+Math.floor(Math.random()*7);
+      const lo=2+Math.floor(rand()*7);
       const vals=[lo,lo+1,lo+2,lo+3,lo+6>14?lo-2:lo+6];
       return shuffle(vals).map(v=>C(VAL_RANK[v],pick(SUITS)));
     },
@@ -450,7 +460,7 @@ function genIdentify(tricky){
       return shuffle([14,2,3,4,5]).map(v=>C(VAL_RANK[v],su));
     },
     ()=>{ // flush hiding 4-straight
-      const su=pick(SUITS), lo=3+Math.floor(Math.random()*6);
+      const su=pick(SUITS), lo=3+Math.floor(rand()*6);
       return shuffle([lo,lo+1,lo+2,lo+3,lo+7>14?lo-2:lo+7]).map(v=>C(VAL_RANK[v],su));
     },
     ()=>{ // full house scrambled (vs two-pair confusion)
@@ -465,7 +475,7 @@ function genIdentify(tricky){
       return shuffle([C(a,'♠'),C(a,'♥'),C(b,'♦'),C(b,'♣'),C(k,'♠')]);
     },
     ()=>{ // pair hiding four to a straight (straight bait)
-      const lo=3+Math.floor(Math.random()*8);
+      const lo=3+Math.floor(rand()*8);
       const vals=[lo,lo+1,lo+2,lo+3];
       const pairOf=pick(vals);
       const cards=vals.map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
@@ -479,11 +489,11 @@ function genIdentify(tricky){
     },
   ] : [
     ()=>{const su=pick(SUITS);return [C('A',su),C('K',su),C('Q',su),C('J',su),C('10',su)];},
-    ()=>{const su=pick(SUITS);const lo=2+Math.floor(Math.random()*8);return [lo+4,lo+3,lo+2,lo+1,lo].map(v=>C(VAL_RANK[v],su));},
+    ()=>{const su=pick(SUITS);const lo=2+Math.floor(rand()*8);return [lo+4,lo+3,lo+2,lo+1,lo].map(v=>C(VAL_RANK[v],su));},
     ()=>{const a=pick(RANKS),k=pick(RANKS.filter(x=>x!==a));return [C(a,'♠'),C(a,'♥'),C(a,'♦'),C(a,'♣'),C(k,'♦')];},
     ()=>{const a=pick(RANKS),b=pick(RANKS.filter(x=>x!==a));return [C(a,'♦'),C(a,'♥'),C(a,'♣'),C(b,'♠'),C(b,'♥')];},
     ()=>{const su=pick(SUITS);let vs;do{vs=shuffle(RANKS).slice(0,5).map(r=>RANK_VAL[r]).sort((a,b)=>b-a);}while(vs[0]-vs[4]===4);return vs.map(v=>C(VAL_RANK[v],su));},
-    ()=>{const lo=2+Math.floor(Math.random()*8);return [lo,lo+1,lo+2,lo+3,lo+4].map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));},
+    ()=>{const lo=2+Math.floor(rand()*8);return [lo,lo+1,lo+2,lo+3,lo+4].map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));},
     ()=>{const a=pick(RANKS);const rest=shuffle(RANKS.filter(x=>x!==a)).slice(0,2);return [C(a,'♠'),C(a,'♥'),C(a,'♦'),C(rest[0],'♣'),C(rest[1],'♠')];},
     ()=>{const [a,b,k]=shuffle(RANKS).slice(0,3);return [C(a,'♠'),C(a,'♥'),C(b,'♦'),C(b,'♣'),C(k,'♠')];},
     ()=>{const [a,...r]=shuffle(RANKS).slice(0,4);return [C(a,'♥'),C(a,'♦'),C(r[0],'♠'),C(r[1],'♣'),C(r[2],'♥')];},
@@ -506,9 +516,9 @@ function genIdentify(tricky){
 // ---------- "which beats" (ranking knowledge) ----------
 function genBeats(){
   const order=['High Card','One Pair','Two Pair','Three of a Kind','Straight','Flush','Full House','Four of a Kind'];
-  if (Math.random()<0.5){
+  if (rand()<0.5){
     // Which BEATS a {target}?
-    const ti=1+Math.floor(Math.random()*(order.length-2));
+    const ti=1+Math.floor(rand()*(order.length-2));
     const target=order[ti];
     const above=order.slice(ti+1).concat(['Straight Flush']);
     const below=order.slice(0,ti+1);
@@ -524,7 +534,7 @@ function genBeats(){
     };
   } else {
     // Which LOSES to a {target}? (reversed — trips people up)
-    const ti=1+Math.floor(Math.random()*5); // One Pair .. Flush
+    const ti=1+Math.floor(rand()*5); // One Pair .. Flush
     const target=order[ti];
     const below=order.slice(0,ti);
     const above=order.slice(ti+1).concat(['Straight Flush']);
@@ -544,8 +554,8 @@ function genBeats(){
 // ---------- showdown duel ----------
 function genDuel(){
   // 20%: engineered split pot
-  if (Math.random()<0.2){
-    const lo=2+Math.floor(Math.random()*8);
+  if (rand()<0.2){
+    const lo=2+Math.floor(rand()*8);
     const vals=[lo,lo+1,lo+2,lo+3,lo+4];
     const A=vals.map((v,i)=>C(VAL_RANK[v],SUITS[i%4]));
     const B=vals.map((v,i)=>C(VAL_RANK[v],SUITS[(i+2)%4]));
@@ -630,11 +640,22 @@ function buildQuestions(){
   return shuffle(mix).map(fn=>fn());
 }
 
+function startDaily(){
+  dailyMode=true;
+  startQuiz();
+}
 function startQuiz(){
   playerName=document.getElementById('playerName').value.trim()||'Anonymous';
+  if(dailyMode){
+    difficulty='medium'; // daily is always the medium mix — level field for everyone
+    rand=mulberry32(seedFromDate('jonestes-poker-'+todayKey()));
+  } else {
+    rand=Math.random;
+  }
   timeLimit=DIFF[difficulty].time;
   runId=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   questions=buildQuestions();
+  rand=Math.random; // generation done — back to real randomness
   currentQ=0; score=0; streak=0; bestStreak=0; answers=[]; questionTimes=[];
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('quizScreen').classList.add('active');
@@ -767,31 +788,46 @@ function nextQuestion(){
 const STORE_URL='/.netlify/functions/store';
 const LB_FIELD='poker.leaderboard';
 
+const DAILY_FIELD='poker.dailyLB';
+function activeField(){return dailyMode?DAILY_FIELD:LB_FIELD;}
+function parseBoard(raw){
+  // regular board: plain array · daily board: {date, entries} that resets each day
+  if(dailyMode){
+    let o; try{o=JSON.parse(raw||'{}')}catch{o={}}
+    return (o&&o.date===todayKey()&&Array.isArray(o.entries))?o.entries:[];
+  }
+  try{return JSON.parse(raw||'[]')}catch{return []}
+}
+function packBoard(entries){
+  return dailyMode?JSON.stringify({date:todayKey(),entries}):JSON.stringify(entries);
+}
 async function fetchLeaderboard(){
+  const field=activeField();
   try{
     const r=await fetch(STORE_URL,{cache:'no-store'});
     if(r.ok){
       const data=await r.json();
-      return {lb:JSON.parse(data[LB_FIELD]||'[]'),global:true};
+      return {lb:parseBoard(data[field]),global:true};
     }
   }catch(e){}
-  try{return {lb:JSON.parse(localStorage.getItem(LB_FIELD)||'[]'),global:false};}catch{return {lb:[],global:false};}
+  try{return {lb:parseBoard(localStorage.getItem(field))}}catch{return {lb:[],global:false}};
 }
 
 async function submitScore(entry){
   // read-merge-write so simultaneous quiz takers don't clobber each other
+  const field=activeField();
   const {lb,global}=await fetchLeaderboard();
   if(!lb.some(e=>e.id===entry.id))lb.push(entry);
   lb.sort((a,b)=>b.score-a.score||b.correct-a.correct||a.ts-b.ts);
   const trimmed=lb.slice(0,50);
-  localStorage.setItem(LB_FIELD,JSON.stringify(trimmed));
+  localStorage.setItem(field,packBoard(trimmed));
   let saved=false;
   if(global){
     try{
       const r=await fetch(STORE_URL,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({updates:{[LB_FIELD]:JSON.stringify(trimmed)}}),
+        body:JSON.stringify({updates:{[field]:packBoard(trimmed)}}),
       });
       saved=r.ok;
     }catch(e){}
@@ -822,7 +858,7 @@ async function showResults(){
 
   document.getElementById('resultEmoji').textContent=emoji;
   document.getElementById('resultTitle').textContent=title;
-  document.getElementById('resultSubtitle').textContent=sub+` Final score: ${score} pts on ${difficulty}.`;
+  document.getElementById('resultSubtitle').textContent=sub+` Final score: ${score} pts on ${dailyMode?'the daily challenge':difficulty}.`;
 
   // review list
   document.getElementById('reviewList').innerHTML=answers.map(a=>`
@@ -833,11 +869,12 @@ async function showResults(){
     </div>`).join('');
 
   // leaderboard
+  document.querySelector('.lb-title').textContent=dailyMode?('📅 Daily Challenge — '+todayKey()):'🏆 Global Leaderboard';
   const status=document.getElementById('lbStatus');
   status.textContent='Posting your score…';
   const entry={id:runId,name:playerName,score,correct,total:questions.length,diff:difficulty,ts:Date.now()};
   const {lb,saved}=await submitScore(entry);
-  status.textContent=saved?'Synced — scores from every device, every player.':'⚠ Offline — showing this device only. Your score will count once the site connection is back.';
+  status.textContent=saved?(dailyMode?'Synced — today\'s board resets at midnight UTC. Come back tomorrow for a new deal.':'Synced — scores from every device, every player.'):'⚠ Offline — showing this device only. Your score will count once the site connection is back.';
   renderLeaderboard(lb);
 }
 
@@ -859,6 +896,7 @@ function renderLeaderboard(lb){
 }
 
 function restartQuiz(){
+  dailyMode=false;
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('startScreen').classList.add('active');
 }

@@ -323,6 +323,15 @@
     }
   });
 
+  // consume a handoff from the inventory vault (basis pre-fill)
+  try{
+    const pre=JSON.parse(localStorage.getItem('whatnotProfit.prefill'));
+    if(pre){
+      if(pre.basis!==undefined)$('costBasis').value=pre.basis;
+      localStorage.removeItem('whatnotProfit.prefill');
+    }
+  }catch{}
+
   calc();renderLog();renderHistory();
 })();
 </script>
