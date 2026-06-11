@@ -3,3 +3,6 @@
 
 [functions.places]
   timeout = 30
+
+[functions."spot-alert"]
+  schedule = "0 16 * * 1-5"
