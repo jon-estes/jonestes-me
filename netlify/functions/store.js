@@ -12,12 +12,16 @@ const HKEY = 'sitetools';
 const MAX_KEY_LEN = 120;
 const MAX_VAL_LEN = 200000; // ~200 KB per field — plenty for any tool's JSON
 
+// Fields anyone may read/write without the PIN (public leaderboards).
+const PUBLIC_PREFIXES = ['poker.'];
+const isPublic = (k) => PUBLIC_PREFIXES.some((p) => k.indexOf(p) === 0);
+
 exports.handler = async (event) => {
   const baseHeaders = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type,x-pin',
     'Cache-Control': 'no-store',
   };
 
@@ -30,6 +34,14 @@ exports.handler = async (event) => {
   if (!url || !token) {
     return { statusCode: 500, headers: baseHeaders, body: JSON.stringify({ error: 'Upstash env vars missing (UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN)' }) };
   }
+
+  // PIN gate: if STORE_PIN env var is set, private fields require it.
+  // Accepted via x-pin header or body.pin (sendBeacon can't set headers).
+  const PIN = process.env.STORE_PIN || '';
+  let bodyParsed = null;
+  try { bodyParsed = JSON.parse(event.body || '{}'); } catch { bodyParsed = {}; }
+  const givenPin = (event.headers && (event.headers['x-pin'] || event.headers['X-Pin'])) || bodyParsed.pin || '';
+  const authed = !PIN || givenPin === PIN;
 
   const redis = async (cmd) => {
     const r = await fetch(url, {
@@ -47,15 +59,19 @@ exports.handler = async (event) => {
       // Upstash returns a flat [field, value, field, value, ...] array
       const arr = r.result || [];
       const obj = {};
-      for (let i = 0; i < arr.length; i += 2) obj[arr[i]] = arr[i + 1];
+      for (let i = 0; i < arr.length; i += 2) {
+        if (authed || isPublic(arr[i])) obj[arr[i]] = arr[i + 1];
+      }
       return { statusCode: 200, headers: baseHeaders, body: JSON.stringify(obj) };
     }
 
     if (event.httpMethod === 'POST') {
-      let updates;
-      try { updates = (JSON.parse(event.body || '{}')).updates; } catch { updates = null; }
+      const updates = bodyParsed.updates;
       if (!updates || typeof updates !== 'object' || Array.isArray(updates)) {
         return { statusCode: 400, headers: baseHeaders, body: JSON.stringify({ error: 'body must be {updates:{key:value}}' }) };
+      }
+      if (!authed && Object.keys(updates).some((k) => !isPublic(k))) {
+        return { statusCode: 401, headers: baseHeaders, body: JSON.stringify({ error: 'pin required for private fields' }) };
       }
 
       const sets = ['HSET', HKEY];
