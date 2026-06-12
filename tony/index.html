@@ -5,24 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026 World Cup Pool — Live Bracket &amp; Leaderboard</title>
 <meta name="description" content="2026 World Cup pool hub — auto-scored leaderboard, live knockout bracket, and the points ladder. 113 points on the table.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#07090F;
-    --ink-2:#0C1018;
-    --card:#111723;
-    --line:rgba(244,242,234,.10);
-    --chalk:#F4F2EA;
-    --chalk-dim:rgba(244,242,234,.62);
-    --chalk-faint:rgba(244,242,234,.38);
-    --grass:#34D469;
-    --gold:#F2C14E;
-    --gold-deep:#C8932B;
-    --red:#E5484D;
-    --bronze:#C98B5E;
-    --silver:#B9C2CE;
+    --ink:#FAFAF8;
+    --ink-2:#F2F1EB;
+    --card:#FFFFFF;
+    --line:rgba(20,30,60,.13);
+    --chalk:#18203A;
+    --chalk-dim:rgba(24,32,58,.68);
+    --chalk-faint:rgba(24,32,58,.45);
+    --grass:#168A45;
+    --gold:#C8901F;
+    --gold-deep:#9C6E12;
+    --red:#C9262C;
+    --bronze:#A96B3F;
+    --silver:#7C8797;
     --radius:14px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -50,7 +53,7 @@
 
   nav{
     position:sticky;top:0;z-index:50;
-    background:rgba(7,9,15,.88);backdrop-filter:blur(10px);
+    background:rgba(250,250,248,.92);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
   nav .wrap{display:flex;align-items:center;gap:6px;padding:12px 24px;overflow-x:auto}
@@ -59,14 +62,14 @@
     font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--chalk-dim);text-decoration:none;padding:7px 12px;border-radius:8px;white-space:nowrap;
   }
-  nav a.nl:hover{color:var(--chalk);background:rgba(244,242,234,.06)}
+  nav a.nl:hover{color:var(--chalk);background:rgba(20,30,60,.06)}
 
   .hero{
     position:relative;
     padding:76px 0 64px;
     background:
-      radial-gradient(1100px 520px at 50% -120px, rgba(52,212,105,.14), transparent 65%),
-      radial-gradient(900px 500px at 85% 110%, rgba(242,193,78,.08), transparent 60%),
+      radial-gradient(1100px 520px at 50% -120px, rgba(22,138,69,.14), transparent 65%),
+      radial-gradient(900px 500px at 85% 110%, rgba(200,144,31,.08), transparent 60%),
       var(--ink);
     border-bottom:1px solid var(--line);
     overflow:hidden;
@@ -80,6 +83,9 @@
     margin-bottom:24px;
   }
   .eyebrow::before,.eyebrow::after{content:"";width:34px;height:1px;background:var(--grass);opacity:.5}
+  .hero-trophy{
+    width:min(440px,82vw);height:auto;display:block;margin:0 auto 6px;
+  }
   .hero h1{font-size:clamp(48px,8.5vw,110px);line-height:.95;margin-bottom:8px}
   .hero h1 .gold{color:var(--gold)}
   .hero .sub{max-width:580px;margin:20px auto 0;color:var(--chalk-dim);font-size:18px}
@@ -89,8 +95,8 @@
     display:inline-flex;align-items:center;gap:8px;
     font-family:'JetBrains Mono',monospace;font-size:12px;
     letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim);
-    border:1px solid rgba(242,193,78,.35);border-radius:999px;
-    background:rgba(242,193,78,.06);
+    border:1px solid rgba(200,144,31,.35);border-radius:999px;
+    background:rgba(200,144,31,.06);
     padding:8px 18px;
   }
   .host-line strong{color:var(--gold);font-weight:700}
@@ -98,14 +104,14 @@
     margin-top:32px;
     display:inline-flex;align-items:baseline;gap:14px;
     border:1px solid var(--line);border-radius:999px;
-    padding:10px 26px;background:rgba(244,242,234,.04);
+    padding:10px 26px;background:rgba(20,30,60,.04);
   }
   .perfect .num{font-family:'Anton',sans-serif;font-size:34px;color:var(--gold);line-height:1}
   .perfect .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-faint)}
 
   .deadline{
-    background:linear-gradient(90deg, rgba(229,72,77,.16), rgba(229,72,77,.06));
-    border-bottom:1px solid rgba(229,72,77,.35);
+    background:linear-gradient(90deg, rgba(201,38,44,.16), rgba(201,38,44,.06));
+    border-bottom:1px solid rgba(201,38,44,.35);
   }
   .deadline .wrap{
     display:flex;align-items:center;justify-content:center;gap:24px;
@@ -117,12 +123,10 @@
     display:flex;align-items:center;gap:9px;
   }
   .pulse{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.4s ease-in-out infinite}
-  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(229,72,77,.55)}50%{box-shadow:0 0 0 7px rgba(229,72,77,0)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,38,44,.55)}50%{box-shadow:0 0 0 7px rgba(201,38,44,0)}}
   .deadline .when{font-weight:600}
-  .deadline .form-link{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--chalk-dim);text-decoration:underline;text-underline-offset:3px}
-  .deadline .form-link:hover{color:var(--chalk)}
   .clock{display:flex;gap:10px}
-  .clock .unit{text-align:center;min-width:56px;background:rgba(7,9,15,.55);border:1px solid rgba(229,72,77,.3);border-radius:8px;padding:6px 8px}
+  .clock .unit{text-align:center;min-width:56px;background:rgba(255,255,255,.85);border:1px solid rgba(201,38,44,.3);border-radius:8px;padding:6px 8px}
   .clock .v{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:20px;line-height:1.1;color:var(--chalk)}
   .clock .u{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-faint)}
 
@@ -138,7 +142,7 @@
   /* ── LEADERBOARD ── */
   .board-sec{
     background:
-      radial-gradient(700px 320px at 15% 0%, rgba(242,193,78,.07), transparent 60%),
+      radial-gradient(700px 320px at 15% 0%, rgba(200,144,31,.07), transparent 60%),
       var(--ink-2);
     border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   }
@@ -165,7 +169,7 @@
   .board th{
     font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
     color:var(--chalk-faint);text-align:right;padding:14px 14px;
-    border-bottom:1px solid var(--line);background:rgba(244,242,234,.03);
+    border-bottom:1px solid var(--line);background:rgba(20,30,60,.03);
   }
   .board th:first-child,.board th:nth-child(2){text-align:left}
   .board td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:15px}
@@ -175,11 +179,11 @@
   .board td.rd{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--chalk-dim);text-align:right}
   .board td.pts{font-family:'JetBrains Mono',monospace;font-weight:800;text-align:right;color:var(--grass);width:84px;font-size:16px}
   .board tr.r1 td.rank,.board tr.r1 td.name{color:var(--gold)}
-  .board tr.r1{background:linear-gradient(90deg, rgba(242,193,78,.10), transparent 65%)}
+  .board tr.r1{background:linear-gradient(90deg, rgba(200,144,31,.10), transparent 65%)}
   .board tr.r2 td.rank{color:var(--silver)}
-  .board tr.r2{background:linear-gradient(90deg, rgba(185,194,206,.07), transparent 65%)}
+  .board tr.r2{background:linear-gradient(90deg, rgba(124,135,151,.07), transparent 65%)}
   .board tr.r3 td.rank{color:var(--bronze)}
-  .board tr.r3{background:linear-gradient(90deg, rgba(201,139,94,.08), transparent 65%)}
+  .board tr.r3{background:linear-gradient(90deg, rgba(169,107,63,.08), transparent 65%)}
   .board .empty{padding:46px 24px;text-align:center;color:var(--chalk-dim);font-size:15px}
   .board .empty .big{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;color:var(--chalk);margin-bottom:8px}
   .entry-count{
@@ -201,18 +205,18 @@
   .round-head{
     text-align:center;margin-bottom:16px;
     border:1px solid var(--line);border-radius:10px;
-    padding:10px 8px;background:rgba(244,242,234,.03);
+    padding:10px 8px;background:rgba(20,30,60,.03);
   }
   .round-head .r-name{font-family:'Anton',sans-serif;font-size:16px;letter-spacing:.05em;text-transform:uppercase}
   .round-head .r-dates{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-faint);margin-top:3px}
   .round-head .r-pts{
     margin-top:4px;display:inline-block;
     font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.12em;
-    color:var(--grass);background:rgba(52,212,105,.1);border:1px solid rgba(52,212,105,.3);
+    color:var(--grass);background:rgba(22,138,69,.1);border:1px solid rgba(22,138,69,.3);
     border-radius:999px;padding:2px 9px;
   }
-  .round-col.final-col .round-head{border-color:rgba(242,193,78,.4)}
-  .round-col.final-col .round-head .r-pts{color:var(--gold);background:rgba(242,193,78,.1);border-color:rgba(242,193,78,.35)}
+  .round-col.final-col .round-head{border-color:rgba(200,144,31,.4)}
+  .round-col.final-col .round-head .r-pts{color:var(--gold);background:rgba(200,144,31,.1);border-color:rgba(200,144,31,.35)}
   .matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
   .match{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
   .match .m-label{
@@ -221,30 +225,30 @@
   }
   .match .row{display:flex;align-items:center;gap:9px;padding:7px 12px;font-size:14px;font-weight:500}
   .match .row + .row{border-top:1px solid var(--line)}
-  .match .row img{width:22px;height:16px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(244,242,234,.14)}
-  .match .row .flag-blank{width:22px;height:16px;border-radius:2px;background:rgba(244,242,234,.07);flex:none}
+  .match .row img{width:22px;height:16px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(20,30,60,.14)}
+  .match .row .flag-blank{width:22px;height:16px;border-radius:2px;background:rgba(20,30,60,.07);flex:none}
   .match .row .score{margin-left:auto;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;color:var(--chalk-faint)}
   .match .row.win{color:var(--gold)}
   .match .row.win .score{color:var(--gold)}
   .match .row.tbd{color:var(--chalk-faint);font-style:italic;font-weight:400}
   .match.champ{
-    border-color:rgba(242,193,78,.55);
-    background:linear-gradient(180deg, rgba(242,193,78,.12), rgba(242,193,78,.02));
-    box-shadow:0 8px 30px rgba(242,193,78,.12);
+    border-color:rgba(200,144,31,.55);
+    background:linear-gradient(180deg, rgba(200,144,31,.12), rgba(200,144,31,.02));
+    box-shadow:0 8px 30px rgba(200,144,31,.12);
   }
-  .match.third{border-style:dashed;border-color:rgba(201,139,94,.5)}
+  .match.third{border-style:dashed;border-color:rgba(169,107,63,.5)}
   .match.third .m-label{color:var(--bronze)}
   .bracket-note{margin-top:20px;font-size:13px;color:var(--chalk-faint);font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
   .champion-banner{
     display:none;margin-bottom:28px;text-align:center;
-    border:1px solid rgba(242,193,78,.5);border-radius:var(--radius);
-    background:linear-gradient(180deg, rgba(242,193,78,.14), rgba(242,193,78,.03));
+    border:1px solid rgba(200,144,31,.5);border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(200,144,31,.14), rgba(200,144,31,.03));
     padding:26px 20px;
   }
   .champion-banner.show{display:block}
   .champion-banner .cb-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep)}
   .champion-banner .cb-team{font-family:'Anton',sans-serif;font-size:clamp(34px,6vw,58px);text-transform:uppercase;color:var(--gold);line-height:1.05;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:16px}
-  .champion-banner .cb-team img{width:54px;height:38px;object-fit:cover;border-radius:4px;box-shadow:0 0 0 1px rgba(242,193,78,.4)}
+  .champion-banner .cb-team img{width:54px;height:38px;object-fit:cover;border-radius:4px;box-shadow:0 0 0 1px rgba(200,144,31,.4)}
 
   /* ── points ladder ── */
   .ladder-sec{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -252,12 +256,12 @@
   .rung{
     position:relative;border-radius:var(--radius);
     border:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(52,212,105,.10), rgba(52,212,105,.02));
+    background:linear-gradient(180deg, rgba(22,138,69,.10), rgba(22,138,69,.02));
     padding:20px 16px 18px;
     display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
     transition:transform .18s ease, border-color .18s ease;
   }
-  .rung:hover{transform:translateY(-4px);border-color:rgba(52,212,105,.45)}
+  .rung:hover{transform:translateY(-4px);border-color:rgba(22,138,69,.45)}
   .rung .pts{font-family:'Anton',sans-serif;font-size:44px;line-height:1;color:var(--grass)}
   .rung .pts small{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--chalk-faint);margin-left:6px;text-transform:uppercase}
   .rung .name{font-weight:700;font-size:15px}
@@ -270,15 +274,15 @@
   .rung[data-h="5"]{min-height:300px}
   .rung[data-h="6"]{
     min-height:330px;
-    border-color:rgba(242,193,78,.5);
-    background:linear-gradient(180deg, rgba(242,193,78,.16), rgba(242,193,78,.03));
+    border-color:rgba(200,144,31,.5);
+    background:linear-gradient(180deg, rgba(200,144,31,.16), rgba(200,144,31,.03));
   }
   .rung[data-h="6"] .pts{color:var(--gold)}
   .rung[data-h="6"]:hover{border-color:var(--gold)}
   .bronze-step{
     margin-top:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-    border:1px dashed rgba(201,139,94,.45);border-radius:var(--radius);
-    padding:16px 20px;background:rgba(201,139,94,.06);
+    border:1px dashed rgba(169,107,63,.45);border-radius:var(--radius);
+    padding:16px 20px;background:rgba(169,107,63,.06);
   }
   .bronze-step .pts{font-family:'Anton',sans-serif;font-size:30px;color:var(--bronze);line-height:1}
   .bronze-step .txt{font-size:14px;color:var(--chalk-dim)}
@@ -292,11 +296,11 @@
     padding:20px 20px 16px;
     transition:transform .18s ease, border-color .18s ease;
   }
-  .group-card:hover{transform:translateY(-4px);border-color:rgba(242,193,78,.4)}
+  .group-card:hover{transform:translateY(-4px);border-color:rgba(200,144,31,.4)}
   .group-card .letter{
     position:absolute;top:-26px;right:-8px;
     font-family:'Anton',sans-serif;font-size:130px;line-height:1;
-    color:rgba(244,242,234,.05);pointer-events:none;user-select:none;
+    color:rgba(20,30,60,.05);pointer-events:none;user-select:none;
   }
   .group-card .g-label{
     font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
@@ -308,17 +312,17 @@
     font-size:15px;font-weight:500;
   }
   .team:first-of-type{border-top:none}
-  .team img{width:26px;height:19px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(244,242,234,.14)}
+  .team img{width:26px;height:19px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(20,30,60,.14)}
   .team .seed{
     margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;
     letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);
-    border:1px solid rgba(242,193,78,.35);border-radius:4px;padding:2px 6px;
+    border:1px solid rgba(200,144,31,.35);border-radius:4px;padding:2px 6px;
   }
   .team.advanced{color:var(--grass)}
   .team .adv{
     margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;
     letter-spacing:.14em;text-transform:uppercase;color:var(--grass);
-    border:1px solid rgba(52,212,105,.4);border-radius:4px;padding:2px 6px;
+    border:1px solid rgba(22,138,69,.4);border-radius:4px;padding:2px 6px;
   }
   .pick-note{
     margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;
@@ -329,8 +333,8 @@
   .wildcard{
     margin-top:36px;
     display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;
-    border:1px solid rgba(52,212,105,.3);border-radius:var(--radius);
-    background:linear-gradient(120deg, rgba(52,212,105,.09), transparent 70%);
+    border:1px solid rgba(22,138,69,.3);border-radius:var(--radius);
+    background:linear-gradient(120deg, rgba(22,138,69,.09), transparent 70%);
     padding:26px 30px;
   }
   .wildcard .big8{font-family:'Anton',sans-serif;font-size:74px;line-height:.9;color:var(--grass)}
@@ -369,20 +373,21 @@
 <nav>
   <div class="wrap">
     <span class="brand">WC26 Pool</span>
-    <a class="nl" href="#leaderboard">Leaderboard</a>
-    <a class="nl" href="#bracket">Bracket</a>
     <a class="nl" href="#how">Scoring</a>
+    <a class="nl" href="#leaderboard">Leaderboard</a>
+    <a class="nl" href="/picks/">Picks</a>
     <a class="nl" href="#groups">Groups</a>
+    <a class="nl" href="#bracket">Bracket</a>
   </div>
 </nav>
 
 <!-- ════════ HERO ════════ -->
 <header class="hero">
   <svg class="pitch-lines" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g stroke="rgba(52,212,105,.13)" stroke-width="2" fill="none">
+    <g stroke="rgba(22,138,69,.13)" stroke-width="2" fill="none">
       <line x1="600" y1="0" x2="600" y2="560"/>
       <circle cx="600" cy="280" r="160"/>
-      <circle cx="600" cy="280" r="5" fill="rgba(52,212,105,.18)" stroke="none"/>
+      <circle cx="600" cy="280" r="5" fill="rgba(22,138,69,.18)" stroke="none"/>
       <rect x="-80" y="120" width="240" height="320"/>
       <rect x="-80" y="195" width="110" height="170"/>
       <rect x="1040" y="120" width="240" height="320"/>
@@ -393,7 +398,7 @@
   </svg>
   <div class="wrap">
     <div class="eyebrow">FIFA World Cup 2026 · USA · Mexico · Canada</div>
-    <h1 class="display">The Bracket.<br>The Ladder.<br><span class="gold">The Glory.</span></h1>
+    <img class="hero-trophy" src="trophy.png" alt="2026 FIFA World Cup — United States, Canada, Mexico" width="1900" height="1333">
     <p class="sub">48 teams. 104 matches. One pool. Picks are scored automatically and the bracket fills in live — <strong>points climb every round you survive.</strong></p>
     <div><span class="host-line">⚽ Hosted by <strong>Tony Gutierrez Castro</strong></span></div>
     <div class="perfect">
@@ -414,53 +419,8 @@
       <div class="unit"><div class="v" id="cd-m">–</div><div class="u">Min</div></div>
       <div class="unit"><div class="v" id="cd-s">–</div><div class="u">Sec</div></div>
     </div>
-    <a class="form-link" id="form-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfnAvMsSEx3fAJ0cYz-OhPDpqjabcC1VMAIcvxMq7lBTpSgUQ/viewform" target="_blank" rel="noopener">Picks form →</a>
   </div>
 </div>
-
-<!-- ════════ LEADERBOARD ════════ -->
-<section class="board-sec" id="leaderboard">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="kicker">Pool Standings · Auto-Scored</div>
-      <h2 class="display">Live Leaderboard</h2>
-      <p>Every entry is pulled straight from the picks form and graded automatically against the real results — no hand counting, no spreadsheets to argue over.</p>
-    </div>
-    <div class="board-meta">
-      <span class="live-dot">Live</span>
-      <span class="entry-count" id="entry-count"></span>
-      <span id="board-updated">Waiting for first sync…</span>
-      <button class="refresh-btn" id="refresh-board" type="button">↻ Refresh</button>
-    </div>
-    <div class="board"><div class="board-scroll" id="board">
-      <div class="empty">
-        <div class="big">Connecting to the pool…</div>
-        Entries appear here automatically once the picks sheet is linked.
-      </div>
-    </div></div>
-  </div>
-</section>
-
-<!-- ════════ BRACKET ════════ -->
-<section id="bracket">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="kicker">Knockout Stage · Jun 28 – Jul 19</div>
-      <h2 class="display">The Live Bracket</h2>
-      <p>All 31 knockout matches, from the Round of 32 to the final at MetLife Stadium. Winners light up gold as results come in. Round of 32 matchups lock in when the group stage ends — FIFA seeds the eight third-place wildcards by a preset formula.</p>
-    </div>
-
-    <div class="champion-banner" id="champion-banner">
-      <div class="cb-label">2026 World Champions</div>
-      <div class="cb-team" id="champion-team"></div>
-    </div>
-
-    <div class="bracket-scroll">
-      <div class="bracket" id="bracket-grid" aria-label="Knockout bracket"></div>
-    </div>
-    <div class="bracket-note" id="bracket-updated">All dates and venues are official — team names replace the slot paths as the tournament unfolds.</div>
-  </div>
-</section>
 
 <!-- ════════ POINTS LADDER ════════ -->
 <section class="ladder-sec" id="how">
@@ -514,6 +474,37 @@
       <div class="pts">+1</div>
       <div class="txt"><strong>Third-place game.</strong> A single bonus point for picking the winner of the consolation match — small, but pools have been won by less.</div>
     </div>
+
+    <div class="wildcard">
+      <div class="big8">8</div>
+      <div>
+        <h3>The third-place wildcards</h3>
+        <p>The 8 best third-place teams also advance to the Round of 32 — but they're <strong style="color:var(--chalk)">not worth points here</strong>. You'll account for them when you pick the Round of 32 matchups, so don't sweat them in this round. Top-two picks only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ LEADERBOARD ════════ -->
+<section class="board-sec" id="leaderboard">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Pool Standings · Auto-Scored</div>
+      <h2 class="display">Live Leaderboard</h2>
+      <p>Every entry is pulled straight from the picks form and graded automatically against the real results — no hand counting, no spreadsheets to argue over.</p>
+    </div>
+    <div class="board-meta">
+      <span class="live-dot">Live</span>
+      <span class="entry-count" id="entry-count"></span>
+      <span id="board-updated">Waiting for first sync…</span>
+      <button class="refresh-btn" id="refresh-board" type="button">↻ Refresh</button>
+    </div>
+    <div class="board"><div class="board-scroll" id="board">
+      <div class="empty">
+        <div class="big">Connecting to the pool…</div>
+        Entries appear here automatically once the picks sheet is linked.
+      </div>
+    </div></div>
   </div>
 </section>
 
@@ -527,13 +518,28 @@
     </div>
     <div class="groups-grid" id="groups-grid"></div>
 
-    <div class="wildcard">
-      <div class="big8">8</div>
-      <div>
-        <h3>The third-place wildcards</h3>
-        <p>The 8 best third-place teams also advance to the Round of 32 — but they're <strong style="color:var(--chalk)">not worth points here</strong>. You'll account for them when you pick the Round of 32 matchups, so don't sweat them in this round. Top-two picks only.</p>
-      </div>
+    
+  </div>
+</section>
+
+<!-- ════════ BRACKET ════════ -->
+<section id="bracket">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Knockout Stage · Jun 28 – Jul 19</div>
+      <h2 class="display">The Live Bracket</h2>
+      <p>All 31 knockout matches, from the Round of 32 to the final at MetLife Stadium. Winners light up gold as results come in. Round of 32 matchups lock in when the group stage ends — FIFA seeds the eight third-place wildcards by a preset formula.</p>
     </div>
+
+    <div class="champion-banner" id="champion-banner">
+      <div class="cb-label">2026 World Champions</div>
+      <div class="cb-team" id="champion-team"></div>
+    </div>
+
+    <div class="bracket-scroll">
+      <div class="bracket" id="bracket-grid" aria-label="Knockout bracket"></div>
+    </div>
+    <div class="bracket-note" id="bracket-updated">All dates and venues are official — team names replace the slot paths as the tournament unfolds.</div>
   </div>
 </section>
 
@@ -673,14 +679,13 @@ renderGroups();
 /* ── countdown ── */
 const deadline = new Date(2026, 5, 10, 23, 59, 59).getTime();
 const cd = {d:document.getElementById('cd-d'),h:document.getElementById('cd-h'),m:document.getElementById('cd-m'),s:document.getElementById('cd-s')};
+let timer = null;
 function tick(){
   let diff = deadline - Date.now();
   if (diff <= 0){
     document.getElementById('clock').innerHTML =
       '<span class="mono" style="font-weight:800;color:var(--red);letter-spacing:.14em;">PICKS ARE LOCKED</span>';
-    const fl = document.getElementById('form-link');
-    if (fl) fl.remove();
-    clearInterval(timer);
+    if (timer){ clearInterval(timer); timer = null; }
     return;
   }
   cd.d.textContent = Math.floor(diff/864e5);
@@ -689,7 +694,7 @@ function tick(){
   cd.s.textContent = String(Math.floor(diff%6e4/1e3)).padStart(2,'0');
 }
 tick();
-const timer = setInterval(tick, 1000);
+if (deadline > Date.now()) timer = setInterval(tick, 1000);
 
 /* ── CSV helpers ── */
 function parseCSV(text){
