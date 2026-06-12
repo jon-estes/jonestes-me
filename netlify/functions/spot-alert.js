@@ -62,6 +62,19 @@ exports.handler = async () => {
       await redis(['HSET', HKEY, 'meltCalc.state', JSON.stringify(m)]);
     } catch {}
 
+    // append to the price history (one point per day, keep ~2 years)
+    try {
+      const hRes = await redis(['HGET', HKEY, 'silver.history']);
+      let hist = [];
+      try { hist = JSON.parse(hRes.result || '[]'); } catch {}
+      const today2 = new Date().toISOString().slice(0, 10);
+      if (!hist.length || hist[hist.length - 1].d !== today2) {
+        hist.push({ d: today2, p: Number(spot.toFixed(2)) });
+        if (hist.length > 730) hist = hist.slice(-730);
+        await redis(['HSET', HKEY, 'silver.history', JSON.stringify(hist)]);
+      }
+    } catch {}
+
     // 3) crossing check, max one email per direction per day
     const today = new Date().toISOString().slice(0, 10);
     let fired = null;

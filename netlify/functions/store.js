@@ -13,7 +13,7 @@ const MAX_KEY_LEN = 120;
 const MAX_VAL_LEN = 200000; // ~200 KB per field — plenty for any tool's JSON
 
 // Fields anyone may read/write without the PIN (public leaderboards).
-const PUBLIC_PREFIXES = ['poker.'];
+const PUBLIC_PREFIXES = ['poker.', 'quiz.', 'shop.', 'chores.', 'silver.'];
 const isPublic = (k) => PUBLIC_PREFIXES.some((p) => k.indexOf(p) === 0);
 
 exports.handler = async (event) => {
