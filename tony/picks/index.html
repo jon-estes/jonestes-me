@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Player Picks — 2026 World Cup Pool</title>
+<meta name="description" content="See everyone's Round of 48 picks in the 2026 World Cup pool.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#FAFAF8;
+    --ink-2:#F2F1EB;
+    --card:#FFFFFF;
+    --line:rgba(20,30,60,.13);
+    --chalk:#18203A;
+    --chalk-dim:rgba(24,32,58,.68);
+    --chalk-faint:rgba(24,32,58,.45);
+    --grass:#168A45;
+    --gold:#C8901F;
+    --gold-deep:#9C6E12;
+    --red:#C9262C;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink);
+    color:var(--chalk);
+    font-family:'Archivo',system-ui,sans-serif;
+    font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#fff}
+  .display{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.01em;text-transform:uppercase}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  .tricolor{display:flex;height:6px}
+  .tricolor span{flex:1}
+  .tricolor span:nth-child(1){background:#B91C2C}
+  .tricolor span:nth-child(2){background:#F4F2EA}
+  .tricolor span:nth-child(3){background:#2C6E49}
+
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,250,248,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex;align-items:center;gap:6px;padding:12px 24px;overflow-x:auto}
+  nav .brand{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-right:auto;white-space:nowrap;text-decoration:none}
+  nav a.nl{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--chalk-dim);text-decoration:none;padding:7px 12px;border-radius:8px;white-space:nowrap;
+  }
+  nav a.nl:hover{color:var(--chalk);background:rgba(20,30,60,.06)}
+  nav a.nl.active{color:var(--gold);background:rgba(200,144,31,.1)}
+
+  header.page{
+    padding:56px 0 36px;text-align:center;
+    background:radial-gradient(900px 380px at 50% -120px, rgba(22,138,69,.10), transparent 65%);
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--grass);margin-bottom:16px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";width:34px;height:1px;background:var(--grass);opacity:.5}
+  header.page h1{font-size:clamp(40px,7vw,72px);line-height:1}
+  header.page p{margin:14px auto 0;max-width:540px;color:var(--chalk-dim)}
+
+  .controls{
+    display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+    padding:28px 24px 4px;
+  }
+  .picker{
+    display:flex;align-items:center;gap:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:10px 16px;box-shadow:0 4px 14px rgba(20,30,60,.06);
+  }
+  .picker label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-faint);
+  }
+  .picker select{
+    font-family:'Archivo',sans-serif;font-size:17px;font-weight:700;color:var(--chalk);
+    background:transparent;border:none;outline:none;cursor:pointer;
+    padding:4px 6px;min-width:180px;
+  }
+  .summary{
+    display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  }
+  .chip{
+    display:inline-flex;align-items:baseline;gap:8px;
+    border:1px solid var(--line);border-radius:999px;background:var(--card);
+    padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--chalk-faint);
+  }
+  .chip b{font-size:16px;letter-spacing:0;color:var(--grass)}
+  .chip.gold b{color:var(--gold)}
+
+  section{padding:42px 0 72px}
+  .groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px}
+  .group-card{
+    position:relative;overflow:hidden;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 20px 16px;
+  }
+  .group-card .letter{
+    position:absolute;top:-26px;right:-8px;
+    font-family:'Anton',sans-serif;font-size:130px;line-height:1;
+    color:rgba(20,30,60,.05);pointer-events:none;user-select:none;
+  }
+  .group-card .g-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+  }
+  .team{
+    position:relative;
+    display:flex;align-items:center;gap:10px;
+    padding:8px 10px;margin:0 -10px;border-top:1px solid var(--line);
+    font-size:15px;font-weight:500;border-radius:8px;
+  }
+  .team:first-of-type{border-top:none}
+  .team img{width:26px;height:19px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(20,30,60,.14);flex:none}
+  .team .pct{
+    margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--chalk-faint);flex:none;
+  }
+  .badge{
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;
+    letter-spacing:.12em;text-transform:uppercase;border-radius:4px;padding:2px 7px;flex:none;
+  }
+  /* picked, undecided */
+  .team.pick{background:rgba(200,144,31,.10);border-top-color:transparent;font-weight:700}
+  .team.pick + .team{border-top-color:transparent}
+  .team.pick .badge{color:var(--gold-deep);border:1px solid rgba(200,144,31,.45);background:#fff}
+  /* picked + advanced */
+  .team.pick.hit{background:rgba(22,138,69,.12)}
+  .team.pick.hit .badge{color:var(--grass);border-color:rgba(22,138,69,.5)}
+  /* picked + eliminated */
+  .team.pick.miss{background:rgba(201,38,44,.08)}
+  .team.pick.miss .badge{color:var(--red);border-color:rgba(201,38,44,.4)}
+  .team.pick.miss .t-name{text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.7}
+  /* advanced but not picked */
+  .team.thru-only .badge{color:var(--grass);border:1px dashed rgba(22,138,69,.45);background:#fff}
+
+  .legend{
+    margin-top:26px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--chalk-faint);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .dot.gold{background:rgba(200,144,31,.6)}
+  .dot.green{background:rgba(22,138,69,.6)}
+  .dot.red{background:rgba(201,38,44,.5)}
+
+  .empty-state{
+    text-align:center;padding:70px 24px;color:var(--chalk-dim);
+  }
+  .empty-state .big{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;color:var(--chalk);margin-bottom:8px}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:28px 0;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--chalk-faint);
+  }
+  footer a{text-decoration:underline;text-underline-offset:3px}
+
+  @media (max-width:560px){
+    .picker select{min-width:140px;font-size:16px}
+  }
+</style>
+</head>
+<body>
+
+<div class="tricolor" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="/">WC26 Pool</a>
+    <a class="nl" href="/#leaderboard">Leaderboard</a>
+    <a class="nl active" href="/picks/">Picks</a>
+    <a class="nl" href="/#bracket">Bracket</a>
+  </div>
+</nav>
+
+<header class="page">
+  <div class="wrap">
+    <div class="eyebrow">Round of 48 · Everyone's Cards on the Table</div>
+    <h1 class="display">Player Picks</h1>
+    <p>Picks are locked, so it's all out in the open. Choose a player to see the two teams they backed in every group — and how it's going.</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="picker">
+    <label for="player-select">Player</label>
+    <select id="player-select" aria-label="Choose a player"></select>
+  </div>
+  <div class="summary" id="summary"></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="groups-grid" id="groups-grid">
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="big">Loading picks…</div>
+        Pulling everyone's entries from the pool.
+      </div>
+    </div>
+    <div class="legend" id="legend" style="display:none">
+      <span><span class="dot gold"></span> Their pick</span>
+      <span><span class="dot green"></span> Pick advanced ✓</span>
+      <span><span class="dot red"></span> Pick eliminated ✗</span>
+      <span>% = share of pool that picked the team</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">2026 World Cup Pool · <a href="/">Back to the leaderboard &amp; bracket</a></div>
+</footer>
+
+<div class="tricolor" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<script>
+/* Same two pipes as the main page */
+const RESPONSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=1722771324&single=true&output=csv";
+const RESULTS_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=2133030220&single=true&output=csv";
+const AUTO_REFRESH_MS = 5 * 60 * 1000;
+
+const ALIASES = {
+  "mexico":"mexico","south africa":"south africa",
+  "south korea":"south korea","korea republic":"south korea","korea":"south korea",
+  "czechia":"czechia","czech republic":"czechia",
+  "canada":"canada","switzerland":"switzerland","qatar":"qatar",
+  "bosnia":"bosnia","bosnia and herzegovina":"bosnia","bosnia & herzegovina":"bosnia","bosnia & herz.":"bosnia",
+  "brazil":"brazil","morocco":"morocco","haiti":"haiti","scotland":"scotland",
+  "usa":"usa","united states":"usa","us":"usa","u.s.a.":"usa",
+  "paraguay":"paraguay","australia":"australia",
+  "turkiye":"turkiye","türkiye":"turkiye","turkey":"turkiye",
+  "germany":"germany","ecuador":"ecuador",
+  "curacao":"curacao","curaçao":"curacao",
+  "ivory coast":"ivory coast","cote d'ivoire":"ivory coast","côte d'ivoire":"ivory coast",
+  "netherlands":"netherlands","japan":"japan","sweden":"sweden","tunisia":"tunisia",
+  "belgium":"belgium","egypt":"egypt","iran":"iran","new zealand":"new zealand",
+  "spain":"spain","uruguay":"uruguay","saudi arabia":"saudi arabia",
+  "cape verde":"cape verde","cabo verde":"cape verde",
+  "france":"france","senegal":"senegal","norway":"norway","iraq":"iraq",
+  "argentina":"argentina","austria":"austria","algeria":"algeria","jordan":"jordan",
+  "portugal":"portugal","colombia":"colombia","uzbekistan":"uzbekistan",
+  "dr congo":"dr congo","congo dr":"dr congo","drc":"dr congo","democratic republic of the congo":"dr congo",
+  "england":"england","croatia":"croatia","ghana":"ghana","panama":"panama"
+};
+const FLAG_CODES = {
+  "mexico":"mx","south africa":"za","south korea":"kr","czechia":"cz",
+  "canada":"ca","switzerland":"ch","qatar":"qa","bosnia":"ba",
+  "brazil":"br","morocco":"ma","haiti":"ht","scotland":"gb-sct",
+  "usa":"us","paraguay":"py","australia":"au","turkiye":"tr",
+  "germany":"de","ecuador":"ec","ivory coast":"ci","curacao":"cw",
+  "netherlands":"nl","japan":"jp","sweden":"se","tunisia":"tn",
+  "belgium":"be","egypt":"eg","iran":"ir","new zealand":"nz",
+  "spain":"es","uruguay":"uy","saudi arabia":"sa","cape verde":"cv",
+  "france":"fr","senegal":"sn","norway":"no","iraq":"iq",
+  "argentina":"ar","austria":"at","algeria":"dz","jordan":"jo",
+  "portugal":"pt","colombia":"co","uzbekistan":"uz","dr congo":"cd",
+  "england":"gb-eng","croatia":"hr","ghana":"gh","panama":"pa"
+};
+function canon(name){
+  const k = (name||"").trim().toLowerCase().replace(/\s+/g,' ');
+  return ALIASES[k] || k;
+}
+function flagImg(team){
+  const code = FLAG_CODES[canon(team)];
+  return code
+    ? '<img src="https://flagcdn.com/w40/'+code+'.png" alt="" loading="lazy">'
+    : '';
+}
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+
+const GROUPS = [
+  ["A",["Mexico","South Korea","South Africa","Czechia"]],
+  ["B",["Canada","Switzerland","Qatar","Bosnia"]],
+  ["C",["Brazil","Morocco","Scotland","Haiti"]],
+  ["D",["USA","Turkiye","Paraguay","Australia"]],
+  ["E",["Germany","Ecuador","Ivory Coast","Curacao"]],
+  ["F",["Netherlands","Japan","Sweden","Tunisia"]],
+  ["G",["Belgium","Egypt","Iran","New Zealand"]],
+  ["H",["Spain","Uruguay","Saudi Arabia","Cape Verde"]],
+  ["I",["France","Senegal","Norway","Iraq"]],
+  ["J",["Argentina","Austria","Algeria","Jordan"]],
+  ["K",["Portugal","Colombia","Uzbekistan","DR Congo"]],
+  ["L",["England","Croatia","Ghana","Panama"]]
+];
+
+function parseCSV(text){
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){
+      if (c === '"' && text[i+1] === '"'){ cell += '"'; i++; }
+      else if (c === '"') q = false;
+      else cell += c;
+    } else {
+      if (c === '"') q = true;
+      else if (c === ','){ row.push(cell); cell=''; }
+      else if (c === '\n'){ row.push(cell); rows.push(row); row=[]; cell=''; }
+      else if (c !== '\r') cell += c;
+    }
+  }
+  if (cell !== '' || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim() !== ''));
+}
+async function fetchCSV(url){
+  const res = await fetch(url + (url.includes('?')?'&':'?') + 'cb=' + Date.now());
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return parseCSV(await res.text());
+}
+
+let entries = [];        // [{name, picks:{A:[c,c],...}}]
+let groupResults = {};   // { A:Set, ... }
+let pickCounts = {};     // canonical team → count
+let current = null;
+
+function parseEntries(rows){
+  const headers = rows[0];
+  let nameCol = headers.findIndex(h => /name|nickname/i.test(h));
+  if (nameCol === -1) nameCol = 1;
+  const groupCols = [];
+  headers.forEach((h, i) => {
+    const m = /group\s+([A-L])\b/i.exec(h);
+    if (m) groupCols.push([i, m[1].toUpperCase()]);
+  });
+  const people = new Map();
+  rows.slice(1).forEach(r => {
+    const name = (r[nameCol]||'').trim();
+    if (!name) return;
+    const picks = {};
+    groupCols.forEach(([i, letter]) => {
+      const t = canon(r[i]);
+      if (t) (picks[letter] = picks[letter] || []).push(t);
+    });
+    people.set(name.toLowerCase(), { name, picks });
+  });
+  return [...people.values()].sort((a,b) => a.name.localeCompare(b.name));
+}
+function tallyPickCounts(){
+  pickCounts = {};
+  entries.forEach(e => {
+    Object.values(e.picks).forEach(arr => {
+      new Set(arr).forEach(t => pickCounts[t] = (pickCounts[t]||0) + 1);
+    });
+  });
+}
+
+function render(){
+  const grid = document.getElementById('groups-grid');
+  const legend = document.getElementById('legend');
+  const summary = document.getElementById('summary');
+  if (!current){ return; }
+  const total = entries.length || 1;
+  let hits = 0, misses = 0, decided = 0;
+
+  grid.innerHTML = GROUPS.map(([letter, teams]) => {
+    const myPicks = new Set(current.picks[letter] || []);
+    const result = groupResults[letter];
+    return `<div class="group-card"><span class="letter">${letter}</span>
+      <div class="g-label">Group ${letter}</div>
+      ${teams.map(t => {
+        const c = canon(t);
+        const picked = myPicks.has(c);
+        const through = result && result.has(c);
+        const out = result && picked && !through;
+        if (result && picked && through) hits++;
+        if (out) misses++;
+        const pct = Math.round(100 * (pickCounts[c]||0) / total);
+        let cls = 'team', badge = '';
+        if (picked && through){ cls += ' pick hit'; badge = '<span class="badge">✓ +1 pt</span>'; }
+        else if (out){ cls += ' pick miss'; badge = '<span class="badge">✗ out</span>'; }
+        else if (picked){ cls += ' pick'; badge = '<span class="badge">Pick</span>'; }
+        else if (through){ cls += ' thru-only'; badge = '<span class="badge">thru</span>'; }
+        return `<div class="${cls}">${flagImg(t)} <span class="t-name">${esc(t)}</span> ${badge} <span class="pct">${pct}%</span></div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+
+  Object.keys(groupResults).forEach(() => decided++);
+  summary.innerHTML = `
+    <span class="chip gold"><b>${Object.values(current.picks).flat().length}</b> picks made</span>
+    <span class="chip"><b>${hits}</b> through · ${hits} pts</span>
+    ${misses ? `<span class="chip" style="color:var(--red)"><b style="color:var(--red)">${misses}</b> eliminated</span>` : ''}
+    ${decided ? `<span class="chip"><b>${decided}</b>/12 groups decided</span>` : ''}`;
+  legend.style.display = 'flex';
+}
+
+function populateSelect(){
+  const sel = document.getElementById('player-select');
+  sel.innerHTML = entries.map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('');
+  // deep-link support: /picks/?player=Jon%20E
+  const want = new URLSearchParams(location.search).get('player');
+  if (want){
+    const match = entries.find(e => e.name.toLowerCase() === want.toLowerCase());
+    if (match) sel.value = match.name;
+  }
+  current = entries.find(e => e.name === sel.value) || entries[0];
+  sel.onchange = () => {
+    current = entries.find(e => e.name === sel.value);
+    const u = new URL(location); u.searchParams.set('player', current.name);
+    history.replaceState(null, '', u);
+    render();
+  };
+}
+
+async function loadAll(){
+  try{
+    const rows = await fetchCSV(RESPONSES_CSV_URL);
+    entries = parseEntries(rows);
+    tallyPickCounts();
+    if (!entries.length){
+      document.getElementById('groups-grid').innerHTML =
+        '<div class="empty-state" style="grid-column:1/-1"><div class="big">No entries found</div>Picks will appear here once the pool sheet syncs.</div>';
+      return;
+    }
+    try{
+      const rRows = await fetchCSV(RESULTS_CSV_URL);
+      const h = rRows[0].map(x => x.trim().toLowerCase());
+      const iR=h.indexOf('round'), iM=h.indexOf('match'), i1=h.indexOf('team1'), i2=h.indexOf('team2');
+      groupResults = {};
+      rRows.slice(1).forEach(r => {
+        if ((r[iR]||'').trim().toUpperCase() !== 'GROUP') return;
+        const g = (r[iM]||'').trim().toUpperCase();
+        const t1 = canon(r[i1]), t2 = canon(r[i2]);
+        if (g && (t1 || t2)) groupResults[g] = new Set([t1,t2].filter(Boolean));
+      });
+    }catch(e){ /* results optional */ }
+    populateSelect();
+    render();
+  }catch(e){
+    document.getElementById('groups-grid').innerHTML =
+      '<div class="empty-state" style="grid-column:1/-1"><div class="big">Couldn\'t load picks</div>Refresh to retry — the pool sheet may be syncing.</div>';
+  }
+}
+loadAll();
+setInterval(loadAll, AUTO_REFRESH_MS);
+</script>
+
+</body>
+</html>
