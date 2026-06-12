@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Engine · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:760px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.75rem;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.2rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.92rem;margin-top:.4rem}
+  .view{display:none}.view.active{display:block}
+  .deck-card{display:flex;justify-content:space-between;align-items:center;gap:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.55rem;cursor:pointer;transition:border-color .15s}
+  .deck-card:hover{border-color:var(--gold)}
+  .deck-card .dn{font-family:var(--mono);font-size:.9rem;color:var(--silver);font-weight:600}
+  .deck-card .dm{font-family:var(--mono);font-size:.68rem;color:var(--text-dim)}
+  .deck-card .top{font-family:var(--mono);font-size:.7rem;color:var(--green-bright);white-space:nowrap}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .85rem}
+  input[type="text"],textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem;color:var(--text);font-family:var(--mono);font-size:.84rem;outline:none}
+  input:focus,textarea:focus{border-color:var(--gold)}
+  textarea{min-height:150px;resize:vertical;line-height:1.8}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.75rem 1.3rem;font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.05em;cursor:pointer}
+  .btn:hover{filter:brightness(1.12)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .btn-ghost:hover{background:var(--bg-card-hover);color:var(--text);filter:none}
+  .actions{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap;justify-content:center}
+  .hint{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);margin-top:.4rem;line-height:1.7}
+  /* play */
+  .meta-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.74rem;color:var(--text-dim);margin-bottom:.75rem}
+  .meta-row .score{color:var(--gold);font-weight:700}
+  .timerbar{height:6px;background:var(--bg-card);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+  .timerbar .tfill{height:100%;background:var(--gold);transition:width 1s linear}
+  .q-text{font-size:1.25rem;color:var(--silver);text-align:center;margin:1.25rem 0 1.5rem;min-height:3.2rem;white-space:pre-wrap}
+  .choices{display:grid;gap:.55rem}
+  .choice{background:var(--bg-card);border:1px solid var(--border);border-radius:9px;padding:.85rem 1rem;font-family:var(--mono);font-size:.85rem;color:var(--text);cursor:pointer;text-align:left;transition:border-color .12s}
+  .choice:hover{border-color:var(--gold)}
+  .choice.correct{border-color:var(--green);background:rgba(110,163,110,.12)}
+  .choice.wrong{border-color:var(--red);background:rgba(176,86,86,.12)}
+  .choice:disabled{cursor:default;opacity:.92}
+  .fb{font-family:var(--mono);font-size:.78rem;margin-top:.9rem;text-align:center;min-height:1.4rem}
+  .fb.ok{color:var(--green-bright)}.fb.no{color:var(--red)}
+  /* results / leaderboard */
+  .final{font-family:var(--mono);text-align:center;margin:1rem 0 1.5rem}
+  .final .pts{font-size:2.4rem;color:var(--gold);font-weight:700}
+  .final .sub2{font-size:.78rem;color:var(--text-dim)}
+  .lb-row{display:flex;gap:.7rem;align-items:baseline;font-family:var(--mono);font-size:.8rem;padding:.45rem .25rem;border-bottom:1px solid var(--border);color:var(--text-dim)}
+  .lb-row.me{color:var(--gold)}
+  .lb-row .p{width:2rem;text-align:center}.lb-row .n{flex:1;color:var(--silver)}.lb-row .s{font-weight:700}
+  .name-row{display:flex;gap:.5rem;justify-content:center;margin:1rem 0}
+  .name-row input{max-width:220px}
+  .del-link{font-family:var(--mono);font-size:.66rem;color:var(--text-dim);background:none;border:none;cursor:pointer;margin-left:.6rem}
+  .del-link:hover{color:var(--red)}
+  .footnote{margin-top:3rem;font-size:.74rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem;text-align:center}
+  .footnote a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Training Platform</div>
+    <h1>Quiz <span class="accent">Engine</span></h1>
+    <p class="subtitle" id="subtitle">Any topic, timed and scored, with a global leaderboard per deck.</p>
+  </header>
+
+  <!-- HOME -->
+  <div class="view active" id="vHome">
+    <div class="section-label">Decks</div>
+    <div id="deckList"><div class="hint">loading decks…</div></div>
+
+    <div class="section-label">Create / Update a Deck</div>
+    <input type="text" id="newTitle" placeholder="Deck title — e.g. MQI Basics">
+    <textarea id="newQs" style="margin-top:.5rem" placeholder="One question per line — two formats:
+
+What does MQI stand for? | Manufacturing Quality Instruction
+Pick the first changeover step | Verify WI revision | Clear the line | Call QA | Start the batch
+
+2 parts = answer auto-mixed with other answers in the deck
+5 parts = question | correct | wrong | wrong | wrong"></textarea>
+    <div class="hint">Re-using an existing title updates that deck. Decks are public: anyone with the link can play (that's the point). Share a deck directly: jonestes.me/quiz?deck=its-slug</div>
+    <div class="actions"><button class="btn" id="createBtn">SAVE DECK</button></div>
+  </div>
+
+  <!-- NAME / START -->
+  <div class="view" id="vStart">
+    <div class="section-label" id="startTitle">Deck</div>
+    <p class="hint" id="startMeta" style="text-align:center"></p>
+    <div class="name-row">
+      <input type="text" id="playerName" placeholder="Your name" maxlength="20">
+      <button class="btn" id="goBtn">START ▶</button>
+    </div>
+    <div class="section-label">Leaderboard</div>
+    <div id="lbPreview"><div class="hint">loading…</div></div>
+    <div class="actions"><button class="btn-ghost btn" id="backBtn">← ALL DECKS</button></div>
+  </div>
+
+  <!-- PLAY -->
+  <div class="view" id="vPlay">
+    <div class="meta-row"><span id="qCount"></span><span>⏱ <span id="tLeft"></span>s</span><span class="score" id="liveScore">0</span></div>
+    <div class="timerbar"><div class="tfill" id="tFill"></div></div>
+    <div class="q-text" id="qText"></div>
+    <div class="choices" id="choices"></div>
+    <div class="fb" id="fb"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="view" id="vResults">
+    <div class="final"><div class="pts" id="finalPts">0</div><div class="sub2" id="finalSub"></div></div>
+    <div class="section-label" id="lbTitle">Leaderboard</div>
+    <div id="lbList"></div>
+    <div class="actions">
+      <button class="btn" id="againBtn">PLAY AGAIN</button>
+      <button class="btn btn-ghost" id="homeBtn">ALL DECKS</button>
+    </div>
+  </div>
+
+  <div class="footnote">Scoring: 100 base + up to 100 speed per correct, streak bonus grows 10% per consecutive hit (caps at 2×). 15s per question. Built on the same engine as the <a href="/poker-quiz">poker quiz</a>. · <a href="/">jonestes.me</a></div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const STORE='/.netlify/functions/store';
+  const TIME=15;
+  let storeData={}, currentDeck=null, questions=[], qi=0, score=0, streak=0, correct=0, timeLeft=0, timer=null, answered=false, runId='';
+
+  const slugify=(s)=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
+  const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const shuffle=(a)=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+  const show=(v)=>{document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');};
+  const J=(s,fb)=>{try{return JSON.parse(s)}catch{return fb}};
+
+  async function fetchStore(){
+    try{const r=await fetch(STORE,{cache:'no-store'});if(r.ok)storeData=await r.json();}catch(e){}
+    return storeData;
+  }
+  async function post(updates){
+    try{const r=await fetch(STORE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({updates})});return r.ok;}catch{return false;}
+  }
+
+  // ---------- home ----------
+  function deckIndex(){return J(storeData['quiz.index'],[]);}
+  function renderHome(){
+    const idx=deckIndex();
+    const list=$('deckList');
+    if(!idx.length){list.innerHTML='<div class="hint">No decks yet — create the first one below.</div>';return;}
+    list.innerHTML='';
+    idx.forEach(d=>{
+      const lb=J(storeData['quiz.lb.'+d.slug],[]);
+      const div=document.createElement('div');
+      div.className='deck-card';
+      div.innerHTML=`<div><div class="dn">${esc(d.title)}</div><div class="dm">${d.count} questions · /quiz?deck=${d.slug}</div></div>`+
+        `<div class="top">${lb.length?('👑 '+esc(lb[0].name)+' · '+lb[0].score):'unclaimed'}</div>`;
+      const del=document.createElement('button');
+      del.className='del-link';del.textContent='✕';del.title='Delete deck (asks first)';
+      del.addEventListener('click',async(e)=>{
+        e.stopPropagation();
+        if(!confirm('Delete deck "'+d.title+'" and its leaderboard?'))return;
+        const idx2=deckIndex().filter(x=>x.slug!==d.slug);
+        await post({'quiz.index':JSON.stringify(idx2),['quiz.deck.'+d.slug]:null,['quiz.lb.'+d.slug]:null});
+        await fetchStore();renderHome();
+      });
+      div.appendChild(del);
+      div.addEventListener('click',()=>openDeck(d.slug));
+      list.appendChild(div);
+    });
+  }
+
+  $('createBtn').addEventListener('click',async()=>{
+    const title=$('newTitle').value.trim();
+    if(!title){$('newTitle').focus();return;}
+    const lines=$('newQs').value.split('\n').map(l=>l.trim()).filter(Boolean);
+    const qs=[];
+    lines.forEach(l=>{
+      const parts=l.split('|').map(p=>p.trim()).filter(Boolean);
+      if(parts.length>=5)qs.push({q:parts[0],a:parts[1],wrong:parts.slice(2,5)});
+      else if(parts.length>=2)qs.push({q:parts[0],a:parts[1]});
+    });
+    if(qs.length<4){alert('Need at least 4 valid questions (so wrong answers can be generated).');return;}
+    const slug=slugify(title);
+    const deck={title,slug,questions:qs,updated:Date.now()};
+    let idx=deckIndex().filter(d=>d.slug!==slug);
+    idx.push({slug,title,count:qs.length});
+    idx.sort((a,b)=>a.title.localeCompare(b.title));
+    $('createBtn').textContent='SAVING…';
+    const ok=await post({['quiz.deck.'+slug]:JSON.stringify(deck),'quiz.index':JSON.stringify(idx)});
+    $('createBtn').textContent='SAVE DECK';
+    if(!ok){alert('Save failed — check connection.');return;}
+    $('newTitle').value='';$('newQs').value='';
+    await fetchStore();renderHome();
+    openDeck(slug);
+  });
+
+  // ---------- start ----------
+  function openDeck(slug){
+    const deck=J(storeData['quiz.deck.'+slug],null);
+    if(!deck){alert('Deck not found.');show('vHome');return;}
+    currentDeck=deck;
+    history.replaceState(null,'','?deck='+slug);
+    $('startTitle').textContent=deck.title;
+    $('startMeta').textContent=Math.min(deck.questions.length,15)+' questions · 15s each · global board';
+    $('subtitle').textContent=deck.title;
+    renderBoard('lbPreview');
+    show('vStart');
+  }
+  function boardFor(slug){return J(storeData['quiz.lb.'+slug],[]);}
+  function renderBoard(elId){
+    const lb=boardFor(currentDeck.slug).slice(0,10);
+    const el=$(elId);
+    if(!lb.length){el.innerHTML='<div class="hint">No scores yet — be the first.</div>';return;}
+    el.innerHTML=lb.map((e,i)=>`<div class="lb-row ${e.id===runId?'me':''}"><span class="p">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span><span class="n">${esc(e.name)}${e.id===runId?' (you)':''}</span><span class="dm" style="font-size:.68rem">${e.correct}/${e.total}</span><span class="s">${e.score}</span></div>`).join('');
+  }
+
+  $('goBtn').addEventListener('click',startRun);
+  $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')startRun();});
+  $('backBtn').addEventListener('click',()=>{history.replaceState(null,'','location'.replace('location','/quiz'));$('subtitle').textContent='Any topic, timed and scored, with a global leaderboard per deck.';show('vHome');});
+  $('homeBtn').addEventListener('click',async()=>{await fetchStore();renderHome();$('subtitle').textContent='Any topic, timed and scored, with a global leaderboard per deck.';history.replaceState(null,'','/quiz');show('vHome');});
+  $('againBtn').addEventListener('click',startRun);
+
+  // ---------- play ----------
+  function buildQuestions(){
+    const all=currentDeck.questions;
+    const picked=shuffle(all).slice(0,15);
+    return picked.map(card=>{
+      let wrongs;
+      if(card.wrong&&card.wrong.length>=3)wrongs=card.wrong.slice(0,3);
+      else{
+        wrongs=shuffle(all.filter(c=>c.a!==card.a).map(c=>c.a));
+        wrongs=[...new Set(wrongs)].slice(0,3);
+      }
+      return{q:card.q,a:card.a,choices:shuffle([card.a,...wrongs])};
+    });
+  }
+
+  function startRun(){
+    if(!$('playerName').value.trim()){$('playerName').focus();return;}
+    runId=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+    questions=buildQuestions();
+    qi=0;score=0;streak=0;correct=0;
+    show('vPlay');
+    renderQ();
+  }
+
+  function renderQ(){
+    const q=questions[qi];
+    answered=false;
+    $('qCount').textContent=(qi+1)+' / '+questions.length;
+    $('liveScore').textContent=score;
+    $('qText').textContent=q.q;
+    $('fb').textContent='';$('fb').className='fb';
+    const box=$('choices');
+    box.innerHTML='';
+    q.choices.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='choice';
+      b.textContent=c;
+      b.addEventListener('click',()=>answer(c,b));
+      box.appendChild(b);
+    });
+    clearInterval(timer);
+    timeLeft=TIME;
+    $('tLeft').textContent=timeLeft;
+    $('tFill').style.width='100%';
+    timer=setInterval(()=>{
+      timeLeft--;
+      $('tLeft').textContent=Math.max(timeLeft,0);
+      $('tFill').style.width=(timeLeft/TIME*100)+'%';
+      if(timeLeft<=0){clearInterval(timer);answer(null,null);}
+    },1000);
+  }
+
+  function answer(chosen,btn){
+    if(answered)return;
+    answered=true;
+    clearInterval(timer);
+    const q=questions[qi];
+    const ok=chosen===q.a;
+    document.querySelectorAll('.choice').forEach(b=>{
+      b.disabled=true;
+      if(b.textContent===q.a)b.classList.add('correct');
+      else if(b===btn&&!ok)b.classList.add('wrong');
+    });
+    let pts=0;
+    if(ok){
+      correct++;streak++;
+      const mult=Math.min(1+0.1*(streak-1),2);
+      pts=Math.round((100+Math.round(100*Math.max(timeLeft,0)/TIME))*mult);
+      score+=pts;
+      $('fb').className='fb ok';
+      $('fb').textContent=`✓ +${pts}${mult>1?' ('+mult.toFixed(1)+'× streak)':''}`;
+    } else {
+      streak=0;
+      pts=chosen===null?-25:-50;
+      score=Math.max(0,score+pts);
+      $('fb').className='fb no';
+      $('fb').textContent=(chosen===null?'⏰ Time! ':'✗ ')+pts+' pts — answer: '+q.a;
+    }
+    $('liveScore').textContent=score;
+    setTimeout(()=>{
+      qi++;
+      if(qi>=questions.length)finish();
+      else renderQ();
+    },1400);
+  }
+
+  async function finish(){
+    show('vResults');
+    $('finalPts').textContent=score;
+    $('finalSub').textContent=correct+'/'+questions.length+' correct · '+esc($('playerName').value.trim());
+    $('lbTitle').textContent='🏆 '+currentDeck.title+' — Leaderboard';
+    // read-merge-write
+    await fetchStore();
+    const field='quiz.lb.'+currentDeck.slug;
+    let lb=J(storeData[field],[]);
+    if(!lb.some(e=>e.id===runId))lb.push({id:runId,name:$('playerName').value.trim().slice(0,20),score,correct,total:questions.length,ts:Date.now()});
+    lb.sort((a,b)=>b.score-a.score||b.correct-a.correct||a.ts-b.ts);
+    lb=lb.slice(0,50);
+    storeData[field]=JSON.stringify(lb);
+    await post({[field]:storeData[field]});
+    renderBoard('lbList');
+  }
+
+  // ---------- init ----------
+  (async function(){
+    await fetchStore();
+    const want=new URLSearchParams(location.search).get('deck');
+    if(want&&storeData['quiz.deck.'+want])openDeck(want);
+    else renderHome();
+  })();
+})();
+</script>
+</body>
+</html>

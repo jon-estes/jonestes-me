@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chore Quest ⭐</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#16161c;--border:#2a2a34;--text:#e8e8ec;--text-dim:#9a9aa4;--gold:#e8b84b;--green:#7ec47e;--red:#c46a6a;--pink:#d48ab8;--blue:#7aa8d4;--purple:#a88ad4;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:680px;margin:0 auto;padding:1.75rem 1rem 4rem}
+  header{text-align:center;margin-bottom:1.5rem}
+  h1{font-size:2.1rem;color:var(--gold)}
+  .subtitle{font-family:var(--mono);font-size:.74rem;color:var(--text-dim)}
+  .kid-tabs{display:flex;gap:.5rem;justify-content:center;margin:1.25rem 0;flex-wrap:wrap}
+  .kid-tab{font-family:var(--mono);font-size:.85rem;font-weight:700;border:2px solid var(--border);background:var(--bg-card);border-radius:12px;padding:.6rem 1.1rem;cursor:pointer;color:var(--text-dim)}
+  .kid-tab.k0.active{border-color:var(--pink);color:var(--pink)}
+  .kid-tab.k1.active{border-color:var(--blue);color:var(--blue)}
+  .kid-tab.k2.active{border-color:var(--purple);color:var(--purple)}
+  .scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.25rem}
+  .sb{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:.8rem;text-align:center}
+  .sb .n{font-family:var(--mono);font-size:1.4rem;color:var(--gold);font-weight:700}
+  .sb .l{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .chore{display:flex;align-items:center;gap:.8rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.5rem;cursor:pointer;transition:transform .1s,border-color .15s}
+  .chore:active{transform:scale(.985)}
+  .chore .ck{width:2rem;height:2rem;border:2px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+  .chore.pending{border-color:var(--gold)}
+  .chore.pending .ck{border-color:var(--gold)}
+  .chore.done{border-color:var(--green);opacity:.85}
+  .chore.done .ck{border-color:var(--green);background:rgba(126,196,126,.18)}
+  .chore .cn{flex:1;font-size:1rem}
+  .chore .cp{font-family:var(--mono);font-size:.8rem;color:var(--gold);font-weight:700;white-space:nowrap}
+  .status-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+  .chore.pending .status-tag{color:var(--gold)}
+  .chore.done .status-tag{color:var(--green)}
+  .section-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.35rem;margin:1.5rem 0 .75rem;display:flex;justify-content:space-between;align-items:baseline}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:10px;padding:.6rem 1.1rem;font-family:var(--mono);font-size:.72rem;font-weight:700;cursor:pointer}
+  .btn:hover{filter:brightness(1.1)}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+  .mini{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-family:var(--mono);font-size:.62rem;padding:.25rem .55rem;cursor:pointer}
+  .mini:hover{color:var(--text)}
+  .mini.ok{border-color:var(--green);color:var(--green)}
+  .mini.no:hover{color:var(--red);border-color:var(--red)}
+  .parent-bar{text-align:center;margin-top:2rem}
+  .approve-row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:var(--bg-card);border:1px solid var(--gold);border-radius:10px;padding:.6rem .9rem;margin-bottom:.45rem;font-family:var(--mono);font-size:.76rem}
+  .add-chore{display:grid;grid-template-columns:2fr .7fr auto;gap:.45rem;margin:.6rem 0}
+  .add-chore input{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .7rem;color:var(--text);font-family:var(--mono);font-size:.78rem;outline:none}
+  .add-chore input:focus{border-color:var(--gold)}
+  .rate-row{font-family:var(--mono);font-size:.72rem;color:var(--text-dim);display:flex;align-items:center;gap:.5rem;margin:.75rem 0}
+  .rate-row input{width:70px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:.35rem .5rem;color:var(--text);font-family:var(--mono);text-align:right;outline:none}
+  .empty{font-family:var(--mono);font-size:.74rem;color:var(--text-dim);font-style:italic;text-align:center;padding:.8rem}
+  .footnote{margin-top:2.5rem;font-size:.72rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>⭐ Chore Quest ⭐</h1>
+    <div class="subtitle" id="todayLine"></div>
+  </header>
+
+  <div class="kid-tabs" id="kidTabs"></div>
+
+  <div class="scoreboard">
+    <div class="sb"><div class="n" id="sbPts">0</div><div class="l">points</div></div>
+    <div class="sb"><div class="n" id="sbStreak">0🔥</div><div class="l">day streak</div></div>
+    <div class="sb"><div class="n" id="sbCash">$0</div><div class="l">allowance earned</div></div>
+  </div>
+
+  <div class="section-label"><span>Today's Quests</span><span class="status-tag" id="doneCount"></span></div>
+  <div id="choreList"></div>
+  <div class="empty" id="choreEmpty" style="display:none">No quests set up yet — a parent needs to add some below.</div>
+
+  <!-- parent zone -->
+  <div class="parent-bar">
+    <button class="btn btn-ghost" id="parentBtn">👨‍👧‍👧 PARENT MODE</button>
+  </div>
+  <div id="parentZone" style="display:none">
+    <div class="section-label"><span>Waiting for Approval</span></div>
+    <div id="approveList"></div>
+    <div class="empty" id="approveEmpty">Nothing pending. The children are slacking. 😄</div>
+
+    <div class="section-label"><span>Manage <span id="manageKid"></span>'s Quests</span></div>
+    <div class="add-chore">
+      <input type="text" id="newChore" placeholder="Quest — e.g. Make your bed">
+      <input type="number" id="newPts" placeholder="pts" value="10">
+      <button class="btn" id="addChoreBtn">ADD</button>
+    </div>
+    <div id="manageList"></div>
+    <div class="rate-row">Allowance rate: $<input type="number" step="0.25" id="rate"> per 100 points
+      <button class="mini" id="payoutBtn" style="margin-left:auto">💸 PAY OUT &amp; RESET POINTS</button>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Tap a quest when it's done — a parent approves it and the points land. Streak = days in a row with every quest finished. Works on the tablet and Dad's phone at the same time. ✨
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const STORE='/.netlify/functions/store';
+  const KIDS=['Anneliese','Clementine','Estella'];
+  const today=()=>new Date().toISOString().slice(0,10);
+  const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let data=null, kid=0, parentMode=false;
+
+  function blank(){
+    const kids={};
+    KIDS.forEach(k=>kids[k]={chores:[],points:0,streak:0,lastFullDay:'',paid:0});
+    return{kids,rate:1.00,pending:[],pin:''};
+  }
+
+  async function load(){
+    try{
+      const r=await fetch(STORE,{cache:'no-store'});
+      if(r.ok){
+        const d=await r.json();
+        data=JSON.parse(d['chores.data']||'null');
+      }
+    }catch(e){}
+    if(!data)data=blank();
+    render();
+  }
+  let saveTimer=null;
+  function save(){
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(async()=>{
+      try{await fetch(STORE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({updates:{'chores.data':JSON.stringify(data)}})});}catch(e){}
+    },600);
+  }
+
+  function kidData(){return data.kids[KIDS[kid]];}
+  function choreState(c){
+    // approved today? pending?
+    if((c.doneDates||[]).includes(today()))return'done';
+    if(data.pending.some(p=>p.kid===KIDS[kid]&&p.choreId===c.id&&p.date===today()))return'pending';
+    return'open';
+  }
+
+  function render(){
+    $('todayLine').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    // tabs
+    $('kidTabs').innerHTML='';
+    KIDS.forEach((k,i)=>{
+      const b=document.createElement('button');
+      b.className='kid-tab k'+i+(i===kid?' active':'');
+      b.textContent=k;
+      b.addEventListener('click',()=>{kid=i;render();});
+      $('kidTabs').appendChild(b);
+    });
+    const kd=kidData();
+    $('sbPts').textContent=kd.points;
+    $('sbStreak').textContent=kd.streak+'🔥';
+    $('sbCash').textContent='$'+(kd.points/100*Number(data.rate||0)).toFixed(2);
+
+    // chores
+    const list=$('choreList');
+    list.innerHTML='';
+    $('choreEmpty').style.display=kd.chores.length?'none':'block';
+    let doneN=0;
+    kd.chores.forEach(c=>{
+      const st=choreState(c);
+      if(st==='done')doneN++;
+      const div=document.createElement('div');
+      div.className='chore '+(st==='done'?'done':st==='pending'?'pending':'');
+      div.innerHTML=`<div class="ck">${st==='done'?'✓':st==='pending'?'⏳':''}</div>`+
+        `<div class="cn">${esc(c.name)}<div class="status-tag">${st==='done'?'approved!':st==='pending'?'waiting for parent':''}</div></div>`+
+        `<div class="cp">+${c.pts}</div>`;
+      if(st==='open'){
+        div.addEventListener('click',()=>{
+          data.pending.push({kid:KIDS[kid],choreId:c.id,choreName:c.name,pts:c.pts,date:today()});
+          save();render();
+        });
+      }
+      list.appendChild(div);
+    });
+    $('doneCount').textContent=kd.chores.length?doneN+'/'+kd.chores.length+' done':'';
+
+    renderParent();
+  }
+
+  function renderParent(){
+    $('parentZone').style.display=parentMode?'block':'none';
+    $('parentBtn').textContent=parentMode?'🔒 EXIT PARENT MODE':'👨‍👧‍👧 PARENT MODE';
+    if(!parentMode)return;
+    $('manageKid').textContent=KIDS[kid];
+    $('rate').value=data.rate;
+
+    // approvals (all kids)
+    const ap=$('approveList');
+    ap.innerHTML='';
+    $('approveEmpty').style.display=data.pending.length?'none':'block';
+    data.pending.forEach((p,i)=>{
+      const row=document.createElement('div');
+      row.className='approve-row';
+      row.innerHTML=`<span><b>${esc(p.kid)}</b> — ${esc(p.choreName)} <span style="color:var(--gold)">+${p.pts}</span> <span style="color:var(--text-dim)">${p.date}</span></span>`;
+      const acts=document.createElement('span');
+      const ok=document.createElement('button');ok.className='mini ok';ok.textContent='✓ APPROVE';
+      ok.addEventListener('click',()=>{
+        const kd=data.kids[p.kid];
+        kd.points+=Number(p.pts||0);
+        const ch=kd.chores.find(c=>c.id===p.choreId);
+        if(ch){ch.doneDates=ch.doneDates||[];if(!ch.doneDates.includes(p.date))ch.doneDates.push(p.date);if(ch.doneDates.length>60)ch.doneDates=ch.doneDates.slice(-60);}
+        // streak: all chores approved for that date?
+        const allDone=kd.chores.length&&kd.chores.every(c=>(c.doneDates||[]).includes(p.date));
+        if(allDone&&kd.lastFullDay!==p.date){
+          const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+          kd.streak=(kd.lastFullDay===yesterday)?kd.streak+1:1;
+          kd.lastFullDay=p.date;
+        }
+        data.pending.splice(i,1);
+        save();render();
+      });
+      const no=document.createElement('button');no.className='mini no';no.textContent='✕';no.title='Reject';
+      no.addEventListener('click',()=>{data.pending.splice(i,1);save();render();});
+      acts.appendChild(ok);acts.appendChild(no);
+      row.appendChild(acts);
+      ap.appendChild(row);
+    });
+
+    // manage chores for current kid
+    const ml=$('manageList');
+    ml.innerHTML='';
+    kidData().chores.forEach((c,i)=>{
+      const row=document.createElement('div');
+      row.className='approve-row';
+      row.style.borderColor='var(--border)';
+      row.innerHTML=`<span>${esc(c.name)} <span style="color:var(--gold)">+${c.pts}</span></span>`;
+      const del=document.createElement('button');del.className='mini no';del.textContent='✕';
+      del.addEventListener('click',()=>{kidData().chores.splice(i,1);save();render();});
+      row.appendChild(del);
+      ml.appendChild(row);
+    });
+  }
+
+  $('parentBtn').addEventListener('click',()=>{
+    if(parentMode){parentMode=false;render();return;}
+    if(!data.pin){
+      const p=prompt('Set a parent PIN (first time — the kids will not see this):');
+      if(!p)return;
+      data.pin=p;save();
+    } else {
+      const p=prompt('Parent PIN:');
+      if(p!==data.pin){alert('Nope! 🙅');return;}
+    }
+    parentMode=true;render();
+  });
+
+  $('addChoreBtn').addEventListener('click',()=>{
+    const name=$('newChore').value.trim();
+    if(!name){$('newChore').focus();return;}
+    kidData().chores.push({id:Date.now().toString(36),name,pts:Number($('newPts').value||10),doneDates:[]});
+    $('newChore').value='';
+    save();render();
+  });
+  $('rate').addEventListener('input',()=>{data.rate=Number($('rate').value||0);save();
+    const kd=kidData();$('sbCash').textContent='$'+(kd.points/100*data.rate).toFixed(2);});
+  $('payoutBtn').addEventListener('click',()=>{
+    const kd=kidData();
+    const cash=(kd.points/100*Number(data.rate||0)).toFixed(2);
+    if(confirm('Pay '+KIDS[kid]+' $'+cash+' and reset their points to 0?')){
+      kd.paid=(kd.paid||0)+Number(cash);
+      kd.points=0;
+      save();render();
+    }
+  });
+
+  load();
+  setInterval(load,45000); // tablet & phone stay in sync mid-day
+})();
+</script>
+</body>
+</html>

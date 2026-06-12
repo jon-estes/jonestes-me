@@ -98,7 +98,7 @@
   </div>
 
   <div class="footnote">
-    "Sell on stream →" pre-loads the item's basis into the <a href="/profit">Profit Calculator</a> so the fee math starts from truth. Margin here is sale − basis (pre-fee); the profit calc gives you the post-fee number. Syncs across devices. · <a href="/">jonestes.me</a>
+    Listed items (name + asking price only) appear automatically on the public <a href="/shop">storefront</a>. "Sell on stream →" pre-loads the item's basis into the <a href="/profit">Profit Calculator</a> so the fee math starts from truth. Margin here is sale − basis (pre-fee); the profit calc gives you the post-fee number. Syncs across devices. · <a href="/">jonestes.me</a>
   </div>
 </div>
 
@@ -113,7 +113,12 @@
   let filter='all';
   let items=[];
   try{items=JSON.parse(localStorage.getItem(KEY))||[]}catch{}
-  function save(){localStorage.setItem(KEY,JSON.stringify(items));}
+  function save(){
+    localStorage.setItem(KEY,JSON.stringify(items));
+    // public storefront mirror — names & asking prices only, never basis
+    const listings=items.filter(i=>i.status==='listed').map(i=>({name:i.name,ask:i.ask!==undefined&&i.ask!==null?Number(i.ask):null}));
+    localStorage.setItem('shop.listings',JSON.stringify(listings));
+  }
 
   function render(){
     const body=$('invBody');
@@ -134,7 +139,12 @@
       td.className='r';
       const acts=document.createElement('div');acts.className='row-actions';
       if(it.status==='stock'){
-        acts.appendChild(mini('LIST',()=>{it.status='listed';save();render();}));
+        acts.appendChild(mini('LIST',()=>{
+          const p=prompt('Asking price $ (optional — shows on the public storefront):');
+          if(p===null)return;
+          it.ask=p===''?null:Number(p);
+          it.status='listed';save();render();
+        }));
         acts.appendChild(mini('SOLD',()=>markSold(idx)));
       } else if(it.status==='listed'){
         acts.appendChild(mini('UNLIST',()=>{it.status='stock';save();render();}));

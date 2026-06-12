@@ -53,7 +53,7 @@
     <a class="hq-card" href="/inventory"><div class="h"><span class="t">Inventory</span><span class="e">📒</span></div><div class="big gold" id="invCount">—</div><div class="sub" id="invSub">items in stock</div></a>
     <a class="hq-card" href="/payoff"><div class="h"><span class="t">Debts</span><span class="e">📉</span></div><div class="big neg" id="debtLeft">—</div><div class="sub" id="debtSub">remaining</div></a>
     <a class="hq-card" href="/countdown"><div class="h"><span class="t">Hawaii</span><span class="e">💍</span></div><div class="big copper" id="wedDays">—</div><div class="sub" id="wedSub">days to 8·20·2028</div></a>
-    <a class="hq-card" href="/melt"><div class="h"><span class="t">Silver</span><span class="e">🪙</span></div><div class="big" id="agSpot">—</div><div class="sub" id="agSub">spot (from melt calc)</div></a>
+    <a class="hq-card" href="/melt"><div class="h"><span class="t">Silver</span><span class="e">🪙</span></div><div class="big" id="agSpot">—</div><div class="sub" id="agSub">spot (from melt calc)</div><svg id="agSpark" viewBox="0 0 240 40" style="width:100%;height:40px;margin-top:.5rem;display:none"></svg></a>
     <a class="hq-card" href="/coastfire"><div class="h"><span class="t">Coast FIRE</span><span class="e">🔥</span></div><div class="big" id="fireInv">—</div><div class="sub" id="fireSub">invested</div></a>
     <a class="hq-card" href="/flashcards"><div class="h"><span class="t">Flashcards</span><span class="e">🧠</span></div><div class="big gold" id="fcDue">—</div><div class="sub" id="fcSub">cards due now</div></a>
     <a class="hq-card" href="/poker-quiz"><div class="h"><span class="t">Poker Crown</span><span class="e">🏆</span></div><div class="big pos" id="pkTop">—</div><div class="sub" id="pkSub">global high score</div></a>
@@ -137,6 +137,19 @@
       const ag=Number(melt.spotAg);
       $('agSpot').textContent='$'+ag.toFixed(2);
       $('agSub').innerHTML='spot · junk melt <b>$'+(ag*0.715).toFixed(2)+'</b> per $1 face';
+    }
+    // sparkline from the daily history the alert function records
+    const hist=J(d['silver.history'],[]);
+    if(hist.length>1){
+      const svg=$('agSpark');
+      svg.style.display='block';
+      const ps=hist.slice(-90).map(x=>x.p);
+      const min=Math.min(...ps),max=Math.max(...ps),span=(max-min)||1;
+      const pts=ps.map((p,i)=>`${(i/(ps.length-1)*238+1).toFixed(1)},${(38-((p-min)/span*34)).toFixed(1)}`).join(' ');
+      const up=ps[ps.length-1]>=ps[0];
+      svg.innerHTML=`<polyline points="${pts}" fill="none" stroke="${up?'var(--green-bright)':'var(--red)'}" stroke-width="1.6"/>`+
+        `<text x="2" y="9" font-family="monospace" font-size="8" fill="var(--text-dim)">${hist.length}d · lo $${min.toFixed(2)} · hi $${max.toFixed(2)}</text>`;
+      if(!melt||!melt.spotAg){$('agSpot').textContent='$'+ps[ps.length-1].toFixed(2);}
     }
 
     // Coast FIRE

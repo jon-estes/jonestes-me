@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run of Show · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:940px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
+  h1{font-size:2.1rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .spot-chip{font-family:var(--mono);font-size:.72rem;color:var(--gold);border:1px solid var(--border);border-radius:999px;padding:.3rem .85rem}
+  .totals{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.25rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.1rem;color:var(--silver)}
+  .stat .n.pos{color:var(--green-bright)}.stat .n.gold{color:var(--gold)}
+  .stat .l{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .85rem;display:flex;justify-content:space-between;align-items:baseline}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  .lineup-item{display:grid;grid-template-columns:auto 1fr 110px 130px auto;gap:.7rem;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;margin-bottom:.5rem}
+  .lineup-item.done{opacity:.55;border-color:var(--green)}
+  .num{font-family:var(--mono);font-size:.78rem;color:var(--text-dim);width:1.6rem;text-align:center}
+  .li-name{font-family:var(--mono);font-size:.84rem;color:var(--silver);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .li-basis{font-family:var(--mono);font-size:.66rem;color:var(--text-dim)}
+  .li-start input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.4rem .55rem;color:var(--gold);font-family:var(--mono);font-size:.8rem;outline:none;text-align:right}
+  .li-start input:focus{border-color:var(--gold)}
+  .li-margin{font-family:var(--mono);font-size:.7rem;text-align:right}
+  .row-actions{display:flex;gap:.3rem}
+  .mini{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-family:var(--mono);font-size:.64rem;padding:.3rem .55rem;cursor:pointer;white-space:nowrap}
+  .mini:hover{color:var(--text)}
+  .mini.sold{background:var(--green);border:none;color:#0a0a0c;font-weight:700}
+  .mini.sold:hover{filter:brightness(1.12)}
+  .mini.del:hover{color:var(--red);border-color:var(--red)}
+  .hammer{font-family:var(--mono);font-size:.74rem;color:var(--green-bright);text-align:right}
+  .picker{display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center;background:var(--bg-card);border:1px dashed var(--border);border-radius:10px;padding:.6rem .9rem;margin-bottom:.4rem;font-family:var(--mono);font-size:.78rem;color:var(--text-dim)}
+  .picker b{color:var(--silver);font-weight:600}
+  .ship-row{display:flex;gap:.75rem;align-items:center;font-family:var(--mono);font-size:.72rem;color:var(--text-dim);margin:.75rem 0}
+  .ship-row input{width:90px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:.4rem .55rem;color:var(--text);font-family:var(--mono);font-size:.76rem;outline:none;text-align:right}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:1rem .5rem;text-align:center}
+  .btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-family:var(--mono);font-size:.7rem;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--bg-card-hover);color:var(--text)}
+  .footnote{margin-top:3rem;font-size:.74rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+  @media(max-width:720px){.lineup-item{grid-template-columns:auto 1fr;gap:.45rem}.li-start,.li-margin,.row-actions{grid-column:2}.totals{grid-template-columns:1fr 1fr}h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <div class="eyebrow">Whatnot</div>
+      <h1>Run of <span class="accent">Show</span></h1>
+    </div>
+    <div class="spot-chip" id="spotChip">Ag $—</div>
+  </header>
+
+  <div class="totals">
+    <div class="stat"><div class="n" id="tItems">0</div><div class="l">in lineup</div></div>
+    <div class="stat"><div class="n gold" id="tBasis">$0</div><div class="l">basis on the table</div></div>
+    <div class="stat"><div class="n" id="tSold">0</div><div class="l">hammered</div></div>
+    <div class="stat"><div class="n pos" id="tNet">$0</div><div class="l">tonight's net</div></div>
+  </div>
+
+  <div class="ship-row">
+    <span>Ship + materials per sale $</span><input type="number" step="0.25" id="shipCost" value="1.00">
+    <span style="opacity:.7">— used in the fee math when you hammer an item</span>
+  </div>
+
+  <div class="section-label"><span>Tonight's Lineup</span><span class="hint">order = sell order · start prices editable</span></div>
+  <div id="lineup"></div>
+  <div class="empty-state" id="lineupEmpty">Lineup's empty — pull items from the vault below.</div>
+
+  <div class="section-label"><span>The Vault — available stock</span><span class="hint">from <a href="/inventory" style="color:var(--gold)">inventory</a></span></div>
+  <div id="vaultList"></div>
+  <div class="empty-state" id="vaultEmpty">No stock available. Add items in the vault first.</div>
+
+  <div class="section-label"><span>After the show</span></div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <button class="btn" id="clearSoldBtn">CLEAR HAMMERED FROM LINEUP</button>
+    <button class="btn" id="clearAllBtn">CLEAR WHOLE LINEUP</button>
+  </div>
+
+  <div class="footnote">
+    Hammering an item does three things at once: marks it sold in the <a href="/inventory">vault</a>, logs the sale (with your saved Whatnot fees + the ship cost above) into the <a href="/profit">profit calculator</a>, and updates tonight's net here. The <a href="/overlay">overlay</a> picks it up within 30s. Margin column shows start price vs basis — never open an auction underwater by accident again. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const money=(n)=>(n<0?'−$':'$')+Math.abs(n).toFixed(2);
+  const J=(k,fb)=>{try{return JSON.parse(localStorage.getItem(k))||fb}catch{return fb}};
+  let lineup=J('planner.lineup',[]);
+
+  function save(){localStorage.setItem('planner.lineup',JSON.stringify(lineup));}
+  function inv(){return J('inventory.items',[]);}
+  function saveInv(items){
+    localStorage.setItem('inventory.items',JSON.stringify(items));
+    const listings=items.filter(i=>i.status==='listed').map(i=>({name:i.name,ask:i.ask!==undefined&&i.ask!==null?Number(i.ask):null}));
+    localStorage.setItem('shop.listings',JSON.stringify(listings));
+  }
+  function fees(){
+    const f=J('whatnotProfit.fees',null);
+    return{c:f?Number(f.c):8,p:f?Number(f.p):2.9,f:f?Number(f.f):0.30};
+  }
+
+  // spot chip
+  const melt=J('meltCalc.state',null);
+  if(melt&&melt.spotAg)$('spotChip').textContent='Ag $'+Number(melt.spotAg).toFixed(2)+' · melt $'+(Number(melt.spotAg)*0.715).toFixed(2)+'/$1 face';
+
+  function render(){
+    // lineup
+    const box=$('lineup');
+    box.innerHTML='';
+    $('lineupEmpty').style.display=lineup.length?'none':'block';
+    lineup.forEach((li,i)=>{
+      const div=document.createElement('div');
+      div.className='lineup-item'+(li.sold?' done':'');
+      const margin=Number(li.start||0)-Number(li.basis||0);
+      div.innerHTML=`<div class="num">${i+1}</div>
+        <div><div class="li-name">${esc(li.name)}</div><div class="li-basis">basis ${money(Number(li.basis||0))}${li.sold?' · hammered '+money(li.hammer):''}</div></div>`;
+      // start price / hammer display
+      const startCell=document.createElement('div');
+      if(li.sold){
+        startCell.className='hammer';
+        startCell.textContent='✓ '+money(li.net)+' net';
+      } else {
+        startCell.className='li-start';
+        const inp=document.createElement('input');
+        inp.type='number';inp.step='0.5';inp.placeholder='start $';inp.value=li.start||'';
+        inp.addEventListener('input',()=>{li.start=inp.value;save();updateMargin();updateTotals();});
+        startCell.appendChild(inp);
+      }
+      div.appendChild(startCell);
+      const marginCell=document.createElement('div');
+      marginCell.className='li-margin';
+      function updateMargin(){
+        const m=Number(li.start||0)-Number(li.basis||0);
+        marginCell.style.color=li.start?(m>=0?'var(--green-bright)':'var(--red)'):'var(--text-dim)';
+        marginCell.textContent=li.sold?'':(li.start?((m>=0?'+':'')+money(m).replace('$-','-$')+' @ start'):'set start $');
+      }
+      updateMargin();
+      div.appendChild(marginCell);
+      const acts=document.createElement('div');
+      acts.className='row-actions';
+      if(!li.sold){
+        acts.appendChild(mini('SOLD 🔨',()=>hammer(i),'sold'));
+        if(i>0)acts.appendChild(mini('↑',()=>{[lineup[i-1],lineup[i]]=[lineup[i],lineup[i-1]];save();render();}));
+        if(i<lineup.length-1)acts.appendChild(mini('↓',()=>{[lineup[i+1],lineup[i]]=[lineup[i],lineup[i+1]];save();render();}));
+      }
+      acts.appendChild(mini('✕',()=>{lineup.splice(i,1);save();render();},'del'));
+      div.appendChild(acts);
+      box.appendChild(div);
+    });
+
+    // vault picker
+    const inLineup=new Set(lineup.map(l=>l.invId));
+    const avail=inv().map((it,idx)=>({it,idx})).filter(x=>x.it.status!=='sold'&&!inLineup.has(x.it.id));
+    const vbox=$('vaultList');
+    vbox.innerHTML='';
+    $('vaultEmpty').style.display=avail.length?'none':'block';
+    avail.forEach(({it})=>{
+      const div=document.createElement('div');
+      div.className='picker';
+      div.innerHTML=`<span><b>${esc(it.name)}</b> · basis ${money(Number(it.basis||0))}${it.ask?' · asking '+money(Number(it.ask)):''}${it.from?' · '+esc(it.from):''}</span>`;
+      const add=mini('+ ADD TO LINEUP',()=>{
+        lineup.push({invId:it.id,name:it.name,basis:Number(it.basis||0),start:it.ask||'',sold:false});
+        save();render();
+      });
+      div.appendChild(add);
+      vbox.appendChild(div);
+    });
+    updateTotals();
+  }
+
+  function updateTotals(){
+    const open=lineup.filter(l=>!l.sold);
+    $('tItems').textContent=open.length;
+    $('tBasis').textContent=money(open.reduce((s,l)=>s+Number(l.basis||0),0));
+    const sold=lineup.filter(l=>l.sold);
+    $('tSold').textContent=sold.length;
+    $('tNet').textContent=money(sold.reduce((s,l)=>s+Number(l.net||0),0));
+  }
+
+  function hammer(i){
+    const li=lineup[i];
+    const p=prompt('🔨 Hammer price for "'+li.name+'" $:',li.start||'');
+    if(p===null||p==='')return;
+    const gross=Number(p);
+    const F=fees();
+    const ship=Number($('shipCost').value||0);
+    const commission=gross*F.c/100;
+    const proc=gross*F.p/100;
+    const totalFees=commission+proc+F.f;
+    const costs=ship+Number(li.basis||0);
+    const net=gross-totalFees-costs;
+    const margin=gross>0?net/gross*100:0;
+
+    // 1) log to whatnotProfit (shows on /profit, /hq, /overlay)
+    const log=J('whatnotProfit.log',[]);
+    const now=new Date();
+    log.push({ts:Date.now(),
+      date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      time:now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),
+      gross,fees:totalFees,costs,net,margin});
+    localStorage.setItem('whatnotProfit.log',JSON.stringify(log));
+
+    // 2) mark sold in the vault
+    const items=inv();
+    const it=items.find(x=>x.id===li.invId);
+    if(it){it.status='sold';it.soldPrice=gross;it.soldTs=Date.now();saveInv(items);}
+
+    // 3) mark lineup row
+    li.sold=true;li.hammer=gross;li.net=net;
+    save();render();
+  }
+
+  function mini(label,fn,cls){
+    const b=document.createElement('button');
+    b.className='mini'+(cls?' '+cls:'');
+    b.textContent=label;
+    b.addEventListener('click',fn);
+    return b;
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+  $('clearSoldBtn').addEventListener('click',()=>{lineup=lineup.filter(l=>!l.sold);save();render();});
+  $('clearAllBtn').addEventListener('click',()=>{
+    if(confirm('Clear the whole lineup? (Vault and profit log are untouched.)')){lineup=[];save();render();}
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

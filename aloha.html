@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jon &amp; Ashley · 8.20.2028 · Hawaii</title>
+<meta name="description" content="Jon & Ashley are getting married in Hawaii on 8/20/2028 — a date that reads the same in both directions.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌺</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--border:#26262e;--text:#d8d8dc;--text-dim:#9a9aa4;--silver:#c0c4cc;--gold:#c9a14a;--green:#6ea36e;--green-bright:#8fd08f;--hibiscus:#d4708a;--ocean:#5a9aa8;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:'Playfair Display',Georgia,serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:Georgia,serif;min-height:100vh;line-height:1.7}
+  .hero{text-align:center;padding:4rem 1.25rem 3rem;background:radial-gradient(ellipse at top,rgba(90,154,168,.12),transparent 65%)}
+  .hero .lei{font-size:1.8rem;letter-spacing:.5rem;margin-bottom:1rem}
+  .hero h1{font-family:var(--serif);font-size:clamp(2.2rem,7vw,3.6rem);font-weight:400;color:var(--silver)}
+  .hero h1 .amp{color:var(--hibiscus);font-style:italic}
+  .hero .where{font-family:var(--mono);font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ocean);margin-top:.75rem}
+  .palindrome{font-family:var(--mono);font-size:clamp(1.2rem,4.5vw,1.9rem);color:var(--gold);letter-spacing:.35em;margin:1.5rem 0 .35rem}
+  .pal-note{font-family:var(--mono);font-size:.66rem;color:var(--text-dim);letter-spacing:.1em}
+  .container{max-width:660px;margin:0 auto;padding:0 1.25rem 4rem}
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:2.25rem 0}
+  .unit{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem .4rem;text-align:center}
+  .unit .n{font-family:var(--mono);font-size:1.9rem;color:var(--gold);font-variant-numeric:tabular-nums}
+  .unit .l{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-top:.2rem}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--hibiscus);text-align:center;margin:2.75rem 0 1rem}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.6rem}
+  .card p{color:var(--text-dim);font-size:.95rem;margin-bottom:.8rem}
+  .card p b{color:var(--silver)}
+  label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin:.9rem 0 .3rem}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;color:var(--text);font-family:var(--mono);font-size:.88rem;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--hibiscus)}
+  .btn{width:100%;background:var(--hibiscus);color:#0a0a0c;border:none;border-radius:10px;padding:.95rem;font-family:var(--mono);font-size:.85rem;font-weight:700;letter-spacing:.08em;cursor:pointer;margin-top:1.25rem;transition:filter .15s}
+  .btn:hover{filter:brightness(1.12)}
+  .info-grid{display:grid;gap:.6rem}
+  .info{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem}
+  .info .t{font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ocean);margin-bottom:.25rem}
+  .info .d{font-size:.9rem;color:var(--text-dim)}
+  .links{text-align:center;margin-top:2.5rem;font-family:var(--mono);font-size:.78rem}
+  .links a{color:var(--gold);text-decoration:none;margin:0 .8rem}
+  .links a:hover{text-decoration:underline}
+  .footnote{margin-top:3rem;text-align:center;font-family:var(--mono);font-size:.68rem;color:var(--text-dim)}
+  @media(max-width:480px){.countdown{grid-template-columns:repeat(2,1fr)}.unit .n{font-size:1.5rem}}
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="lei">🌺 🌴 🌺</div>
+    <h1>Jon <span class="amp">&amp;</span> Ashley</h1>
+    <div class="where">Hawaii · Beach Ceremony</div>
+    <div class="palindrome">8 · 2 0 · 2 0 2 8</div>
+    <div class="pal-note">read it backwards. we'll wait. ✨</div>
+  </div>
+
+  <div class="container">
+    <div class="countdown">
+      <div class="unit"><div class="n" id="cdD">—</div><div class="l">days</div></div>
+      <div class="unit"><div class="n" id="cdH">—</div><div class="l">hours</div></div>
+      <div class="unit"><div class="n" id="cdM">—</div><div class="l">minutes</div></div>
+      <div class="unit"><div class="n" id="cdS">—</div><div class="l">seconds</div></div>
+    </div>
+
+    <div class="section-label">— RSVP —</div>
+    <div class="card">
+      <p>We'd love to know you're coming. (And no pressure — we know Hawaii is a journey. That's <b>two years of warning</b>, plenty of time to find a flight deal.)</p>
+      <form name="wedding-rsvp" method="POST" data-netlify="true" action="/thanks">
+        <input type="hidden" name="form-name" value="wedding-rsvp">
+        <label for="rName">Your name(s)</label>
+        <input type="text" id="rName" name="name" required placeholder="The whole crew counts">
+        <label for="rEmail">Email</label>
+        <input type="email" id="rEmail" name="email" required placeholder="you@email.com">
+        <label for="rAttend">Will you be there?</label>
+        <select id="rAttend" name="attending" required>
+          <option value="">choose one…</option>
+          <option value="yes">🌺 Aloha yes — wouldn't miss it</option>
+          <option value="maybe">🤔 Hoping to — need to check flights</option>
+          <option value="no">💌 There in spirit</option>
+        </select>
+        <label for="rParty">How many in your party?</label>
+        <input type="number" id="rParty" name="party_size" min="1" max="12" placeholder="2">
+        <label for="rSong">A song that must be played</label>
+        <input type="text" id="rSong" name="song_request" placeholder="DJ takes requests two years out">
+        <button class="btn" type="submit">SEND RSVP 🌴</button>
+      </form>
+    </div>
+
+    <div class="section-label">— The Practical Stuff —</div>
+    <div class="info-grid">
+      <div class="info"><div class="t">✈️ Getting There</div><div class="d">Fly into Honolulu (HNL) or the island airport once we lock the venue — full details will land here the moment we book. Set a Google Flights alert now; the deals come to those who wait.</div></div>
+      <div class="info"><div class="t">🏨 Where to Stay</div><div class="d">We'll post a lodging list with a range of budgets — from resort splurges to condo shares. Staying near the ceremony beach will be the move.</div></div>
+      <div class="info"><div class="t">📅 The Weekend</div><div class="d">Ceremony on Sunday 8/20 at golden hour. Expect a beach-casual dress code (linen yes, tuxedos absolutely not) and at least one group snorkel.</div></div>
+      <div class="info"><div class="t">👧👧👧 Kids</div><div class="d">Very much welcome — three of them are in the wedding party.</div></div>
+    </div>
+
+    <div class="links">
+      <a href="/guestbook">✍️ Sign the Guestbook</a>
+      <a href="/hawaii">🗺️ Our Hawaii Research</a>
+    </div>
+
+    <div class="footnote">jon &amp; ashley · 8.20.2028 · the date reads the same in both directions, and so do we 🌺</div>
+  </div>
+
+<script>
+(function(){
+  const W=new Date('2028-08-20T16:00:00-10:00');
+  function tick(){
+    let d=Math.max(W-new Date(),0);
+    document.getElementById('cdD').textContent=Math.floor(d/86400000).toLocaleString();
+    document.getElementById('cdH').textContent=String(Math.floor(d%86400000/3600000)).padStart(2,'0');
+    document.getElementById('cdM').textContent=String(Math.floor(d%3600000/60000)).padStart(2,'0');
+    document.getElementById('cdS').textContent=String(Math.floor(d%60000/1000)).padStart(2,'0');
+  }
+  tick();setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

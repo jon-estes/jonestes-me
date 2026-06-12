@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mende CRM · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--bg-card-hover:#1a1a20;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--blue:#5a7a9a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--bg-card-hover:#f0f0ee;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30;--blue:#3a5a7a}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:1100px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.25rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem}
+  h1{font-size:2.1rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .add-row{display:grid;grid-template-columns:1.6fr 1.4fr .8fr 1fr auto;gap:.5rem;margin:1rem 0 1.5rem}
+  input{background:var(--bg-card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:var(--mono);font-size:.8rem;outline:none;min-width:0;width:100%}
+  input:focus{border-color:var(--gold)}
+  .btn{background:var(--gold);color:#0a0a0c;border:none;border-radius:8px;padding:.65rem 1.1rem;font-family:var(--mono);font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn:hover{filter:brightness(1.12)}
+  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem;align-items:start}
+  .col{background:rgba(18,18,22,.5);border:1px solid var(--border);border-radius:12px;padding:.7rem;min-height:120px}
+  .col-head{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:.1rem .3rem .5rem;display:flex;justify-content:space-between;align-items:baseline}
+  .col-head .cnt{color:var(--text-dim)}
+  .col-head .val{font-size:.6rem;color:var(--gold)}
+  .lead{background:var(--bg-card);border:1px solid var(--border);border-radius:9px;padding:.65rem .75rem;margin-bottom:.5rem;font-family:var(--mono)}
+  .lead.overdue{border-color:var(--red)}
+  .lead .ln{font-size:.78rem;color:var(--silver);font-weight:600}
+  .lead .lc{font-size:.64rem;color:var(--text-dim);margin-top:.1rem;word-break:break-word}
+  .lead .lv{font-size:.66rem;color:var(--gold);margin-top:.15rem}
+  .lead .lf{font-size:.62rem;margin-top:.15rem;color:var(--text-dim)}
+  .lead.overdue .lf{color:var(--red);font-weight:600}
+  .lead .lnotes{font-size:.62rem;color:var(--text-dim);margin-top:.3rem;font-style:italic;white-space:pre-wrap;max-height:4.5em;overflow:hidden}
+  .lead-acts{display:flex;gap:.25rem;margin-top:.5rem;flex-wrap:wrap}
+  .mini{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text-dim);font-family:var(--mono);font-size:.6rem;padding:.18rem .42rem;cursor:pointer}
+  .mini:hover{color:var(--text)}
+  .mini.del:hover{color:var(--red)}
+  .empty-col{font-family:var(--mono);font-size:.62rem;color:var(--text-dim);text-align:center;padding:.8rem 0;font-style:italic}
+  .footnote{margin-top:2.5rem;font-size:.74rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--gold)}
+  @media(max-width:920px){.board{grid-template-columns:repeat(2,1fr)}.add-row{grid-template-columns:1fr 1fr}.add-row .btn{grid-column:1/-1}}
+  @media(max-width:520px){.board{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Mende Marketing</div>
+    <h1>The <span class="accent">Pipeline</span></h1>
+  </header>
+
+  <div class="add-row">
+    <input type="text" id="lName" placeholder="Business name">
+    <input type="text" id="lContact" placeholder="Contact — phone / email">
+    <input type="number" step="50" id="lValue" placeholder="Est. value $">
+    <input type="date" id="lNext" title="Next follow-up">
+    <button class="btn" id="addBtn">ADD LEAD</button>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="footnote">
+    Feed it from <a href="/leadgen">leadgen</a>: find businesses without websites, drop the promising ones here, work them left to right. Red border = follow-up overdue. Won a client? The <a href="/invoice">invoice generator</a> is one tab over. Syncs across devices. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const STAGES=[
+    {id:'found',label:'Found',color:'var(--text-dim)'},
+    {id:'contacted',label:'Contacted',color:'var(--blue)'},
+    {id:'proposal',label:'Proposal Sent',color:'var(--gold)'},
+    {id:'client',label:'Client 🎉',color:'var(--green-bright)'},
+    {id:'dead',label:'Dead / Later',color:'var(--red)'},
+  ];
+  const money=(n)=>'$'+Math.round(n).toLocaleString();
+  const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let leads=[];
+  try{leads=JSON.parse(localStorage.getItem('crm.leads'))||[]}catch{}
+  function save(){localStorage.setItem('crm.leads',JSON.stringify(leads));}
+
+  function render(){
+    const board=$('board');
+    board.innerHTML='';
+    const today=new Date().toISOString().slice(0,10);
+    STAGES.forEach((st,si)=>{
+      const col=document.createElement('div');
+      col.className='col';
+      const inStage=leads.map((l,i)=>({l,i})).filter(x=>x.l.stage===st.id);
+      const val=inStage.reduce((s,x)=>s+Number(x.l.value||0),0);
+      col.innerHTML=`<div class="col-head" style="color:${st.color}"><span>${st.label} <span class="cnt">(${inStage.length})</span></span>${val?`<span class="val">${money(val)}</span>`:''}</div>`;
+      if(!inStage.length)col.insertAdjacentHTML('beforeend','<div class="empty-col">—</div>');
+      inStage.sort((a,b)=>(a.l.next||'9999')<(b.l.next||'9999')?-1:1);
+      inStage.forEach(({l,i})=>{
+        const overdue=l.next&&l.next<today&&st.id!=='client'&&st.id!=='dead';
+        const card=document.createElement('div');
+        card.className='lead'+(overdue?' overdue':'');
+        card.innerHTML=`<div class="ln">${esc(l.name)}</div>`+
+          (l.contact?`<div class="lc">${esc(l.contact)}</div>`:'')+
+          (l.value?`<div class="lv">${money(Number(l.value))}/mo est.</div>`:'')+
+          (l.next?`<div class="lf">↻ ${l.next}${overdue?' — OVERDUE':''}</div>`:'')+
+          (l.notes?`<div class="lnotes">${esc(l.notes)}</div>`:'');
+        const acts=document.createElement('div');
+        acts.className='lead-acts';
+        if(si>0)acts.appendChild(mini('◀',()=>{l.stage=STAGES[si-1].id;save();render();}));
+        if(si<STAGES.length-1)acts.appendChild(mini('▶',()=>{l.stage=STAGES[si+1].id;save();render();}));
+        acts.appendChild(mini('📝',()=>{
+          const n=prompt('Notes for '+l.name+':',l.notes||'');
+          if(n!==null){l.notes=n;save();render();}
+        }));
+        acts.appendChild(mini('↻',()=>{
+          const d=prompt('Next follow-up (YYYY-MM-DD):',l.next||today);
+          if(d!==null){l.next=d;save();render();}
+        }));
+        acts.appendChild(mini('✕',()=>{
+          if(confirm('Delete '+l.name+'?')){leads.splice(i,1);save();render();}
+        },'del'));
+        card.appendChild(acts);
+        col.appendChild(card);
+      });
+      board.appendChild(col);
+    });
+  }
+  function mini(label,fn,cls){
+    const b=document.createElement('button');
+    b.className='mini'+(cls?' '+cls:'');
+    b.textContent=label;
+    b.addEventListener('click',fn);
+    return b;
+  }
+
+  $('addBtn').addEventListener('click',()=>{
+    const name=$('lName').value.trim();
+    if(!name){$('lName').focus();return;}
+    leads.unshift({id:Date.now().toString(36),name,contact:$('lContact').value.trim(),value:$('lValue').value,next:$('lNext').value,notes:'',stage:'found',ts:Date.now()});
+    ['lName','lContact','lValue','lNext'].forEach(id=>$(id).value='');
+    $('lName').focus();
+    save();render();
+  });
+  $('lContact').addEventListener('keydown',e=>{if(e.key==='Enter')$('addBtn').click();});
+
+  render();
+})();
+</script>
+</body>
+</html>

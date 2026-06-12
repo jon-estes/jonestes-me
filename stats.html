@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stream Stats · Jon Estes</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--red:#b05656;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  [data-theme="light"]{--bg:#f4f4f2;--bg-card:#fff;--border:#d8d8d4;--text:#1a1a1e;--text-dim:#6a6a72;--silver:#4a4e56;--green:#3e7a3e;--green-bright:#2e6a2e;--red:#a04040;--gold:#9a7a30}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+  header{margin-bottom:1.5rem}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+  h1{font-size:2.1rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--green-bright);font-style:italic}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-bottom:1.5rem}
+  .stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.75rem .9rem;text-align:center}
+  .stat .n{font-family:var(--mono);font-size:1.1rem;color:var(--silver)}
+  .stat .n.pos{color:var(--green-bright)}.stat .n.gold{color:var(--gold)}.stat .n.red{color:var(--red)}
+  .stat .l{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:1.75rem 0 .85rem;display:flex;justify-content:space-between}
+  .section-label .hint{letter-spacing:0;text-transform:none;font-size:.68rem;opacity:.8}
+  svg{width:100%;height:auto;display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.76rem}
+  th{text-align:left;color:var(--text-dim);font-weight:400;font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+  th.r,td.r{text-align:right}
+  td{padding:.5rem;border-bottom:1px solid var(--border)}
+  td.pos{color:var(--green-bright)}td.neg{color:var(--red)}td.gold{color:var(--gold)}
+  .empty-state{color:var(--text-dim);font-size:.85rem;font-style:italic;padding:2rem .5rem;text-align:center}
+  .footnote{margin-top:3rem;font-size:.74rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--green)}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Whatnot Analytics</div>
+    <h1>Stream <span class="accent">Stats</span></h1>
+  </header>
+
+  <div id="content">
+    <div class="stats" id="statsBar"></div>
+    <div class="section-label"><span>Net per stream</span><span class="hint" id="chartHint">last 20 streams</span></div>
+    <svg id="barChart" viewBox="0 0 700 240" role="img" aria-label="Net profit per stream"></svg>
+    <div class="section-label"><span>Average margin per stream</span></div>
+    <svg id="lineChart" viewBox="0 0 700 160" role="img" aria-label="Margin trend"></svg>
+    <div class="section-label"><span>Monthly rollup</span></div>
+    <div class="table-wrap" style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Month</th><th class="r">Streams</th><th class="r">Sales</th><th class="r">Gross</th><th class="r">Fees+Costs</th><th class="r">Net</th><th class="r">Avg/Stream</th></tr></thead>
+        <tbody id="monthBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="empty-state" id="emptyState" style="display:none">No sales data yet — go run a stream, then come back. The charts build themselves.</div>
+
+  <div class="footnote">
+    Streams are grouped by date from the <a href="/profit">profit calculator</a> log (the planner feeds it too). Fees+costs includes Whatnot fees, shipping, and cost basis. All numbers pre-tax. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script src="/nav.js" defer></script>
+<script src="/theme.js" defer></script>
+<script src="/cloud.js" defer></script>
+<script>
+(function(){
+  const $=(id)=>document.getElementById(id);
+  const money=(n)=>(n<0?'−$':'$')+Math.abs(Math.round(n)).toLocaleString();
+  let sales=[];
+  try{sales=JSON.parse(localStorage.getItem('whatnotProfit.log'))||[]}catch{}
+
+  if(!sales.length){
+    $('content').style.display='none';
+    $('emptyState').style.display='block';
+    return;
+  }
+
+  // group into streams by date
+  const byDate={};
+  sales.forEach(r=>{const k=r.date||'(earlier)';(byDate[k]=byDate[k]||[]).push(r);});
+  const streams=Object.entries(byDate).map(([date,rows])=>({
+    date,ts:rows[0].ts||0,n:rows.length,
+    gross:rows.reduce((s,r)=>s+r.gross,0),
+    fc:rows.reduce((s,r)=>s+r.fees+r.costs,0),
+    net:rows.reduce((s,r)=>s+r.net,0),
+    margin:rows.reduce((s,r)=>s+r.margin,0)/rows.length,
+  })).sort((a,b)=>a.ts-b.ts);
+
+  // headline stats
+  const totalNet=streams.reduce((s,x)=>s+x.net,0);
+  const totalGross=streams.reduce((s,x)=>s+x.gross,0);
+  const totalFees=sales.reduce((s,r)=>s+r.fees,0);
+  const best=streams.reduce((a,b)=>b.net>a.net?b:a,streams[0]);
+  const stats=[
+    [streams.length,'streams',''],
+    [sales.length,'sales',''],
+    [money(totalGross),'gross','gold'],
+    [money(totalNet),'net profit',totalNet>=0?'pos':'red'],
+    [money(totalNet/streams.length),'avg / stream',''],
+    [money(best.net),'best night ('+best.date+')','pos'],
+    [money(totalFees),'fees paid to whatnot','red'],
+    [(totalGross>0?(totalNet/totalGross*100).toFixed(1):0)+'%','lifetime margin',''],
+  ];
+  $('statsBar').innerHTML=stats.map(([n,l,c])=>`<div class="stat"><div class="n ${c}">${n}</div><div class="l">${l}</div></div>`).join('');
+
+  // bar chart: net per stream (last 20)
+  const last=streams.slice(-20);
+  $('chartHint').textContent='last '+last.length+' stream'+(last.length>1?'s':'');
+  (function(){
+    const W=700,H=240,P={l:52,r:10,t:14,b:34};
+    const maxY=Math.max(...last.map(s=>s.net),1);
+    const minY=Math.min(...last.map(s=>s.net),0);
+    const span=(maxY-minY)||1;
+    const y=(v)=>P.t+(H-P.t-P.b)*(1-(v-minY)/span);
+    const bw=(W-P.l-P.r)/last.length;
+    let g='';
+    // gridlines
+    for(let t=0;t<=4;t++){
+      const v=minY+span*t/4;
+      g+=`<line x1="${P.l}" y1="${y(v).toFixed(1)}" x2="${W-P.r}" y2="${y(v).toFixed(1)}" stroke="var(--border)"/>`;
+      g+=`<text x="${P.l-6}" y="${(y(v)+3).toFixed(1)}" text-anchor="end" font-family="monospace" font-size="10" fill="var(--text-dim)">$${Math.round(v)}</text>`;
+    }
+    if(minY<0)g+=`<line x1="${P.l}" y1="${y(0)}" x2="${W-P.r}" y2="${y(0)}" stroke="var(--text-dim)" stroke-width="1"/>`;
+    last.forEach((s,i)=>{
+      const x=P.l+i*bw+bw*0.15;
+      const top=Math.min(y(s.net),y(0));
+      const h=Math.abs(y(s.net)-y(0))||1;
+      g+=`<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${(bw*0.7).toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${s.net>=0?'var(--green)':'var(--red)'}"/>`;
+      if(last.length<=12)g+=`<text x="${(x+bw*0.35).toFixed(1)}" y="${H-P.b+14}" text-anchor="middle" font-family="monospace" font-size="8.5" fill="var(--text-dim)">${s.date.replace(/, \\d{4}$/,'')}</text>`;
+      g+=`<text x="${(x+bw*0.35).toFixed(1)}" y="${(top-4).toFixed(1)}" text-anchor="middle" font-family="monospace" font-size="9" fill="var(--silver)">${Math.round(s.net)}</text>`;
+    });
+    $('barChart').innerHTML=g;
+  })();
+
+  // line chart: avg margin per stream
+  (function(){
+    const W=700,H=160,P={l:52,r:10,t:12,b:22};
+    const ms=last.map(s=>s.margin);
+    const maxY=Math.max(...ms,10),minY=Math.min(...ms,0),span=(maxY-minY)||1;
+    const x=(i)=>P.l+(W-P.l-P.r)*(last.length>1?i/(last.length-1):0.5);
+    const y=(v)=>P.t+(H-P.t-P.b)*(1-(v-minY)/span);
+    let g='';
+    for(let t=0;t<=2;t++){
+      const v=minY+span*t/2;
+      g+=`<line x1="${P.l}" y1="${y(v).toFixed(1)}" x2="${W-P.r}" y2="${y(v).toFixed(1)}" stroke="var(--border)"/>`;
+      g+=`<text x="${P.l-6}" y="${(y(v)+3).toFixed(1)}" text-anchor="end" font-family="monospace" font-size="10" fill="var(--text-dim)">${Math.round(v)}%</text>`;
+    }
+    g+=`<polyline points="${ms.map((m,i)=>x(i).toFixed(1)+','+y(m).toFixed(1)).join(' ')}" fill="none" stroke="var(--gold)" stroke-width="2"/>`;
+    ms.forEach((m,i)=>{g+=`<circle cx="${x(i).toFixed(1)}" cy="${y(m).toFixed(1)}" r="3" fill="var(--gold)"/>`;});
+    $('lineChart').innerHTML=g;
+  })();
+
+  // monthly rollup
+  const byMonth={};
+  streams.forEach(s=>{
+    const m=s.ts?new Date(s.ts).toLocaleDateString('en-US',{month:'short',year:'numeric'}):'(earlier)';
+    const o=(byMonth[m]=byMonth[m]||{streams:0,n:0,gross:0,fc:0,net:0,ts:s.ts});
+    o.streams++;o.n+=s.n;o.gross+=s.gross;o.fc+=s.fc;o.net+=s.net;
+  });
+  $('monthBody').innerHTML=Object.entries(byMonth).sort((a,b)=>b[1].ts-a[1].ts).map(([m,o])=>
+    `<tr><td>${m}</td><td class="r">${o.streams}</td><td class="r">${o.n}</td><td class="r gold">${money(o.gross)}</td><td class="r neg">−${money(o.fc)}</td><td class="r ${o.net>=0?'pos':'neg'}">${money(o.net)}</td><td class="r">${money(o.net/o.streams)}</td></tr>`
+  ).join('');
+})();
+</script>
+</body>
+</html>

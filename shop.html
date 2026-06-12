@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jon Estes Coins & Bullion</title>
+<meta name="description" content="Current coin and bullion inventory — catch the live sales on Whatnot.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏪</text></svg>">
+<style>
+  :root{--bg:#0a0a0c;--bg-card:#121216;--border:#26262e;--text:#d8d8dc;--text-dim:#8a8a94;--silver:#c0c4cc;--green:#6ea36e;--green-bright:#8fd08f;--gold:#c9a14a;--mono:'SF Mono','Fira Code',Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;line-height:1.6}
+  .container{max-width:720px;margin:0 auto;padding:2.5rem 1.25rem 4rem;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h1{font-size:2.3rem;font-weight:400;color:var(--silver)}
+  h1 .accent{color:var(--gold);font-style:italic}
+  .subtitle{color:var(--text-dim);font-size:.95rem;margin:.5rem auto 1.5rem;max-width:46ch}
+  .cta{display:inline-block;background:var(--gold);color:#0a0a0c;text-decoration:none;border-radius:10px;padding:.85rem 1.6rem;font-family:var(--mono);font-size:.85rem;font-weight:700;letter-spacing:.05em;margin-bottom:2.25rem;transition:filter .15s}
+  .cta:hover{filter:brightness(1.12)}
+  .section-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:.4rem;margin:0 0 1rem;text-align:left}
+  .listing{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.55rem;text-align:left}
+  .listing .n{font-family:var(--mono);font-size:.9rem;color:var(--silver)}
+  .listing .p{font-family:var(--mono);font-size:.95rem;color:var(--gold);font-weight:700;white-space:nowrap}
+  .listing .p.ask-none{color:var(--text-dim);font-weight:400;font-size:.74rem}
+  .empty{color:var(--text-dim);font-family:var(--mono);font-size:.8rem;padding:1.5rem;font-style:italic}
+  .spot{font-family:var(--mono);font-size:.72rem;color:var(--text-dim);margin-top:1.75rem}
+  .spot b{color:var(--gold)}
+  .footnote{margin-top:2.5rem;font-size:.72rem;font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:1rem}
+  .footnote a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="eyebrow">Coins · Bullion · Live Sales</div>
+  <h1>Jon Estes <span class="accent">Coins &amp; Bullion</span></h1>
+  <p class="subtitle">Current inventory below — everything sells live on Whatnot, where the auctions (and the deals) happen.</p>
+  <a class="cta" id="whatnotLink" href="https://www.whatnot.com" target="_blank" rel="noopener">🔴 CATCH THE LIVE SHOW ON WHATNOT</a>
+
+  <div class="section-label">Currently Available</div>
+  <div id="listings"><div class="empty">loading inventory…</div></div>
+
+  <div class="spot" id="spotLine"></div>
+
+  <div class="footnote">
+    Prices marked are asking prices; unmarked pieces open at auction. Inventory updates live from the vault. · <a href="/">jonestes.me</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  // NOTE: set your real Whatnot channel URL here:
+  // document.getElementById('whatnotLink').href='https://www.whatnot.com/user/YOURHANDLE';
+  const STORE='/.netlify/functions/store';
+  const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  async function load(){
+    let d={};
+    try{const r=await fetch(STORE,{cache:'no-store'});if(r.ok)d=await r.json();}catch(e){}
+    let listings=[];try{listings=JSON.parse(d['shop.listings']||'[]')}catch{}
+    const box=document.getElementById('listings');
+    if(!listings.length){
+      box.innerHTML='<div class="empty">Nothing listed right now — the good stuff went fast. Follow on Whatnot for the next drop.</div>';
+    } else {
+      box.innerHTML=listings.map(l=>
+        `<div class="listing"><span class="n">${esc(l.name)}</span><span class="p ${l.ask?'':'ask-none'}">${l.ask?'$'+Number(l.ask).toFixed(2):'auction — make an offer live'}</span></div>`
+      ).join('');
+    }
+    // public silver history powers a tasteful spot line if present
+    let hist=[];try{hist=JSON.parse(d['silver.history']||'[]')}catch{}
+    if(hist.length){
+      const last=hist[hist.length-1];
+      document.getElementById('spotLine').innerHTML='silver spot <b>$'+last.p.toFixed(2)+'</b> /ozt as of '+last.d;
+    }
+  }
+  load();
+  setInterval(load,60000);
+})();
+</script>
+</body>
+</html>

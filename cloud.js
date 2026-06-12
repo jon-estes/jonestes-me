@@ -29,6 +29,12 @@
     'inventory.',       // inventory.html — coin stock
     'invoice.',         // invoice.html — counter & history
     'alerts.',          // hq.html — silver alert thresholds
+    'planner.',         // planner.html — tonight's run of show
+    'crm.',             // crm.html — Mende lead pipeline
+    'shop.',            // storefront mirror (written by inventory)
+    'quiz.',            // quiz engine decks (when edited from Jon's devices)
+    'chores.',          // chore quest
+    'silver.',          // price history (written server-side, mirrored here)
   ];
   const tracked = (k) => typeof k === 'string' && PREFIXES.some((p) => k.indexOf(p) === 0);
 
