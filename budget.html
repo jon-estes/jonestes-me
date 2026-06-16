@@ -190,6 +190,9 @@
     .excl-biz-btn { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.15s; }
     .excl-biz-btn:hover { border-color:var(--gold); color:var(--gold); }
     .excl-biz-btn.active { border-color:var(--gold); color:var(--gold); background:rgba(201,169,110,0.1); }
+    .only-biz-btn { background:none; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.15s; }
+    .only-biz-btn:hover { border-color:var(--blue); color:var(--blue); }
+    .only-biz-btn.active { border-color:var(--blue); color:var(--blue); background:rgba(110,179,201,0.1); }
     .filter-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(126,203,161,0.1); border:1px solid rgba(126,203,161,0.3); border-radius:999px; padding:2px 10px; font-size:11px; color:var(--green); display:none; }
 
     .loading { text-align:center; padding:5rem; color:var(--muted); font-size:14px; }
@@ -240,6 +243,7 @@
         <option value="">All People</option>
       </select>
       <button class="excl-biz-btn" id="excl-biz-btn" onclick="toggleExcludeBusiness()">💼 Exclude Business</button>
+      <button class="only-biz-btn" id="only-biz-btn" onclick="toggleOnlyBusiness()">📊 Only Business</button>
       <span class="filter-badge" id="filter-badge">Filtered view</span>
       <button class="filter-reset" id="filter-reset" onclick="resetGlobalFilters()">✕ Reset</button>
     </div>
@@ -418,7 +422,7 @@ function parseCSV(txt) {
 function fmt(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function fmtShort(n){ if(n>=1000) return '$'+(n/1000).toFixed(1)+'k'; return '$'+n.toFixed(0); }
 
-let allRows=[], filteredRows=[], sortKey='date', sortDir=-1, excludeBusiness=false;
+let allRows=[], filteredRows=[], sortKey='date', sortDir=-1, excludeBusiness=false, onlyBusiness=false;
 
 async function init(){
   try {
@@ -792,7 +796,15 @@ function renderTable(){
 
 function toggleExcludeBusiness(){
   excludeBusiness = !excludeBusiness;
+  if(excludeBusiness) { onlyBusiness = false; document.getElementById('only-biz-btn').classList.remove('active'); }
   document.getElementById('excl-biz-btn').classList.toggle('active', excludeBusiness);
+  applyGlobalFilters();
+}
+
+function toggleOnlyBusiness(){
+  onlyBusiness = !onlyBusiness;
+  if(onlyBusiness) { excludeBusiness = false; document.getElementById('excl-biz-btn').classList.remove('active'); }
+  document.getElementById('only-biz-btn').classList.toggle('active', onlyBusiness);
   applyGlobalFilters();
 }
 
@@ -829,6 +841,7 @@ function applyGlobalFilters(){
     if(who   && r.who !== who)                 return false;
     if(excludeBusiness && r.category === 'Business') return false;
     if(excludeBusiness && r.category === 'Income' && /whatnot/i.test(r.item)) return false;
+    if(onlyBusiness && r.category !== 'Business' && !(r.category === 'Income' && /whatnot/i.test(r.item))) return false;
     return true;
   });
 
@@ -852,6 +865,8 @@ function resetGlobalFilters(){
   document.getElementById('filter-reset').style.borderColor = '';
   excludeBusiness = false;
   document.getElementById('excl-biz-btn').classList.remove('active');
+  onlyBusiness = false;
+  document.getElementById('only-biz-btn').classList.remove('active');
   // Restore full dataset
   filteredRows = [...allRows];
   reRenderAll();
