@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Shape Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e0e0c; --panel:rgba(255,255,255,.04); --line:rgba(255,255,255,.1);
+    --ink:#efebe0; --muted2:#a39d90; --silver:#bdbdb8;
+    --gold:#cda663; --copper:#bd7850; --warn:#c25e4e;
+    --serif:'Playfair Display', serif; --sans:'DM Sans', sans-serif; --mono:'DM Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden;}
+
+  .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;}
+  .ambient::before{content:'';position:absolute;top:-20%;right:-10%;width:60vw;height:60vw;background:radial-gradient(circle, rgba(205,166,99,.07), transparent 60%);}
+  .ambient::after{content:'';position:absolute;bottom:-25%;left:-10%;width:55vw;height:55vw;background:radial-gradient(circle, rgba(189,120,80,.06), transparent 60%);}
+
+  .deck{position:relative;height:100vh;width:100vw;z-index:1;display:flex;flex-direction:column;}
+  .progress-track{height:3px;width:100%;background:rgba(255,255,255,.06);}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--copper),var(--gold));transition:width .4s ease;}
+
+  .slide-wrap{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:0 8vw;cursor:pointer;}
+  .watermark{position:absolute;font-family:var(--serif);font-weight:700;font-style:italic;font-size:min(38vw,420px);color:rgba(255,255,255,.025);bottom:-6%;right:-2%;line-height:1;user-select:none;pointer-events:none;}
+  .slide{position:relative;z-index:1;max-width:880px;width:100%;opacity:0;transform:translateY(14px);}
+  .slide.enter{animation:slideIn .5s cubic-bezier(.2,.8,.2,1) forwards;}
+  @keyframes slideIn{to{opacity:1;transform:translateY(0);}}
+
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .kicker::before{content:'';width:22px;height:1px;background:var(--copper);}
+  h1.title{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.2vw,68px);line-height:1.05;margin:0 0 28px 0;letter-spacing:-.01em;}
+  h1.title em{color:var(--gold);font-style:italic;}
+
+  .reveal-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px;max-width:660px;min-height:30px;}
+  .reveal-list li{display:flex;gap:16px;align-items:flex-start;font-size:clamp(18px,2.1vw,22px);line-height:1.45;opacity:0;transform:translateX(-10px);}
+  .reveal-list li.shown{animation:itemIn .4s ease forwards;}
+  .reveal-list li .num{font-family:var(--mono);color:var(--gold);font-size:14px;border:1px solid var(--line);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;background:var(--panel);}
+  @keyframes itemIn{to{opacity:1;transform:translateX(0);}}
+
+  .banner{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,30px);color:var(--copper);border-left:3px solid var(--copper);padding-left:22px;max-width:640px;line-height:1.4;opacity:0;transform:translateY(8px);}
+  .banner.shown{animation:itemIn .45s ease forwards;}
+
+  .after-note{font-size:14.5px;color:var(--muted2);max-width:540px;margin-top:26px;opacity:0;transition:opacity .4s ease;}
+  .after-note.shown{opacity:1;}
+
+  .choice-row,.cat-grid{min-height:30px;}
+  .choice-row{display:flex;gap:18px;flex-wrap:wrap;max-width:680px;}
+  .choice-card{flex:1;min-width:220px;border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--panel);opacity:0;transform:translateY(10px);}
+  .choice-card.shown{animation:itemIn .4s ease forwards;}
+  .choice-card .tag{font-family:var(--mono);font-size:11.5px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;}
+  .choice-card p{margin:9px 0 0 0;font-size:16.5px;line-height:1.45;}
+
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;}
+  @media (max-width:760px){.cat-grid{grid-template-columns:1fr;}}
+  .cat-card{border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:var(--panel);opacity:0;transform:translateY(10px);}
+  .cat-card.shown{animation:itemIn .4s ease forwards;}
+  .cat-card:nth-child(5){grid-column:1/-1;}
+  .cat-card .tag{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.1em;text-transform:uppercase;}
+  .cat-card p{margin:7px 0 0 0;font-size:16px;line-height:1.4;color:var(--ink);}
+
+  .quote-final{font-family:var(--serif);font-style:italic;font-size:clamp(24px,3.6vw,36px);line-height:1.4;max-width:740px;opacity:0;transform:translateY(10px);}
+  .quote-final.shown{animation:itemIn .5s ease forwards;}
+  .quote-final .hl{color:var(--gold);}
+
+  .tap-hint{font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.06em;margin-top:34px;opacity:.6;}
+
+  .corner-timer{position:fixed;top:26px;right:28px;z-index:5;background:rgba(20,20,17,.72);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:none;align-items:center;gap:16px;cursor:default;}
+  .corner-timer.show{display:flex;}
+  .corner-timer .ct-label{font-family:var(--mono);font-size:10.5px;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+  .corner-timer .ct-num{font-family:var(--mono);font-size:30px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
+  .corner-timer .ct-num.warn{color:var(--warn);}
+  .ct-btns{display:flex;gap:6px;}
+  .ct-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .ct-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+  .footer-bar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 8vw 26px 8vw;}
+  .footer-left,.footer-right{display:flex;align-items:center;gap:12px;}
+  .nav-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .nav-btn:disabled{opacity:.3;cursor:default;}
+  .nav-btn:disabled:hover{border-color:var(--line);color:var(--ink);}
+  .counter{font-family:var(--mono);font-size:12.5px;color:var(--muted2);letter-spacing:.04em;}
+  .pill-btn{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted2);border:1px solid var(--line);border-radius:20px;padding:9px 16px;background:transparent;cursor:pointer;}
+  .pill-btn:hover{color:var(--gold);border-color:var(--gold);}
+
+  .notes-drawer{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(18,18,15,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:26px 8vw;transform:translateY(100%);transition:transform .35s ease;max-height:40vh;overflow-y:auto;}
+  .notes-drawer.open{transform:translateY(0);}
+  .notes-drawer h3{margin:0 0 10px 0;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--copper);text-transform:uppercase;}
+  .notes-drawer p{margin:0;font-size:16px;line-height:1.6;color:var(--silver);max-width:760px;}
+
+  ::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+
+  @media (max-width:640px){
+    .slide-wrap{padding:0 7vw;}
+    .footer-bar{padding:16px 7vw 22px 7vw;}
+    .corner-timer{top:16px;right:16px;padding:10px 12px;gap:10px;}
+    .corner-timer .ct-num{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="deck">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="slide-wrap" id="slideWrap">
+    <div class="watermark" id="watermark"></div>
+    <div class="slide" id="slideContent"></div>
+  </div>
+
+  <div class="footer-bar">
+    <div class="footer-left">
+      <button class="nav-btn" id="prevBtn">‹</button>
+      <button class="nav-btn" id="nextBtn">›</button>
+      <span class="counter" id="counter"></span>
+    </div>
+    <div class="footer-right">
+      <button class="pill-btn" id="notesToggle">Notes</button>
+      <button class="pill-btn" id="fsBtn">⤢ Present</button>
+    </div>
+  </div>
+</div>
+
+<div class="corner-timer" id="cornerTimer">
+  <div>
+    <div class="ct-label" id="ctLabel">Round</div>
+    <div class="ct-num" id="ctNum">10:00</div>
+  </div>
+  <div class="ct-btns">
+    <button class="ct-btn" id="ctToggle" title="Start / pause">▶</button>
+    <button class="ct-btn" id="ctReset" title="Reset">↺</button>
+  </div>
+</div>
+
+<div class="notes-drawer" id="notesDrawer">
+  <h3>Facilitator notes</h3>
+  <p id="notesText"></p>
+</div>
+
+<script>
+(function(){
+
+  var SEGMENTS = [
+    {label:"Introduction",          minutes:5},
+    {label:"Round 1 — Silent Build", minutes:10},
+    {label:"Debrief: Round 1",      minutes:5},
+    {label:"Round 2 — Open Build",  minutes:10},
+    {label:"Final Debrief",         minutes:10},
+    {label:"Closing",               minutes:5}
+  ];
+
+  // type: 'list' | 'cards' | 'choice' | 'quote' | 'none'
+  var SLIDES = [
+    {
+      segIndex:null, num:"00", kicker:"Before you start", title:"Silent Shape <em>Challenge</em>",
+      type:"list",
+      items:[
+        "Shapes + target image per table — image face-down.",
+        "Groups of 3–6. Equal piece counts.",
+        "Goal: rebuild the shape. No talking.",
+        "Explain once. Then get out of the way."
+      ],
+      after:"", notes:"Setup checklist — cover before the 45-minute clock starts. Don't reveal the target image yet."
+    },
+    {
+      segIndex:0, num:"01", kicker:"Introduction", title:"Here's how this <em>works</em>",
+      type:"list",
+      items:[
+        "Recreate the target shape.",
+        "No talking. No writing. Gestures only.",
+        "Everyone must participate.",
+        "10 minutes. Ready or not."
+      ],
+      after:"Reveal the image. Start the timer.",
+      notes:"State the rules once, then go quiet yourself. Don't answer questions verbally — just point back at the rule."
+    },
+    {
+      segIndex:1, num:"02", kicker:"Round 1 · Silent Build", title:"No talking. <em>Go.</em>",
+      type:"none",
+      items:[],
+      after:"<div class='banner shown'>Someone always wants to take charge out loud. Let that friction happen.</div>",
+      notes:"Walk the room silently. Don't rescue a stuck team — that struggle is the point. Note who leads non-verbally."
+    },
+    {
+      segIndex:2, num:"03", kicker:"Debrief · Round 1", title:"What just <em>happened</em>?",
+      type:"list",
+      items:[
+        "What was frustrating?",
+        "How did you communicate?",
+        "Did a leader emerge?",
+        "What did you assume?"
+      ],
+      after:"", notes:"Keep this fast — gut reactions, not deep analysis. Stay neutral. Save depth for the Final Debrief."
+    },
+    {
+      segIndex:3, num:"04", kicker:"Round 2 · Open Build", title:"Same shape. <em>New rules.</em>",
+      type:"choice",
+      items:[
+        "<span class='tag'>Option A</span><p>Open talking — anyone, anytime.</p>",
+        "<span class='tag'>Option B</span><p>One designated speaker for the team.</p>"
+      ],
+      after:"Pick one. 10 minutes.",
+      notes:"Don't choose for them — the choice itself is data. Most teams improve dramatically this round."
+    },
+    {
+      segIndex:4, num:"05", kicker:"Final Debrief", title:"Connect it to <em>work</em>",
+      type:"cards",
+      items:[
+        "<span class='tag'>Communication</span><p>What happens when info isn't shared?</p>",
+        "<span class='tag'>Leadership</span><p>Who stepped up, and why?</p>",
+        "<span class='tag'>Collaboration</span><p>Did everyone contribute?</p>",
+        "<span class='tag'>Problem solving</span><p>Stuck, or adjusting?</p>",
+        "<span class='tag'>Workplace</span><p>Sound familiar?</p>"
+      ],
+      after:"", notes:"This is where the real learning lands — slow down, let silence sit after each question. Spend the most time on Workplace."
+    },
+    {
+      segIndex:5, num:"06", kicker:"Closing", title:"The <em>takeaway</em>",
+      type:"quote",
+      items:[
+        "Teams perform better when <span class='hl'>communication is clear</span>, <span class='hl'>roles are understood</span>, and <span class='hl'>everyone contributes</span>."
+      ],
+      after:"", notes:"End on the takeaway, not logistics. Don't let this turn into a wrap-up checklist."
+    }
+  ];
+
+  var segRemaining = SEGMENTS.map(function(s){ return s.minutes*60; });
+  var segRunning   = SEGMENTS.map(function(){ return false; });
+  var current = 0;
+  var revealed = SLIDES.map(function(){ return 0; });
+
+  var slideEl = document.getElementById('slideContent');
+  var slideWrap = document.getElementById('slideWrap');
+  var watermarkEl = document.getElementById('watermark');
+  var progressFill = document.getElementById('progressFill');
+  var counterEl = document.getElementById('counter');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var notesToggle = document.getElementById('notesToggle');
+  var notesDrawer = document.getElementById('notesDrawer');
+  var notesText = document.getElementById('notesText');
+  var fsBtn = document.getElementById('fsBtn');
+  var cornerTimer = document.getElementById('cornerTimer');
+  var ctLabel = document.getElementById('ctLabel');
+  var ctNum = document.getElementById('ctNum');
+  var ctToggle = document.getElementById('ctToggle');
+  var ctReset = document.getElementById('ctReset');
+
+  function fmt(sec){
+    sec = Math.max(0,sec);
+    var m = Math.floor(sec/60), s = sec%60;
+    return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  }
+  function curSeg(){
+    var s = SLIDES[current].segIndex;
+    return (s===null||s===undefined) ? -1 : s;
+  }
+  function renderTimer(){
+    var i = curSeg();
+    if (i<0){ cornerTimer.classList.remove('show'); return; }
+    cornerTimer.classList.add('show');
+    ctLabel.textContent = SEGMENTS[i].label;
+    ctNum.textContent = fmt(segRemaining[i]);
+    ctNum.classList.toggle('warn', segRemaining[i]<=30 && segRemaining[i]>0);
+    ctToggle.textContent = segRunning[i] ? '❙❙' : '▶';
+  }
+
+  function containerOpenTag(type){
+    if (type==='list') return '<ul class="reveal-list" id="itemsBox"></ul>';
+    if (type==='cards') return '<div class="cat-grid" id="itemsBox"></div>';
+    if (type==='choice') return '<div class="choice-row" id="itemsBox"></div>';
+    if (type==='quote') return '<div id="itemsBox"></div>';
+    return '<div id="itemsBox"></div>';
+  }
+
+  function itemTag(type, html, idx){
+    if (type==='list') return '<li><span class="num">'+idx+'</span><span>'+html+'</span></li>';
+    if (type==='cards') return '<div class="cat-card">'+html+'</div>';
+    if (type==='choice') return '<div class="choice-card">'+html+'</div>';
+    if (type==='quote') return '<p class="quote-final">'+html+'</p>';
+    return '<div>'+html+'</div>';
+  }
+
+  function renderSlideShell(){
+    var s = SLIDES[current];
+    watermarkEl.textContent = s.num;
+    counterEl.textContent = (current+1)+' / '+SLIDES.length+'   '+s.kicker;
+    progressFill.style.width = ((current+1)/SLIDES.length*100)+'%';
+    notesText.textContent = s.notes;
+
+    slideEl.classList.remove('enter');
+    var hint = s.items.length ? '<div class="tap-hint" id="tapHint">Click anywhere to reveal →</div>' : '';
+    slideEl.innerHTML =
+      '<div class="kicker">'+s.kicker+'</div>'+
+      '<h1 class="title">'+s.title+'</h1>'+
+      containerOpenTag(s.type)+
+      '<div class="after-note" id="afterBox"></div>'+
+      hint;
+    void slideEl.offsetWidth;
+    slideEl.classList.add('enter');
+
+    // instantly render whatever was already revealed (no animation) when re-entering a slide
+    var box = document.getElementById('itemsBox');
+    for (var k=0;k<revealed[current];k++){
+      var el = document.createElement('div');
+      el.innerHTML = itemTag(s.type, s.items[k], k+1);
+      var node = el.firstChild;
+      node.classList.add('shown');
+      box.appendChild(node);
+    }
+    updateAfter();
+    updateHint();
+    renderTimer();
+  }
+
+  function updateAfter(){
+    var s = SLIDES[current];
+    var afterBox = document.getElementById('afterBox');
+    if (!afterBox) return;
+    if (revealed[current] >= s.items.length && s.after){
+      afterBox.innerHTML = s.after;
+      afterBox.classList.add('shown');
+    } else {
+      afterBox.classList.remove('shown');
+      afterBox.innerHTML='';
+    }
+  }
+
+  function updateHint(){
+    var hint = document.getElementById('tapHint');
+    if (!hint) return;
+    var s = SLIDES[current];
+    hint.style.display = (revealed[current] >= s.items.length) ? 'none' : 'block';
+  }
+
+  function revealNext(){
+    var s = SLIDES[current];
+    if (revealed[current] < s.items.length){
+      var box = document.getElementById('itemsBox');
+      var el = document.createElement('div');
+      el.innerHTML = itemTag(s.type, s.items[revealed[current]], revealed[current]+1);
+      var node = el.firstChild;
+      box.appendChild(node);
+      requestAnimationFrame(function(){ node.classList.add('shown'); });
+      revealed[current]++;
+      updateAfter();
+      updateHint();
+      return true;
+    }
+    return false;
+  }
+
+  function revealBack(){
+    if (revealed[current] > 0){
+      var box = document.getElementById('itemsBox');
+      if (box.lastElementChild) box.lastElementChild.remove();
+      revealed[current]--;
+      updateAfter();
+      updateHint();
+      return true;
+    }
+    return false;
+  }
+
+  function advance(){
+    if (!revealNext()){
+      if (current < SLIDES.length-1){ current++; renderSlideShell(); }
+    }
+    syncNavButtons();
+  }
+  function back(){
+    if (!revealBack()){
+      if (current > 0){ current--; renderSlideShell(); }
+    }
+    syncNavButtons();
+  }
+  function syncNavButtons(){
+    prevBtn.disabled = (current===0 && revealed[0]===0);
+    nextBtn.disabled = (current===SLIDES.length-1 && revealed[current]>=SLIDES[current].items.length);
+  }
+
+  slideWrap.addEventListener('click', advance);
+  nextBtn.addEventListener('click', function(e){ e.stopPropagation(); advance(); });
+  prevBtn.addEventListener('click', function(e){ e.stopPropagation(); back(); });
+
+  ctToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    var i = curSeg(); if (i<0) return;
+    segRunning[i] = !segRunning[i];
+    renderTimer();
+  });
+  ctReset.addEventListener('click', function(e){
+    e.stopPropagation();
+    var i = curSeg(); if (i<0) return;
+    segRunning[i] = false;
+    segRemaining[i] = SEGMENTS[i].minutes*60;
+    renderTimer();
+  });
+
+  notesToggle.addEventListener('click', function(e){ e.stopPropagation(); notesDrawer.classList.toggle('open'); });
+  fsBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+
+  var audioCtx;
+  function chime(){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 660; o.type = 'sine';
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(.0001, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.18, audioCtx.currentTime+.02);
+      g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+.9);
+      o.start(); o.stop(audioCtx.currentTime+.9);
+    }catch(e){}
+  }
+
+  setInterval(function(){
+    var i = curSeg();
+    if (i>=0 && segRunning[i] && segRemaining[i]>0){
+      segRemaining[i]--;
+      if (segRemaining[i]===0){ segRunning[i]=false; chime(); }
+      renderTimer();
+    }
+  }, 1000);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); advance(); }
+    if (e.key==='ArrowLeft'){ e.preventDefault(); back(); }
+    if (e.key.toLowerCase()==='n') notesToggle.click();
+    if (e.key.toLowerCase()==='f') fsBtn.click();
+    if (e.key.toLowerCase()==='t'){ var i=curSeg(); if(i>=0) ctToggle.click(); }
+  });
+
+  renderSlideShell();
+  syncNavButtons();
+})();
+</script>
+</body>
+</html>
