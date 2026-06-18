@@ -42,11 +42,16 @@
   .reveal-list li .num{font-family:var(--mono);color:var(--gold);font-size:14px;border:1px solid var(--line);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;background:var(--panel);}
   @keyframes itemIn{to{opacity:1;transform:translateX(0);}}
 
-  .banner{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,30px);color:var(--copper);border-left:3px solid var(--copper);padding-left:22px;max-width:640px;line-height:1.4;opacity:0;transform:translateY(8px);}
+  .banner{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.6vw,26px);color:var(--copper);border-left:3px solid var(--copper);padding-left:22px;max-width:560px;line-height:1.4;opacity:0;transform:translateY(8px);}
   .banner.shown{animation:itemIn .45s ease forwards;}
 
-  .after-note{font-size:14.5px;color:var(--muted2);max-width:540px;margin-top:26px;opacity:0;transition:opacity .4s ease;}
+  .after-note{font-size:14.5px;color:var(--muted2);max-width:560px;margin-top:26px;opacity:0;transition:opacity .4s ease;}
   .after-note.shown{opacity:1;}
+  .after-note .target-img{display:block;width:clamp(120px,16vw,190px);margin:0 0 16px 0;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));color:var(--ink);}
+  .after-note .target-img.lg{width:clamp(160px,22vw,260px);}
+  .after-note .target-img svg{display:block;width:100%;height:auto;}
+  .after-note .img-cap{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);margin-bottom:10px;}
+  .after-row{display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap;}
 
   .choice-row,.cat-grid{min-height:30px;}
   .choice-row{display:flex;gap:18px;flex-wrap:wrap;max-width:680px;}
@@ -63,14 +68,15 @@
   .cat-card .tag{font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.1em;text-transform:uppercase;}
   .cat-card p{margin:7px 0 0 0;font-size:16px;line-height:1.4;color:var(--ink);}
 
-  .quote-final{font-family:var(--serif);font-style:italic;font-size:clamp(24px,3.6vw,36px);line-height:1.4;max-width:740px;opacity:0;transform:translateY(10px);}
+  .quote-final{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3.2vw,32px);line-height:1.4;max-width:740px;opacity:0;transform:translateY(10px);}
   .quote-final.shown{animation:itemIn .5s ease forwards;}
   .quote-final .hl{color:var(--gold);}
+  .quote-final.recap{font-size:clamp(15px,1.8vw,18px);font-style:normal;color:var(--muted2);font-family:var(--mono);letter-spacing:.02em;max-width:600px;}
+  .quote-final.recap b{color:var(--ink);font-weight:500;}
 
   .tap-hint{font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.06em;margin-top:34px;opacity:.6;}
 
-  .corner-timer{position:fixed;top:26px;right:28px;z-index:5;background:rgba(20,20,17,.72);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:none;align-items:center;gap:16px;cursor:default;}
-  .corner-timer.show{display:flex;}
+  .corner-timer{position:fixed;top:26px;right:28px;z-index:5;background:rgba(20,20,17,.72);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:16px;cursor:default;}
   .corner-timer .ct-label{font-family:var(--mono);font-size:10.5px;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
   .corner-timer .ct-num{font-family:var(--mono);font-size:30px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1;}
   .corner-timer .ct-num.warn{color:var(--warn);}
@@ -130,8 +136,8 @@
 
 <div class="corner-timer" id="cornerTimer">
   <div>
-    <div class="ct-label" id="ctLabel">Round</div>
-    <div class="ct-num" id="ctNum">10:00</div>
+    <div class="ct-label">Session clock</div>
+    <div class="ct-num" id="ctNum">40:00</div>
   </div>
   <div class="ct-btns">
     <button class="ct-btn" id="ctToggle" title="Start / pause">▶</button>
@@ -147,19 +153,14 @@
 <script>
 (function(){
 
-  var SEGMENTS = [
-    {label:"Introduction",          minutes:5},
-    {label:"Round 1 — Silent Build", minutes:10},
-    {label:"Debrief: Round 1",      minutes:5},
-    {label:"Round 2 — Open Build",  minutes:10},
-    {label:"Final Debrief",         minutes:10},
-    {label:"Closing",               minutes:5}
-  ];
+  var SAILBOAT_SVG = '<svg viewBox="0 0 205.4 205.4" xmlns="http://www.w3.org/2000/svg"><path d="M 10 195.4 L 154 195.4 L 118 159.4 L 46 159.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 87.4 159.4 L 87.4 51.4 L 76.6 51.4 Z" fill="currentColor"/><path d="M 87.4 159.4 L 87.4 51.4 L 154 132.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 76.6 87.4 L 28 123.4 Z" fill="currentColor"/><path d="M 87.4 51.4 L 87.4 37.0 L 105.4 44.2 Z" fill="currentColor"/><circle cx="181.0" cy="24.4" r="14.4" fill="#cda663"/></svg>';
+
+  var ROCKET_SVG = '<svg viewBox="0 0 200 245.0" xmlns="http://www.w3.org/2000/svg"><path d="M 64 190 L 136 190 L 136 64 L 64 64 Z" fill="currentColor"/><path d="M 64 64 L 100 64 L 100 10 Z" fill="currentColor"/><path d="M 100 64 L 136 64 L 100 10 Z" fill="currentColor"/><path d="M 64 190 L 64 136 L 10 190 Z" fill="currentColor"/><path d="M 136 190 L 136 136 L 190 190 Z" fill="currentColor"/><path d="M 64 190 L 136 190 L 100 235.0 Z" fill="currentColor"/></svg>';
 
   // type: 'list' | 'cards' | 'choice' | 'quote' | 'none'
   var SLIDES = [
     {
-      segIndex:null, num:"00", kicker:"Team-Building Exercise", title:"Silent Shape <em>Challenge</em>",
+      num:"00", kicker:"Team-Building Exercise", title:"Silent Shape <em>Challenge</em>",
       lede:"45 minutes. Build a shape together — without saying a word.",
       type:"list",
       items:[
@@ -168,10 +169,22 @@
         "Goal: rebuild the shape. No talking.",
         "Explain once. Then get out of the way."
       ],
-      after:"", notes:"Setup checklist — cover before the 45-minute clock starts. Don't reveal the target image yet."
+      after:"", notes:"Setup checklist — cover before you start the clock. Don't reveal the target image yet."
     },
     {
-      segIndex:0, num:"01", kicker:"Introduction", title:"Here's how this <em>works</em>",
+      num:"01", kicker:"Objective", title:"Why we're doing <em>this</em>",
+      type:"list",
+      items:[
+        "Communication — without saying a word.",
+        "Problem-solving — under a real constraint.",
+        "Trust — letting go of control.",
+        "Teamwork &amp; collaboration — one shared goal.",
+        "Leadership — who steps up, and how."
+      ],
+      after:"", notes:"This slide is the answer if anyone asks 'why are we doing this' — five skills, one simple constraint. Keep it quick, then move into Introduction."
+    },
+    {
+      num:"02", kicker:"Introduction", title:"Here's how this <em>works</em>",
       type:"list",
       items:[
         "Recreate the target shape.",
@@ -179,18 +192,18 @@
         "Everyone must participate.",
         "10 minutes. Ready or not."
       ],
-      after:"Reveal the image. Start the timer.",
-      notes:"State the rules once, then go quiet yourself. Don't answer questions verbally — just point back at the rule."
+      after:"<div class='after-row'><div><div class='img-cap'>Target — reveal now</div><div class='target-img'>"+SAILBOAT_SVG+"</div></div></div>",
+      notes:"State the rules once, then go quiet yourself. Don't answer questions verbally — just point back at the rule. Reveal the physical pieces + image together."
     },
     {
-      segIndex:1, num:"02", kicker:"Round 1 · Silent Build", title:"No talking. <em>Go.</em>",
+      num:"03", kicker:"Round 1 · Silent Build", title:"No talking. <em>Go.</em>",
       type:"none",
       items:[],
-      after:"<div class='banner shown'>Someone always wants to take charge out loud. Let that friction happen.</div>",
+      after:"<div class='after-row'><div class='target-img lg'>"+SAILBOAT_SVG+"</div><div class='banner shown' style='margin-top:6px;'>Someone always wants to take charge out loud. Let that friction happen.</div></div>",
       notes:"Walk the room silently. Don't rescue a stuck team — that struggle is the point. Note who leads non-verbally."
     },
     {
-      segIndex:2, num:"03", kicker:"Debrief · Round 1", title:"What just <em>happened</em>?",
+      num:"04", kicker:"Debrief · Round 1", title:"What just <em>happened</em>?",
       type:"list",
       items:[
         "What was frustrating?",
@@ -201,17 +214,17 @@
       after:"", notes:"Keep this fast — gut reactions, not deep analysis. Stay neutral. Save depth for the Final Debrief."
     },
     {
-      segIndex:3, num:"04", kicker:"Round 2 · Open Build", title:"Same shape. <em>New rules.</em>",
+      num:"05", kicker:"Round 2 · Open Build", title:"Same shape. <em>New rules.</em>",
       type:"choice",
       items:[
         "<span class='tag'>Option A</span><p>Open talking — anyone, anytime.</p>",
         "<span class='tag'>Option B</span><p>One designated speaker for the team.</p>"
       ],
-      after:"Pick one. 10 minutes.",
+      after:"<div class='after-row'><div class='target-img'>"+SAILBOAT_SVG+"</div><div class='img-cap' style='margin-top:8px;'>Same target. Pick one. Go.</div></div>",
       notes:"Don't choose for them — the choice itself is data. Most teams improve dramatically this round."
     },
     {
-      segIndex:4, num:"05", kicker:"Final Debrief", title:"Connect it to <em>work</em>",
+      num:"06", kicker:"Final Debrief", title:"Connect it to <em>work</em>",
       type:"cards",
       items:[
         "<span class='tag'>Communication</span><p>What happens when info isn't shared?</p>",
@@ -224,17 +237,17 @@
       notes:"This is where the real learning lands — slow down, let silence sit after each question. Spend the most time on Workplace."
     },
     {
-      segIndex:5, num:"06", kicker:"Closing", title:"The <em>takeaway</em>",
+      num:"07", kicker:"Closing", title:"The <em>takeaway</em>",
       type:"quote",
       items:[
+        "<span class='recap-mark'>Today, in 45 minutes:</span> <b>communication</b> · <b>problem-solving</b> · <b>trust</b> · <b>teamwork</b> · <b>leadership</b>.",
         "Teams perform better when <span class='hl'>communication is clear</span>, <span class='hl'>roles are understood</span>, and <span class='hl'>everyone contributes</span>."
       ],
-      after:"", notes:"End on the takeaway, not logistics. Don't let this turn into a wrap-up checklist."
+      after:"<div class='footnote' style='font-size:14.5px;color:var(--muted2);'>Thanks for building with no instructions and no talking — that&rsquo;s harder than it sounds, and you handled it well.</div>",
+      notes:"End on the takeaway, not logistics. Don't let this turn into a wrap-up checklist."
     }
   ];
 
-  var segRemaining = SEGMENTS.map(function(s){ return s.minutes*60; });
-  var segRunning   = SEGMENTS.map(function(){ return false; });
   var current = 0;
   var revealed = SLIDES.map(function(){ return 0; });
 
@@ -249,36 +262,30 @@
   var notesDrawer = document.getElementById('notesDrawer');
   var notesText = document.getElementById('notesText');
   var fsBtn = document.getElementById('fsBtn');
-  var cornerTimer = document.getElementById('cornerTimer');
-  var ctLabel = document.getElementById('ctLabel');
   var ctNum = document.getElementById('ctNum');
   var ctToggle = document.getElementById('ctToggle');
   var ctReset = document.getElementById('ctReset');
+
+  // ---- single 40-minute session clock ----
+  var TOTAL_SECONDS = 40*60;
+  var clockRemaining = TOTAL_SECONDS;
+  var clockRunning = false;
 
   function fmt(sec){
     sec = Math.max(0,sec);
     var m = Math.floor(sec/60), s = sec%60;
     return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
   }
-  function curSeg(){
-    var s = SLIDES[current].segIndex;
-    return (s===null||s===undefined) ? -1 : s;
-  }
-  function renderTimer(){
-    var i = curSeg();
-    if (i<0){ cornerTimer.classList.remove('show'); return; }
-    cornerTimer.classList.add('show');
-    ctLabel.textContent = SEGMENTS[i].label;
-    ctNum.textContent = fmt(segRemaining[i]);
-    ctNum.classList.toggle('warn', segRemaining[i]<=30 && segRemaining[i]>0);
-    ctToggle.textContent = segRunning[i] ? '❙❙' : '▶';
+  function renderClock(){
+    ctNum.textContent = fmt(clockRemaining);
+    ctNum.classList.toggle('warn', clockRemaining<=300 && clockRemaining>0);
+    ctToggle.textContent = clockRunning ? '❙❙' : '▶';
   }
 
   function containerOpenTag(type){
     if (type==='list') return '<ul class="reveal-list" id="itemsBox"></ul>';
     if (type==='cards') return '<div class="cat-grid" id="itemsBox"></div>';
     if (type==='choice') return '<div class="choice-row" id="itemsBox"></div>';
-    if (type==='quote') return '<div id="itemsBox"></div>';
     return '<div id="itemsBox"></div>';
   }
 
@@ -286,7 +293,7 @@
     if (type==='list') return '<li><span class="num">'+idx+'</span><span>'+html+'</span></li>';
     if (type==='cards') return '<div class="cat-card">'+html+'</div>';
     if (type==='choice') return '<div class="choice-card">'+html+'</div>';
-    if (type==='quote') return '<p class="quote-final">'+html+'</p>';
+    if (type==='quote') return '<p class="quote-final'+(idx===1?' recap':'')+'">'+html+'</p>';
     return '<div>'+html+'</div>';
   }
 
@@ -309,7 +316,6 @@
     void slideEl.offsetWidth;
     slideEl.classList.add('enter');
 
-    // instantly render whatever was already revealed (no animation) when re-entering a slide
     var box = document.getElementById('itemsBox');
     for (var k=0;k<revealed[current];k++){
       var el = document.createElement('div');
@@ -320,7 +326,6 @@
     }
     updateAfter();
     updateHint();
-    renderTimer();
   }
 
   function updateAfter(){
@@ -395,16 +400,14 @@
 
   ctToggle.addEventListener('click', function(e){
     e.stopPropagation();
-    var i = curSeg(); if (i<0) return;
-    segRunning[i] = !segRunning[i];
-    renderTimer();
+    clockRunning = !clockRunning;
+    renderClock();
   });
   ctReset.addEventListener('click', function(e){
     e.stopPropagation();
-    var i = curSeg(); if (i<0) return;
-    segRunning[i] = false;
-    segRemaining[i] = SEGMENTS[i].minutes*60;
-    renderTimer();
+    clockRunning = false;
+    clockRemaining = TOTAL_SECONDS;
+    renderClock();
   });
 
   notesToggle.addEventListener('click', function(e){ e.stopPropagation(); notesDrawer.classList.toggle('open'); });
@@ -429,11 +432,10 @@
   }
 
   setInterval(function(){
-    var i = curSeg();
-    if (i>=0 && segRunning[i] && segRemaining[i]>0){
-      segRemaining[i]--;
-      if (segRemaining[i]===0){ segRunning[i]=false; chime(); }
-      renderTimer();
+    if (clockRunning && clockRemaining>0){
+      clockRemaining--;
+      if (clockRemaining===0){ clockRunning=false; chime(); }
+      renderClock();
     }
   }, 1000);
 
@@ -442,11 +444,12 @@
     if (e.key==='ArrowLeft'){ e.preventDefault(); back(); }
     if (e.key.toLowerCase()==='n') notesToggle.click();
     if (e.key.toLowerCase()==='f') fsBtn.click();
-    if (e.key.toLowerCase()==='t'){ var i=curSeg(); if(i>=0) ctToggle.click(); }
+    if (e.key.toLowerCase()==='t') ctToggle.click();
   });
 
   renderSlideShell();
   syncNavButtons();
+  renderClock();
 })();
 </script>
 </body>
