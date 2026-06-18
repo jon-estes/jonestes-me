@@ -34,6 +34,7 @@
   .kicker::before{content:'';width:22px;height:1px;background:var(--copper);}
   h1.title{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.2vw,68px);line-height:1.05;margin:0 0 28px 0;letter-spacing:-.01em;}
   h1.title em{color:var(--gold);font-style:italic;}
+  p.lede{font-family:var(--serif);font-style:italic;font-size:clamp(17px,2vw,21px);color:var(--silver);line-height:1.5;max-width:560px;margin:-8px 0 30px 0;}
 
   .reveal-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px;max-width:660px;min-height:30px;}
   .reveal-list li{display:flex;gap:16px;align-items:flex-start;font-size:clamp(18px,2.1vw,22px);line-height:1.45;opacity:0;transform:translateX(-10px);}
@@ -158,7 +159,8 @@
   // type: 'list' | 'cards' | 'choice' | 'quote' | 'none'
   var SLIDES = [
     {
-      segIndex:null, num:"00", kicker:"Before you start", title:"Silent Shape <em>Challenge</em>",
+      segIndex:null, num:"00", kicker:"Team-Building Exercise", title:"Silent Shape <em>Challenge</em>",
+      lede:"45 minutes. Build a shape together — without saying a word.",
       type:"list",
       items:[
         "Shapes + target image per table — image face-down.",
@@ -218,7 +220,8 @@
         "<span class='tag'>Problem solving</span><p>Stuck, or adjusting?</p>",
         "<span class='tag'>Workplace</span><p>Sound familiar?</p>"
       ],
-      after:"", notes:"This is where the real learning lands — slow down, let silence sit after each question. Spend the most time on Workplace."
+      after:"<div class='banner shown'>Good answers sound like: clear handoffs, a leader who emerged naturally, and quick course-correction — the same patterns that keep training and production moving.</div>",
+      notes:"This is where the real learning lands — slow down, let silence sit after each question. Spend the most time on Workplace."
     },
     {
       segIndex:5, num:"06", kicker:"Closing", title:"The <em>takeaway</em>",
@@ -299,6 +302,7 @@
     slideEl.innerHTML =
       '<div class="kicker">'+s.kicker+'</div>'+
       '<h1 class="title">'+s.title+'</h1>'+
+      (s.lede ? '<p class="lede">'+s.lede+'</p>' : '')+
       containerOpenTag(s.type)+
       '<div class="after-note" id="afterBox"></div>'+
       hint;
