@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Shape Challenge — Facilitator Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0f0e;
+    --panel:#161614;
+    --panel-2:#1c1c19;
+    --line:#2b2a26;
+    --ink:#ece8de;
+    --muted:#9a958a;
+    --silver:#b9bcc3;
+    --gold:#c9a45c;
+    --copper:#b9714a;
+    --green:#7c9a73;
+    --warn:#c0584a;
+    --serif:'Playfair Display', serif;
+    --sans:'DM Sans', sans-serif;
+    --mono:'DM Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);}
+  body{overflow:hidden;}
+  .app{display:flex;height:100vh;width:100vw;}
+
+  /* ---------- RAIL ---------- */
+  .rail{
+    width:300px;min-width:300px;
+    background:var(--panel);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;
+    padding:28px 22px;
+  }
+  .rail-eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:6px;
+  }
+  .rail-clock{
+    font-family:var(--mono);font-size:42px;font-weight:500;
+    color:var(--gold);line-height:1;margin-bottom:2px;
+    font-variant-numeric:tabular-nums;
+  }
+  .rail-clock-label{font-size:11px;color:var(--muted);margin-bottom:22px;font-family:var(--mono);}
+  .timeline{flex:1;display:flex;flex-direction:column;gap:0;}
+  .seg{
+    position:relative;padding:12px 0 12px 18px;border-left:2px solid var(--line);
+    transition:border-color .3s;
+  }
+  .seg:last-child{border-bottom:none;}
+  .seg::before{
+    content:'';position:absolute;left:-6px;top:14px;width:10px;height:10px;
+    border-radius:50%;background:var(--panel);border:2px solid var(--line);
+    transition:all .3s;
+  }
+  .seg.active{border-left-color:var(--gold);}
+  .seg.active::before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,164,92,.18);}
+  .seg.done{border-left-color:var(--green);}
+  .seg.done::before{background:var(--green);border-color:var(--green);}
+  .seg-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .seg-name{font-size:13.5px;color:var(--ink);font-weight:500;}
+  .seg.done .seg-name{color:var(--muted);}
+  .seg-time{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .seg.active .seg-time{color:var(--gold);}
+  .seg-bar{height:3px;background:var(--line);border-radius:2px;margin-top:7px;overflow:hidden;}
+  .seg-bar-fill{height:100%;background:var(--gold);width:0%;transition:width .9s linear;}
+  .seg.done .seg-bar-fill{background:var(--green);width:100% !important;}
+
+  .rail-foot{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+  .rail-foot-title{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .rail-foot-name{font-family:var(--serif);font-size:15px;color:var(--silver);}
+
+  /* ---------- STAGE ---------- */
+  .stage{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .stage-top{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 48px 0 48px;
+  }
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);}
+  .progress-dots{display:flex;gap:6px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--line);}
+  .dot.on{background:var(--gold);}
+
+  .content{
+    flex:1;overflow-y:auto;padding:8px 48px 24px 48px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .content-inner{max-width:760px;}
+  h1.slide-title{font-family:var(--serif);font-weight:700;font-size:44px;margin:6px 0 18px 0;line-height:1.08;color:var(--ink);}
+  h1.slide-title em{color:var(--gold);font-style:italic;}
+  .lede{font-size:17px;color:var(--silver);line-height:1.6;margin-bottom:28px;max-width:620px;}
+
+  .timer-display{
+    display:flex;align-items:center;gap:22px;margin:8px 0 30px 0;
+  }
+  .timer-num{font-family:var(--mono);font-size:64px;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:-1px;}
+  .timer-num.warn{color:var(--warn);}
+  .timer-controls{display:flex;gap:10px;}
+
+  .btn{
+    font-family:var(--sans);font-size:13.5px;font-weight:500;
+    padding:10px 18px;border-radius:7px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--ink);cursor:pointer;
+    transition:all .15s;
+  }
+  .btn:hover{border-color:var(--gold);}
+  .btn.primary{background:var(--gold);color:#1a1a16;border-color:var(--gold);}
+  .btn.primary:hover{filter:brightness(1.08);}
+  .btn.ghost{background:transparent;}
+  .btn:disabled{opacity:.35;cursor:default;}
+  .btn:disabled:hover{border-color:var(--line);}
+
+  .rule-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+  .rule-list li{
+    display:flex;gap:14px;align-items:flex-start;
+    opacity:0;transform:translateY(6px);
+    animation:reveal .45s ease forwards;
+    font-size:16.5px;line-height:1.5;color:var(--ink);
+  }
+  .rule-list li .num{
+    font-family:var(--mono);color:var(--gold);font-size:13px;
+    border:1px solid var(--line);border-radius:50%;width:26px;height:26px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
+  }
+  @keyframes reveal{to{opacity:1;transform:translateY(0);}}
+
+  .big-banner{
+    font-family:var(--serif);font-style:italic;font-size:26px;color:var(--copper);
+    border-left:3px solid var(--copper);padding-left:18px;margin:18px 0 10px 0;
+  }
+  .note-box{
+    margin-top:24px;font-size:14px;color:var(--muted);
+    border-top:1px solid var(--line);padding-top:16px;max-width:560px;
+  }
+
+  .choice-row{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;}
+  .choice-card{
+    flex:1;min-width:220px;border:1px solid var(--line);border-radius:10px;
+    padding:18px;opacity:0;transform:translateY(6px);animation:reveal .45s ease forwards;
+  }
+  .choice-card .tag{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;}
+  .choice-card p{margin:8px 0 0 0;font-size:15px;line-height:1.5;}
+
+  .category-item{
+    opacity:0;transform:translateY(6px);animation:reveal .45s ease forwards;
+    margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--line);
+  }
+  .category-item:last-child{border-bottom:none;}
+  .category-item .tag{font-family:var(--mono);font-size:11.5px;color:var(--copper);letter-spacing:.1em;text-transform:uppercase;}
+  .category-item p{font-size:18px;margin:6px 0 0 0;color:var(--ink);line-height:1.5;}
+
+  .quote-final{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.4;color:var(--ink);
+    opacity:0;transform:translateY(8px);animation:reveal .55s ease forwards;}
+  .quote-final .hl{color:var(--gold);}
+
+  /* ---------- FOOTER NAV ---------- */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 48px;border-top:1px solid var(--line);background:var(--panel);
+  }
+  .nav-left,.nav-right{display:flex;gap:10px;align-items:center;}
+  .slide-pos{font-family:var(--mono);font-size:12px;color:var(--muted);}
+
+  /* ---------- NOTES PANEL ---------- */
+  .notes-toggle{
+    font-family:var(--mono);font-size:11.5px;color:var(--muted);
+    border:1px solid var(--line);border-radius:6px;padding:8px 14px;
+    background:transparent;cursor:pointer;
+  }
+  .notes-toggle:hover{color:var(--gold);border-color:var(--gold);}
+  .notes-panel{
+    position:fixed;right:0;bottom:0;width:380px;max-width:90vw;
+    background:var(--panel-2);border-left:1px solid var(--line);border-top:1px solid var(--line);
+    border-radius:10px 0 0 0;padding:20px 22px;z-index:50;
+    transform:translateY(110%);transition:transform .3s ease;
+    box-shadow:-10px -10px 30px rgba(0,0,0,.4);
+  }
+  .notes-panel.open{transform:translateY(0);}
+  .notes-panel h3{margin:0 0 8px 0;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--copper);text-transform:uppercase;}
+  .notes-panel p{margin:0;font-size:14.5px;line-height:1.6;color:var(--silver);}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+
+  @media (max-width:880px){
+    .rail{width:230px;min-width:230px;padding:20px 16px;}
+    .stage-top,.content,.nav{padding-left:24px;padding-right:24px;}
+    h1.slide-title{font-size:32px;}
+    .timer-num{font-size:46px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ RAIL ============ -->
+  <div class="rail">
+    <div class="rail-eyebrow">Session clock</div>
+    <div class="rail-clock" id="masterClock">45:00</div>
+    <div class="rail-clock-label">total time remaining</div>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div class="rail-foot">
+      <div class="rail-foot-title">Activity</div>
+      <div class="rail-foot-name">Silent Shape Challenge</div>
+    </div>
+  </div>
+
+  <!-- ============ STAGE ============ -->
+  <div class="stage">
+    <div class="stage-top">
+      <div class="kicker" id="kicker">Setup</div>
+      <div class="progress-dots" id="dots"></div>
+    </div>
+
+    <div class="content"><div class="content-inner" id="content"></div></div>
+
+    <div class="nav">
+      <div class="nav-left">
+        <button class="btn ghost" id="prevBtn">← Back</button>
+        <span class="slide-pos" id="slidePos"></span>
+      </div>
+      <div class="nav-right">
+        <button class="notes-toggle" id="notesToggle">Facilitator notes ▸</button>
+        <button class="btn primary" id="nextBtn">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notes-panel" id="notesPanel">
+  <h3>Facilitator notes</h3>
+  <p id="notesText"></p>
+</div>
+
+<script>
+(function(){
+
+  // ---------------- DATA ----------------
+  var SEGMENTS = [
+    {label:"Introduction",        minutes:5},
+    {label:"Round 1 — Silent Build", minutes:10},
+    {label:"Debrief: Round 1",    minutes:5},
+    {label:"Round 2 — Open Build", minutes:10},
+    {label:"Final Debrief",       minutes:10},
+    {label:"Closing",             minutes:5}
+  ];
+  var TOTAL_SECONDS = 45*60;
+
+  // segIndex: null for untimed setup slide, else index into SEGMENTS
+  var SLIDES = [
+    {
+      segIndex: null,
+      kicker: "Setup · before you start the clock",
+      title: "Silent Shape <em>Challenge</em>",
+      lede: "A 45-minute team-building session on communication, leadership, and problem-solving — built around one simple rule: nobody talks.",
+      body: function(){
+        return ''+
+        '<ul class="rule-list">'+
+          '<li style="animation-delay:.05s"><span class="num">1</span>Set an envelope of shape pieces (or a tangram set) at each table, plus one printed target image — keep the target face-down until the round starts.</li>'+
+          '<li style="animation-delay:.15s"><span class="num">2</span>Confirm table groups of 3–6 people. Every group needs roughly equal piece counts.</li>'+
+          '<li style="animation-delay:.25s"><span class="num">3</span>Objective for the group: recreate the target shape using only the pieces provided — and figure out, without talking, how to work together to do it.</li>'+
+          '<li style="animation-delay:.35s"><span class="num">4</span>Your job as facilitator: explain it once, then get out of the way and watch.</li>'+
+        '</ul>';
+      },
+      notes: "This slide is your setup checklist — cover it before the 45-minute clock starts. Don't reveal the target image yet. Once tables are ready, hit Next to move into Introduction and start the timer."
+    },
+    {
+      segIndex: 0,
+      kicker: "Introduction",
+      title: "Here's how this <em>works</em>",
+      lede: "Explain the rules once. Then go quiet yourself — you're modeling the constraint you're about to put on them.",
+      body: function(){
+        return ''+
+        '<ul class="rule-list">'+
+          '<li style="animation-delay:.05s"><span class="num">1</span>Your goal: recreate the target shape exactly, using only the pieces in your envelope.</li>'+
+          '<li style="animation-delay:.15s"><span class="num">2</span>Rule: no talking. No whispering, no mouthing words, no writing notes. Gestures and pointing only.</li>'+
+          '<li style="animation-delay:.25s"><span class="num">3</span>Everyone at the table must participate — no single person can assemble it alone.</li>'+
+          '<li style="animation-delay:.35s"><span class="num">4</span>We&rsquo;ll stop at 10 minutes whether you finish or not — I&rsquo;m watching how you communicate, not just whether you succeed.</li>'+
+        '</ul>'+
+        '<div class="note-box">Reveal the target image now. Start the Round 1 timer the moment hands touch the pieces.</div>';
+      },
+      notes: "State all four rules in one breath, then stop talking. Resist clarifying questions verbally — if someone asks something, just repeat the rule by pointing back at this slide. The silence starts with you."
+    },
+    {
+      segIndex: 1,
+      kicker: "Round 1 · Silent Build",
+      title: "No talking. <em>Go.</em>",
+      lede: "Teams attempt the build with zero verbal communication.",
+      body: function(){
+        return ''+
+        '<div class="big-banner">Most groups stall here — someone always wants to take charge out loud. Let that friction happen.</div>'+
+        '<div class="note-box">Don&rsquo;t intervene if a group looks stuck or frustrated — that struggle is the point. Just call time at 0:00.</div>';
+      },
+      notes: "Walk the room silently. If a team breaks the no-talking rule, just hold up a finger to your lips — don't lecture. Note who takes a leadership role non-verbally; you'll use it in the debrief."
+    },
+    {
+      segIndex: 2,
+      kicker: "Debrief · Round 1",
+      title: "What just <em>happened</em>?",
+      lede: "Quick gut-reactions — keep this moving, don't over-analyze yet.",
+      body: function(){
+        return ''+
+        '<ul class="rule-list">'+
+          '<li style="animation-delay:.05s"><span class="num">1</span>What was frustrating about that?</li>'+
+          '<li style="animation-delay:.15s"><span class="num">2</span>How did you end up communicating without words?</li>'+
+          '<li style="animation-delay:.25s"><span class="num">3</span>Did a leader emerge? How could you tell?</li>'+
+          '<li style="animation-delay:.35s"><span class="num">4</span>What assumptions did you make about the shape, or about your teammates&rsquo; intentions?</li>'+
+        '</ul>';
+      },
+      notes: "Stay neutral — you're collecting reactions, not grading the round. Call on 2-3 people max per question; you'll go deeper in the Final Debrief. Keep this segment under 5 minutes so Round 2 doesn't get squeezed."
+    },
+    {
+      segIndex: 3,
+      kicker: "Round 2 · Open Build",
+      title: "Same shape. <em>New rules.</em>",
+      lede: "Pick one communication mode for your team before you start.",
+      body: function(){
+        return ''+
+        '<div class="choice-row">'+
+          '<div class="choice-card" style="animation-delay:.05s"><span class="tag">Option A</span><p>Open verbal communication — anyone can talk, anytime.</p></div>'+
+          '<div class="choice-card" style="animation-delay:.2s"><span class="tag">Option B</span><p>One designated speaker — everyone else stays silent and routes through them.</p></div>'+
+        '</div>'+
+        '<div class="note-box">Give each table 15 seconds to choose before you start the clock. Most teams improve dramatically this round — watch for why.</div>';
+      },
+      notes: "Don't pick the mode for them — the choice itself is data for the debrief. If a table can't decide in 15 seconds, that's worth noting too. Start the timer once every table has chosen."
+    },
+    {
+      segIndex: 4,
+      kicker: "Final Debrief",
+      title: "Connecting it to <em>work</em>",
+      lede: "Go slower here. Let a beat of silence sit after each question before someone answers.",
+      body: function(){
+        return ''+
+        '<div class="category-item" style="animation-delay:.05s"><span class="tag">Communication</span><p>What happens on your team when information isn&rsquo;t shared?</p></div>'+
+        '<div class="category-item" style="animation-delay:.2s"><span class="tag">Leadership</span><p>Did leadership emerge naturally this time? Who stepped up, and why?</p></div>'+
+        '<div class="category-item" style="animation-delay:.35s"><span class="tag">Collaboration</span><p>Did everyone contribute? What made that easier or harder than Round 1?</p></div>'+
+        '<div class="category-item" style="animation-delay:.5s"><span class="tag">Problem solving</span><p>Did the team test ideas and adjust, or get stuck repeating the same approach?</p></div>'+
+        '<div class="category-item" style="animation-delay:.65s"><span class="tag">Workplace connection</span><p>How does this compare to how information actually moves through our training and production floor?</p></div>';
+      },
+      notes: "This is where the real learning lands — don't rush it to fill time, and don't pad it if the group runs out of things to say. The workplace-connection question is the one to spend the most time on; it's the actual point of the exercise."
+    },
+    {
+      segIndex: 5,
+      kicker: "Closing",
+      title: "The <em>takeaway</em>",
+      lede: "",
+      body: function(){
+        return ''+
+        '<p class="quote-final">Teams perform better when <span class="hl">communication is clear</span>, <span class="hl">roles are understood</span>, and <span class="hl">everyone contributes</span> toward a shared goal.</p>'+
+        '<div class="note-box">Thanks for building with no instructions and no talking — that&rsquo;s harder than it sounds, and you handled it well.</div>';
+      },
+      notes: "End on the takeaway line, not on logistics or cleanup instructions — say those separately after the session formally closes. Don't let this turn into a checklist wrap-up."
+    }
+  ];
+
+  // ---------------- STATE ----------------
+  var segRemaining = SEGMENTS.map(function(s){ return s.minutes*60; });
+  var segRunning   = SEGMENTS.map(function(){ return false; });
+  var segStarted   = SEGMENTS.map(function(){ return false; });
+  var current = 0;
+
+  var contentEl = document.getElementById('content');
+  var kickerEl = document.getElementById('kicker');
+  var dotsEl = document.getElementById('dots');
+  var timelineEl = document.getElementById('timeline');
+  var masterClockEl = document.getElementById('masterClock');
+  var slidePosEl = document.getElementById('slidePos');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var notesToggle = document.getElementById('notesToggle');
+  var notesPanel = document.getElementById('notesPanel');
+  var notesText = document.getElementById('notesText');
+
+  function fmt(sec){
+    sec = Math.max(0, sec);
+    var m = Math.floor(sec/60), s = sec%60;
+    return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  }
+
+  function buildTimeline(){
+    timelineEl.innerHTML = SEGMENTS.map(function(seg, i){
+      return '<div class="seg" id="seg-'+i+'">'+
+        '<div class="seg-top"><span class="seg-name">'+seg.label+'</span>'+
+        '<span class="seg-time" id="segtime-'+i+'">'+fmt(seg.minutes*60)+'</span></div>'+
+        '<div class="seg-bar"><div class="seg-bar-fill" id="segfill-'+i+'"></div></div>'+
+        '</div>';
+    }).join('');
+  }
+
+  function renderRail(){
+    SEGMENTS.forEach(function(seg, i){
+      var el = document.getElementById('seg-'+i);
+      el.classList.remove('active','done');
+      if (segRemaining[i] <= 0) el.classList.add('done');
+      else if (i === currentSegIndex()) el.classList.add('active');
+      document.getElementById('segtime-'+i).textContent = fmt(segRemaining[i]);
+      var pct = 100 - (segRemaining[i] / (seg.minutes*60) * 100);
+      document.getElementById('segfill-'+i).style.width = pct+'%';
+    });
+    var totalRemaining = segRemaining.reduce(function(a,b){return a+b;},0);
+    masterClockEl.textContent = fmt(totalRemaining);
+  }
+
+  function currentSegIndex(){
+    var s = SLIDES[current].segIndex;
+    return s===null||s===undefined ? -1 : s;
+  }
+
+  function renderDots(){
+    dotsEl.innerHTML = SLIDES.map(function(_, i){
+      return '<span class="dot'+(i===current?' on':'')+'"></span>';
+    }).join('');
+  }
+
+  function renderSlide(){
+    var slide = SLIDES[current];
+    kickerEl.textContent = slide.kicker;
+    slidePosEl.textContent = (current+1)+' / '+SLIDES.length;
+    prevBtn.disabled = current===0;
+    nextBtn.textContent = current===SLIDES.length-1 ? 'Done' : 'Next →';
+    notesText.textContent = slide.notes;
+    renderDots();
+
+    var timerBlock = '';
+    if (slide.segIndex !== null && slide.segIndex !== undefined){
+      var i = slide.segIndex;
+      var low = segRemaining[i] <= 30 && segRemaining[i] > 0;
+      timerBlock = ''+
+        '<div class="timer-display">'+
+          '<div class="timer-num'+(low?' warn':'')+'" id="timerNum">'+fmt(segRemaining[i])+'</div>'+
+          '<div class="timer-controls">'+
+            '<button class="btn primary" id="timerToggle">'+(segRunning[i] ? 'Pause' : (segStarted[i] ? 'Resume' : 'Start timer'))+'</button>'+
+            '<button class="btn ghost" id="timerReset">Reset</button>'+
+          '</div>'+
+        '</div>';
+    }
+
+    contentEl.innerHTML = ''+
+      '<h1 class="slide-title">'+slide.title+'</h1>'+
+      (slide.lede ? '<p class="lede">'+slide.lede+'</p>' : '')+
+      timerBlock+
+      slide.body();
+
+    if (slide.segIndex !== null && slide.segIndex !== undefined){
+      document.getElementById('timerToggle').addEventListener('click', function(){
+        toggleTimer(slide.segIndex);
+      });
+      document.getElementById('timerReset').addEventListener('click', function(){
+        resetTimer(slide.segIndex);
+      });
+    }
+    renderRail();
+  }
+
+  function toggleTimer(i){
+    segRunning[i] = !segRunning[i];
+    if (segRunning[i]) segStarted[i] = true;
+    renderSlide();
+  }
+  function resetTimer(i){
+    segRunning[i] = false;
+    segStarted[i] = false;
+    segRemaining[i] = SEGMENTS[i].minutes*60;
+    renderSlide();
+  }
+
+  // ---------------- TICK ----------------
+  var audioCtx;
+  function chime(){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 660; o.type='sine';
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(.0001, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.18, audioCtx.currentTime+.02);
+      g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+.9);
+      o.start(); o.stop(audioCtx.currentTime+.9);
+    }catch(e){}
+  }
+
+  setInterval(function(){
+    var i = currentSegIndex();
+    var changed = false;
+    if (i>=0 && segRunning[i] && segRemaining[i] > 0){
+      segRemaining[i]--;
+      changed = true;
+      if (segRemaining[i] === 0){
+        segRunning[i] = false;
+        chime();
+      }
+    }
+    if (changed) renderSlide();
+  }, 1000);
+
+  // ---------------- NAV ----------------
+  prevBtn.addEventListener('click', function(){
+    if (current>0){ current--; renderSlide(); }
+  });
+  nextBtn.addEventListener('click', function(){
+    if (current<SLIDES.length-1){ current++; renderSlide(); }
+  });
+  notesToggle.addEventListener('click', function(){
+    notesPanel.classList.toggle('open');
+    notesToggle.textContent = notesPanel.classList.contains('open') ? 'Facilitator notes ▾' : 'Facilitator notes ▸';
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key==='ArrowRight') nextBtn.click();
+    if (e.key==='ArrowLeft') prevBtn.click();
+    if (e.key===' '){
+      var i = currentSegIndex();
+      if (i>=0){ e.preventDefault(); toggleTimer(i); }
+    }
+  });
+
+  buildTimeline();
+  renderSlide();
+})();
+</script>
+</body>
+</html>
