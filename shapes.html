@@ -52,6 +52,10 @@
   .after-note .target-img.lg{width:clamp(160px,22vw,260px);}
   .after-note .target-img svg{display:block;width:100%;height:auto;}
   .after-note .img-cap{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);margin-bottom:10px;}
+  .after-note .target-img svg .hint-lines{opacity:0;transition:opacity .3s ease;}
+  .after-note .target-img.show-hints svg .hint-lines{opacity:1;}
+  .hint-btn{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--copper);border:1px dashed var(--copper);border-radius:20px;padding:7px 14px;background:transparent;cursor:pointer;margin-top:10px;display:inline-block;}
+  .hint-btn:hover{color:var(--gold);border-color:var(--gold);}
   .after-row{display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap;}
 
   .choice-row,.cat-grid{min-height:30px;}
@@ -154,9 +158,9 @@
 <script>
 (function(){
 
-  var SAILBOAT_SVG = '<svg viewBox="0 0 205.4 205.4" xmlns="http://www.w3.org/2000/svg"><path d="M 10 195.4 L 154 195.4 L 118 159.4 Z" fill="currentColor"/><path d="M 10 195.4 L 118 159.4 L 46 159.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 87.4 159.4 L 87.4 51.4 L 76.6 51.4 Z" fill="currentColor"/><path d="M 87.4 159.4 L 87.4 51.4 L 120.7 91.9 Z" fill="currentColor"/><path d="M 87.4 159.4 L 120.7 91.9 L 154 132.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 76.6 87.4 L 52.3 105.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 52.3 105.4 L 28 123.4 Z" fill="currentColor"/><path d="M 87.4 51.4 L 87.4 37.0 L 105.4 44.2 Z" fill="currentColor"/><circle cx="181.0" cy="24.4" r="14.4" fill="#cda663"/></svg>';
+  var SAILBOAT_SVG = '<svg viewBox="0 0 205.4 205.4" xmlns="http://www.w3.org/2000/svg"><path d="M 154.0 195.4 L 10.0 195.4 L 46.0 159.4 L 76.6 159.4 L 28.0 123.4 L 52.3 105.4 L 76.6 87.4 L 76.6 51.4 L 87.4 51.4 L 120.7 91.9 L 154.0 132.4 L 87.4 159.4 L 118.0 159.4 Z" fill="currentColor"/><path d="M 87.4 51.4 L 87.4 37.0 L 105.4 44.2 Z" fill="currentColor"/><circle cx="181.0" cy="24.4" r="14.4" fill="#cda663"/><g class="hint-lines"><line x1="10.0" y1="195.4" x2="118.0" y2="159.4" stroke="#cda663" stroke-width="1.4" stroke-dasharray="4 3"/><line x1="87.4" y1="159.4" x2="120.7" y2="91.9" stroke="#cda663" stroke-width="1.4" stroke-dasharray="4 3"/></g></svg>';
 
-  var ROCKET_SVG = '<svg viewBox="0 0 200 245.0" xmlns="http://www.w3.org/2000/svg"><path d="M 64 190 L 136 190 L 136 64 Z" fill="currentColor"/><path d="M 64 190 L 136 64 L 64 64 Z" fill="currentColor"/><path d="M 64 64 L 100 64 L 100 10 Z" fill="currentColor"/><path d="M 100 64 L 136 64 L 100 10 Z" fill="currentColor"/><path d="M 64 190 L 64 136 L 37.0 163.0 Z" fill="currentColor"/><path d="M 64 190 L 37.0 163.0 L 10 190 Z" fill="currentColor"/><path d="M 136 190 L 136 136 L 163.0 163.0 Z" fill="currentColor"/><path d="M 136 190 L 163.0 163.0 L 190 190 Z" fill="currentColor"/><path d="M 64 190 L 136 190 L 100 235.0 Z" fill="currentColor"/></svg>';
+  var ROCKET_SVG = '<svg viewBox="0 0 200.0 245.0" xmlns="http://www.w3.org/2000/svg"><path d="M 64.0 190.0 L 10.0 190.0 L 37.0 163.0 L 64.0 136.0 L 64.0 64.0 L 100.0 10.0 L 136.0 64.0 L 136.0 136.0 L 163.0 163.0 L 190.0 190.0 L 136.0 190.0 L 100.0 235.0 Z" fill="currentColor"/><g class="hint-lines"><line x1="64.0" y1="190.0" x2="136.0" y2="64.0" stroke="#cda663" stroke-width="1.4" stroke-dasharray="4 3"/><line x1="100.0" y1="64.0" x2="100.0" y2="10.0" stroke="#cda663" stroke-width="1.4" stroke-dasharray="4 3"/></g></svg>';
 
   // type: 'list' | 'cards' | 'choice' | 'quote' | 'none'
   var SLIDES = [
@@ -193,7 +197,7 @@
         "Everyone must participate.",
         "10 minutes. Ready or not."
       ],
-      after:"<div class='after-row'><div><div class='img-cap'>Target — reveal now</div><div class='target-img'>"+SAILBOAT_SVG+"</div></div></div>",
+      after:"<div class='after-row'><div><div class='img-cap'>Target — reveal now</div><div class='target-img' id='targetImg'>"+SAILBOAT_SVG+"</div><button class='hint-btn' id='hintBtn' onclick=\"event.stopPropagation(); this.parentElement.querySelector('.target-img').classList.toggle('show-hints'); this.textContent = this.parentElement.querySelector('.target-img').classList.contains('show-hints') ? 'Hide hint' : 'Stuck? Show 2 lines';\">Stuck? Show 2 lines</button></div></div>",
       notes:"State the rules once, then go quiet yourself. Don't answer questions verbally — just point back at the rule. Reveal the physical pieces + image together."
     },
     {
