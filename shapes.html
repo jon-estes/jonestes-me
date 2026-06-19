@@ -153,9 +153,9 @@
 <script>
 (function(){
 
-  var SAILBOAT_SVG = '<svg viewBox="0 0 205.4 205.4" xmlns="http://www.w3.org/2000/svg"><path d="M 10 195.4 L 154 195.4 L 118 159.4 L 46 159.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 87.4 159.4 L 87.4 51.4 L 76.6 51.4 Z" fill="currentColor"/><path d="M 87.4 159.4 L 87.4 51.4 L 154 132.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 76.6 87.4 L 28 123.4 Z" fill="currentColor"/><path d="M 87.4 51.4 L 87.4 37.0 L 105.4 44.2 Z" fill="currentColor"/><circle cx="181.0" cy="24.4" r="14.4" fill="#cda663"/></svg>';
+  var SAILBOAT_SVG = '<svg viewBox="0 0 205.4 205.4" xmlns="http://www.w3.org/2000/svg"><path d="M 10 195.4 L 154 195.4 L 118 159.4 Z" fill="currentColor"/><path d="M 10 195.4 L 118 159.4 L 46 159.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 87.4 159.4 L 87.4 51.4 L 76.6 51.4 Z" fill="currentColor"/><path d="M 87.4 159.4 L 87.4 51.4 L 120.7 91.9 Z" fill="currentColor"/><path d="M 87.4 159.4 L 120.7 91.9 L 154 132.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 76.6 87.4 L 52.3 105.4 Z" fill="currentColor"/><path d="M 76.6 159.4 L 52.3 105.4 L 28 123.4 Z" fill="currentColor"/><path d="M 87.4 51.4 L 87.4 37.0 L 105.4 44.2 Z" fill="currentColor"/><circle cx="181.0" cy="24.4" r="14.4" fill="#cda663"/></svg>';
 
-  var ROCKET_SVG = '<svg viewBox="0 0 200 245.0" xmlns="http://www.w3.org/2000/svg"><path d="M 64 190 L 136 190 L 136 64 L 64 64 Z" fill="currentColor"/><path d="M 64 64 L 100 64 L 100 10 Z" fill="currentColor"/><path d="M 100 64 L 136 64 L 100 10 Z" fill="currentColor"/><path d="M 64 190 L 64 136 L 10 190 Z" fill="currentColor"/><path d="M 136 190 L 136 136 L 190 190 Z" fill="currentColor"/><path d="M 64 190 L 136 190 L 100 235.0 Z" fill="currentColor"/></svg>';
+  var ROCKET_SVG = '<svg viewBox="0 0 200 245.0" xmlns="http://www.w3.org/2000/svg"><path d="M 64 190 L 136 190 L 136 64 Z" fill="currentColor"/><path d="M 64 190 L 136 64 L 64 64 Z" fill="currentColor"/><path d="M 64 64 L 100 64 L 100 10 Z" fill="currentColor"/><path d="M 100 64 L 136 64 L 100 10 Z" fill="currentColor"/><path d="M 64 190 L 64 136 L 37.0 163.0 Z" fill="currentColor"/><path d="M 64 190 L 37.0 163.0 L 10 190 Z" fill="currentColor"/><path d="M 136 190 L 136 136 L 163.0 163.0 Z" fill="currentColor"/><path d="M 136 190 L 163.0 163.0 L 190 190 Z" fill="currentColor"/><path d="M 64 190 L 136 190 L 100 235.0 Z" fill="currentColor"/></svg>';
 
   // type: 'list' | 'cards' | 'choice' | 'quote' | 'none'
   var SLIDES = [
@@ -241,10 +241,11 @@
       type:"quote",
       items:[
         "<span class='recap-mark'>Today, in 45 minutes:</span> <b>communication</b> · <b>problem-solving</b> · <b>trust</b> · <b>teamwork</b> · <b>leadership</b>.",
-        "Teams perform better when <span class='hl'>communication is clear</span>, <span class='hl'>roles are understood</span>, and <span class='hl'>everyone contributes</span>."
+        "Teams perform better when <span class='hl'>communication is clear</span>, <span class='hl'>roles are understood</span>, and <span class='hl'>everyone contributes</span>.",
+        "And for the person running it: this is facilitation and time-management practice too."
       ],
       after:"<div class='footnote' style='font-size:14.5px;color:var(--muted2);'>Thanks for building with no instructions and no talking — that&rsquo;s harder than it sounds, and you handled it well.</div>",
-      notes:"End on the takeaway, not logistics. Don't let this turn into a wrap-up checklist."
+      notes:"End on the takeaway, not logistics. Don't let this turn into a wrap-up checklist. The closing line about facilitation/time-management is for your own records — ties directly back to the assignment's stated goal, not just what the team practiced."
     }
   ];
 
@@ -293,7 +294,7 @@
     if (type==='list') return '<li><span class="num">'+idx+'</span><span>'+html+'</span></li>';
     if (type==='cards') return '<div class="cat-card">'+html+'</div>';
     if (type==='choice') return '<div class="choice-card">'+html+'</div>';
-    if (type==='quote') return '<p class="quote-final'+(idx===1?' recap':'')+'">'+html+'</p>';
+    if (type==='quote') return '<p class="quote-final'+(idx!==2?' recap':'')+'">'+html+'</p>';
     return '<div>'+html+'</div>';
   }
 
@@ -440,8 +441,8 @@
   }, 1000);
 
   document.addEventListener('keydown', function(e){
-    if (e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); advance(); }
-    if (e.key==='ArrowLeft'){ e.preventDefault(); back(); }
+    if (e.key==='ArrowRight' || e.key==='ArrowDown' || e.key==='PageDown' || e.key===' '){ e.preventDefault(); advance(); }
+    if (e.key==='ArrowLeft' || e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); back(); }
     if (e.key.toLowerCase()==='n') notesToggle.click();
     if (e.key.toLowerCase()==='f') fsBtn.click();
     if (e.key.toLowerCase()==='t') ctToggle.click();
