@@ -228,7 +228,7 @@
 </div>
 <footer>Made with 💜 for Clementine Xiong's 4th Birthday · July 12, 2026</footer>
 <script>
-  const STORE_URL   = 'https://jonestes.me/.netlify/functions/store';
+  const STORE_URL   = '/.netlify/functions/store';
   const STORE_FIELD = 'clementine.checklist';
   let saveTimer = null;
 
@@ -238,10 +238,15 @@
       if (r.ok) {
         const data = await r.json();
         return { state: JSON.parse(data[STORE_FIELD] || '[]'), online: true };
+      } else {
+        setSyncStatus('err-' + r.status);
+        return { state: [], online: false };
       }
-    } catch(e) {}
-    try { return { state: JSON.parse(localStorage.getItem(STORE_FIELD) || '[]'), online: false }; }
-    catch(e) { return { state: [], online: false }; }
+    } catch(e) {
+      setSyncStatus('err: ' + e.message);
+      try { return { state: JSON.parse(localStorage.getItem(STORE_FIELD) || '[]'), online: false }; }
+      catch(e2) { return { state: [], online: false }; }
+    }
   }
 
   async function persistState(state) {
@@ -260,9 +265,10 @@
   function setSyncStatus(s) {
     const el = document.getElementById('syncStatus');
     if (!el) return;
-    if (s === 'synced')       { el.textContent = '✓ Synced across all devices'; el.style.color = '#a3e635'; }
-    else if (s === 'saving')  { el.textContent = '↑ Saving…';                   el.style.color = '#c084fc'; }
-    else                      { el.textContent = '⚠ Offline — saved locally';   el.style.color = '#fbbf24'; }
+    if (s === 'synced')            { el.textContent = '✓ Synced across all devices'; el.style.color = '#a3e635'; }
+    else if (s === 'saving')       { el.textContent = '↑ Saving…';                   el.style.color = '#c084fc'; }
+    else if (s.startsWith('err'))  { el.textContent = '⚠ Error: ' + s;              el.style.color = '#f87171'; }
+    else                           { el.textContent = '⚠ Offline — saved locally';  el.style.color = '#fbbf24'; }
   }
 
   function getCheckboxState() {
