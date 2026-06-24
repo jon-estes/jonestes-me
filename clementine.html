@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clementine's 4th Birthday Party Checklist ⚔️💜</title>
+  <title>Clementine's 4th Birthday Party Checklist</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a0030, #3a0060, #1a0030); min-height: 100vh; color: #f0e6ff; padding: 24px 16px 60px; }
@@ -13,55 +13,58 @@
     .progress-bar-wrap { background: #2d004d; border-radius: 99px; height: 14px; width: 100%; max-width: 600px; margin: 16px auto 0; overflow: hidden; border: 1px solid #7c3aed; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
     .progress-label { text-align: center; color: #c084fc; font-size: 0.85rem; margin-top: 6px; }
+    #syncStatus { font-size: 0.75rem; margin-top: 6px; color: #c084fc; text-align: center; min-height: 1.2em; }
     .controls { display: flex; justify-content: center; gap: 12px; margin: 20px 0 32px; flex-wrap: wrap; }
     .controls button { background: #4c0082; border: 1px solid #7c3aed; color: #e0aaff; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: background 0.2s; }
     .controls button:hover { background: #6d28d9; }
     .section { background: rgba(60,0,100,0.5); border: 1px solid #6d28d9; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; max-width: 780px; margin-left: auto; margin-right: auto; }
     .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; cursor: pointer; user-select: none; }
     .section-header h2 { font-size: 1.15rem; color: #e0aaff; flex: 1; }
-    .section-header .emoji { font-size: 1.4rem; }
+    .emoji { font-size: 1.4rem; }
     .section-count { font-size: 0.8rem; color: #a78bfa; background: #2d004d; border-radius: 99px; padding: 2px 10px; }
-    .toggle-arrow { color: #a78bfa; font-size: 0.9rem; transition: transform 0.2s; }
-    .section.collapsed .toggle-arrow { transform: rotate(-90deg); }
+    .arrow { color: #a78bfa; font-size: 0.9rem; transition: transform 0.2s; }
+    .section.collapsed .arrow { transform: rotate(-90deg); }
     .section.collapsed .items { display: none; }
     .items { list-style: none; }
     .items li { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(109,40,217,0.25); }
     .items li:last-child { border-bottom: none; }
-    .items li input[type="checkbox"] { appearance: none; width: 20px; height: 20px; min-width: 20px; border: 2px solid #7c3aed; border-radius: 5px; cursor: pointer; position: relative; margin-top: 1px; transition: background 0.2s, border-color 0.2s; }
+    .items li input[type="checkbox"] { appearance: none; width: 20px; height: 20px; min-width: 20px; border: 2px solid #7c3aed; border-radius: 5px; cursor: pointer; position: relative; margin-top: 1px; }
     .items li input[type="checkbox"]:checked { background: #7c3aed; border-color: #a855f7; }
     .items li input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: white; font-size: 13px; top: -1px; left: 2px; }
     .item-text { flex: 1; font-size: 0.95rem; line-height: 1.45; color: #e9d5ff; }
     .item-text.done { text-decoration: line-through; color: #7c5aaa; }
     .item-note { display: block; font-size: 0.8rem; color: #9d7bc2; margin-top: 2px; }
     .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 99px; font-weight: 600; white-space: nowrap; margin-top: 2px; }
-    .badge.buy { background: #1e1b4b; color: #a5b4fc; border: 1px solid #4338ca; }
-    .badge.diy { background: #1a2e05; color: #86efac; border: 1px solid #16a34a; }
+    .badge.buy  { background: #1e1b4b; color: #a5b4fc; border: 1px solid #4338ca; }
+    .badge.diy  { background: #1a2e05; color: #86efac; border: 1px solid #16a34a; }
     .badge.food { background: #2d1b00; color: #fcd34d; border: 1px solid #d97706; }
     .badge.todo { background: #2d0013; color: #fda4af; border: 1px solid #be123c; }
     footer { text-align: center; margin-top: 40px; color: #7c5aaa; font-size: 0.85rem; }
-    @media print { body { background: white; color: #111; padding: 16px; } .section { border: 1px solid #ccc; background: white; } .section-header h2 { color: #333; } .item-text { color: #222; } .controls { display: none; } }
   </style>
 </head>
 <body>
+
 <header>
   <h1>⚔️ Clementine's 4th Birthday ⚔️</h1>
   <p>KPop Demon Hunters · Splash Pad · July 12th, 11:30 AM – 2:00 PM</p>
   <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill"></div></div>
-  <div class="progress-label" id="progressLabel">0 of 0 items checked</div>
-  <div id="syncStatus" style="font-size:0.75rem;margin-top:6px;color:#c084fc;">Loading…</div>
+  <div class="progress-label" id="progressLabel">Loading…</div>
+  <div id="syncStatus">Connecting…</div>
 </header>
+
 <div class="controls">
   <button onclick="checkAll()">✅ Check All</button>
   <button onclick="uncheckAll()">🔄 Reset All</button>
   <button onclick="window.print()">🖨️ Print</button>
   <button onclick="toggleAll()">📂 Collapse / Expand All</button>
 </div>
-<!-- VENUE & LOGISTICS -->
+
+<!-- VENUE -->
 <div class="section" id="s-venue">
-  <div class="section-header" onclick="toggleSection('s-venue')"><span class="emoji">📍</span><h2>Venue & Logistics</h2><span class="section-count" id="count-s-venue">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-venue')"><span class="emoji">📍</span><h2>Venue &amp; Logistics</h2><span class="section-count" id="count-s-venue">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
     <li><input type="checkbox"><div><span class="item-text">Confirm Harry Crabb Splash Pad reservation / availability for July 12</span><span class="badge todo">TO DO</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Reserve a covered picnic area / pavilion nearby <span class="item-note">Great for shade, food table, gifts</span></span><span class="badge todo">TO DO</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Reserve a covered picnic area / pavilion nearby<span class="item-note">Great for shade, food table, gifts</span></span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Check parking situation at Harry Crabb Park</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Send final guest reminder 1 week before (July 5)</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Confirm final headcount from RSVP site by June 30</span><span class="badge todo">TO DO</span></div></li>
@@ -72,32 +75,34 @@
     <li><input type="checkbox"><div><span class="item-text">Designate a person to help day-of (co-host, family member)</span><span class="badge todo">TO DO</span></div></li>
   </ul>
 </div>
+
 <!-- DECORATIONS -->
 <div class="section" id="s-deco">
-  <div class="section-header" onclick="toggleSection('s-deco')"><span class="emoji">🎀</span><h2>Decorations</h2><span class="section-count" id="count-s-deco">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-deco')"><span class="emoji">🎀</span><h2>Decorations</h2><span class="section-count" id="count-s-deco">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
-    <li><input type="checkbox"><div><span class="item-text">Purple, pink & black balloon arch or balloon cluster</span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Purple, pink &amp; black balloon arch or balloon cluster</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Balloon bouquets for tables (purple, lilac, hot pink)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">"Clementine Turns 4" banner / custom banner</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">KPop / Demon Hunter–themed backdrop for photos <span class="item-note">Check Amazon, Etsy, or print a custom one</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">KPop / Demon Hunter themed backdrop for photos<span class="item-note">Check Amazon, Etsy, or print a custom one</span></span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Number "4" balloon (jumbo foil, purple or gold)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Table covers in theme colors (purple / black)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Centerpieces for food/gift tables (floral or themed props)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Streamers (purple, pink, black)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Star / sparkle confetti for tables</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Birthday girl sash + crown / tiara for Clementine</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Blow-up portable balloon pump</span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Portable balloon pump</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Weights / stakes for balloons (outdoor / wind)</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">KPop lightstick props or foam swords as décor / photo props</span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">KPop lightstick props or foam swords as decor / photo props</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Themed cutouts or standees (demon hunter / KPop)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Glitter / iridescent paper fans for backdrop display</span><span class="badge buy">BUY</span></div></li>
   </ul>
 </div>
-<!-- CAKE & DESSERTS -->
+
+<!-- CAKE -->
 <div class="section" id="s-cake">
-  <div class="section-header" onclick="toggleSection('s-cake')"><span class="emoji">🎂</span><h2>Cake & Desserts</h2><span class="section-count" id="count-s-cake">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-cake')"><span class="emoji">🎂</span><h2>Cake &amp; Desserts</h2><span class="section-count" id="count-s-cake">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
-    <li><input type="checkbox"><div><span class="item-text">Order custom birthday cake — KPop Demon Hunter theme, serves ~25 <span class="item-note">Order at least 2 weeks ahead; confirm allergens</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Order custom birthday cake — KPop Demon Hunter theme, serves ~25<span class="item-note">Order at least 2 weeks ahead; confirm allergens</span></span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Order or make smash cake for Clementine (small individual cake)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Cake topper (sword, "4", or KPop themed)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Number "4" birthday candles + lighter</span><span class="badge buy">BUY</span></div></li>
@@ -105,18 +110,19 @@
     <li><input type="checkbox"><div><span class="item-text">Cake stand or display tray</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Cake knife + server set</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Dessert table: cookies, Rice Krispie treats, or themed macarons</span><span class="badge food">FOOD</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Ice cream or popsicles (she loves ice cream!) <span class="item-note">Keep in cooler; buy dry ice or lots of regular ice</span></span><span class="badge food">FOOD</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Ice cream or popsicles (she loves ice cream!)<span class="item-note">Keep in cooler; buy dry ice or lots of regular ice</span></span><span class="badge food">FOOD</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Cooler + ice for keeping desserts cold</span><span class="badge buy">BUY</span></div></li>
   </ul>
 </div>
-<!-- FOOD & DRINKS -->
+
+<!-- FOOD -->
 <div class="section" id="s-food">
-  <div class="section-header" onclick="toggleSection('s-food')"><span class="emoji">🌮</span><h2>Food & Drinks</h2><span class="section-count" id="count-s-food">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-food')"><span class="emoji">🌮</span><h2>Food &amp; Drinks</h2><span class="section-count" id="count-s-food">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
-    <li><input type="checkbox"><div><span class="item-text">Plan main food: sandwiches, pizza, or hot dogs <span class="item-note">Splash pad = easy finger food; avoid anything messy</span></span><span class="badge food">FOOD</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Plan main food: sandwiches, pizza, or hot dogs<span class="item-note">Splash pad = easy finger food; avoid anything messy</span></span><span class="badge food">FOOD</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Fruit skewers / fruit platter (kid-friendly, refreshing)</span><span class="badge food">FOOD</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Veggie tray + dip</span><span class="badge food">FOOD</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Chips & snacks</span><span class="badge food">FOOD</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Chips &amp; snacks</span><span class="badge food">FOOD</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Water bottles for all guests (label them for splash pad)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Juice boxes / Capri Suns for kids</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Lemonade or punch for adults</span><span class="badge food">FOOD</span></div></li>
@@ -129,9 +135,10 @@
     <li><input type="checkbox"><div><span class="item-text">Paper towels + wet wipes for messy hands</span><span class="badge buy">BUY</span></div></li>
   </ul>
 </div>
-<!-- PARTY FAVORS -->
+
+<!-- FAVORS -->
 <div class="section" id="s-favors">
-  <div class="section-header" onclick="toggleSection('s-favors')"><span class="emoji">🎁</span><h2>Party Favors</h2><span class="section-count" id="count-s-favors">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-favors')"><span class="emoji">🎁</span><h2>Party Favors</h2><span class="section-count" id="count-s-favors">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
     <li><input type="checkbox"><div><span class="item-text">Themed favor bags / boxes (purple, KPop or demon hunter design)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Mini lightstick / glow stick wands for each kid</span><span class="badge buy">BUY</span></div></li>
@@ -146,12 +153,13 @@
     <li><input type="checkbox"><div><span class="item-text">Assemble favor bags (night before)</span><span class="badge diy">DIY</span></div></li>
   </ul>
 </div>
+
 <!-- PINATA -->
 <div class="section" id="s-pinata">
-  <div class="section-header" onclick="toggleSection('s-pinata')"><span class="emoji">🪅</span><h2>Piñata</h2><span class="section-count" id="count-s-pinata">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-pinata')"><span class="emoji">🪅</span><h2>Piñata</h2><span class="section-count" id="count-s-pinata">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
-    <li><input type="checkbox"><div><span class="item-text">Buy or order piñata (star shape, unicorn, or custom themed) <span class="item-note">Check party stores or order on Amazon 2+ weeks early</span></span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Fill with piñata candy + small toys <span class="item-note">Mini erasers, temporary tattoos, wrapped candy</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Buy or order piñata (star shape, unicorn, or custom themed)<span class="item-note">Check party stores or order on Amazon 2+ weeks early</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Fill with piñata candy + small toys<span class="item-note">Mini erasers, temporary tattoos, wrapped candy</span></span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Piñata bat / stick (or bring your own)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Blindfold</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Strong rope to hang piñata from a tree at the park</span><span class="badge buy">BUY</span></div></li>
@@ -159,32 +167,34 @@
     <li><input type="checkbox"><div><span class="item-text">Check park rules on piñatas before the party</span><span class="badge todo">TO DO</span></div></li>
   </ul>
 </div>
+
 <!-- ACTIVITIES -->
 <div class="section" id="s-games">
-  <div class="section-header" onclick="toggleSection('s-games')"><span class="emoji">🎮</span><h2>Activities & Games</h2><span class="section-count" id="count-s-games">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-games')"><span class="emoji">🎮</span><h2>Activities &amp; Games</h2><span class="section-count" id="count-s-games">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
-    <li><input type="checkbox"><div><span class="item-text">Splash pad play (main activity — free!) <span class="item-note">Bring extra towels and a change of clothes per kid</span></span><span class="badge todo">TO DO</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Set up KPop dance battle / freeze dance area <span class="item-note">Bluetooth speaker + playlist</span></span><span class="badge diy">DIY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Splash pad play (main activity — free!)<span class="item-note">Bring extra towels and a change of clothes per kid</span></span><span class="badge todo">TO DO</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Set up KPop dance battle / freeze dance area<span class="item-note">Bluetooth speaker + playlist</span></span><span class="badge diy">DIY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Create a KPop / Demon Hunters playlist on Spotify</span><span class="badge diy">DIY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Bluetooth speaker (waterproof if possible)</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Ring toss or carnival-style game</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Bubble machine + bubble solution <span class="item-note">Kids go wild for these, especially at a splash pad</span></span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Water balloon station <span class="item-note">Pre-fill balloons and bring in a bucket</span></span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Face painting / glitter tattoo station <span class="item-note">DIY with face paints or hire someone</span></span><span class="badge diy">DIY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Bubble machine + bubble solution<span class="item-note">Kids go wild for these, especially at a splash pad</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Water balloon station<span class="item-note">Pre-fill balloons and bring in a bucket</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Face painting / glitter tattoo station<span class="item-note">DIY with face paints or hire someone</span></span><span class="badge diy">DIY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Photo booth corner with props (swords, crowns, KPop signs)</span><span class="badge diy">DIY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Prize bag for game winners</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Chalk for drawing / hopscotch on pavement</span><span class="badge buy">BUY</span></div></li>
   </ul>
 </div>
+
 <!-- SPLASH PAD -->
 <div class="section" id="s-splash">
-  <div class="section-header" onclick="toggleSection('s-splash')"><span class="emoji">💦</span><h2>Splash Pad Essentials</h2><span class="section-count" id="count-s-splash">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-splash')"><span class="emoji">💦</span><h2>Splash Pad Essentials</h2><span class="section-count" id="count-s-splash">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
     <li><input type="checkbox"><div><span class="item-text">Plenty of towels (bring extras for guests who forget)</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Sunscreen — SPF 50+ (spray + lotion) <span class="item-note">Reapply every 90 min in July heat</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Sunscreen — SPF 50+ (spray + lotion)<span class="item-note">Reapply every 90 min in July heat</span></span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Rash guards / swim shirts for kids who burn easily</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Water shoes / sandals for kids (hot pavement)</span><span class="badge buy">BUY</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Pop-up shade tent / canopy <span class="item-note">July in Roseville = hot; shade is critical</span></span><span class="badge buy">BUY</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Pop-up shade tent / canopy<span class="item-note">July in Roseville = hot; shade is critical</span></span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Portable fan or misting fan</span><span class="badge buy">BUY</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Change of dry clothes for each child</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Waterproof bag for wet clothes</span><span class="badge buy">BUY</span></div></li>
@@ -194,9 +204,10 @@
     <li><input type="checkbox"><div><span class="item-text">Bug spray</span><span class="badge buy">BUY</span></div></li>
   </ul>
 </div>
-<!-- PHOTOGRAPHY -->
+
+<!-- PHOTOS -->
 <div class="section" id="s-photos">
-  <div class="section-header" onclick="toggleSection('s-photos')"><span class="emoji">📸</span><h2>Photography & Memories</h2><span class="section-count" id="count-s-photos">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-photos')"><span class="emoji">📸</span><h2>Photography &amp; Memories</h2><span class="section-count" id="count-s-photos">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
     <li><input type="checkbox"><div><span class="item-text">Designate a photographer for the party</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Charge all cameras / phones night before</span><span class="badge todo">TO DO</span></div></li>
@@ -207,13 +218,14 @@
     <li><input type="checkbox"><div><span class="item-text">Record Clementine opening gifts + blowing out candles</span><span class="badge todo">TO DO</span></div></li>
   </ul>
 </div>
-<!-- DAY-OF SCHEDULE -->
+
+<!-- SCHEDULE -->
 <div class="section" id="s-schedule">
-  <div class="section-header" onclick="toggleSection('s-schedule')"><span class="emoji">🕛</span><h2>Day-Of Schedule</h2><span class="section-count" id="count-s-schedule">0/0</span><span class="toggle-arrow">▾</span></div>
+  <div class="section-header" onclick="toggleSection('s-schedule')"><span class="emoji">🕛</span><h2>Day-Of Schedule</h2><span class="section-count" id="count-s-schedule">0/0</span><span class="arrow">▾</span></div>
   <ul class="items">
     <li><input type="checkbox"><div><span class="item-text">Arrive 45–60 min early to set up (10:30–10:45 AM)</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Set up canopy, tables, chairs</span><span class="badge todo">TO DO</span></div></li>
-    <li><input type="checkbox"><div><span class="item-text">Set up decorations & balloon arch</span><span class="badge todo">TO DO</span></div></li>
+    <li><input type="checkbox"><div><span class="item-text">Set up decorations &amp; balloon arch</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Set up food table + drinks</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">Set up gift table</span><span class="badge todo">TO DO</span></div></li>
     <li><input type="checkbox"><div><span class="item-text">11:30 — Welcome guests, splash pad open</span><span class="badge todo">TO DO</span></div></li>
@@ -226,133 +238,137 @@
     <li><input type="checkbox"><div><span class="item-text">Leave park cleaner than you found it 💜</span><span class="badge todo">TO DO</span></div></li>
   </ul>
 </div>
+
 <footer>Made with 💜 for Clementine Xiong's 4th Birthday · July 12, 2026</footer>
+
 <script>
-  const STORE_URL   = '/.netlify/functions/store';
-  const STORE_FIELD = 'clementine.checklist';
-  let saveTimer = null;
+const STORE_URL   = '/.netlify/functions/store';
+const STORE_FIELD = 'clementine.checklist';
+let saveTimer = null;
 
-  async function fetchState() {
-    try {
-      const r = await fetch(STORE_URL, { cache: 'no-store' });
-      if (r.ok) {
-        const data = await r.json();
-        return { state: JSON.parse(data[STORE_FIELD] || '[]'), online: true };
-      } else {
-        setSyncStatus('err-' + r.status);
-        return { state: [], online: false };
-      }
-    } catch(e) {
-      setSyncStatus('err: ' + e.message);
-      try { return { state: JSON.parse(localStorage.getItem(STORE_FIELD) || '[]'), online: false }; }
-      catch(e2) { return { state: [], online: false }; }
-    }
-  }
+function localLoad() {
+  try { return JSON.parse(localStorage.getItem(STORE_FIELD) || '[]'); } catch(e) { return []; }
+}
 
-  async function persistState(state) {
-    const packed = JSON.stringify(state);
-    try { localStorage.setItem(STORE_FIELD, packed); } catch(e) {}
-    try {
-      const r = await fetch(STORE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ updates: { [STORE_FIELD]: packed } }),
-      });
-      setSyncStatus(r.ok ? 'synced' : 'offline');
-    } catch(e) { setSyncStatus('offline'); }
-  }
+function localSave(state) {
+  try { localStorage.setItem(STORE_FIELD, JSON.stringify(state)); } catch(e) {}
+}
 
-  function setSyncStatus(s) {
-    const el = document.getElementById('syncStatus');
-    if (!el) return;
-    if (s === 'synced')            { el.textContent = '✓ Synced across all devices'; el.style.color = '#a3e635'; }
-    else if (s === 'saving')       { el.textContent = '↑ Saving…';                   el.style.color = '#c084fc'; }
-    else if (s.startsWith('err'))  { el.textContent = '⚠ Error: ' + s;              el.style.color = '#f87171'; }
-    else                           { el.textContent = '⚠ Offline — saved locally';  el.style.color = '#fbbf24'; }
-  }
+async function serverLoad() {
+  const r = await fetch(STORE_URL, { cache: 'no-store' });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const data = await r.json();
+  return data[STORE_FIELD] ? JSON.parse(data[STORE_FIELD]) : null;
+}
 
-  function getCheckboxState() {
-    const s = [];
-    document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => s.push(cb.checked));
-    return s;
-  }
-
-  function applyState(state) {
-    const cbs = document.querySelectorAll('.items input[type="checkbox"]');
-    cbs.forEach((cb, i) => {
-      cb.checked = !!state[i];
-      const label = cb.closest('li').querySelector('.item-text');
-      if (cb.checked) label.classList.add('done'); else label.classList.remove('done');
-    });
-    updateProgress();
-  }
-
-  function scheduleSave() {
-    setSyncStatus('saving');
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => persistState(getCheckboxState()), 800);
-  }
-
-  function updateProgress() {
-    const all     = document.querySelectorAll('.items input[type="checkbox"]');
-    const checked = document.querySelectorAll('.items input[type="checkbox"]:checked');
-    const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressLabel').textContent =
-      checked.length + ' of ' + all.length + ' items checked (' + pct + '%)';
-    updateSectionCounts();
-  }
-
-  function updateSectionCounts() {
-    document.querySelectorAll('.section').forEach(section => {
-      const total = section.querySelectorAll('input[type="checkbox"]').length;
-      const done  = section.querySelectorAll('input[type="checkbox"]:checked').length;
-      const el = document.getElementById('count-' + section.id);
-      if (el) el.textContent = done + '/' + total;
-    });
-  }
-
-  document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', function() {
-      const label = this.closest('li').querySelector('.item-text');
-      if (this.checked) label.classList.add('done'); else label.classList.remove('done');
-      updateProgress();
-      scheduleSave();
-    });
+async function serverSave(state) {
+  const r = await fetch(STORE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ updates: { [STORE_FIELD]: JSON.stringify(state) } }),
   });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+}
 
-  function toggleSection(id) { document.getElementById(id).classList.toggle('collapsed'); }
+function setStatus(msg, color) {
+  const el = document.getElementById('syncStatus');
+  if (el) { el.textContent = msg; el.style.color = color || '#c084fc'; }
+}
 
-  let allCollapsed = false;
-  function toggleAll() {
-    allCollapsed = !allCollapsed;
-    document.querySelectorAll('.section').forEach(s => {
-      if (allCollapsed) s.classList.add('collapsed'); else s.classList.remove('collapsed');
-    });
+function getState() {
+  const s = [];
+  document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => s.push(cb.checked));
+  return s;
+}
+
+function applyState(state) {
+  document.querySelectorAll('.items input[type="checkbox"]').forEach((cb, i) => {
+    cb.checked = !!state[i];
+    cb.closest('li').querySelector('.item-text').classList.toggle('done', !!state[i]);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const all     = document.querySelectorAll('.items input[type="checkbox"]');
+  const checked = document.querySelectorAll('.items input[type="checkbox"]:checked');
+  const pct = all.length ? Math.round(checked.length / all.length * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    checked.length + ' of ' + all.length + ' items checked (' + pct + '%)';
+  document.querySelectorAll('.section').forEach(sec => {
+    const t = sec.querySelectorAll('input[type="checkbox"]').length;
+    const d = sec.querySelectorAll('input[type="checkbox"]:checked').length;
+    const el = document.getElementById('count-' + sec.id);
+    if (el) el.textContent = d + '/' + t;
+  });
+}
+
+function scheduleSave() {
+  setStatus('↑ Saving…', '#c084fc');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const state = getState();
+    localSave(state);
+    try {
+      await serverSave(state);
+      setStatus('✓ Synced across all devices', '#a3e635');
+    } catch(e) {
+      setStatus('⚠ Saved locally only — ' + e.message, '#fbbf24');
+    }
+  }, 800);
+}
+
+document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', function() {
+    this.closest('li').querySelector('.item-text').classList.toggle('done', this.checked);
+    updateProgress();
+    scheduleSave();
+  });
+});
+
+function toggleSection(id) { document.getElementById(id).classList.toggle('collapsed'); }
+
+let allCollapsed = false;
+function toggleAll() {
+  allCollapsed = !allCollapsed;
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('collapsed', allCollapsed));
+}
+
+function checkAll() {
+  document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
+    cb.checked = true;
+    cb.closest('li').querySelector('.item-text').classList.add('done');
+  });
+  updateProgress(); scheduleSave();
+}
+
+function uncheckAll() {
+  document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('li').querySelector('.item-text').classList.remove('done');
+  });
+  updateProgress(); scheduleSave();
+}
+
+// Boot: try server first, fall back to localStorage
+(async () => {
+  setStatus('Connecting…', '#c084fc');
+  try {
+    const serverState = await serverLoad();
+    if (serverState) {
+      applyState(serverState);
+      setStatus('✓ Synced across all devices', '#a3e635');
+    } else {
+      // key not on server yet — use local if available
+      applyState(localLoad());
+      setStatus('✓ Connected — no saves yet', '#a3e635');
+    }
+  } catch(e) {
+    applyState(localLoad());
+    setStatus('⚠ Offline — ' + e.message, '#fbbf24');
   }
-
-  function checkAll() {
-    document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
-      cb.checked = true;
-      cb.closest('li').querySelector('.item-text').classList.add('done');
-    });
-    updateProgress(); scheduleSave();
-  }
-
-  function uncheckAll() {
-    document.querySelectorAll('.items input[type="checkbox"]').forEach(cb => {
-      cb.checked = false;
-      cb.closest('li').querySelector('.item-text').classList.remove('done');
-    });
-    updateProgress(); scheduleSave();
-  }
-
-  (async () => {
-    setSyncStatus('saving');
-    const { state, online } = await fetchState();
-    applyState(state);
-    setSyncStatus(online ? 'synced' : 'offline');
-  })();
+})();
 </script>
 </body>
 </html>
