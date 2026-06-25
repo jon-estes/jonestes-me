@@ -16,7 +16,7 @@
   nav.innerHTML = `
     <a href="/"${page === '' || page === 'index.html' ? ' class="active"' : ''}>Home</a>
     <a href="/estella"${isEstella ? ' class="active"' : ''}>Estella</a>
-    <a href="/hawaii"${page === 'hawaii.html' ? ' class="active"' : ''}>🌺 Hawaii</a>
+    <a href="/hq"${page === 'hq.html' ? ' class="active"' : ''}>HQ</a>
     <a href="/contact"${page === 'contact.html' ? ' class="active"' : ''}>Contact</a>
     <button id="theme-toggle" title="Toggle theme">☀️</button>
   `;
@@ -26,5 +26,13 @@
     existing.replaceWith(nav);
   } else {
     document.body.insertBefore(nav, document.body.firstChild);
+  }
+
+  // Load the command palette (Cmd/Ctrl+K) on every page that includes nav.js
+  if (!document.querySelector('script[src="/cmdk.js"]')) {
+    const cmdk = document.createElement('script');
+    cmdk.src = '/cmdk.js';
+    cmdk.defer = true;
+    document.head.appendChild(cmdk);
   }
 })();

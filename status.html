@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0f0f0e" />
+<title>Status · Jon Estes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0f0e; --panel:#16140f; --line:#2a261a;
+    --text:#ece7de; --muted:#9aa0a0; --dim:#6e6a5c;
+    --gold:#d4af37; --copper:#b87333; --green:#6b9080; --red:#c1554a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:'DM Sans',system-ui,sans-serif;
+    background-image:radial-gradient(circle at 1px 1px, #ffffff08 1px, transparent 0);
+    background-size:18px 18px;}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 20px 80px;}
+  h1{font-family:'Playfair Display',serif;font-weight:700;font-size:34px;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 32px;}
+  .summary{display:flex;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+  .pill{font-family:'DM Mono',monospace;font-size:12px;border:1px solid var(--line);
+    border-radius:999px;padding:6px 14px;color:var(--muted);}
+  .pill b{color:var(--text);}
+  .pill.up{border-color:#6b908055;color:var(--green);}
+  .pill.down{border-color:#c1554a55;color:var(--red);}
+  .group-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--copper);margin:28px 0 10px;}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;}
+  th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--dim);font-weight:500;}
+  tr:last-child td{border-bottom:none;}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;}
+  .dot.up{background:var(--green);box-shadow:0 0 8px #6b9080aa;}
+  .dot.down{background:var(--red);box-shadow:0 0 8px #c1554aaa;}
+  .dot.pending{background:var(--dim);}
+  .ms{color:var(--muted);font-family:'DM Mono',monospace;}
+  .time{color:var(--dim);font-family:'DM Mono',monospace;font-size:12px;}
+  .actions{margin-top:24px;display:flex;gap:10px;align-items:center;}
+  button{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 16px;border-radius:7px;cursor:pointer;}
+  button:hover{border-color:var(--gold);color:var(--gold);}
+  .auto{color:var(--dim);font-size:12px;font-family:'DM Mono',monospace;}
+  .note{margin-top:36px;padding:14px 16px;border:1px dashed var(--line);border-radius:8px;
+    color:var(--dim);font-size:12.5px;line-height:1.6;}
+  .note code{color:var(--copper);}
+  a{color:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Status</h1>
+  <p class="sub">Live health check across every page, function, and scheduled job on jonestes.me</p>
+
+  <div class="summary" id="summary"></div>
+
+  <div id="report"></div>
+
+  <div class="actions">
+    <button id="refreshBtn">Recheck now</button>
+    <span class="auto">Auto-refreshes every 60s · last run <span id="lastRun">—</span></span>
+  </div>
+
+  <div class="note">
+    Edit the <code>CHECKS</code> array at the top of this file's script to add or remove anything being monitored.
+    Page checks just confirm the route responds. Function checks hit your Netlify function URLs directly.
+    Heartbeat checks read a timestamp key from your Redis store (e.g. have your scheduled silver-alert
+    function write <code>heartbeat:silver-alert = Date.now()</code> on every run) so you can tell a cron
+    job is still firing, not just that the endpoint exists.
+  </div>
+</div>
+
+<script>
+// ---- Edit this list any time you add/remove a tool or function ----
+const CHECKS = [
+  { group: "Core Pages",      name: "HQ",              url: "/hq",            type: "page" },
+  { group: "Core Pages",      name: "Budget",          url: "/budget",        type: "page" },
+  { group: "Core Pages",      name: "Directory",       url: "/directory",     type: "page" },
+
+  { group: "Coin Business",   name: "Inventory",       url: "/inventory",     type: "page" },
+  { group: "Coin Business",   name: "Storefront",      url: "/shop",          type: "page" },
+  { group: "Coin Business",   name: "Stream Planner",  url: "/planner",       type: "page" },
+  { group: "Coin Business",   name: "Comp Checker",    url: "/comps",         type: "page" },
+
+  { group: "Mende Marketing", name: "CRM Pipeline",    url: "/crm",           type: "page" },
+  { group: "Mende Marketing", name: "Lead Gen",        url: "/leadgen",       type: "page" },
+
+  { group: "Family",          name: "Chore Quest",     url: "/chores",        type: "page" },
+  { group: "Family",          name: "Aloha Hub",       url: "/aloha",         type: "page" },
+
+  // Netlify functions — point these at your real function paths
+  { group: "Functions",       name: "store (Redis)",   url: "/.netlify/functions/store?key=__status_check__", type: "function" },
+  // Heartbeat — your scheduled silver-alert function should write this key on every run
+  { group: "Scheduled Jobs",  name: "Silver Alert (last run)", url: "/.netlify/functions/store?key=heartbeat:silver-alert", type: "heartbeat" },
+];
+
+const reportEl = document.getElementById("report");
+const summaryEl = document.getElementById("summary");
+const lastRunEl = document.getElementById("lastRun");
+
+function groupBy(arr, key) {
+  return arr.reduce((acc, item) => {
+    (acc[item[key]] = acc[item[key]] || []).push(item);
+    return acc;
+  }, {});
+}
+
+function fmtTime(d) {
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+function fmtAgo(ms) {
+  const mins = Math.floor(ms / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + "m ago";
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + "h ago";
+  return Math.floor(hrs / 24) + "d ago";
+}
+
+async function checkOne(item) {
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(item.url, { method: "GET", signal: controller.signal, cache: "no-store" });
+    clearTimeout(timeout);
+    const ms = Math.round(performance.now() - start);
+
+    if (item.type === "heartbeat") {
+      let ts = null;
+      try {
+        const data = await res.json();
+        ts = Number(data.value || data.result || data);
+      } catch (_) {}
+      if (!res.ok || !ts) return { ...item, status: "down", ms, detail: "no heartbeat found" };
+      const age = Date.now() - ts;
+      const stale = age > 1000 * 60 * 60 * 36; // flag if no run in 36h
+      return { ...item, status: stale ? "down" : "up", ms, detail: fmtAgo(age) };
+    }
+
+    return { ...item, status: res.ok ? "up" : "down", ms, detail: res.status };
+  } catch (err) {
+    const ms = Math.round(performance.now() - start);
+    return { ...item, status: "down", ms, detail: err.name === "AbortError" ? "timeout" : "unreachable" };
+  }
+}
+
+async function runChecks() {
+  document.getElementById("refreshBtn").textContent = "Checking…";
+  const results = await Promise.all(CHECKS.map(checkOne));
+  render(results);
+  lastRunEl.textContent = fmtTime(new Date());
+  document.getElementById("refreshBtn").textContent = "Recheck now";
+}
+
+function render(results) {
+  const up = results.filter((r) => r.status === "up").length;
+  const down = results.filter((r) => r.status === "down").length;
+  summaryEl.innerHTML = `
+    <div class="pill"><b>${results.length}</b> monitored</div>
+    <div class="pill up"><b>${up}</b> healthy</div>
+    <div class="pill ${down ? "down" : ""}"><b>${down}</b> ${down ? "down ⚠" : "down"}</div>
+  `;
+
+  const groups = groupBy(results, "group");
+  let html = "";
+  for (const [groupName, items] of Object.entries(groups)) {
+    html += `<div class="group-label">${groupName}</div><table><tbody>`;
+    items.forEach((r) => {
+      html += `<tr>
+        <td style="width:46%"><span class="dot ${r.status}"></span>${r.name}</td>
+        <td class="time" style="width:24%">${r.url}</td>
+        <td class="ms" style="width:15%">${r.ms}ms</td>
+        <td class="time" style="width:15%">${r.detail ?? ""}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  reportEl.innerHTML = html;
+}
+
+document.getElementById("refreshBtn").addEventListener("click", runChecks);
+runChecks();
+setInterval(runChecks, 60000);
+</script>
+</body>
+</html>
