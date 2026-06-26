@@ -58,6 +58,14 @@
   }
   nav a.nl:hover{color:var(--chalk);background:rgba(20,30,60,.06)}
   nav a.nl.active{color:var(--gold);background:rgba(200,144,31,.1)}
+  .lang-btn{
+    cursor:pointer;border:1px solid var(--line);background:transparent;
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim);
+    border-radius:8px;padding:6px 12px;white-space:nowrap;
+    transition:color .15s,border-color .15s,background .15s;
+  }
+  .lang-btn:hover{color:var(--chalk);border-color:var(--chalk-faint);background:rgba(20,30,60,.06)}
 
   header.page{
     padding:56px 0 36px;text-align:center;
@@ -176,6 +184,117 @@
   @media (max-width:560px){
     .picker select{min-width:140px;font-size:16px}
   }
+
+  /* ── MERGED GRID ── */
+  .merged-meta{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:0 0 20px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--chalk-faint);
+  }
+  .s-live-dot{display:inline-flex;align-items:center;gap:7px;color:var(--grass)}
+  .s-live-dot::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--grass);animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,138,69,.55)}50%{box-shadow:0 0 0 5px rgba(22,138,69,0)}}
+
+  .merged-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+    gap:18px;
+  }
+
+  /* merged card */
+  .m-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;position:relative;
+  }
+  .m-card-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-bottom:1px solid var(--line);
+    background:rgba(20,30,60,.025);position:relative;overflow:hidden;
+  }
+  .m-ghost{
+    position:absolute;right:-4px;top:-26px;
+    font-family:'Anton',sans-serif;font-size:100px;line-height:1;
+    color:rgba(20,30,60,.045);pointer-events:none;
+  }
+  .m-group-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--gold);position:relative;z-index:1;
+  }
+  .m-pick-badge{
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold-deep);background:rgba(200,144,31,.12);
+    border:1px solid rgba(200,144,31,.35);border-radius:6px;
+    padding:3px 8px;position:relative;z-index:1;
+  }
+  .m-pick-badge.all-hit{color:var(--grass);background:rgba(22,138,69,.1);border-color:rgba(22,138,69,.35)}
+
+  /* standings table inside card */
+  .m-table{width:100%;border-collapse:collapse;table-layout:fixed}
+  .m-table th{
+    font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--chalk-faint);
+    padding:6px 6px;text-align:right;background:rgba(20,30,60,.02);
+    border-bottom:1px solid var(--line);overflow:hidden;
+  }
+  .m-table th:nth-child(1){width:24px;text-align:center}
+  .m-table th:nth-child(2){text-align:left;padding-left:8px;width:44%}
+  .m-table th:nth-child(3){width:28px}  /* MP */
+  .m-table th:nth-child(4){width:24px}  /* W */
+  .m-table th:nth-child(5){width:24px}  /* D */
+  .m-table th:nth-child(6){width:24px}  /* L */
+  .m-table th:nth-child(7){width:28px}  /* GF */
+  .m-table th:nth-child(8){width:28px}  /* GA */
+  .m-table th:nth-child(9){width:30px}  /* GD */
+  .m-table th:nth-child(10){width:30px} /* Pts */
+  .m-table td{
+    padding:8px 6px;font-size:12px;font-weight:500;
+    border-bottom:1px solid rgba(20,30,60,.055);text-align:right;overflow:hidden;
+  }
+  .m-table tr:last-child td{border-bottom:none}
+  .m-table td.m-pos{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;text-align:center;color:var(--chalk-faint)}
+  .m-table td.m-team{text-align:left;padding-left:8px;font-weight:600;display:flex;align-items:center;gap:5px;overflow:hidden}
+  .m-table td.m-team .tname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+  .m-table td.m-pts{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:13px;color:var(--grass)}
+  .m-table td.m-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--chalk-dim)}
+  .m-table td.m-gd{font-family:'JetBrains Mono',monospace;font-size:11px}
+  .m-table td.m-gd.pos{color:var(--grass)}
+  .m-table td.m-gd.neg{color:var(--red)}
+
+  /* row highlight states */
+  .m-table tr.m-cut td{border-top:2px dashed rgba(22,138,69,.35) !important}
+
+  /* picked + still playing */
+  .m-table tr.m-pick{background:rgba(200,144,31,.09)}
+  .m-table tr.m-pick td.m-pos{color:var(--gold)}
+  .m-table tr.m-pick td.m-team{color:var(--gold-deep);font-weight:700}
+
+  /* picked + advanced */
+  .m-table tr.m-hit{background:rgba(22,138,69,.1)}
+  .m-table tr.m-hit td.m-pos{color:var(--grass)}
+  .m-table tr.m-hit td.m-team{color:var(--grass);font-weight:700}
+
+  /* picked + eliminated */
+  .m-table tr.m-miss{background:rgba(201,38,44,.07)}
+  .m-table tr.m-miss td.m-pos{color:var(--red)}
+  .m-table tr.m-miss td.m-team{color:var(--red);opacity:.85}
+
+  /* advanced but not picked */
+  .m-table tr.m-adv{background:rgba(22,138,69,.04)}
+  .m-table tr.m-adv td.m-pos{color:var(--grass)}
+
+  .m-pick-icon{
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;
+    padding:2px 6px;border-radius:4px;flex:none;
+  }
+  .m-pick-icon.pick{color:var(--gold-deep);background:rgba(200,144,31,.15);border:1px solid rgba(200,144,31,.4)}
+  .m-pick-icon.hit{color:var(--grass);background:rgba(22,138,69,.15);border:1px solid rgba(22,138,69,.4)}
+  .m-pick-icon.miss{color:var(--red);background:rgba(201,38,44,.1);border:1px solid rgba(201,38,44,.35)}
+  .m-pct{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--chalk-faint);flex:none}
+  .m-flag{width:20px;height:14px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(20,30,60,.12);flex:none}
+  .m-loading{text-align:center;padding:40px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--chalk-faint);letter-spacing:.08em;grid-column:1/-1}
 </style>
 </head>
 <body>
@@ -188,6 +307,7 @@
     <a class="nl" href="/#leaderboard">Leaderboard</a>
     <a class="nl active" href="/picks/">Picks</a>
     <a class="nl" href="/#bracket">Bracket</a>
+    <button class="lang-btn" id="lang-btn" aria-label="Toggle language">🇲🇽 ES</button>
   </div>
 </nav>
 
@@ -204,21 +324,36 @@
     <label for="player-select">Player</label>
     <select id="player-select" aria-label="Choose a player"></select>
   </div>
+  <div class="picker">
+    <label for="round-select">Round</label>
+    <select id="round-select" aria-label="Choose a round">
+      <option value="GROUPS">Groups</option>
+      <option value="R32">Round of 32</option>
+      <option value="R16">Round of 16</option>
+      <option value="QF">Quarterfinals</option>
+      <option value="SF">Semifinals</option>
+      <option value="F">Final</option>
+    </select>
+  </div>
   <div class="summary" id="summary"></div>
 </div>
 
 <section>
   <div class="wrap">
-    <div class="groups-grid" id="groups-grid">
+    <div class="merged-meta">
+      <span class="s-live-dot">Live</span>
+      <span id="s-stamp">Loading…</span>
+    </div>
+    <div class="merged-grid" id="merged-grid">
       <div class="empty-state" style="grid-column:1/-1">
-        <div class="big">Loading picks…</div>
-        Pulling everyone's entries from the pool.
+        <div class="big">Loading…</div>
+        Fetching picks and standings.
       </div>
     </div>
     <div class="legend" id="legend" style="display:none">
       <span><span class="dot gold"></span> Their pick</span>
       <span><span class="dot green"></span> Pick advanced ✓</span>
-      <span><span class="dot red"></span> Pick eliminated ✗</span>
+      <span><span class="dot red"></span> Pick didn't score ✗</span>
       <span>% = share of pool that picked the team</span>
     </div>
   </div>
@@ -232,7 +367,7 @@
 
 <script>
 /* Same two pipes as the main page */
-const RESPONSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=1722771324&single=true&output=csv";
+const RESPONSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=1437944328&single=true&output=csv";
 const RESULTS_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=2133030220&single=true&output=csv";
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
@@ -331,8 +466,8 @@ let current = null;
 
 function parseEntries(rows){
   const headers = rows[0];
-  let nameCol = headers.findIndex(h => /name|nickname/i.test(h));
-  if (nameCol === -1) nameCol = 1;
+  let nameCol = headers.findIndex(h => /name|nickname|player/i.test(h));
+  if (nameCol === -1) nameCol = /timestamp|date/i.test(headers[0]||'') ? 1 : 0;
   const groupCols = [];
   headers.forEach((h, i) => {
     const m = /group\s+([A-L])\b/i.exec(h);
@@ -360,45 +495,261 @@ function tallyPickCounts(){
   });
 }
 
-function render(){
-  const grid = document.getElementById('groups-grid');
+const STANDINGS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSBA3ph1bL3WpZb47heJiW_EnTOjGIt0ZVGrBQWLP6Ul-bfzOuaKCugVuc0cuSJalS81prbXOsjXm/pub?gid=318523542&single=true&output=csv";
+const GROUP_ORDER = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+
+let standingsData = {}; // { A: [{team,w,d,l,gf,ga,pts,gd}, ...sorted], ... }
+
+/* ══════════════════════════════════════════════════════════
+   PASTE EACH ROUND'S PUBLISHED CSV URL(S) HERE AS YOU GET THEM.
+   A round can have ONE url or SEVERAL (e.g. if Tony split a
+   round's picks across multiple Google Forms) — just list them
+   all in the urls array. Leave urls:[] for a round not open yet.
+   ══════════════════════════════════════════════════════════ */
+const KNOCKOUT_FORMS = [
+  { round:'R32', pts:2, urls:["https://docs.google.com/spreadsheets/d/e/2PACX-1vQgGhUvUeJawwDSaP-PCKzeH0UfPcFQQ_QflGzdmomfGtZl6-3Atx4YPkhGMNzAhuW0voBpJsfBl8du/pub?output=csv"] },
+  { round:'R16', pts:3, urls:[] },
+  { round:'QF',  pts:4, urls:[] },
+  { round:'SF',  pts:5, urls:[] },
+  { round:'3P',  pts:1, urls:[] },
+  { round:'F',   pts:6, urls:[] }
+];
+let bracketData = {};
+let roundWinners = {};
+let currentRound = 'GROUPS';
+let roundPicks = {};
+let roundPickCounts = {};
+const ROUND_POINTS = { R32:2, R16:3, QF:4, SF:5, F:6 };
+const ROUND_FULL_NAME = { R32:'Round of 32', R16:'Round of 16', QF:'Quarterfinals', SF:'Semifinals', F:'Final' };
+
+function findNameCol(headers){
+  let nameCol = headers.findIndex(h => /display\s*name/i.test(h));
+  if (nameCol === -1) nameCol = headers.findIndex(h => /name|nickname|player/i.test(h));
+  if (nameCol === -1) nameCol = /timestamp|date/i.test(headers[0]||'') ? 1 : 0;
+  return nameCol;
+}
+
+/* Merges into existing roundPicks/roundPickCounts rather than
+   overwriting, so a round split across multiple sheets combines
+   correctly. Resolves the real FIFA match key by matching the two
+   team names found in the header text against bracketData — so a
+   header like "Canada vs South Africa" connects automatically to
+   whichever R32 slot that matchup actually landed in. Falls back
+   to a sheet-namespaced key if no team names can be resolved. */
+function resolveMatchKeyByTeams(header, roundKey){
+  const parts = header.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i);
+  if (parts.length < 2) return null;
+  const c1 = canon(parts[0]), c2 = canon(parts[1]);
+  if (!c1 || !c2) return null;
+  for (const key of Object.keys(bracketData)){
+    if (!key.startsWith(roundKey + '-')) continue;
+    const bd = bracketData[key];
+    const bt1 = canon(bd.t1), bt2 = canon(bd.t2);
+    if ((bt1 === c1 && bt2 === c2) || (bt1 === c2 && bt2 === c1)){
+      return key.slice(roundKey.length + 1);
+    }
+  }
+  return null;
+}
+
+function parseRoundPickRows(rows, roundKey, sheetIndex){
+  if (!rows || rows.length < 2) return;
+  const headers = rows[0];
+  const nameCol = findNameCol(headers);
+  if (!roundPicks[roundKey]) roundPicks[roundKey] = new Map();
+  if (!roundPickCounts[roundKey]) roundPickCounts[roundKey] = {};
+  const playerMap = roundPicks[roundKey];
+  const matchCounts = roundPickCounts[roundKey];
+  headers.forEach((h, i) => {
+    if (i === 0 || i === nameCol) return;
+    const numMatch = /(?:match|m)\s*#?\s*(\d+)/i.exec(h);
+    const byTeams = resolveMatchKeyByTeams(h, roundKey);
+    const matchKey = numMatch ? numMatch[1] : (byTeams || `s${sheetIndex}-${i}`);
+    rows.slice(1).forEach(r => {
+      const name = (r[nameCol]||'').trim();
+      if (!name) return;
+      const pick = canon(r[i]);
+      if (!pick) return;
+      const key = name.toLowerCase();
+      if (!playerMap.has(key)) playerMap.set(key, new Map());
+      playerMap.get(key).set(matchKey, pick);
+      if (!matchCounts[matchKey]) matchCounts[matchKey] = {};
+      matchCounts[matchKey][pick] = (matchCounts[matchKey][pick]||0) + 1;
+    });
+  });
+}
+
+
+function flagImgM(team){
+  const code = FLAG_CODES[canon(team)];
+  return code ? `<img class="m-flag" src="https://flagcdn.com/w40/${code}.png" alt="">` : '';
+}
+
+function renderMerged(){
+  if (currentRound === 'GROUPS') renderGroupsView();
+  else renderKnockoutView(currentRound);
+}
+
+function renderGroupsView(){
+  const grid = document.getElementById('merged-grid');
   const legend = document.getElementById('legend');
   const summary = document.getElementById('summary');
-  if (!current){ return; }
+  if (!current){ grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>'; return; }
+
   const total = entries.length || 1;
   let hits = 0, misses = 0, decided = 0;
 
-  grid.innerHTML = GROUPS.map(([letter, teams]) => {
+  grid.innerHTML = GROUP_ORDER.map(letter => {
     const myPicks = new Set(current.picks[letter] || []);
-    const result = groupResults[letter];
-    return `<div class="group-card"><span class="letter">${letter}</span>
-      <div class="g-label">Group ${letter}</div>
-      ${teams.map(t => {
-        const c = canon(t);
-        const picked = myPicks.has(c);
-        const through = result && result.has(c);
-        const out = result && picked && !through;
-        if (result && picked && through) hits++;
-        if (out) misses++;
-        const pct = Math.round(100 * (pickCounts[c]||0) / total);
-        let cls = 'team', badge = '';
-        if (picked && through){ cls += ' pick hit'; badge = '<span class="badge">✓ +1 pt</span>'; }
-        else if (out){ cls += ' pick miss'; badge = '<span class="badge">✗ out</span>'; }
-        else if (picked){ cls += ' pick'; badge = '<span class="badge">Pick</span>'; }
-        else if (through){ cls += ' thru-only'; badge = '<span class="badge">thru</span>'; }
-        return `<div class="${cls}">${flagImg(t)} <span class="t-name">${esc(t)}</span> ${badge} <span class="pct">${pct}%</span></div>`;
-      }).join('')}
+    const result = groupResults[letter]; // Set of canon names that advanced
+    const sRows = standingsData[letter] || [];
+    if (result) decided++;
+
+    // count hits/misses for summary
+    myPicks.forEach(c => {
+      if (result){
+        if (result.has(c)) hits++;
+        else misses++;
+      }
+    });
+
+    // header badge
+    let badgeHits = 0;
+    myPicks.forEach(c => { if (result && result.has(c)) badgeHits++; });
+    const pickedCount = myPicks.size;
+    const badgeText = pickedCount === 0 ? 'No picks' :
+      result ? `${badgeHits}/${pickedCount} ✓` : `${pickedCount} picked`;
+    const badgeCls = badgeHits === pickedCount && pickedCount > 0 && result ? 'all-hit' : '';
+
+    // build rows — if we have standings data use it, else fall back to GROUPS list
+    const teamList = sRows.length > 0
+      ? sRows.map(r => r.team)
+      : (GROUPS.find(([l]) => l === letter) || [letter,[]])[1];
+
+    const rows = (sRows.length > 0 ? sRows : teamList.map(t => ({team:t,w:0,d:0,l:0,gf:0,ga:0,pts:0,gd:0}))).map((r, i) => {
+      const c = canon(r.team);
+      const picked = myPicks.has(c);
+      const through = result && result.has(c);
+      const out = result && picked && !through;
+      const pct = Math.round(100 * (pickCounts[c]||0) / total);
+      const gdStr = r.gd > 0 ? '+'+r.gd : String(r.gd);
+      const gdClass = r.gd > 0 ? 'pos' : r.gd < 0 ? 'neg' : '';
+
+      let rowCls = i === 2 ? 'm-cut' : '';
+      let iconHtml = '';
+      if (picked && through){ rowCls += ' m-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +1</span>'; }
+      else if (out){ rowCls += ' m-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
+      else if (picked){ rowCls += ' m-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+      else if (through){ rowCls += ' m-adv'; }
+
+      const teamCell = `<td class="m-team">${flagImgM(r.team)}<span class="tname">${esc(r.team)}</span>${iconHtml}</td>`;
+
+      return `<tr class="${rowCls.trim()}">
+        <td class="m-pos">${i+1}</td>
+        ${teamCell}
+        <td class="m-num">${r.w+r.d+r.l}</td>
+        <td class="m-num">${r.w}</td><td class="m-num">${r.d}</td><td class="m-num">${r.l}</td>
+        <td class="m-num">${r.gf}</td><td class="m-num">${r.ga}</td>
+        <td class="m-gd ${gdClass}">${gdStr}</td>
+        <td class="m-pts">${r.pts}</td>
+      </tr>`;
+    }).join('');
+
+    return `<div class="m-card">
+      <div class="m-card-head">
+        <span class="m-group-label">Group ${letter}</span>
+        <span class="m-pick-badge ${badgeCls}">${badgeText}</span>
+        <span class="m-ghost">${letter}</span>
+      </div>
+      <table class="m-table">
+        <thead><tr>
+          <th>#</th><th style="text-align:left;padding-left:10px">Team</th>
+          <th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
     </div>`;
   }).join('');
 
-  Object.keys(groupResults).forEach(() => decided++);
+  legend.style.display = '';
   summary.innerHTML = `
     <span class="chip gold"><b>${Object.values(current.picks).flat().length}</b> picks made</span>
     <span class="chip"><b>${hits}</b> through · ${hits} pts</span>
-    ${misses ? `<span class="chip" style="color:var(--red)"><b style="color:var(--red)">${misses}</b> eliminated</span>` : ''}
-    ${decided ? `<span class="chip"><b>${decided}</b>/12 groups decided</span>` : ''}`;
-  legend.style.display = 'flex';
+    <span class="chip"><b>${misses}</b> eliminated</span>
+    <span class="chip"><b>${decided}</b>/12 groups decided</span>`;
 }
+
+function renderKnockoutView(roundKey){
+  const grid = document.getElementById('merged-grid');
+  const legend = document.getElementById('legend');
+  const summary = document.getElementById('summary');
+  legend.style.display = 'none';
+
+  const formCfg = KNOCKOUT_FORMS.find(f => f.round === roundKey);
+  const formUrls = formCfg ? (formCfg.urls || (formCfg.url ? [formCfg.url] : [])) : [];
+  if (!formCfg || !formUrls.length){
+    grid.innerHTML = `<div class="m-loading">Picks not open yet for ${esc(ROUND_FULL_NAME[roundKey] || roundKey)}. Check back once the bracket is set.</div>`;
+    summary.innerHTML = '';
+    return;
+  }
+  if (!current){
+    grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>';
+    summary.innerHTML = '';
+    return;
+  }
+
+  const playerMap = (roundPicks[roundKey] || new Map()).get(current.name.toLowerCase());
+  if (!playerMap){
+    grid.innerHTML = `<div class="m-loading">${esc(current.name)} hasn't submitted ${esc(ROUND_FULL_NAME[roundKey] || roundKey)} picks yet.</div>`;
+    summary.innerHTML = '';
+    return;
+  }
+
+  const winners = roundWinners[roundKey] || new Set();
+  const total = entries.length || 1;
+  const matchCountsForRound = roundPickCounts[roundKey] || {};
+
+  let hits = 0, misses = 0, pending = 0;
+  const cards = [];
+  playerMap.forEach((pickedTeam, matchKey) => {
+    const bd = bracketData[roundKey + '-' + matchKey] || {};
+    const isWinnerKnown = bd.w && bd.w.trim();
+    const correct = isWinnerKnown ? canon(bd.w) === pickedTeam : null;
+    if (isWinnerKnown){ if (correct) hits++; else misses++; } else pending++;
+
+    const counts = matchCountsForRound[matchKey] || {};
+    const pct = Math.round(100 * (counts[pickedTeam]||0) / total);
+
+    let cardCls = '', iconHtml = '';
+    if (isWinnerKnown && correct){ cardCls = 'm-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +'+(ROUND_POINTS[roundKey]||0)+'</span>'; }
+    else if (isWinnerKnown && !correct){ cardCls = 'm-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
+    else { cardCls = 'm-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+
+    const teamLabel = bd.t1 && bd.t2 ? `${esc(bd.t1)} <span style="opacity:.4">vs</span> ${esc(bd.t2)}` : `Match ${esc(matchKey)}`;
+    const pickedDisplay = bd.t1 && canon(bd.t1) === pickedTeam ? bd.t1 : (bd.t2 && canon(bd.t2) === pickedTeam ? bd.t2 : pickedTeam);
+
+    cards.push(`<div class="m-card ${cardCls}" style="padding:16px 18px">
+      <div class="m-card-head" style="background:none;border-bottom:none;padding:0 0 10px">
+        <span class="m-group-label" style="color:var(--chalk-faint);font-size:10px">${teamLabel}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding-top:4px">
+        ${flagImgM(pickedDisplay)}
+        <span style="font-weight:700;font-size:15px">${esc(pickedDisplay)}</span>
+        ${iconHtml}
+        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--chalk-faint)">${pct}% of pool</span>
+      </div>
+    </div>`);
+  });
+
+  grid.innerHTML = cards.join('') || '<div class="m-loading">No matches found for this round yet.</div>';
+  summary.innerHTML = `
+    <span class="chip gold"><b>${playerMap.size}</b> picks made</span>
+    <span class="chip"><b>${hits}</b> correct · ${hits*(ROUND_POINTS[roundKey]||0)} pts</span>
+    <span class="chip"><b>${misses}</b> incorrect</span>
+    <span class="chip"><b>${pending}</b> pending</span>`;
+}
+
+function render(){ renderMerged(); }
 
 function populateSelect(){
   const sel = document.getElementById('player-select');
@@ -416,39 +767,311 @@ function populateSelect(){
     history.replaceState(null, '', u);
     render();
   };
+
+  const roundSel = document.getElementById('round-select');
+  const wantRound = new URLSearchParams(location.search).get('round');
+  if (wantRound && [...roundSel.options].some(o => o.value === wantRound.toUpperCase())){
+    roundSel.value = wantRound.toUpperCase();
+    currentRound = roundSel.value;
+  }
+  roundSel.onchange = () => {
+    currentRound = roundSel.value;
+    const u = new URL(location); u.searchParams.set('round', currentRound);
+    history.replaceState(null, '', u);
+    render();
+  };
 }
 
 async function loadAll(){
+  const stamp = document.getElementById('s-stamp');
   try{
-    const rows = await fetchCSV(RESPONSES_CSV_URL);
-    entries = parseEntries(rows);
-    tallyPickCounts();
+    // load picks + results + standings in parallel
+    const [picksRows, resultsRows, standingsRows] = await Promise.allSettled([
+      fetchCSV(RESPONSES_CSV_URL),
+      fetchCSV(RESULTS_CSV_URL),
+      fetchCSV(STANDINGS_CSV_URL)
+    ]);
+
+    // parse picks
+    if (picksRows.status === 'fulfilled'){
+      entries = parseEntries(picksRows.value);
+      tallyPickCounts();
+    }
+
+    // parse results
+    if (resultsRows.status === 'fulfilled'){
+      const rRows = resultsRows.value;
+      const h = rRows[0].map(x => x.trim().toLowerCase());
+      const iR=h.indexOf('round'), iM=h.indexOf('match'), i1=h.indexOf('team1'), iS1=h.indexOf('score1'), i2=h.indexOf('team2'), iS2=h.indexOf('score2'), iW=h.indexOf('winner');
+      groupResults = {}; bracketData = {}; roundWinners = {};
+      rRows.slice(1).forEach(r => {
+        const round = (r[iR]||'').trim().toUpperCase();
+        const g = (r[iM]||'').trim().toUpperCase();
+        if (!round || !g) return;
+        if (round === 'GROUP'){
+          const t1 = canon(r[i1]), t2 = canon(r[i2]);
+          if (t1 || t2) groupResults[g] = new Set([t1,t2].filter(Boolean));
+        } else {
+          bracketData[round + '-' + g] = { t1:r[i1], s1:r[iS1], t2:r[i2], s2:r[iS2], w:r[iW] };
+          const w = canon(r[iW]);
+          if (w){ (roundWinners[round] = roundWinners[round] || new Set()).add(w); }
+        }
+      });
+    }
+
+    // parse standings
+    if (standingsRows.status === 'fulfilled'){
+      const sRows = standingsRows.value;
+      if (sRows.length >= 2){
+        const h = sRows[0].map(x => x.trim().toLowerCase());
+        const iG=h.indexOf('group'),iT=h.indexOf('team'),
+              iW=h.indexOf('w'),iD=h.indexOf('d'),iL=h.indexOf('l'),
+              iGF=h.indexOf('gf'),iGA=h.indexOf('ga');
+        const raw = {};
+        sRows.slice(1).forEach(r => {
+          const g = (r[iG]||'').trim().toUpperCase();
+          if (!g) return;
+          if (!raw[g]) raw[g] = [];
+          const w=parseInt(r[iW])||0,d=parseInt(r[iD])||0,l=parseInt(r[iL])||0,
+                gf=parseInt(r[iGF])||0,ga=parseInt(r[iGA])||0;
+          raw[g].push({team:(r[iT]||'').trim(),w,d,l,gf,ga,pts:w*3+d,gd:gf-ga});
+        });
+        standingsData = {};
+        Object.keys(raw).forEach(g => {
+          standingsData[g] = raw[g].sort((a,b) => b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || a.team.localeCompare(b.team));
+        });
+      }
+    }
+
     if (!entries.length){
-      document.getElementById('groups-grid').innerHTML =
-        '<div class="empty-state" style="grid-column:1/-1"><div class="big">No entries found</div>Picks will appear here once the pool sheet syncs.</div>';
+      document.getElementById('merged-grid').innerHTML =
+        '<div class="m-loading"><div style="font-family:Anton,sans-serif;font-size:26px;text-transform:uppercase;margin-bottom:8px">No entries found</div>Picks will appear once the pool sheet syncs.</div>';
+      stamp.textContent = 'No picks yet';
       return;
     }
-    try{
-      const rRows = await fetchCSV(RESULTS_CSV_URL);
-      const h = rRows[0].map(x => x.trim().toLowerCase());
-      const iR=h.indexOf('round'), iM=h.indexOf('match'), i1=h.indexOf('team1'), i2=h.indexOf('team2');
-      groupResults = {};
-      rRows.slice(1).forEach(r => {
-        if ((r[iR]||'').trim().toUpperCase() !== 'GROUP') return;
-        const g = (r[iM]||'').trim().toUpperCase();
-        const t1 = canon(r[i1]), t2 = canon(r[i2]);
-        if (g && (t1 || t2)) groupResults[g] = new Set([t1,t2].filter(Boolean));
-      });
-    }catch(e){ /* results optional */ }
+
+    // load knockout round picks (only forms with URLs) — reset first so
+    // stale matches don't linger, then merge every sheet for each round
+    roundPicks = {};
+    roundPickCounts = {};
+    await Promise.allSettled(KNOCKOUT_FORMS.map(async f => {
+      const urls = f.urls || (f.url ? [f.url] : []);
+      for (let i = 0; i < urls.length; i++){
+        try{
+          const koRows = await fetchCSV(urls[i]);
+          parseRoundPickRows(koRows, f.round, i);
+        }catch(e){ /* leave that sheet unavailable */ }
+      }
+    }));
+
     populateSelect();
     render();
+    stamp.textContent = 'Synced ' + new Date().toLocaleTimeString() + ' · auto-refreshes every 5 min';
   }catch(e){
-    document.getElementById('groups-grid').innerHTML =
-      '<div class="empty-state" style="grid-column:1/-1"><div class="big">Couldn\'t load picks</div>Refresh to retry — the pool sheet may be syncing.</div>';
+    document.getElementById('merged-grid').innerHTML =
+      '<div class="m-loading"><div style="font-family:Anton,sans-serif;font-size:26px;text-transform:uppercase;margin-bottom:8px">Couldn\'t load</div>Refresh to retry.</div>';
+    stamp.textContent = 'Sync failed — retrying';
   }
 }
 loadAll();
 setInterval(loadAll, AUTO_REFRESH_MS);
+
+/* ══════════════════════════════════════════════════════════
+   SPANISH TRANSLATION TOGGLE
+   ══════════════════════════════════════════════════════════ */
+const TRANSLATIONS = {
+  en: {
+    // nav
+    'Leaderboard':              'Leaderboard',
+    'Picks':                    'Picks',
+    'Bracket':                  'Bracket',
+    // header
+    'Round of 48 · Everyone\'s Cards on the Table': 'Round of 48 · Everyone\'s Cards on the Table',
+    'Player Picks':             'Player Picks',
+    'Picks are locked, so it\'s all out in the open. Choose a player to see the two teams they backed in every group — and how it\'s going.':
+      'Picks are locked, so it\'s all out in the open. Choose a player to see the two teams they backed in every group — and how it\'s going.',
+    // controls
+    'Player':                   'Player',
+    // loading / empty
+    'Loading picks…':           'Loading picks…',
+    'Pulling everyone\'s entries from the pool.': 'Pulling everyone\'s entries from the pool.',
+    'No entries found':         'No entries found',
+    'Picks will appear here once the pool sheet syncs.': 'Picks will appear here once the pool sheet syncs.',
+    'Couldn\'t load picks':     'Couldn\'t load picks',
+    'Refresh to retry — the pool sheet may be syncing.': 'Refresh to retry — the pool sheet may be syncing.',
+    // legend
+    'Their pick':               'Their pick',
+    'Pick advanced ✓':          'Pick advanced ✓',
+    'Pick eliminated ✗':        "Pick didn't score ✗",
+    '% = share of pool that picked the team': '% = share of pool that picked the team',
+    // badges
+    '✓ +1 pt':                  '✓ +1 pt',
+    '✗ out':                    '✗ no point',
+    'Pick':                     'Pick',
+    'thru':                     'thru',
+    // summary chips
+    'picks made':               'picks made',
+    'through · ':               'through · ',
+    'pts':                      'pts',
+    'eliminated':               'eliminated',
+    'groups decided':           'groups decided',
+    // footer
+    'Back to the leaderboard & bracket': 'Back to the leaderboard & bracket',
+    '2026 World Cup Pool':      '2026 World Cup Pool',
+    // lang button
+    '🇲🇽 ES':                  '🇺🇸 EN',
+  },
+  es: {
+    // nav
+    'Leaderboard':              'Tabla',
+    'Picks':                    'Selecciones',
+    'Bracket':                  'Bracket',
+    // header
+    'Round of 48 · Everyone\'s Cards on the Table': 'Ronda de 48 · Todo al Descubierto',
+    'Player Picks':             'Selecciones de Jugadores',
+    'Picks are locked, so it\'s all out in the open. Choose a player to see the two teams they backed in every group — and how it\'s going.':
+      'Las selecciones ya están cerradas. Elige un jugador para ver los dos equipos que apostó en cada grupo — y cómo le va.',
+    // controls
+    'Player':                   'Jugador',
+    // loading / empty
+    'Loading picks…':           'Cargando selecciones…',
+    'Pulling everyone\'s entries from the pool.': 'Obteniendo entradas de todos en el grupo.',
+    'No entries found':         'Sin entradas',
+    'Picks will appear here once the pool sheet syncs.': 'Las selecciones aparecerán aquí cuando se sincronice la hoja.',
+    'Couldn\'t load picks':     'No se pudieron cargar las selecciones',
+    'Refresh to retry — the pool sheet may be syncing.': 'Recarga para reintentar — la hoja puede estar sincronizando.',
+    // legend
+    'Their pick':               'Su elección',
+    'Pick advanced ✓':          'Equipo clasificado ✓',
+    'Pick eliminated ✗':        'No anotó punto ✗',
+    '% = share of pool that picked the team': '% = porcentaje del grupo que eligió al equipo',
+    // badges
+    '✓ +1 pt':                  '✓ +1 pt',
+    '✗ out':                    '✗ sin punto',
+    'Pick':                     'Elegido',
+    'thru':                     'clasif.',
+    // footer
+    'Back to the leaderboard & bracket': 'Volver a la tabla y al bracket',
+    '2026 World Cup Pool':      'Grupo Mundial 2026',
+    // lang button
+    '🇲🇽 ES':                  '🇺🇸 EN',
+  }
+};
+
+/* Nodes we translate by data-i18n attribute */
+const I18N_SELECTORS = [
+  // nav links (text only, not href)
+  { sel: 'nav a.nl[href="/#leaderboard"]',    key: 'Leaderboard' },
+  { sel: 'nav a.nl[href="/picks/"]',           key: 'Picks' },
+  { sel: 'nav a.nl[href="/#bracket"]',         key: 'Bracket' },
+  // header
+  { sel: '.eyebrow',   key: 'Round of 48 · Everyone\'s Cards on the Table' },
+  { sel: 'header.page h1',  key: 'Player Picks' },
+  { sel: 'header.page p',   key: 'Picks are locked, so it\'s all out in the open. Choose a player to see the two teams they backed in every group — and how it\'s going.' },
+  // picker label
+  { sel: 'label[for="player-select"]', key: 'Player' },
+  // footer
+  { sel: 'footer a[href="/"]', key: 'Back to the leaderboard & bracket' },
+];
+
+let currentLang = 'en';
+
+function applyLang(lang){
+  const T = TRANSLATIONS[lang];
+  // static nodes
+  I18N_SELECTORS.forEach(({sel, key}) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    el.textContent = T[key] ?? TRANSLATIONS.en[key];
+  });
+
+  // footer prefix text node
+  const footerWrap = document.querySelector('footer .wrap');
+  if (footerWrap){
+    // rebuild footer to avoid clobbering the anchor
+    const anchor = footerWrap.querySelector('a');
+    if (anchor) anchor.textContent = T['Back to the leaderboard & bracket'];
+    const textNode = footerWrap.childNodes[0];
+    if (textNode && textNode.nodeType === 3){
+      textNode.textContent = T['2026 World Cup Pool'] + ' · ';
+    }
+  }
+
+  // lang button itself
+  document.getElementById('lang-btn').textContent = T['🇲🇽 ES'];
+
+  // re-render dynamic content with new language
+  renderInLang(lang);
+}
+
+/* Patch render() to respect current language */
+const _origRender = render;
+function renderInLang(lang){
+  const T = TRANSLATIONS[lang];
+  // Run the original render (English strings are in JS)
+  _origRender();
+  // Now swap out the dynamic strings
+  // badges
+  document.querySelectorAll('.badge').forEach(b => {
+    const txt = b.textContent.trim();
+    if (txt === '✓ +1 pt') b.textContent = T['✓ +1 pt'];
+    else if (txt === '✗ no point') b.textContent = T['✗ out'];
+    else if (txt === 'Pick') b.textContent = T['Pick'];
+    else if (txt === 'thru') b.textContent = T['thru'];
+  });
+
+  // group labels
+  document.querySelectorAll('.g-label').forEach(el => {
+    el.textContent = el.textContent.replace(/^Group /, lang === 'es' ? 'Grupo ' : 'Group ');
+  });
+
+  // summary chips — rebuild with translated strings
+  const summary = document.getElementById('summary');
+  if (summary && summary.innerHTML){
+    summary.innerHTML = summary.innerHTML
+      .replace(/picks made/g, T['picks made'] ?? 'picks made')
+      .replace(/through · /g, T['through · '] ?? 'through · ')
+      .replace(/\bpts\b/g, T['pts'] ?? 'pts')
+      .replace(/\beliminated\b/g, T['eliminated'] ?? 'eliminado')
+      .replace(/\/12 groups decided/g, lang === 'es' ? '/12 grupos decididos' : '/12 groups decided');
+  }
+
+  // legend
+  const legend = document.getElementById('legend');
+  if (legend){
+    const spans = legend.querySelectorAll('span > :last-child, span');
+    // rebuild legend text nodes
+    legend.querySelectorAll('span[class=""]').forEach(span => {
+      const dot = span.querySelector('.dot');
+      if (!dot) return;
+      const classes = dot.className;
+      if (classes.includes('gold'))  span.childNodes[1] && (span.childNodes[1].textContent = ' ' + T['Their pick']);
+      if (classes.includes('green')) span.childNodes[1] && (span.childNodes[1].textContent = ' ' + T['Pick advanced ✓']);
+      if (classes.includes('red'))   span.childNodes[1] && (span.childNodes[1].textContent = ' ' + T['Pick eliminated ✗']);
+    });
+    // the % note (last span)
+    const allSpans = legend.querySelectorAll('span');
+    const lastSpan = allSpans[allSpans.length - 1];
+    if (lastSpan && !lastSpan.querySelector('.dot')){
+      lastSpan.textContent = T['% = share of pool that picked the team'];
+    }
+  }
+}
+
+// Override render so future calls (select change, loadAll re-run) stay in current lang
+window._origRenderForLang = render;
+(function(){
+  const origRender = render;
+  window.render = function(){
+    origRender();
+    if (currentLang === 'es') renderInLang('es');
+  };
+})();
+
+document.getElementById('lang-btn').addEventListener('click', () => {
+  currentLang = currentLang === 'en' ? 'es' : 'en';
+  applyLang(currentLang);
+});
 </script>
 
 </body>
