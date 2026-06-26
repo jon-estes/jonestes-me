@@ -1150,12 +1150,16 @@ function resolveSlot(label){
   const letter = m[2].toUpperCase();
   const pos = /winner/i.test(m[1]) ? 0 : 1; // 1st or 2nd in the group
   const rows = standingsData[letter];
-  if (!rows || rows.length <= pos) return null;
-  // Only trust this once the group has played enough matches to be
-  // meaningfully decided — require at least 2 matches played for the
-  // team in that position, otherwise standings can still flip.
+  if (!rows || rows.length <= pos){
+    console.log('[resolveSlot]', label, '→ no standings data for group', letter, 'rows:', rows);
+    return null;
+  }
   const row = rows[pos];
-  if (!row || (row.w + row.d + row.l) < 2) return null;
+  if (!row || (row.w + row.d + row.l) < 2){
+    console.log('[resolveSlot]', label, '→ not enough matches played yet:', row);
+    return null;
+  }
+  console.log('[resolveSlot]', label, '→ resolved to', row.team);
   return row.team;
 }
 
@@ -1853,13 +1857,12 @@ function renderKnockoutView(roundKey){
     const correct = isWinnerKnown ? canon(bd.w) === pickedTeam : null;
     const counts = matchCountsForRound[matchKey] || {};
 
-    // figure out both team display names — prefer live bracketData, fall back to the label
-    let teamA = bd.t1, teamB = bd.t2;
-    if (!teamA || !teamB){
-      const labelParts = (pickInfo.label || '').split(/\s+(?:vs\.?|v\.?|or)\s+/i);
-      teamA = teamA || labelParts[0];
-      teamB = teamB || labelParts[1];
-    }
+    // figure out both team display names — prefer live bracketData,
+    // fall back to the pick label independently for each side, so a
+    // partially-filled bracketData row can't hide a team entirely
+    const labelParts = (pickInfo.label || '').split(/\s+(?:vs\.?|v\.?|or)\s+/i);
+    const teamA = (bd.t1 && bd.t1.trim()) || labelParts[0];
+    const teamB = (bd.t2 && bd.t2.trim()) || labelParts[1];
     const teams = [teamA, teamB].filter(Boolean);
 
     const rows = teams.map(t => {
@@ -1885,9 +1888,11 @@ function renderKnockoutView(roundKey){
       ? (correct ? `<span class="m-pick-badge all-hit">✓ Correct</span>` : `<span class="m-pick-badge" style="color:var(--red);background:rgba(201,38,44,.1);border-color:rgba(201,38,44,.35)">✗ Missed</span>`)
       : `<span class="m-pick-badge">Pending</span>`;
 
+    const matchupLabel = teams.length === 2 ? `${esc(teams[0])} vs ${esc(teams[1])}` : esc(pickInfo.label || ROUND_FULL_NAME[roundKey] || roundKey);
+
     cards.push(`<div class="m-card">
       <div class="m-card-head">
-        <span class="m-group-label">${ROUND_FULL_NAME[roundKey] || roundKey}</span>
+        <span class="m-group-label">${matchupLabel}</span>
         ${statusBadge}
       </div>
       <table class="m-table" style="table-layout:auto">
@@ -1901,16 +1906,19 @@ function renderKnockoutView(roundKey){
 
 function populatePlayerSelect(){
   const sel = document.getElementById('player-select');
-  sel.innerHTML = pickEntries.map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('');
+  sel.innerHTML = '<option value="" disabled selected>Please select player</option>' +
+    pickEntries.map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('');
   const want = new URLSearchParams(location.search).get('player');
   if (want){
     const match = pickEntries.find(e => e.name.toLowerCase() === want.toLowerCase());
     if (match) sel.value = match.name;
   }
-  currentPlayer = pickEntries.find(e => e.name === sel.value) || pickEntries[0];
+  currentPlayer = want ? (pickEntries.find(e => e.name.toLowerCase() === want.toLowerCase()) || null) : null;
   sel.onchange = () => {
-    currentPlayer = pickEntries.find(e => e.name === sel.value);
-    const u = new URL(location); u.searchParams.set('player', currentPlayer.name);
+    currentPlayer = pickEntries.find(e => e.name === sel.value) || null;
+    const u = new URL(location);
+    if (currentPlayer) u.searchParams.set('player', currentPlayer.name);
+    else u.searchParams.delete('player');
     history.replaceState(null, '', u);
     renderMerged();
   };
@@ -1947,11 +1955,13 @@ async function loadMergedPicks(){
 
     if (standingsRows.status === 'fulfilled'){
       const sRows = standingsRows.value;
+      console.log('[standings] raw rows:', sRows.length, 'header:', sRows[0]);
       if (sRows.length >= 2){
         const h = sRows[0].map(x => x.trim().toLowerCase());
         const iG=h.indexOf('group'),iT=h.indexOf('team'),
               iW=h.indexOf('w'),iD=h.indexOf('d'),iL=h.indexOf('l'),
               iGF=h.indexOf('gf'),iGA=h.indexOf('ga');
+        console.log('[standings] column indices — group:',iG,'team:',iT,'w:',iW,'d:',iD,'l:',iL,'gf:',iGF,'ga:',iGA);
         const raw = {};
         sRows.slice(1).forEach(r => {
           const g = (r[iG]||'').trim().toUpperCase();
@@ -1965,8 +1975,13 @@ async function loadMergedPicks(){
         Object.keys(raw).forEach(g => {
           standingsData[g] = raw[g].sort((a,b) => b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || a.team.localeCompare(b.team));
         });
+        console.log('[standings] parsed standingsData:', JSON.stringify(standingsData));
         renderBracket(); // re-render now that standings can resolve R32 slots
+      } else {
+        console.log('[standings] sheet returned fewer than 2 rows — nothing to parse');
       }
+    } else {
+      console.log('[standings] fetch failed:', standingsRows.reason);
     }
 
     if (!pickEntries.length){
