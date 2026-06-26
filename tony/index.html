@@ -1137,6 +1137,28 @@ const ROUNDS = [
   { key:'SF',  name:'Semifinals',   pts:'5 pts', count:2,  dates:'Jul 14 – 15' },
   { key:'F',   name:'The Final',    pts:'6 pts', count:1,  dates:'Jul 19 · New York/NJ', final:true }
 ];
+/* Resolves a SCHEDULE slot label like "Winner A" or "Runner-up C"
+   into a real team name using the live group standings — so the
+   bracket fills in automatically as groups finish, without having
+   to type results into the Results sheet by hand. "3rd place" slots
+   are intentionally left alone since FIFA's official third-place
+   ranking formula isn't something we should silently guess at. */
+function resolveSlot(label){
+  if (!label) return null;
+  const m = /^(Winner|Runner-up)\s+([A-L])$/i.exec(label.trim());
+  if (!m) return null; // "3rd place", "SF loser", "Winner M73" etc. — not auto-resolvable here
+  const letter = m[2].toUpperCase();
+  const pos = /winner/i.test(m[1]) ? 0 : 1; // 1st or 2nd in the group
+  const rows = standingsData[letter];
+  if (!rows || rows.length <= pos) return null;
+  // Only trust this once the group has played enough matches to be
+  // meaningfully decided — require at least 2 matches played for the
+  // team in that position, otherwise standings can still flip.
+  const row = rows[pos];
+  if (!row || (row.w + row.d + row.l) < 2) return null;
+  return row.team;
+}
+
 function teamRow(team, score, isWinner, decided, placeholder){
   if (!team || !team.trim()){
     return `<div class="row tbd"><span class="flag-blank"></span> ${esc(placeholder||'TBD')} <span class="score"></span></div>`;
@@ -1151,11 +1173,20 @@ function matchCard(key, fallbackLabel, m, extraClass){
     ? `M${sched.m} · ${sched.d} · ${sched.c}`
     : fallbackLabel;
   const decided = !!(m.w && m.w.trim());
+
+  // if the Results sheet hasn't given us real teams yet, try to
+  // auto-resolve from live group standings
+  let t1 = m.t1, t2 = m.t2;
+  if (sched){
+    if (!t1 || !t1.trim()) t1 = resolveSlot(sched.s1);
+    if (!t2 || !t2.trim()) t2 = resolveSlot(sched.s2);
+  }
+
   const w = canon(m.w);
   return `<div class="match ${extraClass||''}">
     <div class="m-label">${esc(label)}</div>
-    ${teamRow(m.t1, m.s1, decided && canon(m.t1)===w, decided, sched && sched.s1)}
-    ${teamRow(m.t2, m.s2, decided && canon(m.t2)===w, decided, sched && sched.s2)}
+    ${teamRow(t1, m.s1, decided && canon(t1)===w, decided, sched && sched.s1)}
+    ${teamRow(t2, m.s2, decided && canon(t2)===w, decided, sched && sched.s2)}
   </div>`;
 }
 function renderBracket(){
@@ -1820,28 +1851,48 @@ function renderKnockoutView(roundKey){
     const bd = bracketData[matchKey] || {};
     const isWinnerKnown = bd.w && bd.w.trim();
     const correct = isWinnerKnown ? canon(bd.w) === pickedTeam : null;
-
     const counts = matchCountsForRound[matchKey] || {};
-    const pct = Math.round(100 * (counts[pickedTeam]||0) / total);
 
-    let cardCls = '', iconHtml = '';
-    if (isWinnerKnown && correct){ cardCls = 'm-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +'+(ROUND_POINTS[roundKey]||0)+'</span>'; }
-    else if (isWinnerKnown && !correct){ cardCls = 'm-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
-    else { cardCls = 'm-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+    // figure out both team display names — prefer live bracketData, fall back to the label
+    let teamA = bd.t1, teamB = bd.t2;
+    if (!teamA || !teamB){
+      const labelParts = (pickInfo.label || '').split(/\s+(?:vs\.?|v\.?|or)\s+/i);
+      teamA = teamA || labelParts[0];
+      teamB = teamB || labelParts[1];
+    }
+    const teams = [teamA, teamB].filter(Boolean);
 
-    const teamLabel = bd.t1 && bd.t2 ? `${esc(bd.t1)} <span style="opacity:.4">vs</span> ${esc(bd.t2)}` : esc(pickInfo.label || matchKey);
-    const pickedDisplay = bd.t1 && canon(bd.t1) === pickedTeam ? bd.t1 : (bd.t2 && canon(bd.t2) === pickedTeam ? bd.t2 : pickedTeam);
+    const rows = teams.map(t => {
+      const c = canon(t);
+      const picked = c === pickedTeam;
+      const isWinner = isWinnerKnown && canon(bd.w) === c;
+      const pct = Math.round(100 * (counts[c]||0) / total);
 
-    cards.push(`<div class="m-card ${cardCls}" style="padding:16px 18px">
-      <div class="m-card-head" style="background:none;border-bottom:none;padding:0 0 10px">
-        <span class="m-group-label" style="color:var(--chalk-faint);font-size:10px">${teamLabel}</span>
+      let rowCls = '';
+      let iconHtml = '';
+      if (picked && isWinnerKnown && isWinner){ rowCls = 'm-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +'+(ROUND_POINTS[roundKey]||0)+'</span>'; }
+      else if (picked && isWinnerKnown && !isWinner){ rowCls = 'm-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
+      else if (picked){ rowCls = 'm-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+      else if (isWinnerKnown && isWinner){ rowCls = 'm-adv'; }
+
+      return `<tr class="${rowCls}">
+        <td class="m-team" style="padding-left:14px">${flagImgM(t)}<span class="tname">${esc(t)}</span>${iconHtml}</td>
+        <td class="m-num" style="text-align:right;padding-right:14px">${pct}% of pool</td>
+      </tr>`;
+    }).join('');
+
+    const statusBadge = isWinnerKnown
+      ? (correct ? `<span class="m-pick-badge all-hit">✓ Correct</span>` : `<span class="m-pick-badge" style="color:var(--red);background:rgba(201,38,44,.1);border-color:rgba(201,38,44,.35)">✗ Missed</span>`)
+      : `<span class="m-pick-badge">Pending</span>`;
+
+    cards.push(`<div class="m-card">
+      <div class="m-card-head">
+        <span class="m-group-label">${ROUND_FULL_NAME[roundKey] || roundKey}</span>
+        ${statusBadge}
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding-top:4px">
-        ${flagImgM(pickedDisplay)}
-        <span style="font-weight:700;font-size:15px">${esc(pickedDisplay)}</span>
-        ${iconHtml}
-        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--chalk-faint)">${pct}% of pool</span>
-      </div>
+      <table class="m-table" style="table-layout:auto">
+        <tbody>${rows}</tbody>
+      </table>
     </div>`);
   });
 
@@ -1914,6 +1965,7 @@ async function loadMergedPicks(){
         Object.keys(raw).forEach(g => {
           standingsData[g] = raw[g].sort((a,b) => b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || a.team.localeCompare(b.team));
         });
+        renderBracket(); // re-render now that standings can resolve R32 slots
       }
     }
 
