@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f0e">
+<title>Time Capsule · Jon Estes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0f0e;
+    --card:#17171a;
+    --card-hover:#1c1c1f;
+    --border:rgba(255,255,255,.08);
+    --text:#e8e4da;
+    --muted:#948f86;
+    --gold:#c9a227;
+    --copper:#b5651d;
+    --green:#5f7a5f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.025) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+  h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600;margin:0;}
+  .mono{font-family:'DM Mono',monospace;}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 20px 100px;}
+  .fadeUp{opacity:0;transform:translateY(14px);animation:fadeUp .6s ease forwards;}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:36px;flex-wrap:wrap;}
+  header.top h1{font-size:2rem;color:var(--gold);}
+  header.top p{margin:6px 0 0;color:var(--muted);font-size:.95rem;}
+  a.back{color:var(--muted);text-decoration:none;font-size:.85rem;border:1px solid var(--border);padding:6px 12px;border-radius:20px;}
+  a.back:hover{color:var(--text);border-color:var(--gold);}
+
+  .newBtn{
+    background:linear-gradient(135deg,var(--gold),var(--copper));
+    color:#16140d;border:none;border-radius:10px;padding:13px 22px;
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:.95rem;cursor:pointer;
+    box-shadow:0 6px 18px rgba(201,162,39,.18);
+  }
+  .newBtn:hover{filter:brightness(1.08);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:28px;}
+  .capsule{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px;cursor:pointer;transition:.18s;position:relative;overflow:hidden;
+  }
+  .capsule:hover{background:var(--card-hover);border-color:rgba(201,162,39,.3);transform:translateY(-2px);}
+  .capsule.locked{opacity:.88;}
+  .seal{
+    width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.1rem;margin-bottom:14px;
+    background:radial-gradient(circle at 32% 28%, #d8b945, var(--copper) 70%);
+    box-shadow:inset 0 -3px 6px rgba(0,0,0,.35), 0 3px 8px rgba(0,0,0,.4);
+  }
+  .capsule.unlocked .seal{background:radial-gradient(circle at 32% 28%, #7c9b7c, var(--green) 75%);}
+  .to{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);margin-bottom:2px;}
+  .from{color:var(--muted);font-size:.8rem;margin-bottom:14px;}
+  .status{font-size:.78rem;letter-spacing:.02em;}
+  .status.locked{color:var(--copper);}
+  .status.unlocked{color:var(--green);}
+  .title-hidden{color:var(--muted);font-size:.82rem;font-style:italic;margin-top:10px;}
+
+  .empty{color:var(--muted);text-align:center;padding:60px 20px;border:1px dashed var(--border);border-radius:14px;margin-top:28px;}
+
+  /* PIN gate */
+  #pinGate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:16px;}
+  #pinGate input{background:var(--card);border:1px solid var(--border);color:var(--text);padding:14px 16px;border-radius:10px;font-family:'DM Mono',monospace;font-size:1.1rem;letter-spacing:.3em;text-align:center;width:200px;}
+  #pinGate button{background:var(--gold);color:#16140d;border:none;border-radius:10px;padding:12px 24px;font-weight:600;cursor:pointer;}
+
+  /* Modal (new capsule + reveal) */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:40;padding:20px;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto;animation:fadeUp .35s ease;}
+  .modal h2{color:var(--gold);font-size:1.3rem;margin-bottom:18px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:6px;letter-spacing:.02em;}
+  .field input,.field select,.field textarea{
+    width:100%;background:#0f0f0e;border:1px solid var(--border);color:var(--text);
+    padding:11px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.92rem;
+  }
+  .field textarea{min-height:110px;resize:vertical;}
+  .field input[type=file]{padding:8px;}
+  .modalActions{display:flex;gap:10px;margin-top:8px;}
+  .modalActions button{flex:1;border:none;border-radius:9px;padding:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .btnPrimary{background:linear-gradient(135deg,var(--gold),var(--copper));color:#16140d;}
+  .btnGhost{background:transparent;border:1px solid var(--border) !important;color:var(--muted);}
+  .btnDanger{background:transparent;border:1px solid #7a3a3a !important;color:#c97777;}
+
+  .revealPhoto{width:100%;border-radius:10px;margin:14px 0;display:block;}
+  .revealMsg{font-size:1.02rem;line-height:1.6;white-space:pre-wrap;color:var(--text);}
+  .revealMeta{color:var(--muted);font-size:.8rem;margin-top:18px;border-top:1px solid var(--border);padding-top:14px;}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--gold);
+    color:var(--text);padding:12px 20px;border-radius:10px;font-size:.88rem;opacity:0;transition:.25s;z-index:60;pointer-events:none;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div id="pinGate">
+  <h2 style="color:var(--gold)">🔒 Time Capsule</h2>
+  <input id="pinInput" type="password" inputmode="numeric" placeholder="PIN" maxlength="8">
+  <button onclick="submitPin()">Unlock</button>
+</div>
+
+<div class="wrap" id="mainWrap" style="display:none;">
+  <header class="top fadeUp">
+    <div>
+      <h1>🕰️ Family Time Capsule</h1>
+      <p>Messages and photos, sealed until the day they're meant to open.</p>
+    </div>
+    <a class="back" href="/">← Dashboard</a>
+  </header>
+
+  <button class="newBtn fadeUp" onclick="openNew()">+ Seal a new capsule</button>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" style="display:none;">No capsules yet — seal the first one above.</div>
+</div>
+
+<!-- New capsule modal -->
+<div class="overlay" id="newOverlay">
+  <div class="modal">
+    <h2>Seal a new capsule</h2>
+    <div class="field">
+      <label>To</label>
+      <select id="f_to">
+        <option>Anneliese</option>
+        <option>Clementine</option>
+        <option>Estella Azalea</option>
+        <option>The Family</option>
+        <option value="__custom">Someone else…</option>
+      </select>
+      <input id="f_toCustom" placeholder="Name" style="margin-top:8px;display:none;">
+    </div>
+    <div class="field">
+      <label>From</label>
+      <input id="f_from" placeholder="e.g. Mom & Dad">
+    </div>
+    <div class="field">
+      <label>Title</label>
+      <input id="f_title" placeholder="e.g. For your 18th birthday">
+    </div>
+    <div class="field">
+      <label>Message</label>
+      <textarea id="f_msg" placeholder="Write what you want them to read when it opens..."></textarea>
+    </div>
+    <div class="field">
+      <label>Photo (optional — auto-resized)</label>
+      <input id="f_photo" type="file" accept="image/*">
+    </div>
+    <div class="field">
+      <label>Unlock date</label>
+      <input id="f_date" type="date">
+    </div>
+    <div class="modalActions">
+      <button class="btnGhost" onclick="closeNew()">Cancel</button>
+      <button class="btnPrimary" onclick="saveCapsule()">Seal it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reveal / locked modal -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal" id="viewModalBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FN = '/.netlify/functions/store';
+let PIN = sessionStorage.getItem('capsulePin') || '';
+let items = [];   // capsule.items array (metadata only)
+let photos = {};  // id -> base64 dataURL
+let editingPhoto = null; // pending base64 for the capsule currently being created
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+async function submitPin(){
+  PIN = document.getElementById('pinInput').value.trim();
+  sessionStorage.setItem('capsulePin', PIN);
+  await load();
+}
+
+async function load(){
+  try{
+    const r = await fetch(FN, { headers: { 'x-pin': PIN } });
+    const data = await r.json();
+    items = JSON.parse(data['capsule.items'] || '[]');
+    photos = {};
+    Object.keys(data).forEach(k=>{
+      if(k.indexOf('capsule.photo.') === 0) photos[k.slice('capsule.photo.'.length)] = data[k];
+    });
+    document.getElementById('pinGate').style.display = 'none';
+    document.getElementById('mainWrap').style.display = 'block';
+    render();
+  }catch(e){
+    toast('Could not load — check PIN / connection');
+  }
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  document.getElementById('emptyState').style.display = items.length ? 'none' : 'block';
+  const today = new Date().toISOString().slice(0,10);
+  items.slice().sort((a,b)=> a.unlockDate < b.unlockDate ? -1 : 1).forEach(it=>{
+    const unlocked = it.unlockDate <= today;
+    const div = document.createElement('div');
+    div.className = 'capsule fadeUp ' + (unlocked ? 'unlocked' : 'locked');
+    const daysLeft = Math.ceil((new Date(it.unlockDate) - new Date(today)) / 86400000);
+    div.innerHTML = `
+      <div class="seal">${unlocked ? '💌' : '🔒'}</div>
+      <div class="to">To: ${esc(it.to)}</div>
+      <div class="from">from ${esc(it.from || '—')}</div>
+      <div class="status ${unlocked ? 'unlocked' : 'locked'}">
+        ${unlocked ? '🔓 Unlocked ' + fmtDate(it.unlockDate) : '⏳ Opens ' + fmtDate(it.unlockDate) + ' · ' + daysLeft + 'd'}
+      </div>
+      ${unlocked ? '' : '<div class="title-hidden">Sealed</div>'}
+    `;
+    div.onclick = ()=> openView(it, unlocked);
+    grid.appendChild(div);
+  });
+}
+
+function esc(s){ const d=document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+function fmtDate(d){ return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+function openNew(){
+  document.getElementById('newOverlay').classList.add('show');
+  editingPhoto = null;
+}
+function closeNew(){
+  document.getElementById('newOverlay').classList.remove('show');
+  ['f_from','f_title','f_msg','f_date'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_photo').value='';
+  document.getElementById('f_toCustom').style.display='none';
+  document.getElementById('f_toCustom').value='';
+}
+
+document.getElementById('f_to').addEventListener('change', e=>{
+  document.getElementById('f_toCustom').style.display = e.target.value === '__custom' ? 'block' : 'none';
+});
+
+document.getElementById('f_photo').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) { editingPhoto = null; return; }
+  const img = new Image();
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    img.onload = ()=>{
+      const maxW = 1000;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      editingPhoto = canvas.toDataURL('image/jpeg', .72);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+async function saveCapsule(){
+  const toSel = document.getElementById('f_to').value;
+  const to = toSel === '__custom' ? (document.getElementById('f_toCustom').value.trim() || 'Someone') : toSel;
+  const from = document.getElementById('f_from').value.trim();
+  const title = document.getElementById('f_title').value.trim();
+  const msg = document.getElementById('f_msg').value.trim();
+  const date = document.getElementById('f_date').value;
+  if(!msg || !date){ toast('Message and unlock date are required'); return; }
+
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const item = { id, to, from, title, message: msg, unlockDate: date, createdAt: new Date().toISOString(), notified: false, hasPhoto: !!editingPhoto };
+  items.push(item);
+
+  const updates = { 'capsule.items': JSON.stringify(items) };
+  if(editingPhoto){ updates['capsule.photo.' + id] = editingPhoto; photos[id] = editingPhoto; }
+
+  await fetch(FN, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ pin: PIN, updates }) });
+  closeNew();
+  render();
+  toast('Sealed 🔒');
+}
+
+function openView(it, unlocked){
+  const body = document.getElementById('viewModalBody');
+  if(!unlocked){
+    body.innerHTML = `
+      <h2 style="color:var(--copper)">🔒 Still sealed</h2>
+      <p class="revealMsg" style="color:var(--muted)">This capsule for <strong>${esc(it.to)}</strong> opens on ${fmtDate(it.unlockDate)}.</p>
+      <div class="modalActions"><button class="btnGhost" onclick="closeView()">Close</button>
+      <button class="btnDanger" onclick="deleteCapsule('${it.id}')">Delete</button></div>
+    `;
+  } else {
+    body.innerHTML = `
+      <h2 style="color:var(--gold)">💌 ${esc(it.title || 'A message for you')}</h2>
+      ${photos[it.id] ? `<img class="revealPhoto" src="${photos[it.id]}">` : ''}
+      <div class="revealMsg">${esc(it.message)}</div>
+      <div class="revealMeta">To ${esc(it.to)} · from ${esc(it.from||'—')} · opened ${fmtDate(it.unlockDate)}</div>
+      <div class="modalActions" style="margin-top:18px;"><button class="btnGhost" onclick="closeView()">Close</button>
+      <button class="btnDanger" onclick="deleteCapsule('${it.id}')">Delete</button></div>
+    `;
+  }
+  document.getElementById('viewOverlay').classList.add('show');
+}
+function closeView(){ document.getElementById('viewOverlay').classList.remove('show'); }
+
+async function deleteCapsule(id){
+  if(!confirm('Delete this capsule for good?')) return;
+  items = items.filter(i=>i.id !== id);
+  const updates = { 'capsule.items': JSON.stringify(items) };
+  if(photos[id]){ updates['capsule.photo.' + id] = null; delete photos[id]; }
+  await fetch(FN, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ pin: PIN, updates }) });
+  closeView();
+  render();
+}
+
+if(PIN) load(); else document.getElementById('pinInput').focus();
+document.getElementById('pinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') submitPin(); });
+</script>
+</body>
+</html>
