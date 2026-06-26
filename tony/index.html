@@ -905,6 +905,13 @@
 <button id="lang-btn" aria-label="Toggle language">🇲🇽 ES</button>
 
 <script>
+/* All shared state declared up front, before any function bodies
+   that reference it — `let` bindings are NOT safely hoisted across
+   a function call the way `var`/function declarations are, so any
+   variable a function reads must already be declared by the time
+   that function actually runs, not just by the time it's defined. */
+let standingsData = {};   // { A: [{team,w,d,l,gf,ga,pts,gd}, ...sorted], ... }
+
 /* ═══════════════════════════════════════════════════════════════
    SETUP — two links, then everything is automatic.
 
@@ -1574,7 +1581,6 @@ const GROUP_ORDER = ['A','B','C','D','E','F','G','H','I','J','K','L'];
 let pickEntries = [];     // [{name, picks:{A:[c,c],...}}]
 let pickCounts = {};      // canonical team → count across the pool
 let currentPlayer = null;
-let standingsData = {};   // { A: [{team,w,d,l,gf,ga,pts,gd}, ...sorted], ... }
 let currentRound = 'GROUPS';
 let roundPicks = {};       // { R32: Map(nameLower -> Map(matchKey -> canonTeam)), ... }
 let roundPickCounts = {};  // { R32: { matchKey: { canonTeam: count } }, ... }
