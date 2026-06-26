@@ -40,14 +40,26 @@
 
     /* SECTIONS */
     .section { margin-bottom: 2.25rem; opacity: 0; animation: fadeUp 0.6s ease forwards; }
-    .section:nth-child(3) { animation-delay: 0.1s; }
-    .section:nth-child(4) { animation-delay: 0.2s; }
-    .section:nth-child(5) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.05s; }
+    .section:nth-child(5) { animation-delay: 0.1s; }
+    .section:nth-child(6) { animation-delay: 0.15s; }
+    .section:nth-child(7) { animation-delay: 0.2s; }
+    .section:nth-child(8) { animation-delay: 0.25s; }
+    .section:nth-child(9) { animation-delay: 0.3s; }
     .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.9rem; }
     .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
     .section-dot.green { background: var(--accent2); }
     .section-dot.blue { background: var(--accent3); }
+    .section-dot.orange { background: #e8916a; }
+    .section-dot.gold { background: #c9a96e; }
+    .section-dot.purple { background: #a78bca; }
     .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+    .section-badge { font-size: 10px; color: var(--muted); background: var(--bg3); border-radius: 999px; padding: 1px 7px; font-weight: 500; letter-spacing: 0.02em; }
+    .subsection-header { display: flex; align-items: center; gap: 10px; margin: 1.5rem 0 0.75rem; }
+    .subsection-header:first-of-type { margin-top: 0; }
+    .subsection-title { font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+    .subsection-line { flex: 1; height: 1px; background: var(--border); opacity: 0.6; }
 
     /* CARDS */
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
@@ -63,6 +75,9 @@
     .card.primary { border-left: 2px solid var(--accent); }
     .card.success { border-left: 2px solid var(--accent2); }
     .card.info { border-left: 2px solid var(--accent3); }
+    .card.orange { border-left: 2px solid #e8916a; }
+    .card.gold { border-left: 2px solid #c9a96e; }
+    .card.purple { border-left: 2px solid #a78bca; }
 
     .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
     footer { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; margin-top: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
@@ -137,7 +152,7 @@
   </header>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot"></div><span class="section-title">Finance</span></div>
+    <div class="section-header"><div class="section-dot"></div><span class="section-title">Finance</span><div class="section-line"></div><span class="section-badge">4</span></div>
     <div class="card-grid">
       <a class="card primary" href="#" onclick="openExpenseModal(); return false;">
         <div class="card-top"><span class="card-emoji">➕</span><span class="card-arrow">⊕</span></div>
@@ -164,7 +179,7 @@
   </section>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot green"></div><span class="section-title">Health</span></div>
+    <div class="section-header"><div class="section-dot green"></div><span class="section-title">Health</span><div class="section-line"></div><span class="section-badge">2</span></div>
     <div class="card-grid">
       <a class="card success" href="#" onclick="openWeightModal(); return false;">
         <div class="card-top"><span class="card-emoji">⚖️</span><span class="card-arrow">⊕</span></div>
@@ -180,7 +195,7 @@
   </section>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot blue"></div><span class="section-title">Collections</span></div>
+    <div class="section-header"><div class="section-dot blue"></div><span class="section-title">Collections</span><div class="section-line"></div><span class="section-badge">2</span></div>
     <div class="card-grid">
       <a class="card info" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS7JBktCAjC8oVg8JpAkA50MdKGdhcvCmRc0x-PZ3RRPNBfBVOT7eeS2OHuuObiouGQ81SCi60Ivm8X/pubhtml" target="_blank" rel="noopener">
         <div class="card-top"><span class="card-emoji">🪙</span><span class="card-arrow">↗</span></div>
@@ -196,145 +211,159 @@
   </section>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot" style="background:#e8916a;"></div><span class="section-title">Tools</span></div>
+    <div class="section-header"><div class="section-dot orange"></div><span class="section-title">Tools</span><div class="section-line"></div><span class="section-badge">25</span></div>
+
+    <div class="subsection-header"><span class="subsection-title">🪙 Coins &amp; Selling</span><div class="subsection-line"></div></div>
     <div class="card-grid">
-      <a class="card" style="border-left:2px solid #e8916a;" href="/leadgen">
-        <div class="card-top"><span class="card-emoji">🎯</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Lead Gen</div>
-        <div class="card-desc">Find local businesses without websites & generate outreach emails</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/quiz">
-        <div class="card-top"><span class="card-emoji">🧩</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Quiz Engine</div>
-        <div class="card-desc">Build a deck on anything — timed, scored, leaderboard</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/planner">
+      <a class="card orange" href="/planner">
         <div class="card-top"><span class="card-emoji">🎬</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Run of Show</div>
-        <div class="card-desc">Stream lineup → hammer → vault & profit, one screen</div>
+        <div class="card-desc">Stream lineup → hammer → vault &amp; profit, one screen</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/shop">
+      <a class="card orange" href="/shop">
         <div class="card-top"><span class="card-emoji">🏪</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Storefront</div>
         <div class="card-desc">Public inventory with Whatnot CTA</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/stats">
+      <a class="card orange" href="/stats">
         <div class="card-top"><span class="card-emoji">📊</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Stream Stats</div>
-        <div class="card-desc">Profit charts & trends from every stream</div>
+        <div class="card-desc">Profit charts &amp; trends from every stream</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/crm">
-        <div class="card-top"><span class="card-emoji">💼</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">The Pipeline</div>
-        <div class="card-desc">Mende lead kanban with follow-ups</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/chores">
-        <div class="card-top"><span class="card-emoji">⭐</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Chore Quest</div>
-        <div class="card-desc">Points & allowance for the girls</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/aloha">
-        <div class="card-top"><span class="card-emoji">🌺</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Aloha Hub</div>
-        <div class="card-desc">Wedding RSVP & countdown for guests</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/hq">
-        <div class="card-top"><span class="card-emoji">🎛️</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">The HQ</div>
-        <div class="card-desc">Command center — everything, one dashboard</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/inventory">
+      <a class="card orange" href="/inventory">
         <div class="card-top"><span class="card-emoji">📒</span><span class="card-arrow">↗</span></div>
         <div class="card-title">The Vault</div>
         <div class="card-desc">Coin inventory with true cost basis</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/invoice">
-        <div class="card-top"><span class="card-emoji">🧾</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Invoices</div>
-        <div class="card-desc">Numbered, synced, print-to-PDF</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/backup">
-        <div class="card-top"><span class="card-emoji">💾</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Backup</div>
-        <div class="card-desc">Download the whole site store</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/comps">
+      <a class="card orange" href="/comps">
         <div class="card-top"><span class="card-emoji">🔎</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Comp Checker</div>
         <div class="card-desc">Sold comps across every marketplace — one search</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/buy">
-        <div class="card-top"><span class="card-emoji">🛒</span><span class="card-arrow">↗</span></div>
-        <div class="card-title">Sourcing Compare</div>
-        <div class="card-desc">AliExpress vs Alibaba vs Temu + landed cost per unit</div>
-      </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/profit">
+      <a class="card orange" href="/profit">
         <div class="card-top"><span class="card-emoji">💸</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Whatnot Profit</div>
         <div class="card-desc">True profit per sale after fees, with stream log</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/melt">
+      <a class="card orange" href="/melt">
         <div class="card-top"><span class="card-emoji">🪙</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Melt Calculator</div>
         <div class="card-desc">Junk silver, gold &amp; copper melt values from spot</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/lots">
+      <a class="card orange" href="/lots">
         <div class="card-top"><span class="card-emoji">⚖️</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Lot Splitter</div>
         <div class="card-desc">Allocate cost basis across mixed coin lots</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/ship">
+      <a class="card orange" href="/ship">
         <div class="card-top"><span class="card-emoji">📦</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Ship It</div>
         <div class="card-desc">Best shipping method for coin sales — value &amp; weight in</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/coastfire">
+    </div>
+
+    <div class="subsection-header"><span class="subsection-title">📈 Money &amp; Business</span><div class="subsection-line"></div></div>
+    <div class="card-grid">
+      <a class="card orange" href="/leadgen">
+        <div class="card-top"><span class="card-emoji">🎯</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Lead Gen</div>
+        <div class="card-desc">Find local businesses without websites &amp; generate outreach emails</div>
+      </a>
+      <a class="card orange" href="/crm">
+        <div class="card-top"><span class="card-emoji">💼</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">The Pipeline</div>
+        <div class="card-desc">Lead kanban with follow-ups</div>
+      </a>
+      <a class="card orange" href="/invoice">
+        <div class="card-top"><span class="card-emoji">🧾</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Invoices</div>
+        <div class="card-desc">Numbered, synced, print-to-PDF</div>
+      </a>
+      <a class="card orange" href="/buy">
+        <div class="card-top"><span class="card-emoji">🛒</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Sourcing Compare</div>
+        <div class="card-desc">AliExpress vs Alibaba vs Temu + landed cost per unit</div>
+      </a>
+      <a class="card orange" href="/coastfire">
         <div class="card-top"><span class="card-emoji">🔥</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Coast FIRE</div>
         <div class="card-desc">When can compounding take over? Dates &amp; chart</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/payoff">
+      <a class="card orange" href="/payoff">
         <div class="card-top"><span class="card-emoji">📉</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Debt Payoff</div>
         <div class="card-desc">Snowball vs avalanche — head-to-head simulation</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/countdown">
+    </div>
+
+    <div class="subsection-header"><span class="subsection-title">🏠 Home &amp; Life</span><div class="subsection-line"></div></div>
+    <div class="card-grid">
+      <a class="card orange" href="/chores">
+        <div class="card-top"><span class="card-emoji">⭐</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Chore Quest</div>
+        <div class="card-desc">Points &amp; allowance for the girls</div>
+      </a>
+      <a class="card orange" href="/aloha">
+        <div class="card-top"><span class="card-emoji">🌺</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Aloha Hub</div>
+        <div class="card-desc">Wedding RSVP &amp; countdown for guests</div>
+      </a>
+      <a class="card orange" href="/countdown">
         <div class="card-top"><span class="card-emoji">⏳</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Wedding Countdown</div>
         <div class="card-desc">Live countdown to 8·20·2028 + budget tracker</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/flashcards">
+      <a class="card orange" href="/hq">
+        <div class="card-top"><span class="card-emoji">🎛️</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">The HQ</div>
+        <div class="card-desc">Command center — everything, one dashboard</div>
+      </a>
+    </div>
+
+    <div class="subsection-header"><span class="subsection-title">🛠️ Utilities</span><div class="subsection-line"></div></div>
+    <div class="card-grid">
+      <a class="card orange" href="/flashcards">
         <div class="card-top"><span class="card-emoji">🧠</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Flashcards</div>
         <div class="card-desc">Spaced repetition for training topics</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/spinner">
+      <a class="card orange" href="/spinner">
         <div class="card-top"><span class="card-emoji">🎡</span><span class="card-arrow">↗</span></div>
         <div class="card-title">The Wheel</div>
         <div class="card-desc">Random picker for the training room</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/qr">
+      <a class="card orange" href="/quiz">
+        <div class="card-top"><span class="card-emoji">🧩</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Quiz Engine</div>
+        <div class="card-desc">Build a deck on anything — timed, scored, leaderboard</div>
+      </a>
+      <a class="card orange" href="/qr">
         <div class="card-top"><span class="card-emoji">🔳</span><span class="card-arrow">↗</span></div>
         <div class="card-title">QR Generator</div>
         <div class="card-desc">Links, text &amp; Wi-Fi — all client-side</div>
       </a>
-      <a class="card" style="border-left:2px solid #e8916a;" href="/shrink">
+      <a class="card orange" href="/shrink">
         <div class="card-top"><span class="card-emoji">🗜️</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Image Shrink</div>
         <div class="card-desc">Resize &amp; compress photos in the browser</div>
+      </a>
+      <a class="card orange" href="/backup">
+        <div class="card-top"><span class="card-emoji">💾</span><span class="card-arrow">↗</span></div>
+        <div class="card-title">Backup</div>
+        <div class="card-desc">Download the whole site store</div>
       </a>
     </div>
   </section>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot" style="background:#c9a96e;"></div><span class="section-title">Game Room</span></div>
+    <div class="section-header"><div class="section-dot gold"></div><span class="section-title">Game Room</span><div class="section-line"></div><span class="section-badge">2</span></div>
     <div class="card-grid">
-      <a class="card" style="border-left:2px solid #c9a96e;" href="/poker">
+      <a class="card gold" href="/poker">
         <div class="card-top"><span class="card-emoji">🃏</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Poker Hands 101</div>
         <div class="card-desc">Interactive slideshow — 10 hands, Texas Hold'em</div>
       </a>
-      <a class="card" style="border-left:2px solid #c9a96e;" href="/poker-quiz">
+      <a class="card gold" href="/poker-quiz">
         <div class="card-top"><span class="card-emoji">🎯</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Poker Quiz</div>
         <div class="card-desc">4 challenge types, timed, global leaderboard — beat the high score</div>
@@ -343,9 +372,9 @@
   </section>
 
   <section class="section">
-    <div class="section-header"><div class="section-dot" style="background:#a78bca;"></div><span class="section-title">Sierra Leone</span></div>
+    <div class="section-header"><div class="section-dot purple"></div><span class="section-title">Sierra Leone</span><div class="section-line"></div><span class="section-badge">1</span></div>
     <div class="card-grid">
-      <a class="card" style="border-left:2px solid #a78bca;" href="salone.html">
+      <a class="card purple" href="salone.html">
         <div class="card-top"><span class="card-emoji">🇸🇱</span><span class="card-arrow">↗</span></div>
         <div class="card-title">Salone</div>
         <div class="card-desc">Peace Corps memories & Sierra Leone stories</div>
