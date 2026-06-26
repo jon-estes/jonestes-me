@@ -9,15 +9,14 @@
 //   CAL_ICS_JON     = <Jon's secret iCal URL>
 //   CAL_ICS_LORINA  = <Lorina's secret iCal URL>
 //   CAL_ICS_ASHLEY  = <Ashley's secret iCal URL>
-//   CAL_ICS_DAMIN   = <Damin's secret iCal URL>
 //   CAL_ICS_FAMILY  = <Family calendar's secret iCal URL>
 // Redeploy after adding env vars so the function picks them up.
+// (Damin's calendar is intentionally left out — he mainly uses Family anyway.)
 
 const FEEDS = [
   { label: "Jon", color: "#d4af37", env: "CAL_ICS_JON" },
   { label: "Lorina", color: "#b87333", env: "CAL_ICS_LORINA" },
   { label: "Ashley", color: "#6b9080", env: "CAL_ICS_ASHLEY" },
-  { label: "Damin", color: "#7c9fc4", env: "CAL_ICS_DAMIN" },
   { label: "Family", color: "#c1554a", env: "CAL_ICS_FAMILY" },
 ];
 
