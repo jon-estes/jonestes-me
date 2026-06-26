@@ -1574,29 +1574,73 @@ function tallyPickCounts(){
 function renderMerged(){
   if (currentRound === 'GROUPS') renderGroupsView();
   else renderKnockoutView(currentRound);
+  renderCumulativeSummary();
+}
+
+/* Cumulative totals across the group stage AND every knockout round
+   that has picks loaded — independent of whichever round is selected
+   in the dropdown, so this always reflects the player's full pool standing. */
+function renderCumulativeSummary(){
+  const summary = document.getElementById('summary');
+  if (!currentPlayer){ summary.innerHTML = ''; return; }
+
+  let totalPicks = 0, totalPts = 0, totalCorrect = 0, totalWrong = 0, totalPending = 0;
+
+  // groups
+  let groupsDecided = 0;
+  GROUP_ORDER.forEach(letter => {
+    const myPicks = new Set(currentPlayer.picks[letter] || []);
+    const result = groupResults[letter];
+    if (result) groupsDecided++;
+    totalPicks += myPicks.size;
+    myPicks.forEach(c => {
+      if (result){
+        if (result.has(c)){ totalCorrect++; totalPts += 1; }
+        else totalWrong++;
+      } else {
+        totalPending++;
+      }
+    });
+  });
+
+  // each knockout round that has loaded picks for this player
+  Object.keys(roundPicks).forEach(roundKey => {
+    const playerMap = roundPicks[roundKey].get(currentPlayer.name.toLowerCase());
+    if (!playerMap) return;
+    const pts = ROUND_POINTS[roundKey] || 0;
+    playerMap.forEach((pickedTeam, matchKey) => {
+      totalPicks++;
+      const bd = bracketData[roundKey + '-' + matchKey] || {};
+      const isWinnerKnown = bd.w && bd.w.trim();
+      if (isWinnerKnown){
+        if (canon(bd.w) === pickedTeam){ totalCorrect++; totalPts += pts; }
+        else totalWrong++;
+      } else {
+        totalPending++;
+      }
+    });
+  });
+
+  summary.innerHTML = `
+    <span class="chip gold"><b>${totalPicks}</b> total picks</span>
+    <span class="chip"><b>${totalPts}</b> pts so far</span>
+    <span class="chip"><b>${totalCorrect}</b> correct</span>
+    <span class="chip"><b>${totalWrong}</b> incorrect</span>
+    <span class="chip"><b>${totalPending}</b> pending</span>
+    <span class="chip"><b>${groupsDecided}</b>/12 groups decided</span>`;
 }
 
 function renderGroupsView(){
   const grid = document.getElementById('merged-grid');
   const legend = document.getElementById('legend');
-  const summary = document.getElementById('summary');
   if (!currentPlayer){ grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>'; return; }
 
   const total = pickEntries.length || 1;
-  let hits = 0, misses = 0, decided = 0;
 
   grid.innerHTML = GROUP_ORDER.map(letter => {
     const myPicks = new Set(currentPlayer.picks[letter] || []);
     const result = groupResults[letter]; // Set of canon names that advanced
     const sRows = standingsData[letter] || [];
-    if (result) decided++;
-
-    myPicks.forEach(c => {
-      if (result){
-        if (result.has(c)) hits++;
-        else misses++;
-      }
-    });
 
     let badgeHits = 0;
     myPicks.forEach(c => { if (result && result.has(c)) badgeHits++; });
@@ -1653,11 +1697,6 @@ function renderGroupsView(){
   }).join('');
 
   legend.style.display = '';
-  summary.innerHTML = `
-    <span class="chip gold"><b>${Object.values(currentPlayer.picks).flat().length}</b> picks made</span>
-    <span class="chip"><b>${hits}</b> through · ${hits} pts</span>
-    <span class="chip"><b>${misses}</b> eliminated</span>
-    <span class="chip"><b>${decided}</b>/12 groups decided</span>`;
 }
 
 /* ── KNOCKOUT ROUND VIEW ── */
@@ -1667,41 +1706,33 @@ const ROUND_FULL_NAME = { R32:'Round of 32', R16:'Round of 16', QF:'Quarterfinal
 function renderKnockoutView(roundKey){
   const grid = document.getElementById('merged-grid');
   const legend = document.getElementById('legend');
-  const summary = document.getElementById('summary');
   legend.style.display = 'none';
 
   const formCfg = KNOCKOUT_FORMS.find(f => f.round === roundKey);
   const formUrls = formCfg ? (formCfg.urls || (formCfg.url ? [formCfg.url] : [])) : [];
   if (!formCfg || !formUrls.length){
     grid.innerHTML = `<div class="m-loading">Picks not open yet for ${esc(ROUND_FULL_NAME[roundKey] || roundKey)}. Check back once the bracket is set.</div>`;
-    summary.innerHTML = '';
     return;
   }
   if (!currentPlayer){
     grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>';
-    summary.innerHTML = '';
     return;
   }
 
   const playerMap = (roundPicks[roundKey] || new Map()).get(currentPlayer.name.toLowerCase());
   if (!playerMap){
     grid.innerHTML = `<div class="m-loading">${esc(currentPlayer.name)} hasn't submitted ${esc(ROUND_FULL_NAME[roundKey] || roundKey)} picks yet.</div>`;
-    summary.innerHTML = '';
     return;
   }
 
-  const winners = roundWinners[roundKey] || new Set();
   const total = pickEntries.length || 1;
   const matchCountsForRound = roundPickCounts[roundKey] || {};
 
-  let hits = 0, misses = 0, pending = 0;
   const cards = [];
   playerMap.forEach((pickedTeam, matchKey) => {
     const bd = bracketData[roundKey + '-' + matchKey] || {};
-    const decided = winners.size > 0 && (bd.w !== undefined);
     const isWinnerKnown = bd.w && bd.w.trim();
     const correct = isWinnerKnown ? canon(bd.w) === pickedTeam : null;
-    if (isWinnerKnown){ if (correct) hits++; else misses++; } else pending++;
 
     const counts = matchCountsForRound[matchKey] || {};
     const pct = Math.round(100 * (counts[pickedTeam]||0) / total);
@@ -1728,11 +1759,6 @@ function renderKnockoutView(roundKey){
   });
 
   grid.innerHTML = cards.join('') || '<div class="m-loading">No matches found for this round yet.</div>';
-  summary.innerHTML = `
-    <span class="chip gold"><b>${playerMap.size}</b> picks made</span>
-    <span class="chip"><b>${hits}</b> correct · ${hits*(ROUND_POINTS[roundKey]||0)} pts</span>
-    <span class="chip"><b>${misses}</b> incorrect</span>
-    <span class="chip"><b>${pending}</b> pending</span>`;
 }
 
 function populatePlayerSelect(){
@@ -1790,6 +1816,10 @@ function resolveMatchKeyByTeams(header, roundKey){
   return null;
 }
 
+function isKnownTeam(canonName){
+  return !!FLAG_CODES[canonName] || GROUPS.some(([,,teams]) => teams.some(t => canon(t) === canonName));
+}
+
 function parseRoundPickRows(rows, roundKey, sheetIndex){
   if (!rows || rows.length < 2) return;
   const headers = rows[0];
@@ -1801,7 +1831,17 @@ function parseRoundPickRows(rows, roundKey, sheetIndex){
 
   headers.forEach((h, i) => {
     if (i === 0 || i === nameCol) return;
+
+    // Only treat this column as a match-pick column if its header
+    // actually names two teams (e.g. "Canada or South Africa",
+    // "Canada vs South Africa"). Anything else — phone numbers,
+    // emails, free-text questions — gets skipped entirely.
     const numMatch = /(?:match|m)\s*#?\s*(\d+)/i.exec(h);
+    const headerHasTwoTeams = /\s+(?:vs\.?|v\.?|or|–|-)\s+/i.test(h) &&
+      h.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).length >= 2 &&
+      h.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).slice(0,2).every(p => isKnownTeam(canon(p)));
+    if (!numMatch && !headerHasTwoTeams) return;
+
     const byTeams = resolveMatchKeyByTeams(h, roundKey);
     const matchKey = numMatch ? numMatch[1] : (byTeams || `s${sheetIndex}-${i}`);
 
@@ -1809,7 +1849,8 @@ function parseRoundPickRows(rows, roundKey, sheetIndex){
       const name = (r[nameCol]||'').trim();
       if (!name) return;
       const pick = canon(r[i]);
-      if (!pick) return;
+      // only accept values that resolve to an actual team name
+      if (!pick || !isKnownTeam(pick)) return;
       const key = name.toLowerCase();
       if (!playerMap.has(key)) playerMap.set(key, new Map());
       playerMap.get(key).set(matchKey, pick);
