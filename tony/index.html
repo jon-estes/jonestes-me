@@ -1044,9 +1044,18 @@ function parseCSV(text){
   return rows.filter(r => r.some(c => c.trim() !== ''));
 }
 async function fetchCSV(url){
-  const res = await fetch(url + (url.includes('?')?'&':'?') + 'cb=' + Date.now());
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return parseCSV(await res.text());
+  const cb = '&_=' + Date.now();
+  const full = url + (url.includes('?')?'&':'?') + 'cb=' + Date.now();
+  try{
+    const res = await fetch(full);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return parseCSV(await res.text());
+  }catch(e){
+    // one quiet retry — Google's publish-to-web endpoint occasionally blips
+    const res2 = await fetch(full + cb);
+    if (!res2.ok) throw new Error('HTTP ' + res2.status);
+    return parseCSV(await res2.text());
+  }
 }
 
 /* ── RESULTS (one tab drives everything) ── */
@@ -1801,7 +1810,7 @@ function populatePlayerSelect(){
    to a sheet-namespaced key if no team names can be resolved. */
 function resolveMatchKeyByTeams(header, roundKey){
   // pull out any two team-ish phrases from "Team A vs Team B" / "Team A - Team B" etc.
-  const parts = header.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i);
+  const parts = header.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).map(p => p.replace(/[?!.:,]+\s*$/, '').trim());
   if (parts.length < 2) return null;
   const c1 = canon(parts[0]), c2 = canon(parts[1]);
   if (!c1 || !c2) return null;
@@ -1820,6 +1829,10 @@ function isKnownTeam(canonName){
   return !!FLAG_CODES[canonName] || GROUPS.some(([,,teams]) => teams.some(t => canon(t) === canonName));
 }
 
+function splitTeamHeader(h){
+  return h.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).map(p => p.replace(/[?!.:,]+\s*$/, '').trim());
+}
+
 function parseRoundPickRows(rows, roundKey, sheetIndex){
   if (!rows || rows.length < 2) return;
   const headers = rows[0];
@@ -1833,13 +1846,13 @@ function parseRoundPickRows(rows, roundKey, sheetIndex){
     if (i === 0 || i === nameCol) return;
 
     // Only treat this column as a match-pick column if its header
-    // actually names two teams (e.g. "Canada or South Africa",
+    // actually names two teams (e.g. "Canada or South Africa?",
     // "Canada vs South Africa"). Anything else — phone numbers,
     // emails, free-text questions — gets skipped entirely.
     const numMatch = /(?:match|m)\s*#?\s*(\d+)/i.exec(h);
-    const headerHasTwoTeams = /\s+(?:vs\.?|v\.?|or|–|-)\s+/i.test(h) &&
-      h.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).length >= 2 &&
-      h.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i).slice(0,2).every(p => isKnownTeam(canon(p)));
+    const headerParts = splitTeamHeader(h);
+    const headerHasTwoTeams = headerParts.length >= 2 &&
+      headerParts.slice(0,2).every(p => isKnownTeam(canon(p)));
     if (!numMatch && !headerHasTwoTeams) return;
 
     const byTeams = resolveMatchKeyByTeams(h, roundKey);
