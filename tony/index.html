@@ -1740,7 +1740,7 @@ function renderGroupsView(){
       result ? `${badgeHits}/${pickedCount} ✓` : `${pickedCount} picked`;
     const badgeCls = badgeHits === pickedCount && pickedCount > 0 && result ? 'all-hit' : '';
 
-    const fallbackTeams = (GROUPS.find(([l]) => l === letter) || [letter,[]])[1];
+    const fallbackTeams = (GROUPS.find(([l]) => l === letter) || [letter,'',[]])[2];
     const rowsSrc = sRows.length > 0 ? sRows : fallbackTeams.map(t => ({team:t,w:0,d:0,l:0,gf:0,ga:0,pts:0,gd:0}));
 
     const rows = rowsSrc.map((r, i) => {
