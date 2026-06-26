@@ -271,6 +271,87 @@
     grid-column:1/-1;
   }
 
+  /* ── POOL PULSE TICKER ── */
+  .pulse-ticker{
+    background:var(--chalk);color:var(--ink);overflow:hidden;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    position:relative;height:34px;display:flex;align-items:center;
+  }
+  .pulse-ticker .pulse-track{
+    display:flex;white-space:nowrap;
+    animation:pulse-scroll 38s linear infinite;
+  }
+  .pulse-ticker:hover .pulse-track{animation-play-state:paused}
+  .pulse-item{
+    display:inline-flex;align-items:center;gap:8px;padding:0 28px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;
+    color:rgba(255,255,255,.85);
+  }
+  .pulse-item b{color:var(--gold)}
+  .pulse-item .dotsep{color:rgba(255,255,255,.25)}
+  @keyframes pulse-scroll{
+    0%{transform:translateX(0)}
+    100%{transform:translateX(-50%)}
+  }
+
+  /* ── CHAMPION COUNTDOWN ── */
+  .champ-countdown{
+    display:inline-flex;align-items:center;gap:10px;
+    margin-top:14px;padding:9px 18px;
+    background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:999px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--chalk-dim);
+  }
+  .champ-countdown .cc-num{font-weight:800;color:var(--gold-deep);font-size:14px}
+
+  /* ── FLAG WALL ── */
+  .flagwall-sec{padding:0 0 60px}
+  .flagwall{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+  }
+  .fw-flag{
+    position:relative;width:52px;height:38px;border-radius:6px;overflow:hidden;
+    box-shadow:0 0 0 1px rgba(20,30,60,.14);transition:transform .15s,opacity .4s;
+  }
+  .fw-flag img{width:100%;height:100%;object-fit:cover;display:block}
+  .fw-flag.eliminated{opacity:.18;filter:grayscale(1)}
+  .fw-flag:not(.eliminated):hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(20,30,60,.25)}
+  .fw-flag .fw-x{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--red);font-size:22px;font-weight:800;opacity:0;
+  }
+  .fw-flag.eliminated .fw-x{opacity:.7}
+
+  /* ── SHARE CARD ── */
+  .share-btn{
+    cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    background:var(--chalk);color:var(--ink);border:none;border-radius:999px;
+    padding:9px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;
+    letter-spacing:.12em;text-transform:uppercase;
+    transition:transform .15s;
+  }
+  .share-btn:hover{transform:translateY(-2px)}
+  .share-modal-backdrop{
+    position:fixed;inset:0;background:rgba(15,15,14,.7);z-index:200;
+    display:none;align-items:center;justify-content:center;padding:24px;
+  }
+  .share-modal-backdrop.open{display:flex}
+  .share-modal{
+    background:var(--ink);border-radius:18px;padding:0;max-width:420px;width:100%;
+    overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.4);
+  }
+  .share-modal canvas{width:100%;display:block}
+  .share-modal-actions{display:flex;gap:10px;padding:16px;background:var(--card)}
+  .share-modal-actions button{
+    flex:1;cursor:pointer;border:1px solid var(--line);background:var(--card);
+    border-radius:10px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk);
+  }
+  .share-modal-actions button.primary{background:var(--grass);color:#fff;border-color:var(--grass)}
+
+  /* ── CONFETTI CANVAS ── */
+  #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:300;display:none}
+
   /* ── BRACKET ── */
   .bracket-scroll{overflow-x:auto;padding-bottom:14px;-webkit-overflow-scrolling:touch}
   .bracket{
@@ -577,8 +658,13 @@
     <a class="nl" href="#groups">Standings</a>
     <a class="nl" href="#bracket">Bracket</a>
     <a class="nl" href="#upsets">Upsets</a>
+    <a class="nl" href="#flagwall-sec" data-i18n="nav-flagwall">Survivors</a>
   </div>
 </nav>
+
+<div class="pulse-ticker" id="pulse-ticker" style="display:none">
+  <div class="pulse-track" id="pulse-track"></div>
+</div>
 
 <!-- ════════ HERO ════════ -->
 <header class="hero">
@@ -603,6 +689,14 @@
     <div class="perfect">
       <span class="num">113</span>
       <span class="lbl" data-i18n="perfect-lbl">points · perfect bracket</span>
+    </div>
+    <div>
+      <span class="champ-countdown" id="champ-countdown">
+        <span class="cc-num" id="cc-days">–</span> <span data-i18n="cc-label">days until we crown a champion</span>
+      </span>
+    </div>
+    <div style="margin-top:18px">
+      <button class="share-btn" id="open-share-btn">📤 <span data-i18n="share-btn">Share My Standing</span></button>
     </div>
     <div class="audio-wrap" id="audio-wrap" style="display:none">
       <button class="audio-play-btn" id="audio-play" aria-label="Play message">
@@ -767,9 +861,33 @@
   </div>
 </section>
 
+<!-- ════════ FLAG WALL ════════ -->
+<section class="flagwall-sec" id="flagwall-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker" data-i18n="kicker-flagwall">Still Standing</div>
+      <h2 class="display" data-i18n="h2-flagwall">Every Team Still Alive</h2>
+      <p data-i18n="p-flagwall">All 48 teams. Eliminated ones fade out as the tournament moves on.</p>
+    </div>
+    <div class="flagwall" id="flagwall"></div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">Thank you for playing in Tony's World Cup! · <span style="color:var(--gold)">v9</span></div>
 </footer>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="share-modal-backdrop" id="share-modal-backdrop">
+  <div class="share-modal">
+    <canvas id="share-canvas" width="600" height="750"></canvas>
+    <div class="share-modal-actions">
+      <button id="share-download-btn" class="primary">⬇ Download Image</button>
+      <button id="share-close-btn">Close</button>
+    </div>
+  </div>
+</div>
 
 <div class="tricolor" aria-hidden="true"><span></span><span></span><span></span></div>
 
@@ -939,9 +1057,11 @@ async function loadResults(){
       }
     });
     renderBracket();
+    renderFlagWall();
     note.textContent = 'Results synced ' + new Date().toLocaleTimeString() + ' — updates automatically.';
   }catch(e){
     renderBracket();
+    renderFlagWall();
     note.textContent = 'Results sync failed — showing last known state.';
   }
 }
@@ -1201,11 +1321,38 @@ async function loadLeaderboard(){
           <td class="rank">${anyResults ? medal(i) : '–'}${moveArrow(p._delta)}</td>
           <td class="name">${esc(p.name)}</td>
           ${ROUND_LABELS.map(([l]) => `<td class="rd">${p.byRound[l] === null ? '·' : p.byRound[l]}</td>`).join('')}
-          <td class="pts">${p.total}</td>
+          <td class="pts" data-target="${p.total}">0</td>
         </tr>`).join('')}
       </tbody></table>`;
     count.innerHTML = `<b>${graded.length}</b> entries`;
     stamp.textContent = 'Synced ' + new Date().toLocaleTimeString();
+
+    // expose for share card
+    window._gradedLeaderboard = graded;
+
+    // animated count-up for point totals
+    document.querySelectorAll('#board td.pts').forEach(td => {
+      const target = parseInt(td.getAttribute('data-target'), 10) || 0;
+      const start = performance.now();
+      const dur = 700;
+      function step(now){
+        const p = Math.min(1, (now - start) / dur);
+        td.textContent = Math.round(target * (1 - Math.pow(1-p,3)));
+        if (p < 1) requestAnimationFrame(step);
+        else td.textContent = target;
+      }
+      requestAnimationFrame(step);
+    });
+
+    // confetti when the #1 player changes
+    if (anyResults && graded.length){
+      const newLeader = graded[0].name.toLowerCase();
+      const prevLeader = localStorage.getItem('wc26_leader');
+      if (prevLeader && prevLeader !== newLeader){
+        fireConfetti();
+      }
+      localStorage.setItem('wc26_leader', newLeader);
+    }
   }catch(e){
     stamp.textContent = 'Sync failed — retrying on next refresh';
   }
@@ -1279,6 +1426,10 @@ const ES={
   'kicker-groups':'Fase de Grupos · Tabla en Vivo','h2-groups':'Así Va Cada Grupo Ahora Mismo',
   'p-groups':'Elige un jugador para ver sus picks resaltados dentro de la tabla en vivo — ordenado por puntos, diferencia de goles y goles marcados.',
   'player-label':'Jugador','legend-pick':'Su elección','legend-hit':'Equipo clasificado ✓','legend-miss':'No anotó punto ✗',
+  'cc-label':'días para coronar a un campeón','share-btn':'Compartir Mi Posición',
+  'kicker-flagwall':'Siguen en Pie','h2-flagwall':'Cada Equipo Aún Vivo',
+  'p-flagwall':'Los 48 equipos. Los eliminados se desvanecen conforme avanza el torneo.',
+  'nav-flagwall':'Sobrevivientes',
   'kicker-bracket':'Fase Eliminatoria · 28 Jun – 19 Jul','h2-bracket':'El Bracket en Vivo',
   'p-bracket':'Los 31 partidos eliminatorios, desde la Ronda de 32 hasta la final en el MetLife Stadium. Los ganadores se iluminan en dorado conforme llegan los resultados.',
   'champion-label':'Campeones del Mundo 2026',
@@ -1309,6 +1460,10 @@ const EN={
   'kicker-groups':'Group Stage · Live Standings','h2-groups':'How Every Group Looks Right Now',
   'p-groups':'Pick a player to see their picks highlighted right inside the live standings — sorted by points, goal difference, and goals scored.',
   'player-label':'Player','legend-pick':'Their pick','legend-hit':'Pick advanced ✓','legend-miss':"Pick didn't score ✗",
+  'cc-label':'days until we crown a champion','share-btn':'Share My Standing',
+  'kicker-flagwall':'Still Standing','h2-flagwall':'Every Team Still Alive',
+  'p-flagwall':'All 48 teams. Eliminated ones fade out as the tournament moves on.',
+  'nav-flagwall':'Survivors',
   'kicker-bracket':'Knockout Stage · Jun 28 – Jul 19','h2-bracket':'The Live Bracket',
   'p-bracket':'All 31 knockout matches, from the Round of 32 to the final at MetLife Stadium. Winners light up gold as results come in. Round of 32 matchups lock in when the group stage ends — FIFA seeds the eight third-place wildcards by a preset formula.',
   'champion-label':'2026 World Champions',
@@ -1582,6 +1737,216 @@ function updateUpsetTracker(){
 }
 loadMergedPicks();
 setInterval(loadMergedPicks, AUTO_REFRESH_MS);
+
+/* ══ FLAG WALL ══ */
+function renderFlagWall(){
+  const wall = document.getElementById('flagwall');
+  if (!wall) return;
+  const decidedGroups = Object.keys(groupResults).length;
+  wall.innerHTML = GROUPS.map(([letter,,teams]) => {
+    const result = groupResults[letter];
+    return teams.map(t => {
+      const c = canon(t);
+      const eliminated = result && !result.has(c);
+      const code = FLAG_CODES[c];
+      const img = code ? `<img src="https://flagcdn.com/w80/${code}.png" alt="${esc(t)}" loading="lazy">` : '';
+      return `<div class="fw-flag${eliminated?' eliminated':''}" title="${esc(t)}${eliminated?' — eliminated':''}">
+        ${img}<span class="fw-x">✗</span>
+      </div>`;
+    }).join('');
+  }).join('');
+}
+
+/* ══ POOL PULSE TICKER ══ */
+function updatePulseTicker(){
+  const ticker = document.getElementById('pulse-ticker');
+  const track = document.getElementById('pulse-track');
+  if (!ticker || !track) return;
+
+  const items = [];
+
+  // group results → advancing teams
+  Object.keys(groupResults).forEach(letter => {
+    groupResults[letter].forEach(c => {
+      const fallback = (GROUPS.find(([l]) => l === letter) || [letter,[],[]])[2] || [];
+      const name = fallback.find(t => canon(t) === c) || c;
+      items.push(`<b>${esc(name)}</b> advances from Group ${letter}`);
+    });
+  });
+
+  // current leader
+  if (window._gradedLeaderboard && window._gradedLeaderboard.length){
+    const leader = window._gradedLeaderboard[0];
+    items.push(`<b>${esc(leader.name)}</b> leads the pool with ${leader.total} pts`);
+  }
+
+  // biggest upset
+  if (typeof pickCounts !== 'undefined' && Object.keys(groupResults).length){
+    const total = (pickEntries||[]).length || 1;
+    let best = null;
+    Object.keys(groupResults).forEach(letter => {
+      groupResults[letter].forEach(c => {
+        const pct = Math.round(100*(pickCounts[c]||0)/total);
+        if (!best || pct < best.pct) best = { c, pct, letter };
+      });
+    });
+    if (best && best.pct < 30){
+      const fallback = (GROUPS.find(([l]) => l === best.letter) || [best.letter,[],[]])[2] || [];
+      const name = fallback.find(t => canon(t) === best.c) || best.c;
+      items.push(`⚡ Upset alert: only <b>${best.pct}%</b> picked ${esc(name)}`);
+    }
+  }
+
+  if (!items.length){
+    ticker.style.display = 'none';
+    return;
+  }
+  ticker.style.display = '';
+  const html = items.map(i => `<span class="pulse-item">${i}</span><span class="pulse-item dotsep">●</span>`).join('');
+  track.innerHTML = html + html; // duplicate for seamless scroll
+}
+
+/* ══ CHAMPION COUNTDOWN ══ */
+function updateChampionCountdown(){
+  const el = document.getElementById('cc-days');
+  if (!el) return;
+  const finalDate = new Date(2026, 6, 19); // July 19, 2026
+  const now = new Date();
+  const diff = Math.ceil((finalDate - now) / 86400000);
+  el.textContent = diff > 0 ? diff : '0';
+}
+updateChampionCountdown();
+setInterval(updateChampionCountdown, 3600000);
+
+/* ══ CONFETTI ══ */
+function fireConfetti(){
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+  canvas.style.display = 'block';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#C8901F','#168A45','#C9262C','#18203A','#FAFAF8'];
+  const pieces = Array.from({length:140}, () => ({
+    x: Math.random()*canvas.width,
+    y: -20 - Math.random()*canvas.height*0.3,
+    r: 4 + Math.random()*5,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    vy: 2 + Math.random()*3,
+    vx: -1.5 + Math.random()*3,
+    rot: Math.random()*360,
+    vr: -6 + Math.random()*12
+  }));
+  let frame = 0;
+  function tick(){
+    frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);
+      ctx.restore();
+    });
+    if (frame < 220) requestAnimationFrame(tick);
+    else { canvas.style.display = 'none'; ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  tick();
+}
+
+/* ══ SHARE CARD ══ */
+function drawShareCard(){
+  const canvas = document.getElementById('share-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // background
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#18203A'); grad.addColorStop(1,'#0f0f0e');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+  // tricolor bar
+  ['#B91C2C','#FAFAF8','#2C6E49'].forEach((c,i)=>{ ctx.fillStyle=c; ctx.fillRect(i*W/3,0,W/3,8); });
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#C8901F';
+  ctx.font = '700 16px monospace';
+  ctx.fillText("TONY'S WORLD CUP 2026 POOL", W/2, 70);
+
+  const player = currentPlayer ? currentPlayer.name : (window._gradedLeaderboard && window._gradedLeaderboard[0] ? window._gradedLeaderboard[0].name : null);
+  let rank = null, total = null, poolSize = (window._gradedLeaderboard||[]).length;
+  if (player && window._gradedLeaderboard){
+    const idx = window._gradedLeaderboard.findIndex(p => p.name.toLowerCase() === player.toLowerCase());
+    if (idx !== -1){ rank = idx+1; total = window._gradedLeaderboard[idx].total; }
+  }
+
+  ctx.fillStyle = '#FAFAF8';
+  ctx.font = '800 30px sans-serif';
+  ctx.fillText(player || 'My Pool Standing', W/2, 130);
+
+  ctx.font = '900 110px sans-serif';
+  ctx.fillStyle = '#C8901F';
+  ctx.fillText(rank ? '#'+rank : '—', W/2, 270);
+
+  ctx.font = '600 18px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  ctx.fillText(poolSize ? `of ${poolSize} players` : 'rank pending', W/2, 305);
+
+  ctx.font = '800 46px monospace';
+  ctx.fillStyle = '#168A45';
+  ctx.fillText(total !== null ? total + ' PTS' : '— PTS', W/2, 380);
+
+  // mini group strip
+  if (currentPlayer){
+    let y = 460;
+    ctx.textAlign = 'left';
+    ctx.font = '700 13px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.fillText('GROUP PICKS', 60, y);
+    y += 26;
+    Object.keys(currentPlayer.picks).slice(0,8).forEach(letter => {
+      const picks = currentPlayer.picks[letter];
+      const result = groupResults[letter];
+      const hitCount = picks.filter(p => result && result.has(p)).length;
+      ctx.fillStyle = result ? (hitCount === picks.length ? '#168A45' : hitCount>0 ? '#C8901F' : '#C9262C') : 'rgba(255,255,255,.3)';
+      ctx.font = '700 14px monospace';
+      ctx.fillText(`Group ${letter}`, 60, y);
+      ctx.fillStyle = 'rgba(255,255,255,.6)';
+      ctx.fillText(result ? `${hitCount}/${picks.length} ✓` : 'pending', 170, y);
+      y += 24;
+    });
+  }
+
+  ctx.textAlign = 'center';
+  ctx.font = '600 13px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,.4)';
+  ctx.fillText('tonysworldcup.xyz', W/2, H-30);
+}
+
+const shareBackdrop = document.getElementById('share-modal-backdrop');
+document.getElementById('open-share-btn').addEventListener('click', () => {
+  drawShareCard();
+  shareBackdrop.classList.add('open');
+});
+document.getElementById('share-close-btn').addEventListener('click', () => {
+  shareBackdrop.classList.remove('open');
+});
+shareBackdrop.addEventListener('click', (e) => { if (e.target === shareBackdrop) shareBackdrop.classList.remove('open'); });
+document.getElementById('share-download-btn').addEventListener('click', () => {
+  const canvas = document.getElementById('share-canvas');
+  const link = document.createElement('a');
+  link.download = 'my-world-cup-pool-standing.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+// refresh pulse ticker whenever a sync completes
+const _origSyncAll = syncAll;
+syncAll = async function(){
+  await _origSyncAll();
+  updatePulseTicker();
+};
 </script>
 
 </body>
