@@ -246,7 +246,7 @@
   .mover-banner.cooling .mb-text b{color:var(--red)}
 
   /* ── UPSET TRACKER ── */
-  .upset-sec{padding:0 0 72px}
+  .upset-sec{padding:56px 0 72px;border-top:1px solid var(--line)}
   .upset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
   .upset-card{
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
@@ -654,8 +654,8 @@
     <span class="brand">WC26 Pool</span>
     <a class="nl" href="#how">Scoring</a>
     <a class="nl" href="#leaderboard">Leaderboard</a>
-    <a class="nl" href="/picks/">Picks</a>
-    <a class="nl" href="#groups" data-i18n="nav-picks">Picks</a>
+    <a class="nl" href="/picks/">Picks Page</a>
+    <a class="nl" href="#groups" data-i18n="nav-picks">Live Picks</a>
     <a class="nl" href="#bracket">Bracket</a>
     <a class="nl" href="#upsets">Upsets</a>
     <a class="nl" href="#flagwall-sec" data-i18n="nav-flagwall">Survivors</a>
@@ -841,6 +841,7 @@
     <div class="standings-meta" style="justify-content:flex-start;padding:0 0 24px">
       <span class="s-live-dot">Live</span>
       <span id="s-stamp">Loading…</span>
+      <button class="share-btn" id="open-share-btn-2" style="margin-left:auto;padding:6px 14px;font-size:10px">📤 Share My Standing</button>
     </div>
     <div class="merged-grid" id="merged-grid">
       <div class="m-loading">Loading picks and standings…</div>
@@ -1547,8 +1548,8 @@ const EN={
   'champion-label':'2026 World Champions',
   'bracket-note':'All dates and venues are official — team names replace the slot paths as the tournament unfolds.',
 };
-const NAV_EN={'#how':'Scoring','#leaderboard':'Leaderboard','/picks/':'Picks','#groups':'Picks','#bracket':'Bracket'};
-const NAV_ES={'#how':'Puntuación','#leaderboard':'Tabla','/picks/':'Picks','#groups':'Picks','#bracket':'Bracket'};
+const NAV_EN={'#how':'Scoring','#leaderboard':'Leaderboard','/picks/':'Picks Page','#groups':'Live Picks','#bracket':'Bracket'};
+const NAV_ES={'#how':'Puntuación','#leaderboard':'Tabla','/picks/':'Página de Picks','#groups':'Picks en Vivo','#bracket':'Bracket'};
 let lang='en';
 const langBtn=document.getElementById('lang-btn');
 function applyLang(T,navT){
@@ -2004,9 +2005,52 @@ async function loadMergedPicks(){
     stamp.textContent = 'Synced ' + new Date().toLocaleTimeString() + ' · auto-refreshes every 5 min';
   } catch(e) {
     console.error('loadMergedPicks failed:', e);
-    stamp.textContent = 'Sync failed — retrying';
+    stamp.textContent = 'Having trouble syncing — retrying shortly';
     grid.innerHTML = '<div class="m-loading">Couldn\'t load — refresh to retry.</div>';
   }
+}
+
+/* ══ UPSET TRACKER ══
+   Flags any team that advanced out of its group despite being
+   picked by under 30% of the pool — an "upset" relative to the
+   crowd's expectations, not necessarily an underdog on paper. */
+function updateUpsetTracker(){
+  const upsetGrid = document.getElementById('upset-grid');
+  if (!upsetGrid) return;
+  const total = pickEntries.length || 0;
+  if (!total || !Object.keys(groupResults).length){
+    upsetGrid.innerHTML = '<div class="upset-empty">No upsets yet — check back as groups finish.</div>';
+    return;
+  }
+
+  const upsets = [];
+  Object.keys(groupResults).forEach(letter => {
+    groupResults[letter].forEach(canonTeam => {
+      const pct = Math.round(100 * (pickCounts[canonTeam]||0) / total);
+      if (pct < 30){
+        const sRows = standingsData[letter] || [];
+        let displayName = (sRows.find(r => canon(r.team) === canonTeam) || {}).team;
+        if (!displayName){
+          const fallback = (GROUPS.find(([l]) => l === letter) || [letter,'',[]])[2] || [];
+          displayName = fallback.find(t => canon(t) === canonTeam) || canonTeam;
+        }
+        upsets.push({ letter, team: displayName, pct });
+      }
+    });
+  });
+
+  if (!upsets.length){
+    upsetGrid.innerHTML = '<div class="upset-empty">No upsets yet — every advancing team was a popular pick.</div>';
+    return;
+  }
+
+  upsets.sort((a,b) => a.pct - b.pct);
+  upsetGrid.innerHTML = upsets.map(u => `
+    <div class="upset-card">
+      <div class="u-group">Group ${u.letter} · Advanced</div>
+      <div class="u-team">${flagImg(u.team)}${esc(u.team)}</div>
+      <div class="u-pct">Only <b>${u.pct}%</b> of the pool picked them</div>
+    </div>`).join('');
 }
 setInterval(loadMergedPicks, AUTO_REFRESH_MS);
 
@@ -2197,10 +2241,12 @@ function drawShareCard(){
 }
 
 const shareBackdrop = document.getElementById('share-modal-backdrop');
-document.getElementById('open-share-btn').addEventListener('click', () => {
+function openShareModal(){
   drawShareCard();
   shareBackdrop.classList.add('open');
-});
+}
+document.getElementById('open-share-btn').addEventListener('click', openShareModal);
+document.getElementById('open-share-btn-2').addEventListener('click', openShareModal);
 document.getElementById('share-close-btn').addEventListener('click', () => {
   shareBackdrop.classList.remove('open');
 });
