@@ -454,9 +454,17 @@ function parseCSV(text){
   return rows.filter(r => r.some(c => c.trim() !== ''));
 }
 async function fetchCSV(url){
-  const res = await fetch(url + (url.includes('?')?'&':'?') + 'cb=' + Date.now());
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return parseCSV(await res.text());
+  const cb = '&_=' + Date.now();
+  const full = url + (url.includes('?')?'&':'?') + 'cb=' + Date.now();
+  try{
+    const res = await fetch(full);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return parseCSV(await res.text());
+  }catch(e){
+    const res2 = await fetch(full + cb);
+    if (!res2.ok) throw new Error('HTTP ' + res2.status);
+    return parseCSV(await res2.text());
+  }
 }
 
 let entries = [];        // [{name, picks:{A:[c,c],...}}]
@@ -464,13 +472,22 @@ let groupResults = {};   // { A:Set, ... }
 let pickCounts = {};     // canonical team → count
 let current = null;
 
+/* ══════════════════════════════════════════════════════════
+   GROUP STAGE PICKS PARSER
+   Header row looks like: Date, Name, Group A (1st Pick),
+   Group A (2nd Pick), Group B (1st Pick), ... Group L (2nd Pick)
+   We find the Name column directly, and for every other column
+   pull the group letter straight out of "Group X" in the header
+   — no guessing, no ambiguity.
+   ══════════════════════════════════════════════════════════ */
 function parseEntries(rows){
   const headers = rows[0];
-  let nameCol = headers.findIndex(h => /name|nickname|player/i.test(h));
-  if (nameCol === -1) nameCol = /timestamp|date/i.test(headers[0]||'') ? 1 : 0;
+  const nameCol = headers.findIndex(h => /^name$/i.test(h.trim())) !== -1
+    ? headers.findIndex(h => /^name$/i.test(h.trim()))
+    : headers.findIndex(h => /name/i.test(h));
   const groupCols = [];
   headers.forEach((h, i) => {
-    const m = /group\s+([A-L])\b/i.exec(h);
+    const m = /group\s*([A-L])\b/i.exec(h);
     if (m) groupCols.push([i, m[1].toUpperCase()]);
   });
   const people = new Map();
@@ -486,6 +503,7 @@ function parseEntries(rows){
   });
   return [...people.values()].sort((a,b) => a.name.localeCompare(b.name));
 }
+
 function tallyPickCounts(){
   pickCounts = {};
   entries.forEach(e => {
@@ -499,86 +517,81 @@ const STANDINGS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWSB
 const GROUP_ORDER = ['A','B','C','D','E','F','G','H','I','J','K','L'];
 
 let standingsData = {}; // { A: [{team,w,d,l,gf,ga,pts,gd}, ...sorted], ... }
-
-/* ══════════════════════════════════════════════════════════
-   PASTE EACH ROUND'S PUBLISHED CSV URL(S) HERE AS YOU GET THEM.
-   A round can have ONE url or SEVERAL (e.g. if Tony split a
-   round's picks across multiple Google Forms) — just list them
-   all in the urls array. Leave urls:[] for a round not open yet.
-   ══════════════════════════════════════════════════════════ */
-const KNOCKOUT_FORMS = [
-  { round:'R32', pts:2, urls:["https://docs.google.com/spreadsheets/d/e/2PACX-1vQgGhUvUeJawwDSaP-PCKzeH0UfPcFQQ_QflGzdmomfGtZl6-3Atx4YPkhGMNzAhuW0voBpJsfBl8du/pub?output=csv"] },
-  { round:'R16', pts:3, urls:[] },
-  { round:'QF',  pts:4, urls:[] },
-  { round:'SF',  pts:5, urls:[] },
-  { round:'3P',  pts:1, urls:[] },
-  { round:'F',   pts:6, urls:[] }
-];
 let bracketData = {};
 let roundWinners = {};
 let currentRound = 'GROUPS';
 let roundPicks = {};
 let roundPickCounts = {};
-const ROUND_POINTS = { R32:2, R16:3, QF:4, SF:5, F:6 };
-const ROUND_FULL_NAME = { R32:'Round of 32', R16:'Round of 16', QF:'Quarterfinals', SF:'Semifinals', F:'Final' };
 
-function findNameCol(headers){
-  let nameCol = headers.findIndex(h => /display\s*name/i.test(h));
-  if (nameCol === -1) nameCol = headers.findIndex(h => /name|nickname|player/i.test(h));
-  if (nameCol === -1) nameCol = /timestamp|date/i.test(headers[0]||'') ? 1 : 0;
-  return nameCol;
-}
+/* ══════════════════════════════════════════════════════════
+   KNOCKOUT ROUND PICKS — explicit column config per round.
+   Each form is described with EXACT 0-indexed column numbers
+   instead of guessing from header text. This is the only thing
+   you need to edit when wiring up a new round's sheet.
 
-/* Merges into existing roundPicks/roundPickCounts rather than
-   overwriting, so a round split across multiple sheets combines
-   correctly. Resolves the real FIFA match key by matching the two
-   team names found in the header text against bracketData — so a
-   header like "Canada vs South Africa" connects automatically to
-   whichever R32 slot that matchup actually landed in. Falls back
-   to a sheet-namespaced key if no team names can be resolved. */
-function resolveMatchKeyByTeams(header, roundKey){
-  const parts = header.split(/\s+(?:vs\.?|v\.?|or|–|-)\s+/i);
-  if (parts.length < 2) return null;
-  const c1 = canon(parts[0]), c2 = canon(parts[1]);
-  if (!c1 || !c2) return null;
-  for (const key of Object.keys(bracketData)){
-    if (!key.startsWith(roundKey + '-')) continue;
-    const bd = bracketData[key];
-    const bt1 = canon(bd.t1), bt2 = canon(bd.t2);
-    if ((bt1 === c1 && bt2 === c2) || (bt1 === c2 && bt2 === c1)){
-      return key.slice(roundKey.length + 1);
+   nameCol  = column with the player's display name
+   matches  = [{ key, col, label }] — one per pick column
+              key   = unique id, matches bracketData's key (e.g. "R32-1")
+              col   = 0-indexed column number of the pick
+              label = human label shown on the card
+   ══════════════════════════════════════════════════════════ */
+const ROUND_SHEET_CONFIG = {
+  R32: [
+    {
+      url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgGhUvUeJawwDSaP-PCKzeH0UfPcFQQ_QflGzdmomfGtZl6-3Atx4YPkhGMNzAhuW0voBpJsfBl8du/pub?output=csv",
+      nameCol: 2,   // column C — "What was the display name you entered?"
+      matches: [
+        { key:"R32-1", col:4, label:"Canada vs South Africa" }  // column E — "Canada or South Africa?"
+      ]
     }
-  }
-  return null;
-}
+    // When the second R32 sheet (with the rest of the matches) is ready,
+    // add another { url, nameCol, matches:[...] } object to this array.
+  ],
+  R16: [],
+  QF:  [],
+  SF:  [],
+  '3P':[],
+  F:   []
+};
+const ROUND_POINTS = { R32:2, R16:3, QF:4, SF:5, F:6, '3P':1 };
+const ROUND_FULL_NAME = { R32:'Round of 32', R16:'Round of 16', QF:'Quarterfinals', SF:'Semifinals', F:'Final', '3P':'Third Place' };
 
-function parseRoundPickRows(rows, roundKey, sheetIndex){
+async function loadRoundSheet(roundKey, cfg){
+  const rows = await fetchCSV(cfg.url);
   if (!rows || rows.length < 2) return;
-  const headers = rows[0];
-  const nameCol = findNameCol(headers);
+
   if (!roundPicks[roundKey]) roundPicks[roundKey] = new Map();
   if (!roundPickCounts[roundKey]) roundPickCounts[roundKey] = {};
   const playerMap = roundPicks[roundKey];
   const matchCounts = roundPickCounts[roundKey];
-  headers.forEach((h, i) => {
-    if (i === 0 || i === nameCol) return;
-    const numMatch = /(?:match|m)\s*#?\s*(\d+)/i.exec(h);
-    const byTeams = resolveMatchKeyByTeams(h, roundKey);
-    const matchKey = numMatch ? numMatch[1] : (byTeams || `s${sheetIndex}-${i}`);
-    rows.slice(1).forEach(r => {
-      const name = (r[nameCol]||'').trim();
-      if (!name) return;
-      const pick = canon(r[i]);
+
+  rows.slice(1).forEach(r => {
+    const name = (r[cfg.nameCol]||'').trim();
+    if (!name) return;
+    const key = name.toLowerCase();
+
+    cfg.matches.forEach(m => {
+      const pick = canon(r[m.col]);
       if (!pick) return;
-      const key = name.toLowerCase();
       if (!playerMap.has(key)) playerMap.set(key, new Map());
-      playerMap.get(key).set(matchKey, pick);
-      if (!matchCounts[matchKey]) matchCounts[matchKey] = {};
-      matchCounts[matchKey][pick] = (matchCounts[matchKey][pick]||0) + 1;
+      playerMap.get(key).set(m.key, { team: pick, label: m.label });
+
+      if (!matchCounts[m.key]) matchCounts[m.key] = {};
+      matchCounts[m.key][pick] = (matchCounts[m.key][pick]||0) + 1;
     });
   });
 }
 
+async function loadAllRoundPicks(){
+  roundPicks = {};
+  roundPickCounts = {};
+  for (const roundKey of Object.keys(ROUND_SHEET_CONFIG)){
+    for (const cfg of ROUND_SHEET_CONFIG[roundKey]){
+      try{ await loadRoundSheet(roundKey, cfg); }
+      catch(e){ /* leave that sheet's picks unavailable, keep going */ }
+    }
+  }
+}
 
 function flagImgM(team){
   const code = FLAG_CODES[canon(team)];
@@ -588,32 +601,72 @@ function flagImgM(team){
 function renderMerged(){
   if (currentRound === 'GROUPS') renderGroupsView();
   else renderKnockoutView(currentRound);
+  renderCumulativeSummary();
+}
+
+/* Cumulative totals across the group stage AND every knockout round
+   that has picks loaded — independent of whichever round is selected
+   in the dropdown, so this always reflects the player's full pool standing. */
+function renderCumulativeSummary(){
+  const summary = document.getElementById('summary');
+  if (!current){ summary.innerHTML = ''; return; }
+
+  let totalPicks = 0, totalPts = 0, totalCorrect = 0, totalWrong = 0, totalPending = 0;
+  let groupsDecided = 0;
+
+  GROUP_ORDER.forEach(letter => {
+    const myPicks = new Set(current.picks[letter] || []);
+    const result = groupResults[letter];
+    if (result) groupsDecided++;
+    totalPicks += myPicks.size;
+    myPicks.forEach(c => {
+      if (result){
+        if (result.has(c)){ totalCorrect++; totalPts += 1; }
+        else totalWrong++;
+      } else {
+        totalPending++;
+      }
+    });
+  });
+
+  Object.keys(roundPicks).forEach(roundKey => {
+    const playerMap = roundPicks[roundKey].get(current.name.toLowerCase());
+    if (!playerMap) return;
+    const pts = ROUND_POINTS[roundKey] || 0;
+    playerMap.forEach((pickInfo, matchKey) => {
+      totalPicks++;
+      const bd = bracketData[matchKey] || {};
+      const isWinnerKnown = bd.w && bd.w.trim();
+      if (isWinnerKnown){
+        if (canon(bd.w) === pickInfo.team){ totalCorrect++; totalPts += pts; }
+        else totalWrong++;
+      } else {
+        totalPending++;
+      }
+    });
+  });
+
+  summary.innerHTML = `
+    <span class="chip gold"><b>${totalPicks}</b> total picks</span>
+    <span class="chip"><b>${totalPts}</b> pts so far</span>
+    <span class="chip"><b>${totalCorrect}</b> correct</span>
+    <span class="chip"><b>${totalWrong}</b> incorrect</span>
+    <span class="chip"><b>${totalPending}</b> pending</span>
+    <span class="chip"><b>${groupsDecided}</b>/12 groups decided</span>`;
 }
 
 function renderGroupsView(){
   const grid = document.getElementById('merged-grid');
   const legend = document.getElementById('legend');
-  const summary = document.getElementById('summary');
   if (!current){ grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>'; return; }
 
   const total = entries.length || 1;
-  let hits = 0, misses = 0, decided = 0;
 
   grid.innerHTML = GROUP_ORDER.map(letter => {
     const myPicks = new Set(current.picks[letter] || []);
     const result = groupResults[letter]; // Set of canon names that advanced
     const sRows = standingsData[letter] || [];
-    if (result) decided++;
 
-    // count hits/misses for summary
-    myPicks.forEach(c => {
-      if (result){
-        if (result.has(c)) hits++;
-        else misses++;
-      }
-    });
-
-    // header badge
     let badgeHits = 0;
     myPicks.forEach(c => { if (result && result.has(c)) badgeHits++; });
     const pickedCount = myPicks.size;
@@ -621,7 +674,6 @@ function renderGroupsView(){
       result ? `${badgeHits}/${pickedCount} ✓` : `${pickedCount} picked`;
     const badgeCls = badgeHits === pickedCount && pickedCount > 0 && result ? 'all-hit' : '';
 
-    // build rows — if we have standings data use it, else fall back to GROUPS list
     const teamList = sRows.length > 0
       ? sRows.map(r => r.team)
       : (GROUPS.find(([l]) => l === letter) || [letter,[]])[1];
@@ -631,7 +683,6 @@ function renderGroupsView(){
       const picked = myPicks.has(c);
       const through = result && result.has(c);
       const out = result && picked && !through;
-      const pct = Math.round(100 * (pickCounts[c]||0) / total);
       const gdStr = r.gd > 0 ? '+'+r.gd : String(r.gd);
       const gdClass = r.gd > 0 ? 'pos' : r.gd < 0 ? 'neg' : '';
 
@@ -672,81 +723,85 @@ function renderGroupsView(){
   }).join('');
 
   legend.style.display = '';
-  summary.innerHTML = `
-    <span class="chip gold"><b>${Object.values(current.picks).flat().length}</b> picks made</span>
-    <span class="chip"><b>${hits}</b> through · ${hits} pts</span>
-    <span class="chip"><b>${misses}</b> eliminated</span>
-    <span class="chip"><b>${decided}</b>/12 groups decided</span>`;
 }
 
 function renderKnockoutView(roundKey){
   const grid = document.getElementById('merged-grid');
   const legend = document.getElementById('legend');
-  const summary = document.getElementById('summary');
   legend.style.display = 'none';
 
-  const formCfg = KNOCKOUT_FORMS.find(f => f.round === roundKey);
-  const formUrls = formCfg ? (formCfg.urls || (formCfg.url ? [formCfg.url] : [])) : [];
-  if (!formCfg || !formUrls.length){
+  const cfgs = ROUND_SHEET_CONFIG[roundKey] || [];
+  if (!cfgs.length){
     grid.innerHTML = `<div class="m-loading">Picks not open yet for ${esc(ROUND_FULL_NAME[roundKey] || roundKey)}. Check back once the bracket is set.</div>`;
-    summary.innerHTML = '';
     return;
   }
   if (!current){
     grid.innerHTML = '<div class="m-loading">Select a player above to see their picks.</div>';
-    summary.innerHTML = '';
     return;
   }
 
   const playerMap = (roundPicks[roundKey] || new Map()).get(current.name.toLowerCase());
-  if (!playerMap){
+  if (!playerMap || playerMap.size === 0){
     grid.innerHTML = `<div class="m-loading">${esc(current.name)} hasn't submitted ${esc(ROUND_FULL_NAME[roundKey] || roundKey)} picks yet.</div>`;
-    summary.innerHTML = '';
     return;
   }
 
-  const winners = roundWinners[roundKey] || new Set();
   const total = entries.length || 1;
   const matchCountsForRound = roundPickCounts[roundKey] || {};
 
-  let hits = 0, misses = 0, pending = 0;
   const cards = [];
-  playerMap.forEach((pickedTeam, matchKey) => {
-    const bd = bracketData[roundKey + '-' + matchKey] || {};
+  playerMap.forEach((pickInfo, matchKey) => {
+    const pickedTeam = pickInfo.team;
+    const bd = bracketData[matchKey] || {};
     const isWinnerKnown = bd.w && bd.w.trim();
     const correct = isWinnerKnown ? canon(bd.w) === pickedTeam : null;
-    if (isWinnerKnown){ if (correct) hits++; else misses++; } else pending++;
-
     const counts = matchCountsForRound[matchKey] || {};
-    const pct = Math.round(100 * (counts[pickedTeam]||0) / total);
 
-    let cardCls = '', iconHtml = '';
-    if (isWinnerKnown && correct){ cardCls = 'm-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +'+(ROUND_POINTS[roundKey]||0)+'</span>'; }
-    else if (isWinnerKnown && !correct){ cardCls = 'm-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
-    else { cardCls = 'm-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+    // figure out both team display names — prefer live bracketData,
+    // fall back to the pick label independently for each side, so a
+    // partially-filled bracketData row can't hide a team entirely
+    const labelParts = (pickInfo.label || '').split(/\s+(?:vs\.?|v\.?|or)\s+/i);
+    const teamA = (bd.t1 && bd.t1.trim()) || labelParts[0];
+    const teamB = (bd.t2 && bd.t2.trim()) || labelParts[1];
+    const teams = [teamA, teamB].filter(Boolean);
 
-    const teamLabel = bd.t1 && bd.t2 ? `${esc(bd.t1)} <span style="opacity:.4">vs</span> ${esc(bd.t2)}` : `Match ${esc(matchKey)}`;
-    const pickedDisplay = bd.t1 && canon(bd.t1) === pickedTeam ? bd.t1 : (bd.t2 && canon(bd.t2) === pickedTeam ? bd.t2 : pickedTeam);
+    const rows = teams.map(t => {
+      const c = canon(t);
+      const picked = c === pickedTeam;
+      const isWinner = isWinnerKnown && canon(bd.w) === c;
+      const pct = Math.round(100 * (counts[c]||0) / total);
 
-    cards.push(`<div class="m-card ${cardCls}" style="padding:16px 18px">
-      <div class="m-card-head" style="background:none;border-bottom:none;padding:0 0 10px">
-        <span class="m-group-label" style="color:var(--chalk-faint);font-size:10px">${teamLabel}</span>
+      let rowCls = '';
+      let iconHtml = '';
+      if (picked && isWinnerKnown && isWinner){ rowCls = 'm-hit'; iconHtml = '<span class="m-pick-icon hit">✓ +'+(ROUND_POINTS[roundKey]||0)+'</span>'; }
+      else if (picked && isWinnerKnown && !isWinner){ rowCls = 'm-miss'; iconHtml = '<span class="m-pick-icon miss">✗ no point</span>'; }
+      else if (picked){ rowCls = 'm-pick'; iconHtml = '<span class="m-pick-icon pick">Pick</span>'; }
+      else if (isWinnerKnown && isWinner){ rowCls = 'm-adv'; }
+
+      return `<tr class="${rowCls}">
+        <td class="m-team" style="padding-left:14px">${flagImgM(t)}<span class="tname">${esc(t)}</span>${iconHtml}</td>
+        <td class="m-num" style="text-align:right;padding-right:14px">${pct}% of pool</td>
+      </tr>`;
+    }).join('');
+
+    const statusBadge = isWinnerKnown
+      ? (correct ? `<span class="m-pick-badge all-hit">✓ Correct</span>` : `<span class="m-pick-badge" style="color:var(--red);background:rgba(201,38,44,.1);border-color:rgba(201,38,44,.35)">✗ Missed</span>`)
+      : `<span class="m-pick-badge">Pending</span>`;
+
+    const matchupLabel = teams.length === 2 ? `${esc(teams[0])} vs ${esc(teams[1])}` : esc(pickInfo.label || ROUND_FULL_NAME[roundKey] || roundKey);
+
+    cards.push(`<div class="m-card">
+      <div class="m-card-head">
+        <span class="m-group-label">${matchupLabel}</span>
+        ${statusBadge}
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding-top:4px">
-        ${flagImgM(pickedDisplay)}
-        <span style="font-weight:700;font-size:15px">${esc(pickedDisplay)}</span>
-        ${iconHtml}
-        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--chalk-faint)">${pct}% of pool</span>
-      </div>
+      <table class="m-table" style="table-layout:auto">
+        <tbody>${rows}</tbody>
+      </table>
     </div>`);
   });
 
   grid.innerHTML = cards.join('') || '<div class="m-loading">No matches found for this round yet.</div>';
-  summary.innerHTML = `
-    <span class="chip gold"><b>${playerMap.size}</b> picks made</span>
-    <span class="chip"><b>${hits}</b> correct · ${hits*(ROUND_POINTS[roundKey]||0)} pts</span>
-    <span class="chip"><b>${misses}</b> incorrect</span>
-    <span class="chip"><b>${pending}</b> pending</span>`;
 }
 
 function render(){ renderMerged(); }
@@ -754,7 +809,6 @@ function render(){ renderMerged(); }
 function populateSelect(){
   const sel = document.getElementById('player-select');
   sel.innerHTML = entries.map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('');
-  // deep-link support: /picks/?player=Jon%20E
   const want = new URLSearchParams(location.search).get('player');
   if (want){
     const match = entries.find(e => e.name.toLowerCase() === want.toLowerCase());
@@ -785,20 +839,19 @@ function populateSelect(){
 async function loadAll(){
   const stamp = document.getElementById('s-stamp');
   try{
-    // load picks + results + standings in parallel
     const [picksRows, resultsRows, standingsRows] = await Promise.allSettled([
       fetchCSV(RESPONSES_CSV_URL),
       fetchCSV(RESULTS_CSV_URL),
       fetchCSV(STANDINGS_CSV_URL)
     ]);
 
-    // parse picks
     if (picksRows.status === 'fulfilled'){
       entries = parseEntries(picksRows.value);
       tallyPickCounts();
+    } else {
+      console.error('Group picks sheet failed to load', picksRows.reason);
     }
 
-    // parse results
     if (resultsRows.status === 'fulfilled'){
       const rRows = resultsRows.value;
       const h = rRows[0].map(x => x.trim().toLowerCase());
@@ -819,7 +872,6 @@ async function loadAll(){
       });
     }
 
-    // parse standings
     if (standingsRows.status === 'fulfilled'){
       const sRows = standingsRows.value;
       if (sRows.length >= 2){
@@ -850,24 +902,13 @@ async function loadAll(){
       return;
     }
 
-    // load knockout round picks (only forms with URLs) — reset first so
-    // stale matches don't linger, then merge every sheet for each round
-    roundPicks = {};
-    roundPickCounts = {};
-    await Promise.allSettled(KNOCKOUT_FORMS.map(async f => {
-      const urls = f.urls || (f.url ? [f.url] : []);
-      for (let i = 0; i < urls.length; i++){
-        try{
-          const koRows = await fetchCSV(urls[i]);
-          parseRoundPickRows(koRows, f.round, i);
-        }catch(e){ /* leave that sheet unavailable */ }
-      }
-    }));
+    await loadAllRoundPicks();
 
     populateSelect();
     render();
     stamp.textContent = 'Synced ' + new Date().toLocaleTimeString() + ' · auto-refreshes every 5 min';
   }catch(e){
+    console.error('loadAll failed:', e);
     document.getElementById('merged-grid').innerHTML =
       '<div class="m-loading"><div style="font-family:Anton,sans-serif;font-size:26px;text-transform:uppercase;margin-bottom:8px">Couldn\'t load</div>Refresh to retry.</div>';
     stamp.textContent = 'Sync failed — retrying';
